@@ -19,3 +19,17 @@
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+# I just added these, since they don't seem needed!
+.babelrc
+.flowconfig
+.watchmanconfig
+LICENSE
+README.md
+README.md.orig
+package-lock.json
+public/
+src/index.css
+src/index.js
+src/registerServiceWorker.js
+webpack.config.js
