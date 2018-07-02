@@ -21,6 +21,7 @@ yarn-debug.log*
 yarn-error.log*
 
 # I just added these, since they don't seem needed!
+.*.swp
 .babelrc
 .flowconfig
 .watchmanconfig

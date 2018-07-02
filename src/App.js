@@ -1,5 +1,6 @@
 import React from 'react';
 import { StyleSheet, View, Dimensions } from 'react-native';
+import Block from './views/Block.js';
 
 export default class App extends React.Component {
   constructor(props) {
@@ -10,7 +11,9 @@ export default class App extends React.Component {
     return (
       <View style={styles.root}>
         <View style={styles.grass} />
-        <View style={styles.workspace} />
+        <View style={styles.workspace}>
+          <Block size='u' bottom={10} />
+        </View>
       </View>
     );
   }
