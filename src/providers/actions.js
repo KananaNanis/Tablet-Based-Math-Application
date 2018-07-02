@@ -19,7 +19,7 @@ export const NUM_SET_OPACITY = 'NUM_SET_OPACITY';
 {
   type : NUM_SET_POSITION,
   id : 'num4',
-  left : 30,
+  position : [30, 0]
 }
 */
 
@@ -31,8 +31,8 @@ export function numSetName(id, name) {
   return { type: NUM_SET_NAME, id, name }
 }
 
-export function numSetPosition(id, left, bottom) {
-  return { type: NUM_SET_POSITION, id, left, bottom }
+export function numSetPosition(id, position) {
+  return { type: NUM_SET_POSITION, id, position }
 }
 
 export function numSetOpacity(id, opacity) {

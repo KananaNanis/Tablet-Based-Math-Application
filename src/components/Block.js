@@ -1,6 +1,6 @@
 import React from 'react'
 import { StyleSheet, View, Text } from 'react-native';
-import { myglobal } from '../App.js';
+import { myglobal } from '../App';
 
 const Block = ({size, bottom}) => {
   const height = myglobal.block_height[size];

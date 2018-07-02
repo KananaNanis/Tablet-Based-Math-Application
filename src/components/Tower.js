@@ -1,11 +1,11 @@
 import React from 'react'
 import { StyleSheet, View } from 'react-native';
-import Block from './Block.js';
-import { myglobal } from '../App.js';
+import Block from './Block';
+import { myglobal } from '../App';
 
 const Tower = ({id, name}) => {
   // expand the name into individual blocks
-  //console.log(name);
+  console.log(name);
   let blocks = [];
   let floor = 0;
   for (const group of name) {

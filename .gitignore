@@ -29,6 +29,7 @@ LICENSE
 README.md
 README.md.orig
 package-lock.json
+index.js.orig
 public/
 src/index.css
 src/index.js

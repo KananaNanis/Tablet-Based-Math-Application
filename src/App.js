@@ -1,28 +1,30 @@
 import React from 'react';
 import { StyleSheet, View, Dimensions } from 'react-native';
 /*
-import Block from './views/Block.js';
-import Tower from './views/Tower.js';
-import Num from './views/Num.js';
+import Block from './components/Block';
+import Tower from './components/Tower';
+import Num from './components/Num';
+import Workspace from './components/Workspace';
 */
-import Workspace from './views/Workspace.js';
+import WorkspaceContainer from './containers/WorkspaceContainer';
 
 export default class App extends React.Component {
   constructor(props) {
     super(props);
-    console.log(Dimensions.get('window').height);
+    //console.log(Dimensions.get('window').height);
   }
   /*
           <Tower id={'t3'} name={['u1', 'z2']}/>
           <Num id={'t1'} name={['u1', 'z2']} position={[11, 20]} />
+        <Workspace style={styles.workspace}
+                   num_desc={[{id:'t1', name:['u1', 'z2'], position:[11,12]},
+                              {id:'t2', name:['u2', 'z1'], position:[200,30]}]} />
   */
   render() {
     return (
       <View style={styles.root}>
         <View style={styles.grass} />
-        <Workspace style={styles.workspace}
-                   num_desc={[{id:'t1', name:['u1', 'z2'], position:[11,21]},
-                              {id:'t2', name:['u2', 'z1'], position:[200,30]}]} />
+        <WorkspaceContainer style={styles.workspace}/>
       </View>
     );
   }
