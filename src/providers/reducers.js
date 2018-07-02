@@ -6,12 +6,12 @@ import {
   NUM_SET_OPACITY
 } from './actions'
 
-function num_IDs(state = [], action) {
+function num_ids(state = [], action) {
   switch (action.type) {
     case NUM_CREATE:
       return [
         ...state,
-        action.ID,
+        action.id,
       ]
     default:
       return state
@@ -24,7 +24,7 @@ function num_name(state = {}, action) {
     case NUM_SET_NAME:
       return {
         ...state,
-        [action.ID] : action.name,
+        [action.id] : action.name,
       }
     default:
       return state
@@ -37,11 +37,11 @@ function num_position(state = {}, action) {
     case NUM_SET_POSITION:
       let newPosition = {'left' : action.left || 0, 
                          'bottom' : action.bottom || 0};
-      if (action.ID in state)
-        newPosition = { ...state[action.ID], ...newPosition };
+      if (action.id in state)
+        newPosition = { ...state[action.id], ...newPosition };
       return {
         ...state,
-        [action.ID] : newPosition
+        [action.id] : newPosition
       }
     default:
       return state
@@ -52,10 +52,10 @@ function num_style(state = {}, action) {
   switch (action.type) {
     case NUM_SET_OPACITY:
       let newStyle = { 'opacity' : action.opacity }
-      if (action.ID in state)
-        newStyle = { ...state[action.ID], ...newStyle }
+      if (action.id in state)
+        newStyle = { ...state[action.id], ...newStyle }
       return Object.assign({}, state, {
-        [action.ID]: newStyle
+        [action.id]: newStyle
       })
     default:
       return state
@@ -70,7 +70,7 @@ function num_misc(state = {}, action) {
 }
 
 const suujiApp = combineReducers({
-  num_IDs,
+  num_ids,
   num_name,
   num_position,
   num_style,
