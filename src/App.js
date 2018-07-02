@@ -1,23 +1,47 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, View, Dimensions } from 'react-native';
 
 export default class App extends React.Component {
+  constructor(props) {
+    super(props);
+    console.log(Dimensions.get('window').height);
+  }
   render() {
     return (
-      <View style={styles.container}>
-        <Text>Open up src/App.js to start working on your app!</Text>
-        <Text>Changes you make will automatically reload.</Text>
-        <Text>Shake your phone to open the developer menu.</Text>
+      <View style={styles.root}>
+        <View style={styles.grass} />
+        <View style={styles.workspace} />
       </View>
     );
   }
 }
 
+var global = {
+  screen_width: Dimensions.get('window').width,
+  screen_height: Dimensions.get('window').height,
+  grass_height: 100
+}
+
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
+  root: {
+    //backgroundColor: 'white',  // appears to not be needed
+    width: global.screen_width,
+    height: global.screen_height,
+  },
+  grass: {
+    backgroundColor: 'lightgreen',
+    height: global.grass_height,
+    width: global.screen_width,
+    position: 'absolute',
+    left: 0,
+    bottom: 0,
+  },
+  workspace: {
+    //backgroundColor: 'blue',
+    height: global.screen_height - global.grass_height,
+    width: global.screen_width,
+    position: 'absolute',
+    left: 0,
+    bottom: 100,
   },
 });
