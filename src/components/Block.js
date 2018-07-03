@@ -7,13 +7,13 @@ const Block = ({size, bottom, scaleFactor}) => {
   const isFiver = (sz !== size);
   const height = scaleFactor * myglobal.size2value[sz];
   const width = isFiver ? 1.1*height : height;
-  console.log('scaleFactor ' + scaleFactor + ' size ' + size + ' sz ' + sz);
+  //console.log('scaleFactor ' + scaleFactor + ' size ' + size + ' sz ' + sz);
   return (
   <View style={[styles.block, {bottom: bottom,
                                backgroundColor: myglobal.size2color[sz],
                                borderRadius: 0.1*height,
-                               borderLeftWidth: isFiver ? 0.1*height : 0,
-                               borderLeftColor: isFiver ? '#328' : 'none',
+                               borderLeftWidth: (isFiver ? 0.1*height : 0),
+                               borderLeftColor: (isFiver ? '#328' : 'transparent'),
                                width: (width-1), height: (height-1)}]}>
     <Text style={{color: '#eee',
                   marginBottom: .15*height,

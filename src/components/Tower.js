@@ -5,7 +5,7 @@ import { myglobal } from '../App';
 
 const Tower = ({id, name, scaleFactor}) => {
   // expand the name into individual blocks
-  console.log(name);
+  //console.log(name);
   let blocks = [];
   let floor = 0;
   for (const group of name) {

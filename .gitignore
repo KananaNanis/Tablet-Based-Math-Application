@@ -35,4 +35,5 @@ src/index.css
 src/index.js
 src/registerServiceWorker.js
 src/providers/testThis.js
+src/downloadGoogleDoc.py
 webpack.config.js
