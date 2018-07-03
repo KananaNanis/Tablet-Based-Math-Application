@@ -15,9 +15,10 @@ const consolidateNums = (ids, name, position, style, misc) => {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  console.log(ownProps);
+  //console.log(ownProps);
   return {
     style: ownProps.style,
+    scaleFactor: ownProps.scaleFactor,
     num_desc: consolidateNums(state.num_ids,
                               state.num_name,
                               state.num_position,

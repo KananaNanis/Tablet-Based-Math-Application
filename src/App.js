@@ -1,11 +1,11 @@
 import React from 'react';
 import { StyleSheet, View, Dimensions } from 'react-native';
 /*
-import Block from './components/Block';
 import Tower from './components/Tower';
 import Num from './components/Num';
 import Workspace from './components/Workspace';
 */
+import Block from './components/Block';
 import WorkspaceContainer from './containers/WorkspaceContainer';
 
 export default class App extends React.Component {
@@ -14,6 +14,9 @@ export default class App extends React.Component {
     //console.log(Dimensions.get('window').height);
   }
   /*
+        <Block size={'u'} scaleFactor={200} bottom={100} />
+        <Block size={'U'} scaleFactor={200} bottom={100} />
+        <Block size={'m'} scaleFactor={200000} bottom={100} />
           <Tower id={'t3'} name={['u1', 'z2']}/>
           <Num id={'t1'} name={['u1', 'z2']} position={[11, 20]} />
         <Workspace style={styles.workspace}
@@ -24,7 +27,8 @@ export default class App extends React.Component {
     return (
       <View style={styles.root}>
         <View style={styles.grass} />
-        <WorkspaceContainer style={styles.workspace}/>
+        <WorkspaceContainer style={styles.workspace}
+                            scaleFactor={myglobal.default_scaleFactor}/>
       </View>
     );
   }
@@ -34,7 +38,13 @@ export var myglobal = {
   screen_width: Dimensions.get('window').width,
   screen_height: Dimensions.get('window').height,
   grass_height: 100,
-  block_height: {'u':50, 'z':5}
+  size2value: {'m': .001, 'f': .01, 'z': 0.1, 'u': 1,
+               't': 10, 'h': 100, 'p': 1000},
+  size2color: {'m': 'limegreen', 'f': 'purple', 'z': 'darkred', 'u': 'blue',
+               't': 'green', 'h': 'orange', 'p': 'cyan'},
+  size2symbol: {'m': '-', 'f': '^', 'z': 'o', 'u': '|',
+               't': '\u25A1', 'h': '\u25EB', 'p': '\u25E7'},
+  default_scaleFactor: 520
 }
 
 const styles = StyleSheet.create({

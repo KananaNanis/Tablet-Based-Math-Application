@@ -3,11 +3,11 @@ import { StyleSheet, View } from 'react-native';
 import Tower from './Tower';
 
 
-const Num = ({id, name, position}) => (
+const Num = ({id, name, position, scaleFactor}) => (
   <View style={[styles.num,
                 {left: position[0], bottom: position[1]}
                ]}>
-    <Tower id={id} name={name} />
+    <Tower id={id} name={name} scaleFactor={scaleFactor} />
   </View>
 )
 

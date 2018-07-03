@@ -3,18 +3,19 @@ import { StyleSheet, View } from 'react-native';
 import Block from './Block';
 import { myglobal } from '../App';
 
-const Tower = ({id, name}) => {
+const Tower = ({id, name, scaleFactor}) => {
   // expand the name into individual blocks
   console.log(name);
   let blocks = [];
   let floor = 0;
   for (const group of name) {
     const size = group.charAt(0);
-    const height = myglobal.block_height[size];
+    const height = scaleFactor * myglobal.size2value[size];
     const howMany = +group.substr(1);
     //console.log('size ' + size + ' howMany ' + howMany);
     for (const i = 0; i < howMany; ++i) {
-      blocks.push(<Block size={size} bottom={floor} key={group+i}/>)
+      blocks.push(<Block size={size} scaleFactor={scaleFactor}
+                         bottom={floor} key={group+i}/>)
       floor += height;
     }
   }
