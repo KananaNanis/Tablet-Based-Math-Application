@@ -13,14 +13,14 @@ const Workspace = ({style, num_desc}) => (
 )
 */
 //longer way... perhaps to be used later?
-const Workspace = ({style, num_desc, scaleFactor}) => {
+const Workspace = ({style, num_desc, scale_factor}) => {
   //console.log(num_desc[0]);
   let nums = [];
   for (const i = 0; i < num_desc.length; ++i) {
     const num = num_desc[i];
     nums.push(
       <Num id={num.id} name={num.name}
-           position={num.position} scaleFactor={scaleFactor} key={i}/>
+           position={num.position} scale_factor={scale_factor} key={i}/>
     );
   }
   return <View style={style}>{nums}</View>

@@ -18,7 +18,7 @@ const mapStateToProps = (state, ownProps) => {
   //console.log(ownProps);
   return {
     style: ownProps.style,
-    scaleFactor: ownProps.scaleFactor,
+    scale_factor: state.scale_factor,
     num_desc: consolidateNums(state.num_ids,
                               state.num_name,
                               state.num_position,

@@ -3,7 +3,8 @@ import {
   NUM_CREATE,
   NUM_SET_NAME,
   NUM_SET_POSITION,
-  NUM_SET_OPACITY
+  NUM_SET_OPACITY,
+  SET_SCALE_FACTOR
 } from './actions'
 
 // the following reducers control the various overall chunks of the store
@@ -69,12 +70,22 @@ function num_misc(state = {}, action) {
   }
 }
 
+function scale_factor(state = 520, action) {
+  switch (action.type) {
+    case SET_SCALE_FACTOR:
+      return action.val;
+    default:
+      return state
+  }
+}
+
 const suujiAppInner = combineReducers({
   num_ids,
   num_name,
   num_position,
   num_style,
-  num_misc
+  num_misc,
+  scale_factor
 })
 
 const initialState = {
@@ -87,6 +98,7 @@ const initialState = {
               't2' : {}},
   num_misc : {'t1' : {'role': 'left_operand'},
               't2' : {}},
+  scale_factor : 520,
 }
 
 function suujiApp(state, action) {

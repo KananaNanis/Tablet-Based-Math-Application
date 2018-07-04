@@ -49,8 +49,7 @@ export default class App extends React.Component {
         >
 
         <View style={styles.grass} />
-        <WorkspaceContainer style={styles.workspace}
-                            scaleFactor={myglobal.default_scaleFactor}/>
+        <WorkspaceContainer style={styles.workspace} />
       </View>
     );
   }
