@@ -6,6 +6,8 @@ import {
   NUM_SET_OPACITY
 } from './actions'
 
+// the following reducers control the various overall chunks of the store
+
 function num_ids(state = [], action) {
   switch (action.type) {
     case NUM_CREATE:
@@ -77,8 +79,8 @@ const suujiAppInner = combineReducers({
 
 const initialState = {
   num_ids : ['t1', 't2'],
-  num_name : {'t1' : ['u1', 'z2'],
-              't2' : ['u2', 'z1']},
+  num_name : {'t1' : [1, .2],
+              't2' : [2, .1]},
   num_position : {'t1' : [20, 20],
               't2' : [200, 30]},
   num_style : {'t1' : {'opacity': 0.5},
