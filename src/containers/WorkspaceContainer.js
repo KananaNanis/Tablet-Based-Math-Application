@@ -1,26 +1,13 @@
 import { connect } from 'react-redux'
 import Workspace from '../components/Workspace'
-
-const consolidateNums = (ids, name, position, style, block_opacity, misc) => {
-  let res = [];
-  for(const id of ids) {
-    res.push({id,
-              name : name[id],
-              position : position[id],
-              style : style[id],
-              block_opacity : block_opacity[id],
-              misc : misc[id]
-    })
-  }
-  return res;
-}
+import { consolidate_nums } from '../providers/query_store'
 
 const mapStateToProps = (state, ownProps) => {
   //console.log(ownProps);
   return {
     style: ownProps.style,
     scale_factor: state.scale_factor,
-    num_desc: consolidateNums(state.num_ids,
+    all_nums: consolidate_nums(state.num_ids,
                               state.num_name,
                               state.num_position,
                               state.num_style,
@@ -30,8 +17,7 @@ const mapStateToProps = (state, ownProps) => {
 }
 
 const mapDispatchToProps = dispatch => {
-  return {
-  }
+  return { }
 }
 
 const WorkspaceContainer = connect(

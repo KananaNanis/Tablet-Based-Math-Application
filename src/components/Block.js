@@ -2,9 +2,7 @@ import React from 'react'
 import { StyleSheet, View, Text } from 'react-native';
 import { global_size2color, global_size2symbol } from '../myglobal';
 
-const Block = ({size, isFiver, opacity, scale_factor, bottom}) => {
-  const height = scale_factor * (10**size);
-  const width = isFiver ? 1.1*height : height;
+const Block = ({size, isFiver, height, width, opacity, scale_factor, bottom}) => {
   //console.log('scale_factor ' + scale_factor + ' size ' + size + ' sz ' + sz);
   return (
   <View style={[styles.block, {bottom: bottom,

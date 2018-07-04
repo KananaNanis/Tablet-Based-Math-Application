@@ -1,16 +1,11 @@
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
-/*
-import Tower from './components/Tower';
-import Num from './components/Num';
-import Workspace from './components/Workspace';
-import Block from './components/Block';
-*/
 import WorkspaceContainer from './containers/WorkspaceContainer';
 import { global_screen_width, global_screen_height, global_grass_height } from './myglobal';
 import { touchHandler } from './event/event';
 //import { setScaleFactor, numSetBlockOpacity } from './providers/actions';
 //import { global_store } from './index.js';
+import { query_tower, query_tower_blocks } from './providers/query_store';
 
 export default class App extends React.Component {
   constructor(props) {
@@ -19,16 +14,10 @@ export default class App extends React.Component {
     //global_store.dispatch(setScaleFactor(200))
     //global_store.dispatch(numSetBlockOpacity('t2', 2, 0.5))
   }
-  /*
-        <Block size={'u'} scaleFactor={200} bottom={100} />
-        <Block size={'U'} scaleFactor={200} bottom={100} />
-        <Block size={'m'} scaleFactor={200000} bottom={100} />
-          <Tower id={'t3'} name={['u1', 'z2']}/>
-          <Num id={'t1'} name={['u1', 'z2']} position={[11, 20]} />
-        <Workspace style={styles.workspace}
-                   num_desc={[{id:'t1', name:['u1', 'z2'], position:[11,12]},
-                              {id:'t2', name:['u2', 'z1'], position:[200,30]}]} />
-  */
+  componentDidMount() {
+    //query_block_positions();
+    console.log(query_tower_blocks('t1', null, true))
+  }
   render() {
     return (
       <View style={styles.root} 
@@ -38,18 +27,7 @@ export default class App extends React.Component {
             onResponderMove={(evt) => touchHandler(evt)}
             onResponderRelease={(evt) => touchHandler(evt)}
             onResponderTerminationRequest={(evt) => false}
-      /*
-            onTouchStart={touchHandler}
-            onTouchMove={touchHandler}
-            onTouchEnd={touchHandler}
-            mouseDown={mouseHandler}
-            mouseMove={mouseHandler}
-            mouseUp={mouseHandler}
-            onTouchCancel={touchHandler}>
-            onClick={this._onClick}
-            */
         >
-
         <View style={styles.grass} />
         <WorkspaceContainer style={styles.workspace} />
       </View>
