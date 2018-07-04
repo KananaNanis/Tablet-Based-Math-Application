@@ -1,5 +1,5 @@
 import { Platform } from 'react-native';
-import * as myglobal from '../myglobal'
+import { global_is_mobile, global_is_safari, global_screen_width } from '../myglobal'
 
 let mouseTouchID = 100;
 let currentNumTouches = 0;
@@ -14,7 +14,7 @@ function myPreventDefault(synthetic_event)
 {
   //if (isTeacherInfoLevel()) return;  // don't prevent on this special level!
   var evt = synthetic_event.nativeEvent;
-  if (myglobal.is_mobile && !myglobal.is_safari) {
+  if (global_is_mobile && !global_is_safari) {
     // check whether we cannot prevent it anyway
     const type = synthetic_event.type.substr(5);
     if ('start' === type || 'move' === type) {}
@@ -34,7 +34,7 @@ export function touchHandler(synthetic_event, on_grant) {
   numTouchesAtTop = 0;
   for (const i=0, i_end=evt.touches.length; i < i_end; ++i) {
     if (evt.touches[i].clientX < 100) ++numTouchesAtLeft;
-    if (evt.touches[i].clientX > myglobal.screenWidth-100) ++numTouchesAtRight;
+    if (evt.touches[i].clientX > global_screen_width-100) ++numTouchesAtRight;
     if (evt.touches[i].clientY < 100) ++numTouchesAtTop;
   }
   //console.log('numTouchesAtLeft ' + numTouchesAtLeft + ' numTouchesAtTop ' + numTouchesAtTop);

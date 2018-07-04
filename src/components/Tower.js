@@ -1,7 +1,6 @@
 import React from 'react'
 import { StyleSheet, View } from 'react-native';
 import Block from './Block';
-import * as myglobal from '../myglobal';
 
 export function get_block_size_from_group(group) {
   return Math.ceil(-1 + .00001 + (Math.log(group)/Math.log(10)))

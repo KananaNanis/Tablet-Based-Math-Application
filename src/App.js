@@ -7,7 +7,7 @@ import Workspace from './components/Workspace';
 import Block from './components/Block';
 */
 import WorkspaceContainer from './containers/WorkspaceContainer';
-import * as myglobal from './myglobal';
+import { global_screen_width, global_screen_height, global_grass_height } from './myglobal';
 import { touchHandler } from './event/event';
 //import { setScaleFactor, numSetBlockOpacity } from './providers/actions';
 //import { global_store } from './index.js';
@@ -57,39 +57,24 @@ export default class App extends React.Component {
   }
 }
 
-/*
-export var myglobal = {
-  screen_width: Dimensions.get('window').width,
-  screen_height: Dimensions.get('window').height,
-  grass_height: 101,
-  size2value: {'m': .001, 'f': .01, 'z': 0.1, 'u': 1,
-               't': 10, 'h': 100, 'p': 1000},
-  size2color: {'m': 'limegreen', 'f': 'purple', 'z': 'darkred', 'u': 'blue',
-               't': 'green', 'h': 'orange', 'p': 'cyan'},
-  size2symbol: {'m': '-', 'f': '^', 'z': 'o', 'u': '|',
-               't': '\u25A1', 'h': '\u25EB', 'p': '\u25E7'},
-  default_scaleFactor: 520
-}
-*/
-
 const styles = StyleSheet.create({
   root: {
     //backgroundColor: 'white',  // appears to not be needed
-    width: myglobal.screen_width,
-    height: myglobal.screen_height,
+    width: global_screen_width,
+    height: global_screen_height,
   },
   grass: {
     backgroundColor: 'lightgreen',
-    height: myglobal.grass_height,
-    width: myglobal.screen_width,
+    height: global_grass_height,
+    width: global_screen_width,
     position: 'absolute',
     left: 0,
     bottom: 0,
   },
   workspace: {
     //backgroundColor: 'blue',
-    height: myglobal.screen_height - myglobal.grass_height,
-    width: myglobal.screen_width,
+    height: global_screen_height - global_grass_height,
+    width: global_screen_width,
     position: 'absolute',
     left: 0,
     bottom: 100,
