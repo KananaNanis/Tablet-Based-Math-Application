@@ -1,7 +1,7 @@
 import React from 'react'
 import { StyleSheet, View } from 'react-native';
 import Block from './Block';
-import { myglobal } from '../App';
+import * as myglobal from '../myglobal';
 
 const Tower = ({id, name, scaleFactor}) => {
   // expand the name into individual blocks

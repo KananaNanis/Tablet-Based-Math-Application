@@ -1,12 +1,16 @@
 import React from 'react';
-import { StyleSheet, View, Dimensions } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 /*
 import Tower from './components/Tower';
 import Num from './components/Num';
 import Workspace from './components/Workspace';
-*/
 import Block from './components/Block';
+*/
 import WorkspaceContainer from './containers/WorkspaceContainer';
+import * as myglobal from './myglobal';
+import { touchHandler } from './event/event';
+
+function hi() { console.log('HI');}
 
 export default class App extends React.Component {
   constructor(props) {
@@ -25,7 +29,25 @@ export default class App extends React.Component {
   */
   render() {
     return (
-      <View style={styles.root}>
+      <View style={styles.root} 
+            onStartShouldSetResponder={(evt) => true}
+            onMoveShouldSetResponder={(evt) => true}
+            onResponderGrant={(evt) => touchHandler(evt, true)}
+            onResponderMove={(evt) => touchHandler(evt)}
+            onResponderRelease={(evt) => touchHandler(evt)}
+            onResponderTerminationRequest={(evt) => false}
+      /*
+            onTouchStart={touchHandler}
+            onTouchMove={touchHandler}
+            onTouchEnd={touchHandler}
+            mouseDown={mouseHandler}
+            mouseMove={mouseHandler}
+            mouseUp={mouseHandler}
+            onTouchCancel={touchHandler}>
+            onClick={this._onClick}
+            */
+        >
+
         <View style={styles.grass} />
         <WorkspaceContainer style={styles.workspace}
                             scaleFactor={myglobal.default_scaleFactor}/>
@@ -34,10 +56,11 @@ export default class App extends React.Component {
   }
 }
 
+/*
 export var myglobal = {
   screen_width: Dimensions.get('window').width,
   screen_height: Dimensions.get('window').height,
-  grass_height: 100,
+  grass_height: 101,
   size2value: {'m': .001, 'f': .01, 'z': 0.1, 'u': 1,
                't': 10, 'h': 100, 'p': 1000},
   size2color: {'m': 'limegreen', 'f': 'purple', 'z': 'darkred', 'u': 'blue',
@@ -46,6 +69,7 @@ export var myglobal = {
                't': '\u25A1', 'h': '\u25EB', 'p': '\u25E7'},
   default_scaleFactor: 520
 }
+*/
 
 const styles = StyleSheet.create({
   root: {

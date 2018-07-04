@@ -1,6 +1,6 @@
 import React from 'react'
 import { StyleSheet, View, Text } from 'react-native';
-import { myglobal } from '../App';
+import * as myglobal from '../myglobal';
 
 const Block = ({size, bottom, scaleFactor}) => {
   const sz = size.toLowerCase();
