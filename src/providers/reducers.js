@@ -4,6 +4,7 @@ import {
   NUM_SET_NAME,
   NUM_SET_POSITION,
   NUM_SET_OPACITY,
+  NUM_SET_BLOCK_OPACITY,
   SET_SCALE_FACTOR
 } from './actions'
 
@@ -63,6 +64,21 @@ function num_style(state = {}, action) {
   }
 }
 
+function num_block_opacity(state = {}, action) {
+  switch (action.type) {
+    case NUM_SET_BLOCK_OPACITY:
+      let new_opacity = state[action.id] ? state[action.id].slice() : [];
+      new_opacity[action.index] = action.opacity;
+      return {
+        ...state,
+        [action.id] : new_opacity
+      }
+    default:
+      return state
+  }
+}
+
+
 function num_misc(state = {}, action) {
   switch (action.type) {
     default:
@@ -84,6 +100,7 @@ const suujiAppInner = combineReducers({
   num_name,
   num_position,
   num_style,
+  num_block_opacity,
   num_misc,
   scale_factor
 })
@@ -96,6 +113,7 @@ const initialState = {
               't2' : [200, 30]},
   num_style : {'t1' : {'opacity': 0.5},
               't2' : {}},
+  num_block_opacity : {'t1': [null, 0.5]},
   num_misc : {'t1' : {'role': 'left_operand'},
               't2' : {}},
   scale_factor : 520,

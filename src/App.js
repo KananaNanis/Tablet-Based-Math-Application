@@ -9,13 +9,15 @@ import Block from './components/Block';
 import WorkspaceContainer from './containers/WorkspaceContainer';
 import * as myglobal from './myglobal';
 import { touchHandler } from './event/event';
-
-function hi() { console.log('HI');}
+//import { setScaleFactor, numSetBlockOpacity } from './providers/actions';
+//import { global_store } from './index.js';
 
 export default class App extends React.Component {
   constructor(props) {
     super(props);
     //console.log(Dimensions.get('window').height);
+    //global_store.dispatch(setScaleFactor(200))
+    //global_store.dispatch(numSetBlockOpacity('t2', 2, 0.5))
   }
   /*
         <Block size={'u'} scaleFactor={200} bottom={100} />

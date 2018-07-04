@@ -2,6 +2,7 @@ export const NUM_CREATE = 'NUM_CREATE';
 export const NUM_SET_NAME = 'NUM_SET_NAME';
 export const NUM_SET_POSITION = 'NUM_SET_POSITION';
 export const NUM_SET_OPACITY = 'NUM_SET_OPACITY';
+export const NUM_SET_BLOCK_OPACITY = 'NUM_SET_BLOCK_OPACITY';
 export const SET_SCALE_FACTOR = 'SET_SCALE_FACTOR';
 
 /*  example action objects
@@ -37,6 +38,10 @@ export function numSetPosition(id, position) {
 
 export function numSetOpacity(id, opacity) {
   return { type: NUM_SET_OPACITY, id, opacity }
+}
+
+export function numSetBlockOpacity(id, index, opacity) {
+  return { type: NUM_SET_BLOCK_OPACITY, id, index, opacity }
 }
 
 export function setScaleFactor(val) {

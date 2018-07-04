@@ -11,7 +11,7 @@ export function get_how_many_from_group(group) {
   return Math.round(group/(10**get_block_size_from_group(group)));
 }
 
-const Tower = ({id, name, scale_factor}) => {
+const Tower = ({id, name, block_opacity = [], scale_factor}) => {
   // expand the name into individual blocks
   //console.log(name);
   let blocks = [];
@@ -24,7 +24,10 @@ const Tower = ({id, name, scale_factor}) => {
     const isFiver = (5 === how_many);
     //console.log('size ' + size + ' how_many ' + how_many);
     for (const i = 0; i < how_many; ++i) {
-      blocks.push(<Block size={size} isFiver={isFiver} scale_factor={scale_factor}
+      blocks.push(<Block size={size}
+                         isFiver={isFiver}
+                         opacity={block_opacity[blocks.length]}
+                         scale_factor={scale_factor}
                          bottom={floor} key={group+i}/>)
       floor += height;
     }

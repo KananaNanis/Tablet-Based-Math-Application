@@ -20,7 +20,9 @@ const Workspace = ({style, num_desc, scale_factor}) => {
     const num = num_desc[i];
     nums.push(
       <Num id={num.id} name={num.name}
-           position={num.position} scale_factor={scale_factor} key={i}/>
+           position={num.position}
+           block_opacity={num.block_opacity}
+           scale_factor={scale_factor} key={i}/>
     );
   }
   return <View style={style}>{nums}</View>
