@@ -6,6 +6,8 @@ import { touchHandler } from './event/event';
 //import { setScaleFactor, numSetBlockOpacity } from './providers/actions';
 //import { global_store } from './index.js';
 import { query_tower, query_tower_blocks } from './providers/query_store';
+//import Button from './components/Button';
+import Keypad from './components/Keypad';
 
 export default class App extends React.Component {
   constructor(props) {
@@ -30,6 +32,13 @@ export default class App extends React.Component {
         >
         <View style={styles.grass} />
         <WorkspaceContainer style={styles.workspace} />
+        <Keypad position={[70,100]} button_width={50} button_height={50}
+                space_width={20} space_height={30} />
+        {/*
+        <Button position={[100,100]} width={50} height={50}
+            view_style={{backgroundColor:'cyan'}}
+            label='button' label_style={{}} />
+        */}
       </View>
     );
   }
