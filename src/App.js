@@ -8,6 +8,7 @@ import { touchHandler } from './event/event';
 import { query_tower, query_tower_blocks } from './providers/query_store';
 //import Button from './components/Button';
 import Keypad from './components/Keypad';
+import TowerName from './components/TowerName';
 
 export default class App extends React.Component {
   constructor(props) {
@@ -18,7 +19,7 @@ export default class App extends React.Component {
   }
   componentDidMount() {
     //query_block_positions();
-    console.log(query_tower_blocks('t1', null, true))
+    //console.log(query_tower_blocks('t1', null, true))
   }
   render() {
     return (
@@ -33,8 +34,9 @@ export default class App extends React.Component {
         <View style={styles.grass} />
         <WorkspaceContainer style={styles.workspace} />
         <Keypad position={[70,100]} button_width={50} button_height={50}
-                space_width={20} space_height={30} />
+                space_width={20} space_height={31} />
         {/*
+        <TowerName id={'t1'} />
         <Button position={[100,100]} width={50} height={50}
             view_style={{backgroundColor:'cyan'}}
             label='button' label_style={{}} />

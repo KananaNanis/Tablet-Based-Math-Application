@@ -3,10 +3,10 @@ import { StyleSheet, View } from 'react-native';
 import Block from './Block';
 import { query_tower_blocks } from '../providers/query_store'
 
-const Tower = ({id, name, block_opacity = [], scale_factor}) => {
+const Tower = ({id, name, position, block_opacity = [], scale_factor}) => {
   // expand the name into individual blocks
   //console.log(name);
-  const block_info = query_tower_blocks(id, {name, block_opacity});
+  const block_info = query_tower_blocks(id, {name, position, block_opacity});
   let blocks = [];
   for (const i = 0; i < block_info.length; ++i) {
     blocks.push(<Block size={block_info[i].size}
