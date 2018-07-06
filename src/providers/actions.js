@@ -1,9 +1,13 @@
-export const NUM_CREATE = 'NUM_CREATE';
-export const NUM_SET_NAME = 'NUM_SET_NAME';
-export const NUM_SET_POSITION = 'NUM_SET_POSITION';
-export const NUM_SET_OPACITY = 'NUM_SET_OPACITY';
-export const NUM_SET_BLOCK_OPACITY = 'NUM_SET_BLOCK_OPACITY';
-export const SET_SCALE_FACTOR = 'SET_SCALE_FACTOR';
+import {
+  NUM_CREATE,
+  NUM_SET_NAME,
+  NUM_SET_POSITION,
+  NUM_SET_OPACITY,
+  NUM_SET_BLOCK_OPACITY,
+  SET_SCALE_FACTOR,
+  SET_KEYPAD_KIND,
+  SET_BUTTON_HIGHLIGHT
+} from './actionTypes';
 
 /*  example action objects
 {
@@ -46,4 +50,12 @@ export function numSetBlockOpacity(id, index, opacity) {
 
 export function setScaleFactor(val) {
   return { type: SET_SCALE_FACTOR, val }
+}
+
+export function setKeypadKind(kind) {
+  return { type: SET_KEYPAD_KIND, kind }
+}
+
+export function setButtonHighlight(index) {
+  return { type: SET_BUTTON_HIGHLIGHT, index }
 }

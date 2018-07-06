@@ -1,5 +1,5 @@
 import { global_store } from '../index.js';
-import { global_size2fontsize } from '../myglobal.js';
+import { global_size2fontsize } from '../components/Tower';
 
 export const consolidate_nums = (ids, name, position, style, block_opacity, misc) => {
   let res = {};
@@ -104,4 +104,9 @@ export function query_tower_name(num_id, tower = null, just_position) {
     floor += height;
   }
   return name_info;
+}
+
+export function query_keyboard_kind() {
+  const state = global_store.getState();
+  return state.keyboard_kind;
 }

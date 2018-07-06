@@ -1,5 +1,10 @@
-import { Platform } from 'react-native';
+import { Platform } from 'react-native'
 import { global_is_mobile, global_is_safari, global_screen_width } from '../myglobal'
+import { query_keyboard_kind } from '../providers/query_store'
+import { getPositionInfoForKeypad, getButtonGeomsFor } from '../components/Keypad'
+import { doAction } from '../App'
+import { window2workspaceCoords } from '../components/Workspace'
+import { touch_dispatcher } from './dispatcher'
 
 let mouseTouchID = 100;
 let currentNumTouches = 0;
@@ -55,9 +60,10 @@ export function touchHandler(synthetic_event, on_grant) {
   if (is_mouse) mouseTouchID++;
   let handled = [];
   for (const i=0, i_end=touches.length; i < i_end; ++i) {
-    const x = touches[i].clientX, y = touches[i].clientY;
+    const x0 = touches[i].clientX, y0 = touches[i].clientY;
     // x += document.documentElement.scrollLeft ? document.documentElement.scrollLeft : document.body.scrollLeft;  // handle scroll position?
     // y += document.documentElement.scrollTop ? document.documentElement.scrollTop : document.body.scrollTop;
+    const [x, y] = window2workspaceCoords([x0, y0]);
     handlerDispatch(type, x, y, is_mouse ? mouseTouchID : touches[i].identifier, evt);
     handled.push(touches[i].identifier);
   }
@@ -113,11 +119,6 @@ function handlerDispatch(type, x, y, touchID, e)
   if ("up" ==type || "end" == type || "cleanup" == type || "cancel" == type) {
     store_this_touch(type, x, y, touchID);  // wait until after event
   }
-}
-
-function touch_dispatcher(state, x, y, touchID)
-{
-  console.log('touch_dispatcher state ' + state + ' x ' + x + ' y ' + y + ' touchID ' + touchID);
 }
 
 function addHTMLcircle(x, y, radius)

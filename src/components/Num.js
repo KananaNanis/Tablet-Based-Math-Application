@@ -15,9 +15,6 @@ const Num = ({id, name, position, block_opacity, scale_factor}) => (
 
 const styles = StyleSheet.create({
   num: {
-    backgroundColor: 'cyan',
-    width: 300,
-    height: 300,
     position: 'absolute',
   }
 });

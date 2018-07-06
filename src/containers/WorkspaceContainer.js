@@ -7,6 +7,8 @@ const mapStateToProps = (state, ownProps) => {
   return {
     style: ownProps.style,
     scale_factor: state.scale_factor,
+    keypad_kind: state.keypad_kind,
+    button_highlight: state.button_highlight,
     all_nums: consolidate_nums(state.num_ids,
                               state.num_name,
                               state.num_position,

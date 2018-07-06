@@ -5,8 +5,10 @@ import {
   NUM_SET_POSITION,
   NUM_SET_OPACITY,
   NUM_SET_BLOCK_OPACITY,
-  SET_SCALE_FACTOR
-} from './actions'
+  SET_SCALE_FACTOR,
+  SET_KEYPAD_KIND,
+  SET_BUTTON_HIGHLIGHT
+} from './actionTypes'
 
 // the following reducers control the various overall chunks of the store
 
@@ -95,6 +97,24 @@ function scale_factor(state = 520, action) {
   }
 }
 
+function keypad_kind(state = 'decimal', action) {
+  switch (action.type) {
+    case SET_KEYPAD_KIND:
+      return action.kind;
+    default:
+      return state
+  }
+}
+
+function button_highlight(state = null, action) {
+  switch (action.type) {
+    case SET_BUTTON_HIGHLIGHT:
+      return action.index;
+    default:
+      return state
+  }
+}
+
 const suujiAppInner = combineReducers({
   num_ids,
   num_name,
@@ -102,7 +122,9 @@ const suujiAppInner = combineReducers({
   num_style,
   num_block_opacity,
   num_misc,
-  scale_factor
+  scale_factor,
+  keypad_kind,
+  button_highlight
 })
 
 const initialState = {
@@ -117,6 +139,8 @@ const initialState = {
   num_misc : {'t1' : {'role': 'left_operand'},
               't2' : {}},
   scale_factor : 520,
+  keypad_kind : 'decimal',
+  button_highlight : null,
 }
 
 function suujiApp(state, action) {

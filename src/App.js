@@ -1,21 +1,25 @@
-import React from 'react';
-import { StyleSheet, View } from 'react-native';
-import WorkspaceContainer from './containers/WorkspaceContainer';
-import { global_screen_width, global_screen_height, global_grass_height } from './myglobal';
-import { touchHandler } from './event/event';
-//import { setScaleFactor, numSetBlockOpacity } from './providers/actions';
-//import { global_store } from './index.js';
-import { query_tower, query_tower_blocks } from './providers/query_store';
-//import Button from './components/Button';
-import Keypad from './components/Keypad';
-import TowerName from './components/TowerName';
+import React from 'react'
+import { StyleSheet, View } from 'react-native'
+import { bindActionCreators } from 'redux'
+
+import WorkspaceContainer from './containers/WorkspaceContainer'
+import { global_screen_width, global_screen_height, global_grass_height } from './components/Workspace'
+import { touchHandler } from './event/event'
+import { global_store } from './index.js'
+import * as Actions from './providers/actions'
+//import Button from './components/Button'
+//import Keypad from './components/Keypad'
+//import TowerName from './components/TowerName'
+
+export let doAction = {}
 
 export default class App extends React.Component {
   constructor(props) {
     super(props);
-    //console.log(Dimensions.get('window').height);
-    //global_store.dispatch(setScaleFactor(200))
-    //global_store.dispatch(numSetBlockOpacity('t2', 2, 0.5))
+    // create the bound action creators!
+    doAction = bindActionCreators(Actions, global_store.dispatch);
+    //doAction.setScaleFactor(200);
+    //doAction.numSetBlockOpacity('t2', 2, 0.5);
   }
   componentDidMount() {
     //query_block_positions();
@@ -33,9 +37,8 @@ export default class App extends React.Component {
         >
         <View style={styles.grass} />
         <WorkspaceContainer style={styles.workspace} />
-        <Keypad position={[70,100]} button_width={50} button_height={50}
-                space_width={20} space_height={31} />
         {/*
+        <Keypad kind="decimal" button_highlight={2} />
         <TowerName id={'t1'} />
         <Button position={[100,100]} width={50} height={50}
             view_style={{backgroundColor:'cyan'}}
@@ -59,13 +62,5 @@ const styles = StyleSheet.create({
     position: 'absolute',
     left: 0,
     bottom: 0,
-  },
-  workspace: {
-    //backgroundColor: 'blue',
-    height: global_screen_height - global_grass_height,
-    width: global_screen_width,
-    position: 'absolute',
-    left: 0,
-    bottom: 100,
   },
 });
