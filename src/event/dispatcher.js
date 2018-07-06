@@ -1,5 +1,5 @@
-import { query_keyboard_kind } from '../providers/query_store';
-import { getPositionInfoForKeypad, getButtonGeomsFor } from '../components/Keypad';
+import { query_keypad_kind } from '../providers/query_store';
+import { getPositionInfoForKeypad, getButtonGeomsFor, buildTower_button_info } from '../components/Keypad';
 import { doAction } from '../App';
 
 export function pointIsInRectangle(point, geom, offset = [0, 0])
@@ -13,7 +13,7 @@ export function pointIsInRectangle(point, geom, offset = [0, 0])
 export function touch_dispatcher(state, x, y, touchID)
 {
   //console.log('touch_dispatcher state ' + state + ' x ' + x + ' y ' + y + ' touchID ' + touchID);
-  const kind = query_keyboard_kind();
+  const kind = query_keypad_kind();
   const pos = getPositionInfoForKeypad(kind);
   const button_geoms = getButtonGeomsFor(kind);
   let found_one = false
@@ -21,7 +21,13 @@ export function touch_dispatcher(state, x, y, touchID)
     if (pointIsInRectangle([x, y], button_geoms[i], pos.position)) {
       doAction.setButtonHighlight(i);
       found_one = true
+      if ('up' == state) {
+        //doAction.numRemoveBlock('t2');
+        const size = buildTower_button_info[i][0];
+        const is_fiver = buildTower_button_info[i][1];
+        doAction.numAddBlock('t2', size, is_fiver);
+      }
     }
   }
-  if (!found_one) doAction.setButtonHighlight(null);
+  if ('up' == state || !found_one) doAction.setButtonHighlight(null);
 }

@@ -1,8 +1,12 @@
 import {
   NUM_CREATE,
   NUM_SET_NAME,
+  NUM_ADD_BLOCK,
+  NUM_REMOVE_BLOCK,
   NUM_SET_POSITION,
   NUM_SET_OPACITY,
+  NUM_SET_TOWER_WIDTH,
+  NUM_SET_TOWER_OVERFLOW,
   NUM_SET_BLOCK_OPACITY,
   SET_SCALE_FACTOR,
   SET_KEYPAD_KIND,
@@ -36,12 +40,28 @@ export function numSetName(id, name) {
   return { type: NUM_SET_NAME, id, name }
 }
 
+export function numAddBlock(id, size, is_fiver) {
+  return { type: NUM_ADD_BLOCK, id, size, is_fiver }
+}
+
+export function numRemoveBlock(id) {
+  return { type: NUM_REMOVE_BLOCK, id }
+}
+
 export function numSetPosition(id, position) {
   return { type: NUM_SET_POSITION, id, position }
 }
 
 export function numSetOpacity(id, opacity) {
   return { type: NUM_SET_OPACITY, id, opacity }
+}
+
+export function numSetTowerWidth(id, width) {
+  return { type: NUM_SET_TOWER_WIDTH, id, width }
+}
+
+export function numSetTowerOverflow(id, overflow) {
+  return { type: NUM_SET_TOWER_OVERFLOW, id, overflow }
 }
 
 export function numSetBlockOpacity(id, index, opacity) {

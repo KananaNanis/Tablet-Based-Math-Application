@@ -1,6 +1,6 @@
 import React from 'react'
 import { StyleSheet, View, Text } from 'react-native'
-import { global_size2symbol, global_size2color, global_size2fontsize, global_size2padding, global_fiver_shadow } from './Tower'
+import { global_size2symbol, global_size2color, global_size2fontsize, global_size2padding, global_fiver_shadow } from './Num'
 import { query_tower_name } from '../providers/query_store'
 
 const TowerName = ({id, name, position}) => {
@@ -13,7 +13,7 @@ const TowerName = ({id, name, position}) => {
   let name_elements = [], height;
   for (const i = 0; i < name_info.length; ++i) {
     var size = name_info[i].size;
-    const is_fiver = (5 == name_info[i].quantity);
+    const is_fiver = name_info[i].is_fiver;
     name_elements.push(
       <Text style={[styles.tower_name_element,
                     {bottom: name_info[i].bottom,
@@ -21,7 +21,7 @@ const TowerName = ({id, name, position}) => {
                      fontSize: global_size2fontsize[size],
                      //paddingLeft: global_size2padding[size],
                     },
-                    is_fiver ? global_fiver_shadow : {},
+                    global_fiver_shadow[is_fiver],
                     name_info[i].style]} key={i}>
         {name_info[i].quantity}
         {' ' + global_size2symbol[size]}

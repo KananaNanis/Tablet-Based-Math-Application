@@ -6,9 +6,10 @@ import Keypad from './Keypad';
 export const global_screen_width = Dimensions.get('window').width;
 export const global_screen_height = Dimensions.get('window').height;
 export const global_grass_height = 100;
+export const global_workspace_height = global_screen_height - global_grass_height;
 
 export const window2workspaceCoords = (pos0) =>
-  [pos0[0], global_screen_height - global_grass_height - pos0[1]]
+  [pos0[0], global_workspace_height - pos0[1]]
 
 const Workspace = ({scale_factor, keypad_kind, button_highlight, all_nums}) => {
   let nums = [];
@@ -18,6 +19,7 @@ const Workspace = ({scale_factor, keypad_kind, button_highlight, all_nums}) => {
       <Num id={id}
            name={num.name}
            position={num.position}
+           tower_style={num.tower_style}
            block_opacity={num.block_opacity}
            scale_factor={scale_factor}
            key={id}/>
@@ -32,7 +34,7 @@ const Workspace = ({scale_factor, keypad_kind, button_highlight, all_nums}) => {
 const styles = StyleSheet.create({
   workspace: {
     //backgroundColor: 'blue',
-    height: global_screen_height - global_grass_height,
+    height: global_workspace_height,
     width: global_screen_width,
     position: 'absolute',
     left: 0,

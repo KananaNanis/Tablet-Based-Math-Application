@@ -2,13 +2,18 @@ import { combineReducers } from 'redux'
 import {
   NUM_CREATE,
   NUM_SET_NAME,
+  NUM_ADD_BLOCK,
+  NUM_REMOVE_BLOCK,
   NUM_SET_POSITION,
   NUM_SET_OPACITY,
+  NUM_SET_TOWER_WIDTH,
+  NUM_SET_TOWER_OVERFLOW,
   NUM_SET_BLOCK_OPACITY,
   SET_SCALE_FACTOR,
   SET_KEYPAD_KIND,
   SET_BUTTON_HIGHLIGHT
 } from './actionTypes'
+import { add_block_to_name, remove_block_from_name } from '../components/Num'
 
 // the following reducers control the various overall chunks of the store
 
@@ -31,6 +36,16 @@ function num_name(state = {}, action) {
       return {
         ...state,
         [action.id] : action.name,
+      }
+    case NUM_ADD_BLOCK:
+      return {
+        ...state,
+        [action.id] : add_block_to_name(action.size, action.is_fiver, state[action.id])
+      }
+    case NUM_REMOVE_BLOCK:
+      return {
+        ...state,
+        [action.id] : remove_block_from_name(state[action.id])
       }
     default:
       return state
@@ -56,6 +71,28 @@ function num_style(state = {}, action) {
   switch (action.type) {
     case NUM_SET_OPACITY:
       let newStyle = { 'opacity' : action.opacity }
+      if (action.id in state)
+        newStyle = { ...state[action.id], ...newStyle }
+      return Object.assign({}, state, {
+        [action.id]: newStyle
+      })
+    default:
+      return state
+  }
+}
+
+function num_tower_style(state = {}, action) {
+  let newStyle = {}
+  switch (action.type) {
+    case NUM_SET_TOWER_WIDTH:
+      newStyle = { 'width' : action.width }
+      if (action.id in state)
+        newStyle = { ...state[action.id], ...newStyle }
+      return Object.assign({}, state, {
+        [action.id]: newStyle
+      })
+    case NUM_SET_TOWER_OVERFLOW:
+      newStyle = { 'overflow' : action.overflow }
       if (action.id in state)
         newStyle = { ...state[action.id], ...newStyle }
       return Object.assign({}, state, {
@@ -120,6 +157,7 @@ const suujiAppInner = combineReducers({
   num_name,
   num_position,
   num_style,
+  num_tower_style,
   num_block_opacity,
   num_misc,
   scale_factor,
@@ -130,16 +168,16 @@ const suujiAppInner = combineReducers({
 const initialState = {
   num_ids : ['t1', 't2'],
   num_name : {'t1' : [1, .2],
-              't2' : [2, .1]},
-  num_position : {'t1' : [20, 20],
-              't2' : [200, 30]},
-  num_style : {'t1' : {'opacity': 0.5},
-              't2' : {}},
+              't2' : []},
+  num_position : {'t1' : [0, 0],
+              't2' : [180, 0]},
+  num_style : {'t2' : {'opacity': 0.5}},
+  num_tower_style : {'t1' : {'width': 150, 'overflow':'hidden'}},
   num_block_opacity : {'t1': [null, 0.5]},
   num_misc : {'t1' : {'role': 'left_operand'},
               't2' : {}},
   scale_factor : 520,
-  keypad_kind : 'decimal',
+  keypad_kind : 'buildTower',
   button_highlight : null,
 }
 

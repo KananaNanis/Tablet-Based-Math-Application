@@ -13,6 +13,7 @@ const mapStateToProps = (state, ownProps) => {
                               state.num_name,
                               state.num_position,
                               state.num_style,
+                              state.num_tower_style,
                               state.num_block_opacity,
                               state.num_misc)
   }

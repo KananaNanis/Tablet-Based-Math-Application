@@ -1,26 +1,19 @@
 import { global_store } from '../index.js';
-import { global_size2fontsize } from '../components/Tower';
+import { global_size2fontsize, get_block_size_from_group, get_how_many_from_group, get_is_fiver_from_group } from '../components/Num';
 
-export const consolidate_nums = (ids, name, position, style, block_opacity, misc) => {
+export const consolidate_nums = (ids, name, position, style, tower_style, block_opacity, misc) => {
   let res = {};
   for (const id of ids) {
     res[id] = {
       name: name[id],
       position: position[id],
       style: style[id],
+      tower_style: tower_style[id],
       block_opacity: block_opacity[id],
       misc: misc[id]
     };
   }
   return res;
-}
-
-export function get_block_size_from_group(group) {
-  return Math.ceil(-1 + .00001 + (Math.log(group) / Math.log(10)))
-}
-
-export function get_how_many_from_group(group) {
-  return Math.round(group / (10 ** get_block_size_from_group(group)));
 }
 
 export function query_scale_factor() {
@@ -34,6 +27,7 @@ export function query_all_nums() {
     state.num_name,
     state.num_position,
     state.num_style,
+    state.num_tower_style,
     state.num_block_opacity,
     state.num_misc
   );
@@ -52,14 +46,16 @@ export function query_tower_blocks(num_id, tower = null, just_position) {
   //console.log(tower.name);
   let blocks = [];
   let floor = 0;
+  let was_fiver = 0;
   for (const group of tower.name) {
     const size = get_block_size_from_group(group);
     const how_many = get_how_many_from_group(group);
-    console.assert(how_many <= 5, 'how_many is ' + how_many)
-    const isFiver = (5 === how_many);
+    const is_fiver = get_is_fiver_from_group(group);
+    if (is_fiver && was_fiver) is_fiver = 3-was_fiver;
+    was_fiver = is_fiver;
     //console.log('size ' + size + ' how_many ' + how_many);
     const height = scale_factor * (10 ** size);
-    const width = isFiver ? 1.1 * height : height;
+    const width = is_fiver ? 1.1 * height : height;
     for (const i = 0; i < how_many; ++i) {
       if (just_position) {
         blocks.push([tower.position[0], tower.position[1] + floor, width, height]);
@@ -68,7 +64,7 @@ export function query_tower_blocks(num_id, tower = null, just_position) {
           size,
           height,
           width,
-          isFiver,
+          is_fiver,
           block_opacity: tower.block_opacity[blocks.length],
           bottom: floor
         })
@@ -83,12 +79,14 @@ export function query_tower_name(num_id, tower = null, just_position) {
   if (!tower) tower = query_tower(num_id);
   // expand the name into individual blocks
   let name_info = [];
-  let floor = 0;
+  let floor = 0, was_fiver = 0;
   const width = 60;  // NOTE: make this a global?  Where to keep style params?
   for (const group of tower.name) {
     const size = get_block_size_from_group(group);
     const how_many = get_how_many_from_group(group);
-    console.assert(how_many <= 5, 'how_many is ' + how_many)
+    const is_fiver = get_is_fiver_from_group(group);
+    if (is_fiver && was_fiver) is_fiver = 3-was_fiver;
+    was_fiver = is_fiver;
     //console.log('size ' + size + ' how_many ' + how_many);
     const height = global_size2fontsize[size] + 2;
     if (just_position) {
@@ -97,6 +95,7 @@ export function query_tower_name(num_id, tower = null, just_position) {
       name_info.push({
         size,
         quantity: how_many,
+        is_fiver,
         height,
         bottom: floor
       })
@@ -106,7 +105,7 @@ export function query_tower_name(num_id, tower = null, just_position) {
   return name_info;
 }
 
-export function query_keyboard_kind() {
+export function query_keypad_kind() {
   const state = global_store.getState();
-  return state.keyboard_kind;
+  return state.keypad_kind;
 }
