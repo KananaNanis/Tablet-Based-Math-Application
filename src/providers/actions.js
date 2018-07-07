@@ -11,7 +11,7 @@ import {
   SET_SCALE_FACTOR,
   SET_KEYPAD_KIND,
   SET_BUTTON_HIGHLIGHT
-} from './actionTypes';
+} from './actionTypes'
 
 /*  example action objects
 {

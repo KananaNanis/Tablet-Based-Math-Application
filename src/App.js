@@ -15,26 +15,26 @@ export let doAction = {}
 
 export default class App extends React.Component {
   constructor(props) {
-    super(props);
+    super(props)
     // create the bound action creators!
-    doAction = bindActionCreators(Actions, global_store.dispatch);
-    //doAction.setScaleFactor(200);
-    //doAction.numSetBlockOpacity('t2', 2, 0.5);
+    doAction = bindActionCreators(Actions, global_store.dispatch)
+    //doAction.setScaleFactor(200)
+    //doAction.numSetBlockOpacity('t2', 2, 0.5)
   }
   componentDidMount() {
-    //query_block_positions();
+    //query_block_positions()
     //console.log(query_tower_blocks('t1', null, true))
   }
   render() {
     return (
-      <View style={styles.root} 
-            onStartShouldSetResponder={(evt) => true}
-            onMoveShouldSetResponder={(evt) => true}
-            onResponderGrant={(evt) => touchHandler(evt, true)}
-            onResponderMove={(evt) => touchHandler(evt)}
-            onResponderRelease={(evt) => touchHandler(evt)}
-            onResponderTerminationRequest={(evt) => false}
-        >
+      <View style={styles.root}
+        onStartShouldSetResponder={(evt) => true}
+        onMoveShouldSetResponder={(evt) => true}
+        onResponderGrant={(evt) => touchHandler(evt, true)}
+        onResponderMove={(evt) => touchHandler(evt)}
+        onResponderRelease={(evt) => touchHandler(evt)}
+        onResponderTerminationRequest={(evt) => false}
+      >
         <View style={styles.grass} />
         <WorkspaceContainer style={styles.workspace} />
         {/*
@@ -45,15 +45,14 @@ export default class App extends React.Component {
             label='button' label_style={{}} />
         */}
       </View>
-    );
+    )
   }
 }
 
 const styles = StyleSheet.create({
   root: {
-    //backgroundColor: 'white',  // appears to not be needed
     width: global_screen_width,
-    height: global_screen_height,
+    height: global_screen_height
   },
   grass: {
     backgroundColor: 'lightgreen',
@@ -63,4 +62,4 @@ const styles = StyleSheet.create({
     left: 0,
     bottom: 0,
   },
-});
+})
