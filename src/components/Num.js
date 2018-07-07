@@ -8,12 +8,16 @@ export const global_size2color = {
   '0': 'blue', '1': 'green', '2': 'orange', '3': 'cyan'
 };
 export const global_size2symbol = {
-  '-3': '-', '-2': '^', '-1': 'o', '0': '|',
-  '1': '\u25A1', '2': '\u25EB', '3': '\u25E7'
+  '-3': '-', '-2': '^', '-1': 'o', '0': '\u2577', // '|',
+  '1': '\u25AF', '2': '\u25EB', '3': '\u25E7'
 };
 export const global_size2fontsize = {
   '-3': 25, '-2': 30, '-1': 35, '0': 40,
   '1': 45, '2': 50, '3': 55
+};
+export const global_size2depth = {
+  '-3': .1, '-2': .2, '-1': .8, '0': 1,
+  '1': 8, '2': 50, '3': 500
 };
 export const global_size2padding = {
   '-3': 60, '-2': 50, '-1': 40, '0': 30,
@@ -74,8 +78,10 @@ export function add_block_to_name(new_size, new_is_fiver, name0)
   if ((size !== new_size) || (new_is_fiver !== is_fiver) || (5 == how_many)) {
     name.push(new_group)
   } else {  // same size and is_fiver, with less than 5
-    if (is_fiver) name[name.length - 1] = (5 + how_many + 1) * 10**size;
-    else {
+    if (is_fiver) {
+      const extra = (how_many < 4) ? 5 : 0;
+      name[name.length - 1] = (how_many + 1 + extra) * 10**size;
+    } else {
       if (how_many < 4) name[name.length - 1] = (how_many + 1) * 10**size;
       else name.push(new_group);
     }

@@ -1,5 +1,5 @@
 import { global_store } from '../index.js';
-import { global_size2fontsize, get_block_size_from_group, get_how_many_from_group, get_is_fiver_from_group } from '../components/Num';
+import { global_size2fontsize, global_size2depth, get_block_size_from_group, get_how_many_from_group, get_is_fiver_from_group } from '../components/Num';
 
 export const consolidate_nums = (ids, name, position, style, tower_style, block_opacity, misc) => {
   let res = {};
@@ -55,7 +55,9 @@ export function query_tower_blocks(num_id, tower = null, just_position) {
     was_fiver = is_fiver;
     //console.log('size ' + size + ' how_many ' + how_many);
     const height = scale_factor * (10 ** size);
-    const width = is_fiver ? 1.1 * height : height;
+    const is_tiny = height < 4;
+    const width = scale_factor * global_size2depth[size];
+    if (is_fiver) width *= is_tiny ? 1.5 : 1.1;
     for (const i = 0; i < how_many; ++i) {
       if (just_position) {
         blocks.push([tower.position[0], tower.position[1] + floor, width, height]);

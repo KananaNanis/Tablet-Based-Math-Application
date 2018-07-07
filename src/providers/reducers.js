@@ -167,9 +167,12 @@ const suujiAppInner = combineReducers({
 
 const initialState = {
   num_ids : ['t1', 't2'],
-  num_name : {'t1' : [1, .2],
+  num_name : {
+              //'t1' : [1, .1, .05, .01],
+              't1' : [.5, .2, .05, .05, .04],
+              //'t1' : [100, 50, 50, 10, 5, 5, 4],
               't2' : []},
-  num_position : {'t1' : [0, 0],
+  num_position : {'t1' : [5, 0],
               't2' : [180, 0]},
   num_style : {'t2' : {'opacity': 0.5}},
   num_tower_style : {'t1' : {'width': 150, 'overflow':'hidden'}},
@@ -177,6 +180,7 @@ const initialState = {
   num_misc : {'t1' : {'role': 'left_operand'},
               't2' : {}},
   scale_factor : 520,
+  //scale_factor : 2,
   keypad_kind : 'buildTower',
   button_highlight : null,
 }

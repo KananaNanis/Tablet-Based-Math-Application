@@ -40,7 +40,7 @@ const TowerName = ({id, name, position}) => {
 const styles = StyleSheet.create({
   tower_name: {
     backgroundColor: 'white',
-    width: 60,
+    width: 70,
     position: 'absolute',
     bottom: 10,
     left: 60,
