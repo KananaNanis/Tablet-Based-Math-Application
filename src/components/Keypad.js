@@ -42,28 +42,38 @@ export const buildTower_button_info = [
   [-2, 0], [-2, 1], [-3, 0], [-3, 1]
 ]
 
-const Keypad = ({ kind, button_highlight }) => {
+const Keypad = ({ kind, button_display, button_highlight }) => {
   let buttons = []
   const pos = getPositionInfoForKeypad(kind)
   const geoms = getButtonGeomsFor(kind)
   for (const row = 0; row < pos.num_rows; ++row) {
     for (const col = 0; col < pos.num_cols; ++col) {
       const index = col + pos.num_cols * row
+      if (index in button_display && false === button_display[index])
+        continue
       const button_position = [geoms[index][0], geoms[index][1]]
-      let label = index, label_style = {};  // default
+      const height = pos.button_height
+      let label = index, label_style = {
+        marginBottom: .15 * height,
+        fontSize: .75 * height
+      }  // default
+      //console.log(label_style)
       if ("buildTower" == kind) {
         const size = buildTower_button_info[index][0]
         const is_fiver = buildTower_button_info[index][1]
         label = global_size2symbol[size]
-        label_style = { color: global_size2color[size] }
-        if (is_fiver) label_style = { ...global_fiver_shadow[1], ...label_style }
+        label_style['color'] = global_size2color[size]
+        if (is_fiver) {
+          label = '5' + label
+          label_style = { ...global_fiver_shadow[1], ...label_style }
+        }
       }
       const view_style = { backgroundColor: 'grey' }
-      if (null !== button_highlight && index == button_highlight)
+      if (null !== button_highlight && index === button_highlight)
         view_style['backgroundColor'] = 'yellow'
       buttons.push(
         <Button position={button_position}
-          width={pos.button_width} height={pos.button_height}
+          width={pos.button_width} height={height}
           view_style={view_style}
           label={label} label_style={label_style} key={index} />
       )

@@ -8,7 +8,7 @@ export const global_size2color = {
   '0': 'blue', '1': 'green', '2': 'orange', '3': 'cyan'
 }
 export const global_size2symbol = {
-  '-3': '-', '-2': '^', '-1': 'o', '0': '\u2577', // '|',
+  '-3': '-', '-2': '^', '-1': '\u25CF', '0': '\u2577', // '|',
   '1': '\u25AF', '2': '\u25EB', '3': '\u25E7'
 }
 export const global_size2fontsize = {

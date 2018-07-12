@@ -31,6 +31,7 @@ README.md.orig
 package-lock.json
 index.js.orig
 public/
+src/assets
 src/index.css
 src/index.js
 src/registerServiceWorker.js

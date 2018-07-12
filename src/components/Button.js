@@ -9,11 +9,9 @@ const Button = ({ position, width, height, view_style, label, label_style }) => 
       width,
       height
     }, view_style]} >
-      <Text style={[{
-        marginBottom: .15 * height,
-        fontSize: .75 * height
-      }, label_style]} >
-        {label}</Text>
+      <Text style={label_style} >
+        {label}
+      </Text>
     </View>
   )
 }

@@ -8,7 +8,8 @@ import { global_size2color, global_size2symbol, global_fiver_shadow } from './Nu
 const Tower = ({ id, name, position, style = {}, block_opacity = [], scale_factor }) => {
   const block_info = query_tower_blocks(id, { name, position, block_opacity })
 
-  let blocks = [], small_in_a_row = 0, fiver_in_a_row = 0, prev_size = null
+  let blocks = [], small_in_a_row = 0
+  //let fiver_in_a_row = 0, prev_size = null
   for (const i = 0; i < block_info.length; ++i) {
     // compute all the style info for the blocks here, where we have context
     const b = block_info[i]
@@ -18,11 +19,13 @@ const Tower = ({ id, name, position, style = {}, block_opacity = [], scale_facto
     const size = b.size
     if (is_small && !is_fiver)++small_in_a_row
     else small_in_a_row = 0
+    /*
     if (is_fiver) {
       if (size !== prev_size || 5 === fiver_in_a_row) fiver_in_a_row = 0
       ++fiver_in_a_row
     } else fiver_in_a_row = 0
     prev_size = size
+    */
 
     const width = b.width
     let height = b.height
@@ -30,7 +33,7 @@ const Tower = ({ id, name, position, style = {}, block_opacity = [], scale_facto
     let marginBottom = (is_tiny || is_fiver) ? 0 : 1
     let radius_style = {}
     const radius = 0.1 * (.5 * (height + width))
-    if (is_fiver) {
+    if (false && is_fiver) {
       if (1 == fiver_in_a_row || 5 == fiver_in_a_row)
         height -= 1
       if (1 == fiver_in_a_row) {
@@ -54,8 +57,10 @@ const Tower = ({ id, name, position, style = {}, block_opacity = [], scale_facto
     }
     var marginLeft = 0
     if (is_small) {
-      if (is_fiver || !(small_in_a_row % 2)) marginLeft = 1
+      if (//is_fiver || 
+          !(small_in_a_row % 2)) marginLeft = 1
     }
+    /*
     let width_factor = is_tiny ? .5 : is_small ? .4 : .1
     const fiver_style = [{}, {
       borderLeftWidth: width_factor * height,
@@ -64,6 +69,7 @@ const Tower = ({ id, name, position, style = {}, block_opacity = [], scale_facto
       borderRightWidth: width_factor * height,
       borderRightColor: is_tiny ? 'orange' : '#633',
     }][is_fiver]
+    */
     let view_style = {
       position: 'absolute',
       backgroundColor: (width < 10) ? 'black' : '#dbb',
@@ -73,14 +79,19 @@ const Tower = ({ id, name, position, style = {}, block_opacity = [], scale_facto
       marginBottom,
       marginLeft,
       ...radius_style,
-      ...fiver_style
+      //...fiver_style
     }
 
-    const text_content = global_size2symbol[size]
+    let text_content = global_size2symbol[size]
     const color = global_size2color[size]
     const left = 5 + ((size >= 0) ? -.19 * height : 0)
-    const textBottom = ((0 === size) ? .25 : (-2 === size) ? -1 : .10) * height
-    const fontSize = (is_tiny ? 0 : is_small ? 2 : .75) * height
+    let textBottom = ((0 === size) ? .25 : (-2 === size) ? -1 : .10) * height
+    let fontSize = (is_tiny ? 0 : is_small ? 2 : .75) * height
+    if (is_fiver) {
+      text_content += "\n" + text_content + "\n" + text_content + "\n" + text_content + "\n" + text_content
+      fontSize /= 5
+      textBottom *= .8
+    }
     let text_style = {
       position: 'absolute',
       fontSize,

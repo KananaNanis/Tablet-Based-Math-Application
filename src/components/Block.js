@@ -16,6 +16,11 @@ export function get_is_fiver_from_group(group) {
   return n >= 5 ? 1 : 0
 }
 
+export function get_fiver_incomplete_from_group(group) {
+  var n = Math.round(group / (10 ** get_block_size_from_group(group)))
+  return n > 5;
+}
+
 export function remove_block_from_name(name0) {
   //console.log('remove_block_from_name', name0)
   let name = name0.slice()
@@ -24,7 +29,7 @@ export function remove_block_from_name(name0) {
   let size = get_block_size_from_group(group)
   let how_many = get_how_many_from_group(group)
   let is_fiver = get_is_fiver_from_group(group)
-  if (how_many > 1) {
+  if (how_many > 1 && !is_fiver) {
     // the following special case is due to the convention for handling
     //   fivers using the quantity in the tower name
     if (is_fiver) name.push((5 + how_many - 1) * (10 ** size))
@@ -34,7 +39,7 @@ export function remove_block_from_name(name0) {
 }
 
 export function add_block_to_name(new_size, new_is_fiver, name0) {
-  let new_group = (new_is_fiver ? 6 : 1) * 10 ** new_size
+  let new_group = (new_is_fiver ? 5 : 1) * 10 ** new_size
   if (0 == name0.length) return [new_group]
   let name = name0.slice()
   let group = name[name.length - 1]
