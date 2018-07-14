@@ -30,49 +30,69 @@ import { add_block_to_name, remove_block_from_name } from '../components/Block'
 
 // the following reducers control the various overall chunks of the store
 
-function handle_create_delete(state = [], action) {
+function array_add_remove_element(state, elt, add) {
+  if (add) {
+    return [
+      ...state,
+      elt
+    ]
+  } else {
+    const index = state.indexOf(elt);
+    if (index > -1) {
+      let cpy = [...state]
+      cpy.splice(index, 1);
+      return cpy
+    }
+    return state
+  }
+}
+
+function obj_add_remove_property(state, key, val) {
+  if (null === val) {
+    if (state.hasOwnProperty(key)) {
+      let cpy = { ...state }
+      delete cpy[key]
+      return cpy
+    } else return state
+  } else {
+    return {
+      ...state,
+      [key]: val,
+    }
+  }
+}
+
+function tower_ids(state = [], action) {
   switch (action.type) {
     case AT.TOWER_CREATE:
-    case AT.TILE_CREATE:
-    case AT.LIFT_CREATE:
-      return [
-        ...state,
-        action.id,
-      ]
+      return array_add_remove_element(state, action.id, true)
     case AT.TOWER_DELETE:
-    case AT.TILE_DELETE:
-    case AT.LIFT_DELETE:
-      const index = state.indexOf(action.id);
-      if (index > -1) {
-        let cpy = [...state]
-        cpy.splice(index, 1);
-        return cpy
-      }
+      return array_add_remove_element(state, action.id, false)
     default:
       return state
   }
 }
 
-function tower_ids(state = [], action) {
-  //console.log('tower_ids', state, action)
-  if (action.type == AT.TOWER_CREATE ||
-    action.type == AT.TOWER_DELETE) {
-    return handle_create_delete(state, action)
-  } else return state;
-}
-
 function tile_ids(state = [], action) {
-  if (action.type == AT.TILE_CREATE ||
-    action.type == AT.TILE_DELETE)
-    return handle_create_delete(state, action)
-  else return state;
+  switch (action.type) {
+    case AT.TILE_CREATE:
+      return array_add_remove_element(state, action.id, true)
+    case AT.TILE_DELETE:
+      return array_add_remove_element(state, action.id, false)
+    default:
+      return state
+  }
 }
 
 function lift_ids(state = [], action) {
-  if (action.type == AT.LIFT_CREATE ||
-    action.type == AT.LIFT_DELETE)
-    return handle_create_delete(state, action)
-  else return state;
+  switch (action.type) {
+    case AT.LIFT_CREATE:
+      return array_add_remove_element(state, action.id, true)
+    case AT.LIFT_DELETE:
+      return array_add_remove_element(state, action.id, false)
+    default:
+      return state
+  }
 }
 
 function name(state = {}, action) {
@@ -80,10 +100,10 @@ function name(state = {}, action) {
     case AT.TOWER_CREATE:
     case AT.TILE_CREATE:
     case AT.SET_NAME:
-      return {
-        ...state,
-        [action.id]: action.name,
-      }
+      return obj_add_remove_property(state, action.id, action.name);
+    case AT.TOWER_DELETE:
+    case AT.TILE_DELETE:
+      return obj_add_remove_property(state, action.id, null);
     case AT.TOWER_ADD_BLOCK:
       return {
         ...state,
@@ -104,48 +124,40 @@ function position(state = {}, action) {
     case AT.TOWER_CREATE:
     case AT.TILE_CREATE:
     case AT.SET_POSITION:
-      let newPosition = [action.position[0] || 0,
-      action.position[1] || 0]
-      return {
-        ...state,
-        [action.id]: newPosition
-      }
+      return obj_add_remove_property(state, action.id, action.position);
+    case AT.TOWER_DELETE:
+    case AT.TILE_DELETE:
+      return obj_add_remove_property(state, action.id, null);
     default:
       return state
   }
 }
 
 function style(state = {}, action) {
+  let new_style = state[action.id] ? state[action.id] : {}
   switch (action.type) {
     case AT.SET_OPACITY:
-      let newStyle = { 'opacity': action.opacity }
-      if (action.id in state)
-        newStyle = { ...state[action.id], ...newStyle }
-      return Object.assign({}, state, {
-        [action.id]: newStyle
-      })
+      new_style = obj_add_remove_property(new_style, 'opacity', action.opacity);
+      return Object.assign({}, state, {[action.id] : new_style})
+    case AT.TOWER_DELETE:
+    case AT.TILE_DELETE:
+      return obj_add_remove_property(state, action.id, null);
     default:
       return state
   }
 }
 
 function tower_style(state = {}, action) {
-  let newStyle = {}
+  let new_style = state[action.id] ? state[action.id] : {}
   switch (action.type) {
     case AT.TOWER_SET_WIDTH:
-      newStyle = { 'width': action.width }
-      if (action.id in state)
-        newStyle = { ...state[action.id], ...newStyle }
-      return Object.assign({}, state, {
-        [action.id]: newStyle
-      })
+      new_style = obj_add_remove_property(new_style, 'width', action.width);
+      return Object.assign({}, state, {[action.id] : new_style})
     case AT.TOWER_SET_OVERFLOW:
-      newStyle = { 'overflow': action.overflow }
-      if (action.id in state)
-        newStyle = { ...state[action.id], ...newStyle }
-      return Object.assign({}, state, {
-        [action.id]: newStyle
-      })
+      new_style = obj_add_remove_property(new_style, 'overflow', action.overflow);
+      return Object.assign({}, state, {[action.id] : new_style})
+    case AT.TOWER_DELETE:
+      return obj_add_remove_property(state, action.id, null);
     default:
       return state
   }
@@ -160,6 +172,8 @@ function block_opacity(state = {}, action) {
         ...state,
         [action.id]: new_opacity
       }
+    case AT.TOWER_DELETE:
+      return obj_add_remove_property(state, action.id, null);
     default:
       return state
   }
@@ -194,13 +208,7 @@ function keypad_kind(state = null, action) {
 function button_display(state = null, action) {
   switch (action.type) {
     case AT.SET_BUTTON_DISPLAY:
-      if (null === action.val) {  // remove id
-        if (state.hasOwnProperty(action.index)) {
-          let cpy = {...state}
-          delete cpy[action.index]
-          return cpy
-        }
-      } else return { ...state, [action.index]: action.val }
+      return obj_add_remove_property(state, action.index, action.val);
     default:
       return state
   }

@@ -9,35 +9,14 @@ import { global_store } from './index.js'
 import Sound from './assets/sound'
 import * as Actions from './providers/actions'
 import PrintFigure from './components/PrintFigure';
-import { query_current_config, query_test } from './providers/query_store';
+import { enter_exit_config } from './providers/change_config'
+//import { query_current_config, query_test } from './providers/query_store';
 //import Keypad from './components/Keypad'
 //import TowerName from './components/TowerName'
 //import Button from './components/Button'
 
 export let doAction = {}
 export let global_sound = {}
-
-export function initStoreForCurrentConfig() {
-  const cc = query_current_config();
-  if ('in_between' == cc) {
-    doAction.setButtonDisplay('next', true)
-  } else {  // levels that are a variation on copy_tower
-    doAction.setKeypadKind('buildTower')
-    doAction.setNumStars(3)
-    for (const i of [0, 1, 3, 8, 9])
-      doAction.setButtonDisplay(i, false)
-    doAction.setButtonDisplay('submit', true)
-    doAction.setButtonDisplay('delete', true)
-    if ('copy_tower' == cc) {
-      doAction.towerCreate('t1', [.5, .1], [5, 0])
-      doAction.towerCreate('t2', [], [180, 0])
-    } else if ('animal_height' == cc) {
-      doAction.tileCreate('a1', 'kitty', [-300, 0])
-      doAction.towerCreate('t2', [], [180, 0])
-    }
-  }
-  //query_test()
-}
 
 export default class App extends React.Component {
   constructor(props) {
@@ -46,11 +25,11 @@ export default class App extends React.Component {
     doAction = bindActionCreators(Actions, global_store.dispatch)
     //doAction.setScaleFactor(200)
     //doAction.towerSetBlockOpacity('t2', 2, 0.5)
-    //doAction.setCurrentConfig('copy_tower')
+    doAction.setCurrentConfig('copy_tower')
     //doAction.setCurrentConfig('animal_height')
-    doAction.setCurrentConfig('in_between')
+    //doAction.setCurrentConfig('in_between')
     doAction.setCurrentConfigIteration(1)
-    initStoreForCurrentConfig();
+    enter_exit_config(true);
   }
   componentDidMount() {
     //query_block_positions()

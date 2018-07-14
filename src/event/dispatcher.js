@@ -1,9 +1,9 @@
 import { query_keypad_kind, query_visible_buttons, query_tower_name, query_top_block, query_num_stars, query_name_of_tile, query_tower_height, query_current_config, query_current_config_iteration } from '../providers/query_store'
 import { getPositionInfoForKeypad, getButtonGeomsFor, buildTower_button_info } from '../components/Keypad'
 import { special_button_names, special_button_geoms } from '../components/Workspace'
-import { doAction, global_sound, initStoreForCurrentConfig } from '../App'
+import { doAction, global_sound } from '../App'
 import { animals } from '../components/Tile';
-import { AssertionError } from 'assert';
+import { enter_exit_config } from '../providers/change_config'
 
 export function pointIsInRectangle(point, geom, offset = [0, 0]) {
   return (geom[0] + offset[0]) <= point[0] &&
@@ -58,7 +58,7 @@ function update_keypad_button_visibility(size, is_fiver, how_many) {
 let exercise_index = 0;
 const tower_exercise_list = [
   [.3],
-  [.1, .02],
+  [1, .1],
 ]
 
 let animal_chosen = 'kitty'
@@ -88,9 +88,9 @@ function handle_delete_button(state) {
 
 function handle_next_button(state) {
   if ('up' == state) {
-    doAction.setButtonDisplay('next', null)
+    enter_exit_config(false)
     doAction.setCurrentConfig('animal_height')
-    initStoreForCurrentConfig()
+    enter_exit_config(true)
   }
 }
 
@@ -104,9 +104,17 @@ function handle_submit_button(state) {
         //console.log(name, animal_height, t2_height)
         if (approx_equal(animal_height, t2_height)) {
           global_sound['chirp1'].play()
-          doAction.setName('a1', choose_random_animal())
-          doAction.setName('t2', []);
-          update_keypad_button_visibility(null, null, null)
+          if (query_current_config_iteration() > 0) {
+            const iter = query_current_config_iteration()
+            doAction.setCurrentConfigIteration(iter - 1)
+            doAction.setName('a1', choose_random_animal())
+            doAction.setName('t2', []);
+            update_keypad_button_visibility(null, null, null)
+          } else {
+            enter_exit_config(false)
+            doAction.setCurrentConfig('in_between')
+            enter_exit_config(true)
+          }
         } else {
           const curr_num_stars = query_num_stars()
           if (curr_num_stars > 0)
@@ -117,13 +125,19 @@ function handle_submit_button(state) {
       if (towersHaveIdenticalNames('t1', 't2')) {
         console.log('same')
         global_sound['chirp1'].play()
-        // new Sound('src/assets/snd/chip1.wav').play()
-        // new Sound('http://localhost:8001/snd/chirp1.wav').play()
-        doAction.setName('t1',
-          tower_exercise_list[exercise_index])
-        exercise_index = (exercise_index + 1) % tower_exercise_list.length;
-        doAction.setName('t2', []);
-        update_keypad_button_visibility(null, null, null)
+        if (query_current_config_iteration() > 0) {
+          const iter = query_current_config_iteration()
+          doAction.setCurrentConfigIteration(iter - 1)
+          doAction.setName('t1',
+            tower_exercise_list[exercise_index])
+          exercise_index = (exercise_index + 1) % tower_exercise_list.length;
+          doAction.setName('t2', []);
+          update_keypad_button_visibility(null, null, null)
+        } else {
+          enter_exit_config(false)
+          doAction.setCurrentConfig('in_between')
+          enter_exit_config(true)
+        }
       } else {
         console.log('different')
         const curr_num_stars = query_num_stars()
