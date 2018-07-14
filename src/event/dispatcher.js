@@ -1,6 +1,6 @@
-import { query_keypad_kind, query_visible_buttons, query_tower_name, query_top_block, query_num_stars, query_name_of_tile, query_tower_height, query_current_config, query_current_config_iteration } from '../providers/query_store'
+import { query_keypad_kind, query_visible_buttons, query_tower_name, query_top_block, query_num_stars, query_name_of_tile, query_tower_height, query_current_config, query_current_config_iteration, query_scale_factor } from '../providers/query_store'
 import { getPositionInfoForKeypad, getButtonGeomsFor, buildTower_button_info } from '../components/Keypad'
-import { special_button_names, special_button_geoms } from '../components/Workspace'
+import { special_button_names, special_button_geoms, global_screen_height, global_workspace_height } from '../components/Workspace'
 import { doAction, global_sound } from '../App'
 import { animals } from '../components/Tile';
 import { enter_exit_config } from '../providers/change_config'
@@ -29,8 +29,8 @@ function towersHaveIdenticalNames(num_id1, num_id2) {
   return namesAreIdentical(name1, name2)
 }
 
-function update_keypad_button_visibility(size, is_fiver, how_many) {
-  console.log('update_keypad_button_visibility', size, is_fiver, how_many)
+export function update_keypad_button_visibility(size, is_fiver, how_many) {
+  //console.log('update_keypad_button_visibility', size, is_fiver, how_many)
   const i_end = buildTower_button_info.length
   const require_standard_tower = true;
   for (const i = 0; i < i_end; ++i) {
@@ -172,11 +172,15 @@ export function touch_dispatcher(state, x, y, touchID) {
         doAction.setButtonHighlight(i)
         found_one = true
         if ('up' == state) {
-          const new_size = buildTower_button_info[i][0]
-          const new_is_fiver = buildTower_button_info[i][1]
-          doAction.towerAddBlock('t2', new_size, new_is_fiver)
-          const [size, is_fiver, how_many] = query_top_block('t2')
-          update_keypad_button_visibility(size, is_fiver, how_many)
+          const pixel_height = query_scale_factor() * query_tower_height('t2')
+          console.log('pixel_height', pixel_height, 'h', global_workspace_height)
+          if (pixel_height < global_workspace_height) {
+            const new_size = buildTower_button_info[i][0]
+            const new_is_fiver = buildTower_button_info[i][1]
+            doAction.towerAddBlock('t2', new_size, new_is_fiver)
+            const [size, is_fiver, how_many] = query_top_block('t2')
+            update_keypad_button_visibility(size, is_fiver, how_many)
+          }
         }
       }
     }

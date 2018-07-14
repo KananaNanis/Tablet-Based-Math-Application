@@ -1,5 +1,6 @@
 import { doAction } from '../App'
 import { query_current_config } from './query_store'
+import { update_keypad_button_visibility } from '../event/dispatcher';
 
 export function enter_exit_config(enter) {
   const cc = query_current_config();
@@ -9,8 +10,6 @@ export function enter_exit_config(enter) {
     doAction.setCurrentConfigIteration(1)  // 2 exercises?
     doAction.setKeypadKind(enter ? 'buildTower' : null)
     doAction.setNumStars(enter ? 3 : 0)
-    for (const i of [0, 1, 3, 8, 9])
-      doAction.setButtonDisplay(i, enter ? false : null)
     doAction.setButtonDisplay('submit', enter ? true : null)
     doAction.setButtonDisplay('delete', enter ? true : null)
     if ('copy_tower' == cc) {
@@ -32,6 +31,7 @@ export function enter_exit_config(enter) {
         doAction.towerDelete('t2')
       }
     }
+    update_keypad_button_visibility(null, null, null)
   }
   //query_test()
 }

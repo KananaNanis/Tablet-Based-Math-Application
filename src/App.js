@@ -28,7 +28,6 @@ export default class App extends React.Component {
     doAction.setCurrentConfig('copy_tower')
     //doAction.setCurrentConfig('animal_height')
     //doAction.setCurrentConfig('in_between')
-    doAction.setCurrentConfigIteration(1)
     enter_exit_config(true);
   }
   componentDidMount() {
