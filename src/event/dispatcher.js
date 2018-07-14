@@ -1,8 +1,9 @@
-import { query_keypad_kind, query_visible_buttons, query_tower_name, query_top_block, query_num_stars, query_name_of_tile, query_tower_height } from '../providers/query_store'
+import { query_keypad_kind, query_visible_buttons, query_tower_name, query_top_block, query_num_stars, query_name_of_tile, query_tower_height, query_current_config, query_current_config_iteration } from '../providers/query_store'
 import { getPositionInfoForKeypad, getButtonGeomsFor, buildTower_button_info } from '../components/Keypad'
 import { special_button_names, special_button_geoms } from '../components/Workspace'
-import { doAction, global_sound } from '../App'
+import { doAction, global_sound, initStoreForCurrentConfig } from '../App'
 import { animals } from '../components/Tile';
+import { AssertionError } from 'assert';
 
 export function pointIsInRectangle(point, geom, offset = [0, 0]) {
   return (geom[0] + offset[0]) <= point[0] &&
@@ -85,9 +86,17 @@ function handle_delete_button(state) {
   }
 }
 
+function handle_next_button(state) {
+  if ('up' == state) {
+    doAction.setButtonDisplay('next', null)
+    doAction.setCurrentConfig('animal_height')
+    initStoreForCurrentConfig()
+  }
+}
+
 function handle_submit_button(state) {
   if ('up' == state) {
-    if (1) {  // assume comparison with a tile height
+    if (query_current_config() === 'animal_height') {
       const name = query_name_of_tile('a1')
       if (name) {
         const animal_height = animals[name][0]
@@ -104,7 +113,7 @@ function handle_submit_button(state) {
             doAction.setNumStars(curr_num_stars - 1)
         }
       }
-    } else {
+    } else if (query_current_config() === 'copy_tower') {
       if (towersHaveIdenticalNames('t1', 't2')) {
         console.log('same')
         global_sound['chirp1'].play()
@@ -121,6 +130,8 @@ function handle_submit_button(state) {
         if (curr_num_stars > 0)
           doAction.setNumStars(curr_num_stars - 1)
       }
+    } else {
+      console.error('unrecognized config?!')
     }
   }
 }
@@ -139,6 +150,7 @@ export function touch_dispatcher(state, x, y, touchID) {
         doAction.setButtonHighlight(i)
         if ('submit' === i) handle_submit_button(state)
         else if ('delete' === i) handle_delete_button(state)
+        else if ('next' === i) handle_next_button(state)
         else console.warn('touch_dispatcher did not handle', i)
       }
     } else {

@@ -1,0 +1,67 @@
+params:
+- modify:
+  - expr_1: {left: 5, arg_spacing: 20, res_spacing: 40}
+measure_height:
+- params:
+  - create:
+    - tower_2: { is_target }
+    - button_submit:
+  - events: { handle: keypad }
+  - misc: {num_exercises: 4}
+- copy_tower:
+  - params:
+    - generate: { tower_1_name: [pickOne, [.1, .5], [.2]] }
+    - create:
+      - tower_1: { name: tower_1_name }
+    - events: { submit: identical }
+  - level_1:
+  - level_2:
+- height_of_tile:
+  - params:
+    - generate: { tile_1_name: [pick_animal_name] }
+    - create:
+      - tile_1: { name: tile_1_name }
+    - events: { submit: same_height }
+  - level_1:
+  - level_2:
+
+bar_addition:
+- params:
+  - generator: {random1: uniform[.1-.9], random2: uniform[.1-.9], sum_in_range: [.1-1]}
+  - events: {down: jump_if_far, move: by_delta, submit: error_animation }
+  - misc: {num_exercises: 4}
+  - create:
+    - expr1:
+      - params: {op: +, left: 35}
+      - bar1: {value: random1}
+      - bar2: {value: random2}
+      - lift1:
+        - params: {-locked, +knob_hidden, +is_target}
+    - button_submit: []
+  - modify: []
+- replicate_close_tile_height:
+  - params: {}
+- replicate_far_tile_height: []
+- replicate_far_tile_height:
+  - params: {maxNumExercises: 3}
+  - ex1:
+    - params: {+size11x17, +justStandardize}
+  - ex2:
+    - params: {+size8p5x11, +rebuildTower, +removeBorders}
+choose_tower_name:
+pack_unpack:
+standardize:
+estimate_sums:
+single_size_addition:
+multi_size_addition_1:
+multi_size_addition_2:
+decimal_frame:
+decimal_number:
+suuji_multiplication:
+estimating_products:
+multi_digit_addition:
+multi_digit_subtraction:
+shrinking_a_tower:
+multi_size_multiplication:
+decimal_to_shrink:
+multi_digit_multiplication:

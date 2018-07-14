@@ -1,116 +1,109 @@
-import {
-  SET_NAME,
-  SET_POSITION,
-  SET_OPACITY,
-  TOWER_CREATE,
-  TOWER_DELETE,
-  TOWER_ADD_BLOCK,
-  TOWER_REMOVE_BLOCK,
-  TOWER_SET_WIDTH,
-  TOWER_SET_OVERFLOW,
-  TOWER_SET_BLOCK_OPACITY,
-  TILE_CREATE,
-  TILE_DELETE,
-  LIFT_CREATE,
-  LIFT_DELETE,
-  SET_SCALE_FACTOR,
-  SET_KEYPAD_KIND,
-  SET_BUTTON_DISPLAY,
-  SET_BUTTON_HIGHLIGHT,
-  SET_NUM_STARS
-} from './actionTypes'
+import * as AT from './actionTypes'
 
 /*  example action objects
 {
-  type : TOWER_CREATE,
+  type : AT.TOWER_CREATE,
   id : 'num4',
   name : [],
   position : [20, 0]
 }
 {
-  type : SET_NAME,
+  type : AT.SET_NAME,
   id : 'num4',
   name : [2],
 }
 {
-  type : SET_POSITION,
+  type : AT.SET_POSITION,
   id : 'num4',
   position : [30, 0]
 }
 */
 
 export function towerCreate(id, name, position) {
-  return { type: TOWER_CREATE, id, name, position }
+  return { type: AT.TOWER_CREATE, id, name, position }
 }
 
 export function tileCreate(id, name, position) {
-  return { type: TILE_CREATE, id, name, position }
+  return { type: AT.TILE_CREATE, id, name, position }
 }
 
 export function liftCreate(id, name, position) {
-  return { type: LIFT_CREATE, id, name, position }
+  return { type: AT.LIFT_CREATE, id, name, position }
 }
 
 export function towerDelete(id) {
-  return { type: TOWER_DELETE, id }
+  return { type: AT.TOWER_DELETE, id }
 }
 
 export function tileDelete(id, name, position) {
-  return { type: TILE_DELETE, id }
+  return { type: AT.TILE_DELETE, id }
 }
 
 export function liftDelete(id, name, position) {
-  return { type: LIFT_DELETE, id }
+  return { type: AT.LIFT_DELETE, id }
 }
 
 export function setName(id, name) {
-  return { type: SET_NAME, id, name }
+  return { type: AT.SET_NAME, id, name }
 }
 
 export function towerAddBlock(id, size, is_fiver) {
-  return { type: TOWER_ADD_BLOCK, id, size, is_fiver }
+  return { type: AT.TOWER_ADD_BLOCK, id, size, is_fiver }
 }
 
 export function towerRemoveBlock(id) {
-  return { type: TOWER_REMOVE_BLOCK, id }
+  return { type: AT.TOWER_REMOVE_BLOCK, id }
 }
 
 export function setPosition(id, position) {
-  return { type: SET_POSITION, id, position }
+  return { type: AT.SET_POSITION, id, position }
 }
 
 export function setOpacity(id, opacity) {
-  return { type: SET_OPACITY, id, opacity }
+  return { type: AT.SET_OPACITY, id, opacity }
 }
 
 export function towerSetWidth(id, width) {
-  return { type: TOWER_SET_WIDTH, id, width }
+  return { type: AT.TOWER_SET_WIDTH, id, width }
 }
 
 export function towerSetOverflow(id, overflow) {
-  return { type: TOWER_SET_OVERFLOW, id, overflow }
+  return { type: AT.TOWER_SET_OVERFLOW, id, overflow }
 }
 
 export function towerSetBlockOpacity(id, index, opacity) {
-  return { type: TOWER_SET_BLOCK_OPACITY, id, index, opacity }
+  return { type: AT.TOWER_SET_BLOCK_OPACITY, id, index, opacity }
 }
 
 export function setScaleFactor(val) {
-  return { type: SET_SCALE_FACTOR, val }
+  return { type: AT.SET_SCALE_FACTOR, val }
 }
 
 export function setKeypadKind(kind) {
-  return { type: SET_KEYPAD_KIND, kind }
+  return { type: AT.SET_KEYPAD_KIND, kind }
 }
 
 export function setButtonDisplay(index, val) {
-  return { type: SET_BUTTON_DISPLAY, index, val }
+  return { type: AT.SET_BUTTON_DISPLAY, index, val }
 }
 
 export function setButtonHighlight(index) {
-  return { type: SET_BUTTON_HIGHLIGHT, index }
+  return { type: AT.SET_BUTTON_HIGHLIGHT, index }
 }
 
 export function setNumStars(n) {
-  return { type: SET_NUM_STARS, n }
+  //console.log('setNumStars', n)
+  return { type: AT.SET_NUM_STARS, n }
+}
+
+export function setCurrentConfig(c) {
+  return { type: AT.SET_CURRENT_CONFIG, c }
+}
+
+export function setCurrentConfigIteration(n) {
+  return { type: AT.SET_CURRENT_CONFIG_ITERATION, n }
+}
+
+export function setPrevConfig(c) {
+  return { type: AT.SET_PREV_CONFIG, c }
 }

@@ -4,6 +4,7 @@ import Num from './Num'
 import Keypad from './Keypad'
 import Button from './Button'
 import Tile from './Tile'
+import Placard from './Placard'
 
 export const global_screen_width = Dimensions.get('window').width
 export const global_screen_height = Dimensions.get('window').height
@@ -13,17 +14,19 @@ export const global_workspace_height = global_screen_height - global_grass_heigh
 export const window2workspaceCoords = (pos0) =>
   [pos0[0], global_workspace_height - pos0[1]]
 
-export const special_button_names = ['submit', 'restart', 'delete']
+export const special_button_names = ['submit', 'restart', 'delete', 'next']
 export const special_button_geoms = {
   'submit': [5, 400, 210, 70],
   'restart': [5, 330, 210, 70],
   'delete': [5, 330, 210, 70],
+  'next': [180, 130, 210, 70],
 }
 
 const Workspace = ({ scale_factor, keypad_kind, button_display,
-  button_highlight, num_stars,
+  button_highlight, num_stars, current_config,
   all_nums, all_tiles, all_lifts }) => {
 
+  //console.log('Workspace all_nums', all_nums, 'all_tiles', all_tiles)
   let nums = []
   for (const id in all_nums) {
     const num = all_nums[id]
@@ -63,6 +66,7 @@ const Workspace = ({ scale_factor, keypad_kind, button_display,
   */
   let misc = [], key = 0
   if (keypad_kind) {
+    //console.log('keypad_kind', keypad_kind)
     ++key
     misc.push(<Keypad
       kind={keypad_kind}
@@ -102,6 +106,15 @@ const Workspace = ({ scale_factor, keypad_kind, button_display,
       <Image
         style={{ position: 'absolute', right: 5 + 25 * i, top: 5, width: 20, height: 20 }}
         source={require('../assets/img/star.png')}
+        key={key}
+      />
+    )
+  }
+  if ('in_between' == current_config) {
+    ++key
+    misc.push(
+      <Placard
+        position={[10, 100]}
         key={key}
       />
     )

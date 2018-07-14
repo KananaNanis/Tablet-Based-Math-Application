@@ -27,6 +27,7 @@ export const animals = {
 }
 
 const Tile = ({ name, position, extra_scale}) => {
+  //console.log('Tile name', name)
   extra_scale = extra_scale || 1.0
   const height = extra_scale * default_pixels_per_cm * 10 * animals[name][0]
   const width = height * animals[name][1] / animals[name][2]

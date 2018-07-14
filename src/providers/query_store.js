@@ -5,6 +5,7 @@ import { getButtonGeomsFor } from '../components/Keypad'
 import { special_button_names } from '../components/Workspace.js';
 
 export const consolidate_info_for_ids = (ids, name, position, style, tower_style = false, block_opacity = false, misc = false) => {
+  //console.log('consolidate_info_for_ids', ids)
   let res = {}
   for (const id of ids) {
     res[id] = {
@@ -183,4 +184,24 @@ export function query_num_stars() {
 export function query_name_of_tile(id) {
   const state = global_store.getState()
   return state.name[id]
+}
+
+export function query_current_config() {
+  const state = global_store.getState()
+  return state.current_config
+}
+
+export function query_current_config_iteration() {
+  const state = global_store.getState()
+  return state.current_config_iteration
+}
+
+export function query_prev_config() {
+  const state = global_store.getState()
+  return state.prev_config
+}
+
+export function query_test() {
+  let state = global_store.getState()
+  console.log('state', state)
 }

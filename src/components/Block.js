@@ -1,5 +1,5 @@
 import React from 'react'
-import { View, Text } from 'react-native'
+import { View, Image, Text } from 'react-native'
 
 export function get_block_size_from_group(group) {
   return Math.ceil(-1 + .00001 + (Math.log(group) / Math.log(10)))
@@ -60,12 +60,19 @@ export function add_block_to_name(new_size, new_is_fiver, name0) {
   return name
 }
 
-const Block = ({ view_style, text_style, text_content }) => (
-  <View style={view_style}>
+const Block = ({ width, height, radius_style, img_name, view_style, text_style, text_content }) => {
+  let img = null;
+  if (img_name) {
+    img = (<Image style={[radius_style,
+                    {position: 'absolute', width, height }]}
+      source={require('../assets/img/' + img_name + '.png')} />)
+  }
+  return (<View style={[view_style, radius_style, {width, height}]}>
+    {img}
     <Text style={text_style}>
       {text_content}
     </Text>
-  </View>
-)
+  </View>)
+}
 
 export default Block

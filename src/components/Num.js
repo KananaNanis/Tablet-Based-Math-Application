@@ -4,8 +4,8 @@ import Tower from './Tower'
 import TowerName from './TowerName'
 
 export const global_size2color = {
-  '-3': 'limegreen', '-2': 'purple', '-1': 'darkred',
-  '0': 'blue', '1': 'green', '2': 'orange', '3': 'cyan'
+  '-3': 'limegreen', '-2': 'purple', '-1': 'darkgreen',
+  '0': 'blue', '1': 'pink', '2': 'orange', '3': 'cyan'
 }
 export const global_size2symbol = {
   '-3': '-', '-2': '^', '-1': '\u25CF', '0': '\u2577', // '|',

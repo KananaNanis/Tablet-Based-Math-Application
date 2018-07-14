@@ -4,6 +4,7 @@ import { consolidate_info_for_ids } from '../providers/query_store'
 
 const mapStateToProps = (state, ownProps) => {
   //console.log(ownProps)
+  //console.log('mapStateToProps tower_ids', state.tower_ids, 'tile_ids', state.tile_ids)
   return {
     style: ownProps.style,
     scale_factor: state.scale_factor,
@@ -11,6 +12,7 @@ const mapStateToProps = (state, ownProps) => {
     button_display: state.button_display,
     button_highlight: state.button_highlight,
     num_stars: state.num_stars,
+    current_config: state.current_config,
     all_nums: consolidate_info_for_ids(
       state.tower_ids,
       state.name,

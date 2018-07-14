@@ -17,6 +17,7 @@ const Tower = ({ id, name, position, style = {}, block_opacity = [], scale_facto
     const is_tiny = b.height < 4
     const is_fiver = b.is_fiver
     const size = b.size
+    //console.log('size', size)
     if (is_small && !is_fiver)++small_in_a_row
     else small_in_a_row = 0
     /*
@@ -31,8 +32,8 @@ const Tower = ({ id, name, position, style = {}, block_opacity = [], scale_facto
     let height = b.height
     const bottom = b.bottom
     let marginBottom = (is_tiny || is_fiver) ? 0 : 1
-    let radius_style = {}
     const radius = 0.1 * (.5 * (height + width))
+    let radius_style = {}
     if (false && is_fiver) {
       if (1 == fiver_in_a_row || 5 == fiver_in_a_row)
         height -= 1
@@ -55,11 +56,15 @@ const Tower = ({ id, name, position, style = {}, block_opacity = [], scale_facto
       else height -= 2
       if (!is_small) radius_style = { borderRadius: radius }
     }
-    var marginLeft = 0
+    let marginLeft = 0
     if (is_small) {
       if (//is_fiver || 
-          !(small_in_a_row % 2)) marginLeft = 1
+        !(small_in_a_row % 2)) marginLeft = 1
     }
+    let img_name = null
+    if (-1 === size && !is_fiver) img_name = 'turtle'
+    else if (-1 === size && is_fiver) img_name = 'fiverTurtle'
+    else if (0 === size && !is_fiver) img_name = 'unit'
     /*
     let width_factor = is_tiny ? .5 : is_small ? .4 : .1
     const fiver_style = [{}, {
@@ -74,17 +79,14 @@ const Tower = ({ id, name, position, style = {}, block_opacity = [], scale_facto
       position: 'absolute',
       backgroundColor: (width < 10) ? 'black' : '#dbb',
       bottom,
-      width,
-      height,
       marginBottom,
       marginLeft,
-      ...radius_style,
       //...fiver_style
     }
 
     let text_content = global_size2symbol[size]
     const color = global_size2color[size]
-    const left = 5 + ((size >= 0) ? -.19 * height : 0)
+    const left = 15 + ((size >= 0) ? -.19 * height : 0)
     let textBottom = ((0 === size) ? .25 : (-2 === size) ? -1 : .10) * height
     let fontSize = (is_tiny ? 0 : is_small ? 2 : .75) * height
     if (is_fiver) {
@@ -100,13 +102,18 @@ const Tower = ({ id, name, position, style = {}, block_opacity = [], scale_facto
       bottom: textBottom,
       ...global_fiver_shadow[is_fiver]
     }
-    blocks.push(<Block view_style={view_style}
+    blocks.push(<Block width={width}
+      height={height}
+      radius_style={radius_style}
+      img_name={img_name}
+      view_style={view_style}
       text_style={text_style}
       text_content={text_content}
       key={i} />)
   }
-  return (<View style={[styles.tower,
-  { 'height': global_workspace_height },
+  return (<View style={[
+    styles.tower,
+    { 'height': global_workspace_height },
     style]}>
     {blocks}
   </View>

@@ -1,4 +1,6 @@
 import { combineReducers } from 'redux'
+import * as AT from './actionTypes'
+/*
 import {
   SET_POSITION,
   SET_OPACITY,
@@ -18,24 +20,28 @@ import {
   SET_KEYPAD_KIND,
   SET_BUTTON_DISPLAY,
   SET_BUTTON_HIGHLIGHT,
-  SET_NUM_STARS
+  SET_NUM_STARS,
+  SET_CURRENT_CONFIG,
+  SET_CURRENT_CONFIG_ITERATION,
+  SET_PREV_CONFIG,
 } from './actionTypes'
+*/
 import { add_block_to_name, remove_block_from_name } from '../components/Block'
 
 // the following reducers control the various overall chunks of the store
 
 function handle_create_delete(state = [], action) {
   switch (action.type) {
-    case TOWER_CREATE:
-    case TILE_CREATE:
-    case LIFT_CREATE:
+    case AT.TOWER_CREATE:
+    case AT.TILE_CREATE:
+    case AT.LIFT_CREATE:
       return [
         ...state,
         action.id,
       ]
-    case TOWER_DELETE:
-    case TILE_DELETE:
-    case LIFT_DELETE:
+    case AT.TOWER_DELETE:
+    case AT.TILE_DELETE:
+    case AT.LIFT_DELETE:
       const index = state.indexOf(action.id);
       if (index > -1) {
         let cpy = [...state]
@@ -48,32 +54,42 @@ function handle_create_delete(state = [], action) {
 }
 
 function tower_ids(state = [], action) {
-  return handle_create_delete(state, action)
+  //console.log('tower_ids', state, action)
+  if (action.type == AT.TOWER_CREATE ||
+    action.type == AT.TOWER_DELETE) {
+    return handle_create_delete(state, action)
+  } else return state;
 }
 
 function tile_ids(state = [], action) {
-  return handle_create_delete(state, action)
+  if (action.type == AT.TILE_CREATE ||
+    action.type == AT.TILE_DELETE)
+    return handle_create_delete(state, action)
+  else return state;
 }
 
 function lift_ids(state = [], action) {
-  return handle_create_delete(state, action)
+  if (action.type == AT.LIFT_CREATE ||
+    action.type == AT.LIFT_DELETE)
+    return handle_create_delete(state, action)
+  else return state;
 }
 
 function name(state = {}, action) {
   switch (action.type) {
-    case TOWER_CREATE:
-    case TILE_CREATE:
-    case SET_NAME:
+    case AT.TOWER_CREATE:
+    case AT.TILE_CREATE:
+    case AT.SET_NAME:
       return {
         ...state,
         [action.id]: action.name,
       }
-    case TOWER_ADD_BLOCK:
+    case AT.TOWER_ADD_BLOCK:
       return {
         ...state,
         [action.id]: add_block_to_name(action.size, action.is_fiver, state[action.id])
       }
-    case TOWER_REMOVE_BLOCK:
+    case AT.TOWER_REMOVE_BLOCK:
       return {
         ...state,
         [action.id]: remove_block_from_name(state[action.id])
@@ -85,9 +101,9 @@ function name(state = {}, action) {
 
 function position(state = {}, action) {
   switch (action.type) {
-    case TOWER_CREATE:
-    case TILE_CREATE:
-    case SET_POSITION:
+    case AT.TOWER_CREATE:
+    case AT.TILE_CREATE:
+    case AT.SET_POSITION:
       let newPosition = [action.position[0] || 0,
       action.position[1] || 0]
       return {
@@ -101,7 +117,7 @@ function position(state = {}, action) {
 
 function style(state = {}, action) {
   switch (action.type) {
-    case SET_OPACITY:
+    case AT.SET_OPACITY:
       let newStyle = { 'opacity': action.opacity }
       if (action.id in state)
         newStyle = { ...state[action.id], ...newStyle }
@@ -116,14 +132,14 @@ function style(state = {}, action) {
 function tower_style(state = {}, action) {
   let newStyle = {}
   switch (action.type) {
-    case TOWER_SET_WIDTH:
+    case AT.TOWER_SET_WIDTH:
       newStyle = { 'width': action.width }
       if (action.id in state)
         newStyle = { ...state[action.id], ...newStyle }
       return Object.assign({}, state, {
         [action.id]: newStyle
       })
-    case TOWER_SET_OVERFLOW:
+    case AT.TOWER_SET_OVERFLOW:
       newStyle = { 'overflow': action.overflow }
       if (action.id in state)
         newStyle = { ...state[action.id], ...newStyle }
@@ -137,7 +153,7 @@ function tower_style(state = {}, action) {
 
 function block_opacity(state = {}, action) {
   switch (action.type) {
-    case TOWER_SET_BLOCK_OPACITY:
+    case AT.TOWER_SET_BLOCK_OPACITY:
       let new_opacity = state[action.id] ? state[action.id].slice() : []
       new_opacity[action.index] = action.opacity
       return {
@@ -159,16 +175,16 @@ function misc(state = {}, action) {
 
 function scale_factor(state = 520, action) {
   switch (action.type) {
-    case SET_SCALE_FACTOR:
+    case AT.SET_SCALE_FACTOR:
       return action.val
     default:
       return state
   }
 }
 
-function keypad_kind(state = 'decimal', action) {
+function keypad_kind(state = null, action) {
   switch (action.type) {
-    case SET_KEYPAD_KIND:
+    case AT.SET_KEYPAD_KIND:
       return action.kind
     default:
       return state
@@ -177,8 +193,14 @@ function keypad_kind(state = 'decimal', action) {
 
 function button_display(state = null, action) {
   switch (action.type) {
-    case SET_BUTTON_DISPLAY:
-      return { ...state, [action.index]: action.val }
+    case AT.SET_BUTTON_DISPLAY:
+      if (null === action.val) {  // remove id
+        if (state.hasOwnProperty(action.index)) {
+          let cpy = {...state}
+          delete cpy[action.index]
+          return cpy
+        }
+      } else return { ...state, [action.index]: action.val }
     default:
       return state
   }
@@ -186,7 +208,7 @@ function button_display(state = null, action) {
 
 function button_highlight(state = null, action) {
   switch (action.type) {
-    case SET_BUTTON_HIGHLIGHT:
+    case AT.SET_BUTTON_HIGHLIGHT:
       return action.index
     default:
       return state
@@ -195,8 +217,35 @@ function button_highlight(state = null, action) {
 
 function num_stars(state = 3, action) {
   switch (action.type) {
-    case SET_NUM_STARS:
+    case AT.SET_NUM_STARS:
       return action.n
+    default:
+      return state
+  }
+}
+
+function current_config(state = null, action) {
+  switch (action.type) {
+    case AT.SET_CURRENT_CONFIG:
+      return action.c
+    default:
+      return state
+  }
+}
+
+function current_config_iteration(state = 0, action) {
+  switch (action.type) {
+    case AT.SET_CURRENT_CONFIG_ITERATION:
+      return action.n
+    default:
+      return state
+  }
+}
+
+function prev_config(state = null, action) {
+  switch (action.type) {
+    case AT.SET_PREV_CONFIG:
+      return action.c
     default:
       return state
   }
@@ -216,49 +265,43 @@ const suujiAppInner = combineReducers({
   keypad_kind,
   button_display,
   button_highlight,
-  num_stars
+  num_stars,
+  current_config,
+  current_config_iteration,
+  prev_config,
 })
 
 const initialState = {
   // general info on towers, tiles, and lifts
-  tower_ids: ['t1', 't2'],
-  tile_ids: ['a1'],
-  lift_ids: ['l1'],
-  name: {
-    //'t1' : [1, .1, .05, .01],
-    //'t1': [.5, .2, .05, .05, .04],
-    't1': [],
-    //'t1' : [100, 50, 50, 10, 5, 5, 4],
-    't2': [.5, .1],
-    'a1': 'kitty'
+  tower_ids: [],
+  tile_ids: [],
+  lift_ids: [],
+  name: {},
+  position: {},
+  style: { //'t2': { 'opacity': 0.5 }
   },
-  position: {
-    't1': [5, 0],
-    't2': [180, 0],
-    'a1': [-300, 0]
-  },
-  style: { 't2': { 'opacity': 0.5 } },
-  misc: {
-    't1': { 'role': 'left_operand' },
-    't2': {}
+  misc: { //'t1': { 'role': 'left_operand' },
   },
 
   // tower info
-  tower_style: { 't1': { 'width': 150, 'overflow': 'hidden' } },
-  block_opacity: { 't1': [null, 0.5] },
+  tower_style: { // 't1': { 'width': 150, 'overflow': 'hidden' }
+  },
+  block_opacity: { //'t1': [null, 0.5]
+  },
 
   // keypad info
-  keypad_kind: 'buildTower',
-  button_display: {
-    'submit': true, 'delete': true,
-    '0': false, '1': false, '3': false, '8': false, '9': false
-  },
+  keypad_kind: null,
+  button_display: {},
   button_highlight: null,
 
   // other info
-  num_stars: 3,
+  num_stars: 0,
   scale_factor: 520,
   //scale_factor : 2,
+
+  current_config: null,
+  current_config_iteration: 0,
+  prev_config: null,
 }
 
 function suujiApp(state, action) {
