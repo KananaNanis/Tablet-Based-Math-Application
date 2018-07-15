@@ -27,7 +27,7 @@ measure_height:
 
 bar_addition:
 - params:
-  - generator: {random1: uniform[.1-.9], random2: uniform[.1-.9], sum_in_range: [.1-1]}
+  - generator: {random1: uniform, random2: uniform, sum_in_range: [.1,1]}
   - events: {down: jump_if_far, move: by_delta, submit: error_animation }
   - misc: {num_exercises: 4}
   - create:

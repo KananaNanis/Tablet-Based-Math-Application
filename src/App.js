@@ -1,6 +1,7 @@
 import React from 'react'
 import { StyleSheet, View } from 'react-native'
 import { bindActionCreators } from 'redux'
+import yaml from 'js-yaml'
 
 import WorkspaceContainer from './containers/WorkspaceContainer'
 import { global_screen_width, global_screen_height, global_grass_height } from './components/Workspace'
@@ -18,11 +19,55 @@ import { enter_exit_config } from './providers/change_config'
 export let doAction = {}
 export let global_sound = {}
 
+async function get_config() {
+  try {
+    let response = await fetch('assets/config.yaml');
+    let responseText = await response.text();
+    //console.log(responseText);
+    let config = yaml.safeLoad(responseText);
+    console.log('d', config);
+    //console.log(responseJson.movies);
+    //console.log(response);
+    //return responseJson.movies;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
 export default class App extends React.Component {
   constructor(props) {
     super(props)
     // create the bound action creators!
     doAction = bindActionCreators(Actions, global_store.dispatch)
+
+    get_config();
+    //var config = yaml.load('./config.yaml')
+    //console.log('e', config)
+    /*
+    fetch('assets/config.yaml')
+    //.then((response) => yaml.safeLoad(response))
+    .then((responseYaml) => {
+      console.log(responseYaml);
+    })
+    .catch((error) => {
+      console.error(error);
+    })
+    */
+    /*
+    try {
+              // YAML string to Javascript object
+              var obj = yaml.load( 'greeting: hello\nname: world' );
+              console.log( obj );
+      var doc = yaml.safeLoad(
+        //fs.readFileSync('/home/ixti/example.yml', 'utf8')
+        require('./config.yaml')
+      );
+      console.log(doc);
+    } catch (e) {
+      console.log(e);
+    }
+    */
+
     //doAction.setScaleFactor(200)
     //doAction.towerSetBlockOpacity('t2', 2, 0.5)
     doAction.setCurrentConfig('copy_tower')
