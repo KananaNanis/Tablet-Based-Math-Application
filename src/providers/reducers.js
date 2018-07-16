@@ -1,31 +1,5 @@
 import { combineReducers } from 'redux'
 import * as AT from './actionTypes'
-/*
-import {
-  SET_POSITION,
-  SET_OPACITY,
-  SET_NAME,
-  TOWER_CREATE,
-  TOWER_DELETE,
-  TOWER_ADD_BLOCK,
-  TOWER_REMOVE_BLOCK,
-  TOWER_SET_WIDTH,
-  TOWER_SET_OVERFLOW,
-  TOWER_SET_BLOCK_OPACITY,
-  TILE_CREATE,
-  TILE_DELETE,
-  LIFT_CREATE,
-  LIFT_DELETE,
-  SET_SCALE_FACTOR,
-  SET_KEYPAD_KIND,
-  SET_BUTTON_DISPLAY,
-  SET_BUTTON_HIGHLIGHT,
-  SET_NUM_STARS,
-  SET_CURRENT_CONFIG,
-  SET_CURRENT_CONFIG_ITERATION,
-  SET_PREV_CONFIG,
-} from './actionTypes'
-*/
 import { add_block_to_name, remove_block_from_name } from '../components/Block'
 
 // the following reducers control the various overall chunks of the store
@@ -223,6 +197,15 @@ function button_highlight(state = null, action) {
   }
 }
 
+function freeze_display(state = null, action) {
+  switch (action.type) {
+    case AT.SET_FREEZE_DISPLAY:
+      return action.t
+    default:
+      return state
+  }
+}
+
 function num_stars(state = 3, action) {
   switch (action.type) {
     case AT.SET_NUM_STARS:
@@ -273,6 +256,7 @@ const suujiAppInner = combineReducers({
   keypad_kind,
   button_display,
   button_highlight,
+  freeze_display,
   num_stars,
   current_config,
   current_config_iteration,
@@ -286,21 +270,22 @@ const initialState = {
   lift_ids: [],
   name: {},
   position: {},
-  style: { //'t2': { 'opacity': 0.5 }
+  style: { //'tower_2': { 'opacity': 0.5 }
   },
-  misc: { //'t1': { 'role': 'left_operand' },
+  misc: { //'tower_1': { 'role': 'left_operand' },
   },
 
   // tower info
-  tower_style: { // 't1': { 'width': 150, 'overflow': 'hidden' }
+  tower_style: { // 'tower_1': { 'width': 150, 'overflow': 'hidden' }
   },
-  block_opacity: { //'t1': [null, 0.5]
+  block_opacity: { //'tower_1': [null, 0.5]
   },
 
   // keypad info
   keypad_kind: null,
   button_display: {},
   button_highlight: null,
+  freeze_display: false,
 
   // other info
   num_stars: 0,

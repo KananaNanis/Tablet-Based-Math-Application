@@ -1,5 +1,5 @@
 import React from 'react'
-import { StyleSheet, View } from 'react-native'
+import { StyleSheet, View, Text } from 'react-native'
 import Button from './Button'
 import { global_size2color, global_size2symbol, global_fiver_shadow } from './Num'
 
@@ -42,7 +42,8 @@ export const buildTower_button_info = [
   [-2, 0], [-2, 1], [-3, 0], [-3, 1]
 ]
 
-const Keypad = ({ kind, button_display, button_highlight }) => {
+const Keypad = ({ kind, button_display, button_highlight,
+  freeze_display }) => {
   let buttons = []
   const pos = getPositionInfoForKeypad(kind)
   const geoms = getButtonGeomsFor(kind)
@@ -70,7 +71,9 @@ const Keypad = ({ kind, button_display, button_highlight }) => {
       }
       const view_style = { backgroundColor: 'grey' }
       if (null !== button_highlight && index === button_highlight)
-        view_style['backgroundColor'] = 'yellow'
+        view_style['backgroundColor'] = freeze_display ? 'red' : 'yellow'
+      else if (freeze_display)
+        view_style['opacity'] = 0.25
       buttons.push(
         <Button position={button_position}
           width={pos.button_width} height={height}
@@ -79,10 +82,22 @@ const Keypad = ({ kind, button_display, button_highlight }) => {
       )
     }
   }
+  let extras = []
+  if ("buildTower" == kind) {
+    extras.push(<Text style={{
+      position: 'absolute',
+      left: -120, bottom: 160, fontSize: 50
+    }} key='707'>Small</Text>)
+    extras.push(<Text style={{
+      position: 'absolute',
+      left: -120, bottom: 80, fontSize: 50
+    }} key='727'>Box</Text>)
+  }
   return (
     <View style={[styles.keypad,
     { left: pos.position[0], bottom: pos.position[1] }]} >
       {buttons}
+      {extras}
     </View>
   )
 }

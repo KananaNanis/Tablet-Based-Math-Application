@@ -11,6 +11,8 @@ import Sound from './assets/sound'
 import * as Actions from './providers/actions'
 import PrintFigure from './components/PrintFigure';
 import { enter_exit_config } from './providers/change_config'
+import { height2tower_name } from './providers/query_store';
+import { animal_too_tall } from './event/dispatcher';
 //import { query_current_config, query_test } from './providers/query_store';
 //import Keypad from './components/Keypad'
 //import TowerName from './components/TowerName'
@@ -25,7 +27,7 @@ async function get_config() {
     let responseText = await response.text();
     //console.log(responseText);
     let config = yaml.safeLoad(responseText);
-    console.log('d', config);
+    //console.log('d', config);
     //console.log(responseJson.movies);
     //console.log(response);
     //return responseJson.movies;
@@ -40,36 +42,9 @@ export default class App extends React.Component {
     // create the bound action creators!
     doAction = bindActionCreators(Actions, global_store.dispatch)
 
+    // read in the config tree
     get_config();
-    //var config = yaml.load('./config.yaml')
-    //console.log('e', config)
-    /*
-    fetch('assets/config.yaml')
-    //.then((response) => yaml.safeLoad(response))
-    .then((responseYaml) => {
-      console.log(responseYaml);
-    })
-    .catch((error) => {
-      console.error(error);
-    })
-    */
-    /*
-    try {
-              // YAML string to Javascript object
-              var obj = yaml.load( 'greeting: hello\nname: world' );
-              console.log( obj );
-      var doc = yaml.safeLoad(
-        //fs.readFileSync('/home/ixti/example.yml', 'utf8')
-        require('./config.yaml')
-      );
-      console.log(doc);
-    } catch (e) {
-      console.log(e);
-    }
-    */
 
-    //doAction.setScaleFactor(200)
-    //doAction.towerSetBlockOpacity('t2', 2, 0.5)
     doAction.setCurrentConfig('copy_tower')
     //doAction.setCurrentConfig('animal_height')
     //doAction.setCurrentConfig('in_between')
@@ -77,7 +52,7 @@ export default class App extends React.Component {
   }
   componentDidMount() {
     //query_block_positions()
-    //console.log(query_tower_blocks('t1', null, true))
+    //console.log(query_tower_blocks('tower_1', null, true))
     // preload some sounds?
     const available_sounds = ['chirp1',
       'chirp2', 'bells', 'level0', 'level1', 'level2', 'level3']
@@ -102,7 +77,7 @@ export default class App extends React.Component {
           <WorkspaceContainer style={styles.workspace} />
           {/*
         <Keypad kind="decimal" button_highlight={2} />
-        <TowerName id={'t1'} />
+        <TowerName id={'tower_1'} />
         */}
         </View>
       )

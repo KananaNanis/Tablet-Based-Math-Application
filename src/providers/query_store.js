@@ -1,5 +1,5 @@
 import { global_store } from '../index.js'
-import { get_block_size_from_group, get_how_many_from_group, get_is_fiver_from_group, get_fiver_incomplete_from_group } from '../components/Block'
+import { get_block_size_from_group, get_how_many_from_group, get_is_fiver_from_group } from '../components/Block'
 import { global_size2fontsize, global_size2depth } from '../components/Num'
 import { getButtonGeomsFor } from '../components/Keypad'
 import { special_button_names } from '../components/Workspace.js';
@@ -91,10 +91,35 @@ export function query_tower_name(num_id) {
 }
 
 export function tower_name2height(name) {
+  // possible tests:  same as height2tower_name, in reverse
   if (!name) return null
   let res = 0
   for (const group of name) {
     res += group
+  }
+  return res
+}
+
+export function height2tower_name(height) {
+  // possible tests:
+  //    473.291 -> [400, 50, 20, 3, .2, .05, .04, .001]
+  //    1.000001 -> [1]
+  //    1 -> [1]
+  //    .999999 -> [1]
+  let res = []
+  if (height > 10000) console.error('Error in height2tower_name:  height', height, '(too large)')
+  if (height < .0001) console.error('Error in height2tower_name:  height', height, '(too small)')
+  for (const size = 3; size >= -3; --size) {
+    if (10 ** size < (height + .000000001)) {
+      let how_many = Math.floor((height + .000000001) / (10 ** size))
+      height -= how_many * 10 ** size
+      if (how_many > 4) {
+        res.push(5 * 10 ** size)
+        how_many -= 5
+      }
+      if (how_many > 0)
+        res.push(how_many * 10 ** size)
+    }
   }
   return res
 }
@@ -111,7 +136,6 @@ export function query_top_block(num_id) {
     const group = name[name.length - 1]
     size = get_block_size_from_group(group)
     is_fiver = get_is_fiver_from_group(group)
-    //fiver_incomplete = get_fiver_incomplete_from_group(group)
     how_many = get_how_many_from_group(group)
   }
   return [size, is_fiver, how_many]
@@ -121,7 +145,7 @@ export function query_whole_tower(num_id, tower = null, just_position) {
   if (!tower) {
     if (just_position) {
       const state = global_store.getState()
-      tower = {name: name[num_id], position: position[num_id]}
+      tower = { name: name[num_id], position: position[num_id] }
     } else tower = query_tower(num_id)
   }
   // expand the name into individual blocks
@@ -199,6 +223,11 @@ export function query_current_config_iteration() {
 export function query_prev_config() {
   const state = global_store.getState()
   return state.prev_config
+}
+
+export function query_freeze_display() {
+  const state = global_store.getState()
+  return state.freeze_display;
 }
 
 export function query_test() {

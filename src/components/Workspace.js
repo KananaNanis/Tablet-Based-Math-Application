@@ -23,7 +23,7 @@ export const special_button_geoms = {
 }
 
 const Workspace = ({ scale_factor, keypad_kind, button_display,
-  button_highlight, num_stars, current_config,
+  button_highlight, freeze_display, num_stars, current_config,
   all_nums, all_tiles, all_lifts }) => {
 
   //console.log('Workspace all_nums', all_nums, 'all_tiles', all_tiles)
@@ -72,6 +72,7 @@ const Workspace = ({ scale_factor, keypad_kind, button_display,
       kind={keypad_kind}
       button_display={button_display}
       button_highlight={button_highlight}
+      freeze_display={freeze_display}
       key={key} />)
   }
   const button_view = {

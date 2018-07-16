@@ -91,6 +91,10 @@ export function setButtonHighlight(index) {
   return { type: AT.SET_BUTTON_HIGHLIGHT, index }
 }
 
+export function setFreezeDisplay(t) {
+  return { type: AT.SET_FREEZE_DISPLAY, t }
+}
+
 export function setNumStars(n) {
   //console.log('setNumStars', n)
   return { type: AT.SET_NUM_STARS, n }

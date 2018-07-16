@@ -11,6 +11,7 @@ const mapStateToProps = (state, ownProps) => {
     keypad_kind: state.keypad_kind,
     button_display: state.button_display,
     button_highlight: state.button_highlight,
+    freeze_display: state.freeze_display,
     num_stars: state.num_stars,
     current_config: state.current_config,
     all_nums: consolidate_info_for_ids(
