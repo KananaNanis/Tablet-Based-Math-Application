@@ -2,7 +2,7 @@ import { Platform } from 'react-native'
 import { global_is_mobile, global_is_safari, global_screen_width } from '../myglobal'
 import { query_keyboard_kind } from '../providers/query_store'
 import { getPositionInfoForKeypad, getButtonGeomsFor } from '../components/Keypad'
-import { doAction } from '../App'
+import { doAction, load_config_tree } from '../App'
 import { window2workspaceCoords } from '../components/Workspace'
 import { touch_dispatcher } from './dispatcher'
 
@@ -33,15 +33,22 @@ export function touchHandler(synthetic_event, on_grant) {
   //if ('move' != type) console.log('touchHandler ' + type)
   const touches = evt.changedTouches; // , first = touches[0]
   currentNumTouches = evt.touches.length
-  numTouchesAtLeft = 1
+  numTouchesAtLeft = 0
   numTouchesAtRight = 0
   numTouchesAtTop = 0
+  numTouchesAtTopLeft = 0
   for (const i = 0, i_end = evt.touches.length; i < i_end; ++i) {
     if (evt.touches[i].clientX < 100)++numTouchesAtLeft
     if (evt.touches[i].clientX > global_screen_width - 100)++numTouchesAtRight
     if (evt.touches[i].clientY < 100)++numTouchesAtTop
+    if (evt.touches[i].clientX < 100 &&
+      evt.touches[i].clientY < 100)++numTouchesAtTopLeft
   }
   //console.log('numTouchesAtLeft ' + numTouchesAtLeft + ' numTouchesAtTop ' + numTouchesAtTop)
+  if (false && 1 === numTouchesAtTopLeft) { // reload
+    load_config_tree()
+    return
+  }
   if (6 === currentNumTouches) { // check whether reload is requested
     if (4 === numTouchesAtTop) { // this is to make it harder to do accidentally
       console.warn('reloading not implemented yet')

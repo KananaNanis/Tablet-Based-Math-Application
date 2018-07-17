@@ -5,7 +5,8 @@ import { query_tower_blocks } from '../providers/query_store'
 import { global_workspace_height } from './Workspace'
 import { global_size2color, global_size2symbol, global_fiver_shadow } from './Num'
 
-const Tower = ({ id, name, position, style = {}, block_opacity = [], scale_factor }) => {
+const Tower = ({ id, name, position, style = {},
+  block_opacity = [], scale_factor }) => {
   const block_info = query_tower_blocks(id, { name, position, block_opacity })
 
   let blocks = [], small_in_a_row = 0

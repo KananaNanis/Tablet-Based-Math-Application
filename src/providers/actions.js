@@ -111,3 +111,7 @@ export function setConfigIteration(n) {
 export function setPrevConfigPath(c) {
   return { type: AT.SET_PREV_CONFIG_PATH, c }
 }
+
+export function resetAll() {
+  return { type: AT.RESET_ALL }
+}

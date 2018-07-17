@@ -16,14 +16,20 @@ import { query_config_path } from './providers/query_store';
 export let doAction = {}
 export let global_sound = {}
 
+let prev_response_text = ''
 export let config_tree = {}
-async function load_config_tree() {
+export let global_constant = {}
+
+export async function load_config_tree() {
   try {
     let response = await fetch('assets/config.yaml');
-    let responseText = await response.text();
-    //console.log(responseText);
-    config_tree = yaml.safeLoad(responseText);
-    //console.log('config_tree', config_tree);
+    let response_text = await response.text();
+    if (response_text == prev_response_text) return
+    prev_response_text = response_text
+    //console.log(response_text);
+    config_tree = yaml.safeLoad(response_text);
+    console.log('config_tree', config_tree);
+    global_constant = config_tree.params.global_constant
 
     // create the bound action creators!
     if (0) { // verbose version
@@ -39,9 +45,14 @@ async function load_config_tree() {
     //let path = ['in_between']
     //let path = ['measure_height', 'animal_height', 'level_1']
     //let path = ['measure_height', 'copy_tower', 'level_1']
-    let path = first_config_path()
+    //let path = first_config_path()
+    const path = global_constant.starting_config_path
+    // clear the store
+    doAction.resetAll()
+
     doAction.setConfigPath(path)
     doAction.setPrevConfigPath(query_config_path())
+    doAction.setScaleFactor(global_constant.scale_factor_from_yaml)
     //get_config(path)
 
     //doAction.setCurrentConfig('animal_height')
@@ -62,7 +73,9 @@ export default App = (props) => {
 export default class App extends React.Component {
   constructor(props) {
     super(props)
-    load_config_tree();
+    //load_config_tree()
+    // poll to see if the tree has changed
+    window.setInterval(load_config_tree, 1000)
   }
   componentDidMount() {
     //query_block_positions()

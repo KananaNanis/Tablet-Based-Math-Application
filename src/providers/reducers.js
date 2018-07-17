@@ -291,7 +291,7 @@ const initialState = {
 
   // other info
   num_stars: 0,
-  scale_factor: 520,
+  //scale_factor: 520,
   //scale_factor : 2,
 
   config_path: [],
@@ -300,6 +300,7 @@ const initialState = {
 }
 
 function suujiApp(state, action) {
+  if (AT.RESET_ALL == action.type) return initialState
   return state ? suujiAppInner(state, action) : initialState
 }
 

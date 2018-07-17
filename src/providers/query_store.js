@@ -3,6 +3,7 @@ import { get_block_size_from_group, get_how_many_from_group, get_is_fiver_from_g
 import { global_size2fontsize, global_size2depth } from '../components/Num'
 import { getButtonGeomsFor } from '../components/Keypad'
 import { special_button_names } from '../components/Workspace.js';
+import { width_from_name } from './change_config.js';
 
 export const consolidate_info_for_ids = (ids, name, position, style, tower_style = false, block_opacity = false, misc = false) => {
   //console.log('consolidate_info_for_ids', ids)
@@ -128,6 +129,13 @@ export function query_tower_height(num_id) {
   const state = global_store.getState()
   return tower_name2height(state.name[num_id])
 }
+
+/*
+export function query_tower_width(num_id) {
+  const name = query_tower_name(num_id);
+  return width_from_name(name)
+}
+*/
 
 export function query_top_block(num_id) {
   const name = query_tower_name(num_id);

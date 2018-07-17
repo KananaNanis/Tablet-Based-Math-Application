@@ -2,6 +2,11 @@
 params:
   modify:
     expr_1: {left: 5, arg_spacing: 20, res_spacing: 40}
+    button_submit: { position: [5, 200] }
+  global_constant:
+    starting_config_path: ['measure_height', 'copy_tower', 'level_1']
+    scale_factor_from_yaml: 520
+  # config_path: ['measure_height', 'animal_height', 'level_1']
 measure_height:
   params:
     create:
@@ -18,7 +23,9 @@ measure_height:
       create:
         tower_1: { name: tower_1_name }
       modify:
-        tower_1: { position: [5, 0], width: 150, overflow: 'hidden' }
+        tower_1: { position: [5, 0],
+          width: 150, overflow: 'hidden'
+        }
       events: { submit: identical }
     level_1:
     level_2:

@@ -1,7 +1,10 @@
-import { doAction, config_tree } from '../App'
-import { query_config_path, query_config_iteration, height2tower_name, query_prev_config_path } from './query_store'
+import { doAction, config_tree, global_constant } from '../App'
+import { query_config_path, query_config_iteration, height2tower_name, query_prev_config_path, query_scale_factor, tower_name2height } from './query_store'
 import { update_keypad_button_visibility } from '../event/dispatcher';
 import { pick_from_range, pick_from_list, pick_animal_name } from '../containers/generate';
+import { global_screen_width, global_workspace_height } from '../components/Workspace';
+import { get_block_size_from_group } from '../components/Block';
+import { global_size2depth } from '../components/Num';
 
 const deep_clone = (obj) => JSON.parse(JSON.stringify(obj))
 
@@ -41,10 +44,59 @@ export function get_config(path) {
   return res
 }
 
+function as_position(pos_info, width = 0, height = 0) {
+  let res = [0, 0]
+  for (const i = 0; i < 2; ++i) {
+    if ('number' === typeof pos_info[i]) res[i] = pos_info[i]
+    else if ('string' === typeof pos_info[i]) {
+      let val = pos_info[i]
+      let swap_sides = false
+      if (val.startsWith('left ')) val = val.slice(5)  // ignore
+      else if (val.startsWith('bottom ')) val = val.slice(7)  // ignore
+      else if (val.startsWith('right ')) {
+        val = val.slice(6)
+        swap_sides = 'right'
+      } else if (val.startsWith('top ')) {
+        val = val.slice(4)
+        swap_sides = 'top'
+      }
+      if (val.endsWith('vw'))
+        val = global_screen_width * (+val.slice(0, -2)) / 100.
+      else if (val.endsWith('vh'))
+        val = global_workspace_height * (+val.slice(0, -2)) / 100.
+      if ('right' == swap_sides) {
+        val = global_screen_width - width - val
+      } else if ('top' == swap_sides) {
+        val = global_workspace_height - height - val
+      }
+      res[i] = +val
+    }
+  }
+  console.log('as_position pos_info', pos_info, 'res', res)
+  return res
+}
+
+export function width_pixels_from_name(name, scale_factor)
+{
+  if (name && name.length >= 1) {
+    const group = name[0]
+    const size = get_block_size_from_group(group)
+    scale_factor = scale_factor || query_scale_factor()
+    return scale_factor * global_size2depth[size]
+  }
+  return 0
+}
+
+export function height_pixels_from_name(name, scale_factor)
+{
+  scale_factor = scale_factor || query_scale_factor()
+  return scale_factor * tower_name2height(name, scale_factor)
+}
+
 export function enter_exit_config(enter) {
   const cp = query_config_path();
   const config = get_config(cp)
-  //console.log('config', config)
+  console.log('config', config)
   if (1) {
     // let's handle the various parts of the config one at a time
     let gen_vars = {}
@@ -88,14 +140,20 @@ export function enter_exit_config(enter) {
             if (enter) {
               if ('number' == typeof name)
                 name = height2tower_name(name)
-              doAction.towerCreate(id, name, config['modify'][id]['position'])
+              const w = width_pixels_from_name(name, global_constant.scale_factor)
+              const h = height_pixels_from_name(name, global_constant.scale_factor)
+              doAction.towerCreate(id, name,
+                as_position(config['modify'][id]['position'], w, h))
             } else {
               //console.log('deleting', id)
               doAction.towerDelete(id)
             }
           } else {
             if (enter) {
-              doAction.tileCreate(id, name, config['modify'][id]['position'])
+              doAction.tileCreate(id, name,
+                as_position(config['modify'][id]['position'],
+                  global_constant.tile_width,
+                  global_constant.tile_height))
             } else doAction.tileDelete(id)
           }
         }
@@ -219,7 +277,7 @@ export function next_config_path(path) {
       res = []
       for (const j = 0; j < i; ++j)
         res.push(path[j])
-      res.push(k[k.indexOf(path[i])+1])
+      res.push(k[k.indexOf(path[i]) + 1])
       // now find the longest continuation of this path
       res = first_config_path(res)
     }
