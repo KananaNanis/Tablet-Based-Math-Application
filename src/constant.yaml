@@ -1,0 +1,22 @@
+# this constants are fixed!
+# starting_config_path: ['measure_height', 'animal_height', 'level_1']
+starting_config_path: ['measure_height', 'copy_tower', 'level_1']
+scale_factor_from_yaml: 520
+buildTower_button_info: [ [1, 0], [1, 1], [0, 0], [0, 1], [-1, 0], [-1, 1], [-2, 0], [-2, 1], [-3, 0], [-3, 1] ]
+keypad_info:
+  buildTower:
+    position: [350, 50]
+    button_width: 50
+    button_height: 50
+    space_width: 20
+    space_height: 30
+    num_cols: 2
+    num_rows: 5
+  decimal:
+    position: [350, 50]
+    button_width: 50
+    button_height: 50
+    space_width: 20
+    space_height: 30
+    num_cols: 3
+    num_rows: 4

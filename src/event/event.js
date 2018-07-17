@@ -1,8 +1,6 @@
 import { Platform } from 'react-native'
 import { global_is_mobile, global_is_safari, global_screen_width } from '../myglobal'
-import { query_keyboard_kind } from '../providers/query_store'
-import { getPositionInfoForKeypad, getButtonGeomsFor } from '../components/Keypad'
-import { doAction, load_config_tree } from '../App'
+import { load_config_tree } from '../App'
 import { window2workspaceCoords } from '../components/Workspace'
 import { touch_dispatcher } from './dispatcher'
 

@@ -2,11 +2,11 @@ import {
   query_keypad_kind, query_visible_buttons, query_tower_name, query_top_block, query_num_stars, query_name_of_tile,
   query_tower_height, query_config_path, query_config_iteration, query_scale_factor, query_freeze_display, height2tower_name
 } from '../providers/query_store'
-import { getPositionInfoForKeypad, getButtonGeomsFor, buildTower_button_info } from '../components/Keypad'
+import { getButtonGeomsFor } from '../components/Keypad'
 import { special_button_names, special_button_geoms, global_screen_height, global_workspace_height } from '../components/Workspace'
-import { doAction, global_sound } from '../App'
+import { doAction, global_sound, global_constant } from '../App'
 import { animals } from '../components/Tile';
-import { enter_exit_config, transition_to_next_config } from '../providers/change_config'
+import { transition_to_next_config } from '../providers/change_config'
 import { get_block_size_from_group, get_how_many_from_group, get_is_fiver_from_group } from '../components/Block';
 
 export function pointIsInRectangle(point, geom, offset = [0, 0]) {
@@ -95,11 +95,11 @@ function correct_next_button() {
 
 export function update_keypad_button_visibility(size, is_fiver, how_many) {
   //console.log('update_keypad_button_visibility', size, is_fiver, how_many)
-  const i_end = buildTower_button_info.length
+  const i_end = global_constant.buildTower_button_info.length
   const require_standard_tower = true;
   for (const i = 0; i < i_end; ++i) {
-    const bsize = buildTower_button_info[i][0]
-    const bfiver = buildTower_button_info[i][1]
+    const bsize = global_constant.buildTower_button_info[i][0]
+    const bfiver = global_constant.buildTower_button_info[i][1]
     let show = (null === size || bsize <= size)
     if (require_standard_tower) {
       if (size == bsize) {
@@ -178,8 +178,9 @@ export function touch_dispatcher(state, x, y, touchID) {
     return;
   }
   const kind = query_keypad_kind()
-  const pos = getPositionInfoForKeypad(kind)
-  const button_geoms = getButtonGeomsFor(kind)
+  //const pos = getPositionInfoForKeypad(kind)
+  const pos = global_constant.keypad_info[kind]
+  const button_geoms = kind ? getButtonGeomsFor(kind) : null
   let found_one = false
   const visible = query_visible_buttons()
   for (const i of visible) {
@@ -197,8 +198,8 @@ export function touch_dispatcher(state, x, y, touchID) {
         doAction.setButtonHighlight(i)
         found_one = true
         if ('up' == state) {
-          const new_size = buildTower_button_info[i][0]
-          const new_is_fiver = buildTower_button_info[i][1]
+          const new_size = global_constant.buildTower_button_info[i][0]
+          const new_is_fiver = global_constant.buildTower_button_info[i][1]
           const curr = (new_is_fiver ? 5 : 1) * 10 ** new_size;
           const correct = correct_next_button();
           if (curr !== correct) {

@@ -72,7 +72,7 @@ function as_position(pos_info, width = 0, height = 0) {
       res[i] = +val
     }
   }
-  console.log('as_position pos_info', pos_info, 'res', res)
+  //console.log('as_position pos_info', pos_info, 'res', res)
   return res
 }
 
@@ -96,7 +96,7 @@ export function height_pixels_from_name(name, scale_factor)
 export function enter_exit_config(enter) {
   const cp = query_config_path();
   const config = get_config(cp)
-  console.log('config', config)
+  //console.log('config', config)
   if (1) {
     // let's handle the various parts of the config one at a time
     let gen_vars = {}

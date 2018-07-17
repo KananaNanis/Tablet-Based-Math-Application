@@ -18,10 +18,15 @@ export let global_sound = {}
 
 let prev_response_text = ''
 export let config_tree = {}
-export let global_constant = {}
+export let global_constant = false
 
 export async function load_config_tree() {
   try {
+    if (!global_constant) {  // first load the constants
+      let const_buffer = await fetch('assets/constant.yaml');
+      let const_text = await const_buffer.text();
+      global_constant = yaml.safeLoad(const_text);
+    }
     let response = await fetch('assets/config.yaml');
     let response_text = await response.text();
     if (response_text == prev_response_text) return
@@ -29,7 +34,6 @@ export async function load_config_tree() {
     //console.log(response_text);
     config_tree = yaml.safeLoad(response_text);
     console.log('config_tree', config_tree);
-    global_constant = config_tree.params.global_constant
 
     // create the bound action creators!
     if (0) { // verbose version

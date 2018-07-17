@@ -3,10 +3,6 @@ params:
   modify:
     expr_1: {left: 5, arg_spacing: 20, res_spacing: 40}
     button_submit: { position: [5, 200] }
-  global_constant:
-    starting_config_path: ['measure_height', 'copy_tower', 'level_1']
-    scale_factor_from_yaml: 520
-  # config_path: ['measure_height', 'animal_height', 'level_1']
 measure_height:
   params:
     create:
@@ -16,7 +12,7 @@ measure_height:
     events: { handle: keypad }
     modify:
       tower_2: { position: [180, 0] }
-    misc: {config_iteration: 2, num_stars: 3}
+    misc: {config_iteration: 1, num_stars: 3}
   copy_tower:
     params:
       generate: { tower_1_name: [pick_from_range, .1, 1.8, .1] }
