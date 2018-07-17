@@ -23,7 +23,7 @@ export const special_button_geoms = {
 }
 
 const Workspace = ({ scale_factor, keypad_kind, button_display,
-  button_highlight, freeze_display, num_stars, current_config,
+  button_highlight, freeze_display, num_stars, config_path,
   all_nums, all_tiles, all_lifts }) => {
 
   //console.log('Workspace all_nums', all_nums, 'all_tiles', all_tiles)
@@ -111,7 +111,7 @@ const Workspace = ({ scale_factor, keypad_kind, button_display,
       />
     )
   }
-  if ('in_between' == current_config) {
+  if ('in_between' == config_path[0]) {
     ++key
     misc.push(
       <Placard

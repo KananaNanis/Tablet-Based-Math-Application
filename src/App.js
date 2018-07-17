@@ -10,45 +10,59 @@ import { global_store } from './index.js'
 import Sound from './assets/sound'
 import * as Actions from './providers/actions'
 import PrintFigure from './components/PrintFigure';
-import { enter_exit_config } from './providers/change_config'
-import { height2tower_name } from './providers/query_store';
-import { animal_too_tall } from './event/dispatcher';
-//import { query_current_config, query_test } from './providers/query_store';
-//import Keypad from './components/Keypad'
-//import TowerName from './components/TowerName'
-//import Button from './components/Button'
+import { enter_exit_config, get_config, first_config_path, next_config_path } from './providers/change_config'
+import { query_config_path } from './providers/query_store';
 
 export let doAction = {}
 export let global_sound = {}
 
-async function get_config() {
+export let config_tree = {}
+async function load_config_tree() {
   try {
     let response = await fetch('assets/config.yaml');
     let responseText = await response.text();
     //console.log(responseText);
-    let config = yaml.safeLoad(responseText);
-    //console.log('d', config);
-    //console.log(responseJson.movies);
-    //console.log(response);
-    //return responseJson.movies;
+    config_tree = yaml.safeLoad(responseText);
+    //console.log('config_tree', config_tree);
+
+    // create the bound action creators!
+    if (0) { // verbose version
+      doActionInner = bindActionCreators(Actions, global_store.dispatch)
+      for (const a in doActionInner) {
+        doAction[a] = function (...args) {
+          console.log(a, ...args)
+          return doActionInner[a](...args)
+        }
+      }
+    } else doAction = bindActionCreators(Actions, global_store.dispatch)
+
+    //let path = ['in_between']
+    //let path = ['measure_height', 'animal_height', 'level_1']
+    //let path = ['measure_height', 'copy_tower', 'level_1']
+    let path = first_config_path()
+    doAction.setConfigPath(path)
+    doAction.setPrevConfigPath(query_config_path())
+    //get_config(path)
+
+    //doAction.setCurrentConfig('animal_height')
+    //doAction.setCurrentConfig('in_between')
+    enter_exit_config(true);
   } catch (error) {
     console.error(error);
   }
 }
 
+/*
+export default App = (props) => {
+  load_config_tree();
+  return null
+}
+*/
+
 export default class App extends React.Component {
   constructor(props) {
     super(props)
-    // create the bound action creators!
-    doAction = bindActionCreators(Actions, global_store.dispatch)
-
-    // read in the config tree
-    get_config();
-
-    doAction.setCurrentConfig('copy_tower')
-    //doAction.setCurrentConfig('animal_height')
-    //doAction.setCurrentConfig('in_between')
-    enter_exit_config(true);
+    load_config_tree();
   }
   componentDidMount() {
     //query_block_positions()
@@ -75,10 +89,6 @@ export default class App extends React.Component {
         >
           <View style={styles.grass} />
           <WorkspaceContainer style={styles.workspace} />
-          {/*
-        <Keypad kind="decimal" button_highlight={2} />
-        <TowerName id={'tower_1'} />
-        */}
         </View>
       )
     }

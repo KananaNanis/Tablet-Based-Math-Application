@@ -210,19 +210,19 @@ export function query_name_of_tile(id) {
   return state.name[id]
 }
 
-export function query_current_config() {
+export function query_config_path() {
   const state = global_store.getState()
-  return state.current_config
+  return state.config_path
 }
 
-export function query_current_config_iteration() {
+export function query_config_iteration() {
   const state = global_store.getState()
-  return state.current_config_iteration
+  return state.config_iteration
 }
 
-export function query_prev_config() {
+export function query_prev_config_path() {
   const state = global_store.getState()
-  return state.prev_config
+  return state.prev_config_path
 }
 
 export function query_freeze_display() {

@@ -1,9 +1,12 @@
-import { query_keypad_kind, query_visible_buttons, query_tower_name, query_top_block, query_num_stars, query_name_of_tile, query_tower_height, query_current_config, query_current_config_iteration, query_scale_factor, query_freeze_display, height2tower_name } from '../providers/query_store'
+import {
+  query_keypad_kind, query_visible_buttons, query_tower_name, query_top_block, query_num_stars, query_name_of_tile,
+  query_tower_height, query_config_path, query_config_iteration, query_scale_factor, query_freeze_display, height2tower_name
+} from '../providers/query_store'
 import { getPositionInfoForKeypad, getButtonGeomsFor, buildTower_button_info } from '../components/Keypad'
 import { special_button_names, special_button_geoms, global_screen_height, global_workspace_height } from '../components/Workspace'
 import { doAction, global_sound } from '../App'
 import { animals } from '../components/Tile';
-import { enter_exit_config } from '../providers/change_config'
+import { enter_exit_config, transition_to_next_config } from '../providers/change_config'
 import { get_block_size_from_group, get_how_many_from_group, get_is_fiver_from_group } from '../components/Block';
 
 export function pointIsInRectangle(point, geom, offset = [0, 0]) {
@@ -46,20 +49,24 @@ function expand_into_units(name) {
 }
 
 function correct_next_button() {
-  const verbose = true
+  const verbose = false
   let expand = false
   let correct, curr, res = null
-  if ('copy_tower' == query_current_config()) {
+  const cp = query_config_path()
+  //console.log('correct_next_button cp', cp)
+  if ('copy_tower' == cp[1]) {
     correct = query_tower_name('tower_1')
     curr = query_tower_name('tower_2')
     expand = true
-  } else if ('animal_height' == query_current_config()) {
-    const animal_name = query_name_of_tile('animal_1')
+  } else if ('animal_height' == cp[1]) {
+    const animal_name = query_name_of_tile('tile_1')
     const height = animals[animal_name][0]
     correct = height2tower_name(height)
-    console.log('animal_name', animal_name, 'correct', correct)
+    //console.log('animal_name', animal_name, 'correct', correct)
     curr = query_tower_name('tower_2')
     expand = true
+  } else {
+    console.warn('Warning in correct_next_button: config_path', cp)
   }
   if (expand) {
     correct = expand_into_units(correct)
@@ -115,31 +122,6 @@ const tower_exercise_list = [
   [1, .1],
 ]
 
-export function animal_too_tall(animal_name) {
-  const height = animals[animal_name][0]
-  const pixels = query_scale_factor() * height
-  return pixels > global_workspace_height
-}
-
-let animal_chosen = 'kitty'
-function choose_random_animal() {
-  //console.log('choose_random_animal', Object.keys(animals))
-  const animal_names = Object.keys(animals)
-  for (const i of Array(10).keys()) {
-    const animal_name = animal_names[
-      Math.floor(animal_names.length * Math.random())]
-    if (animal_name !== animal_chosen &&
-      animal_name != 'chimpanzee' &&
-      !animal_too_tall(animal_name)) {
-      //console.log('choose_random_animal result ', animal_name)
-      animal_chosen = animal_name
-      return animal_name
-    }
-  }
-  console.warn('choose_random_animal')
-  return 'kitty'
-}
-
 function handle_delete_button(state) {
   if ('up' == state) {
     doAction.towerRemoveBlock('tower_2')
@@ -149,11 +131,8 @@ function handle_delete_button(state) {
 }
 
 function handle_next_button(state) {
-  if ('up' == state) {
-    enter_exit_config(false)
-    doAction.setCurrentConfig('animal_height')
-    enter_exit_config(true)
-  }
+  if ('up' == state) 
+    transition_to_next_config()
 }
 
 function reduce_num_stars() {
@@ -162,54 +141,32 @@ function reduce_num_stars() {
     doAction.setNumStars(curr_num_stars - 1)
 }
 
+function answer_is_correct() {
+  let res = false
+  const cp = query_config_path()
+  if (cp[1] === 'animal_height') {
+    const name = query_name_of_tile('tile_1')
+    if (name) {
+      const animal_height = animals[name][0]
+      const tower_2_height = query_tower_height('tower_2')
+      //console.log(name, animal_height, tower_2_height)
+      res = approx_equal(animal_height, tower_2_height)
+    }
+  } else if (cp[1] === 'copy_tower') {
+    res = towersHaveIdenticalNames('tower_1', 'tower_2')
+  } else {
+    console.error('unrecognized config path?!')
+  }
+  return res
+}
+
 function handle_submit_button(state) {
   if ('up' == state) {
-    if (query_current_config() === 'animal_height') {
-      const name = query_name_of_tile('animal_1')
-      if (name) {
-        const animal_height = animals[name][0]
-        const tower_2_height = query_tower_height('tower_2')
-        //console.log(name, animal_height, tower_2_height)
-        if (approx_equal(animal_height, tower_2_height)) {
-          global_sound['chirp1'].play()
-          if (query_current_config_iteration() > 1) {
-            const iter = query_current_config_iteration()
-            doAction.setCurrentConfigIteration(iter - 1)
-            doAction.setName('animal_1', choose_random_animal())
-            doAction.setName('tower_2', []);
-            update_keypad_button_visibility(null, null, null)
-          } else {
-            enter_exit_config(false)
-            doAction.setCurrentConfig('in_between')
-            enter_exit_config(true)
-          }
-        } else {
-          reduce_num_stars()
-        }
-      }
-    } else if (query_current_config() === 'copy_tower') {
-      if (towersHaveIdenticalNames('tower_1', 'tower_2')) {
-        console.log('same')
-        global_sound['chirp1'].play()
-        if (query_current_config_iteration() > 1) {
-          const iter = query_current_config_iteration()
-          doAction.setCurrentConfigIteration(iter - 1)
-          doAction.setName('tower_1',
-            tower_exercise_list[exercise_index])
-          exercise_index = (exercise_index + 1) % tower_exercise_list.length;
-          doAction.setName('tower_2', []);
-          update_keypad_button_visibility(null, null, null)
-        } else {
-          enter_exit_config(false)
-          doAction.setCurrentConfig('in_between')
-          enter_exit_config(true)
-        }
-      } else {
-        console.log('different')
-        reduce_num_stars()
-      }
+    if (answer_is_correct()) {
+      global_sound['chirp1'].play()
+      transition_to_next_config()
     } else {
-      console.error('unrecognized config?!')
+      reduce_num_stars()
     }
   }
 }
@@ -254,7 +211,7 @@ export function touch_dispatcher(state, x, y, touchID) {
             return;
           }
           const pixel_height = query_scale_factor() * query_tower_height('tower_2')
-          //console.log('pixel_height', pixel_height, 'h', global_workspace_height)
+          // console.log('pixel_height', pixel_height, 'h', global_workspace_height)
           if (pixel_height < global_workspace_height) {
             doAction.towerAddBlock('tower_2', new_size, new_is_fiver)
             const [size, is_fiver, how_many] = query_top_block('tower_2')

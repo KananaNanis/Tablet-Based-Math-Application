@@ -1,7 +1,8 @@
 import React from 'react'
 import { StyleSheet, View, Text } from 'react-native'
 
-const Button = ({ position, width, height, view_style, label, label_style }) => {
+const Button = ({ position, width, height, view_style,
+  label, label_style }) => {
   return (
     <View style={[styles.button, {
       left: position[0],

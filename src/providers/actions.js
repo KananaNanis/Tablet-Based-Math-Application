@@ -100,14 +100,14 @@ export function setNumStars(n) {
   return { type: AT.SET_NUM_STARS, n }
 }
 
-export function setCurrentConfig(c) {
-  return { type: AT.SET_CURRENT_CONFIG, c }
+export function setConfigPath(c) {
+  return { type: AT.SET_CONFIG_PATH, c }
 }
 
-export function setCurrentConfigIteration(n) {
-  return { type: AT.SET_CURRENT_CONFIG_ITERATION, n }
+export function setConfigIteration(n) {
+  return { type: AT.SET_CONFIG_ITERATION, n }
 }
 
-export function setPrevConfig(c) {
-  return { type: AT.SET_PREV_CONFIG, c }
+export function setPrevConfigPath(c) {
+  return { type: AT.SET_PREV_CONFIG_PATH, c }
 }

@@ -4,9 +4,11 @@ import { add_block_to_name, remove_block_from_name } from '../components/Block'
 
 // the following reducers control the various overall chunks of the store
 
-function array_add_remove_element(state, elt, add) {
+function array_add_remove_element(state, elt, add, skip_duplicate) {
   if (add) {
-    return [
+    if (skip_duplicate && state.indexOf(elt) > -1)
+      return state
+    else return [
       ...state,
       elt
     ]
@@ -39,9 +41,9 @@ function obj_add_remove_property(state, key, val) {
 function tower_ids(state = [], action) {
   switch (action.type) {
     case AT.TOWER_CREATE:
-      return array_add_remove_element(state, action.id, true)
+      return array_add_remove_element(state, action.id, true, true)
     case AT.TOWER_DELETE:
-      return array_add_remove_element(state, action.id, false)
+      return array_add_remove_element(state, action.id, false, true)
     default:
       return state
   }
@@ -50,9 +52,9 @@ function tower_ids(state = [], action) {
 function tile_ids(state = [], action) {
   switch (action.type) {
     case AT.TILE_CREATE:
-      return array_add_remove_element(state, action.id, true)
+      return array_add_remove_element(state, action.id, true, true)
     case AT.TILE_DELETE:
-      return array_add_remove_element(state, action.id, false)
+      return array_add_remove_element(state, action.id, false, true)
     default:
       return state
   }
@@ -61,9 +63,9 @@ function tile_ids(state = [], action) {
 function lift_ids(state = [], action) {
   switch (action.type) {
     case AT.LIFT_CREATE:
-      return array_add_remove_element(state, action.id, true)
+      return array_add_remove_element(state, action.id, true, true)
     case AT.LIFT_DELETE:
-      return array_add_remove_element(state, action.id, false)
+      return array_add_remove_element(state, action.id, false, true)
     default:
       return state
   }
@@ -215,27 +217,27 @@ function num_stars(state = 3, action) {
   }
 }
 
-function current_config(state = null, action) {
+function config_path(state = [], action) {
   switch (action.type) {
-    case AT.SET_CURRENT_CONFIG:
+    case AT.SET_CONFIG_PATH:
       return action.c
     default:
       return state
   }
 }
 
-function current_config_iteration(state = 0, action) {
+function config_iteration(state = 0, action) {
   switch (action.type) {
-    case AT.SET_CURRENT_CONFIG_ITERATION:
+    case AT.SET_CONFIG_ITERATION:
       return action.n
     default:
       return state
   }
 }
 
-function prev_config(state = null, action) {
+function prev_config_path(state = [], action) {
   switch (action.type) {
-    case AT.SET_PREV_CONFIG:
+    case AT.SET_PREV_CONFIG_PATH:
       return action.c
     default:
       return state
@@ -258,9 +260,9 @@ const suujiAppInner = combineReducers({
   button_highlight,
   freeze_display,
   num_stars,
-  current_config,
-  current_config_iteration,
-  prev_config,
+  config_path,
+  config_iteration,
+  prev_config_path,
 })
 
 const initialState = {
@@ -292,9 +294,9 @@ const initialState = {
   scale_factor: 520,
   //scale_factor : 2,
 
-  current_config: null,
-  current_config_iteration: 0,
-  prev_config: null,
+  config_path: [],
+  config_iteration: 0,
+  prev_config_path: [],
 }
 
 function suujiApp(state, action) {
