@@ -1,38 +1,47 @@
 import React from 'react'
 import { StyleSheet, View, Text } from 'react-native'
 import Button from './Button'
-import { global_size2color, global_size2symbol, global_fiver_shadow } from './Num'
+import { global_fiver_shadow } from './Num'
 import { global_constant } from '../App'
 
-export function getButtonGeomsFor(kind) {
-  //console.warn('getButtonGeomsFor', kind)
+export function get_button_geoms_for(kind) {
+  //console.warn('get_button_geoms_for', kind)
   const pos = global_constant.keypad_info[kind]
   let geoms = []
   for (const row = 0; row < pos.num_rows; ++row) {
     for (const col = 0; col < pos.num_cols; ++col) {
       geoms.push(
-        [col * (pos.button_width + pos.space_width),
-        row * (pos.button_height + pos.space_height),
-        pos.button_width,
-        pos.button_height,
-        ]
+        {
+          position: [col * (pos.button_width + pos.space_width),
+          row * (pos.button_height + pos.space_height)],
+          width: pos.button_width,
+          height: pos.button_height,
+        }
       )
     }
   }
   return geoms
 }
 
+export function get_keypad_width_height(kind) {
+  const pos = global_constant.keypad_info[kind]
+  return {
+    width: pos.num_cols * pos.button_width + (pos.num_cols - 1) * pos.space_width,
+    height: pos.num_rows * pos.button_height + (pos.num_rows - 1) * pos.space_height
+  }
+}
+
 const Keypad = ({ kind, button_display, button_highlight,
   freeze_display }) => {
   let buttons = []
   const pos = global_constant.keypad_info[kind]
-  const geoms = getButtonGeomsFor(kind)
+  const geoms = get_button_geoms_for(kind)
   for (const row = 0; row < pos.num_rows; ++row) {
     for (const col = 0; col < pos.num_cols; ++col) {
       const index = col + pos.num_cols * row
       if (index in button_display && false === button_display[index])
         continue
-      const button_position = [geoms[index][0], geoms[index][1]]
+      const button_position = geoms[index].position
       const height = pos.button_height
       let label = index, label_style = {
         marginBottom: .15 * height,
@@ -42,8 +51,8 @@ const Keypad = ({ kind, button_display, button_highlight,
       if ("buildTower" == kind) {
         const size = global_constant.buildTower_button_info[index][0]
         const is_fiver = global_constant.buildTower_button_info[index][1]
-        label = global_size2symbol[size]
-        label_style['color'] = global_size2color[size]
+        label = global_constant.tower.size2symbol[size]
+        label_style['color'] = global_constant.tower.size2color[size]
         if (is_fiver) {
           label = '5' + label
           label_style = { ...global_fiver_shadow[1], ...label_style }

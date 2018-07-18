@@ -2,18 +2,17 @@ import {
   query_keypad_kind, query_visible_buttons, query_tower_name, query_top_block, query_num_stars, query_name_of_tile,
   query_tower_height, query_config_path, query_config_iteration, query_scale_factor, query_freeze_display, height2tower_name
 } from '../providers/query_store'
-import { getButtonGeomsFor } from '../components/Keypad'
-import { special_button_names, special_button_geoms, global_screen_height, global_workspace_height } from '../components/Workspace'
+import { get_button_geoms_for } from '../components/Keypad'
+import { global_workspace_height } from '../components/Workspace'
 import { doAction, global_sound, global_constant } from '../App'
-import { animals } from '../components/Tile';
 import { transition_to_next_config } from '../providers/change_config'
-import { get_block_size_from_group, get_how_many_from_group, get_is_fiver_from_group } from '../components/Block';
+import { get_block_size_from_group, get_how_many_from_group, get_is_fiver_from_group } from '../components/Block'
 
 export function pointIsInRectangle(point, geom, offset = [0, 0]) {
-  return (geom[0] + offset[0]) <= point[0] &&
-    point[0] <= (geom[0] + offset[0] + geom[2]) &&
-    (geom[1] + offset[1]) <= point[1] &&
-    point[1] <= (geom[1] + offset[1] + geom[3])
+  return (geom.position[0] + offset[0]) <= point[0] &&
+    point[0] <= (geom.position[0] + offset[0] + geom.width) &&
+    (geom.position[1] + offset[1]) <= point[1] &&
+    point[1] <= (geom.position[1] + offset[1] + geom.height)
 }
 
 function approx_equal(x, y, thresh = 1e-08) {
@@ -54,13 +53,13 @@ function correct_next_button() {
   let correct, curr, res = null
   const cp = query_config_path()
   //console.log('correct_next_button cp', cp)
-  if ('copy_tower' == cp[1]) {
+  if (cp[1].startsWith('copy_tower')) {
     correct = query_tower_name('tower_1')
     curr = query_tower_name('tower_2')
     expand = true
-  } else if ('animal_height' == cp[1]) {
+  } else if (cp[1].startsWith('animal_height')) {
     const animal_name = query_name_of_tile('tile_1')
-    const height = animals[animal_name][0]
+    const height = global_constant.animals[animal_name].height
     correct = height2tower_name(height)
     //console.log('animal_name', animal_name, 'correct', correct)
     curr = query_tower_name('tower_2')
@@ -144,15 +143,15 @@ function reduce_num_stars() {
 function answer_is_correct() {
   let res = false
   const cp = query_config_path()
-  if (cp[1] === 'animal_height') {
+  if (cp[1].startsWith('animal_height')) {
     const name = query_name_of_tile('tile_1')
     if (name) {
-      const animal_height = animals[name][0]
+      const animal_height = global_constant.animals[name].height
       const tower_2_height = query_tower_height('tower_2')
       //console.log(name, animal_height, tower_2_height)
       res = approx_equal(animal_height, tower_2_height)
     }
-  } else if (cp[1] === 'copy_tower') {
+  } else if (cp[1].startsWith('copy_tower')) {
     res = towersHaveIdenticalNames('tower_1', 'tower_2')
   } else {
     console.error('unrecognized config path?!')
@@ -180,12 +179,13 @@ export function touch_dispatcher(state, x, y, touchID) {
   const kind = query_keypad_kind()
   //const pos = getPositionInfoForKeypad(kind)
   const pos = global_constant.keypad_info[kind]
-  const button_geoms = kind ? getButtonGeomsFor(kind) : null
+  const button_geoms = kind ? get_button_geoms_for(kind) : null
+  // console.log('button_geoms', button_geoms)
   let found_one = false
   const visible = query_visible_buttons()
   for (const i of visible) {
-    if (special_button_names.includes(i)) {
-      if (pointIsInRectangle([x, y], special_button_geoms[i])) {
+    if (global_constant.special_button_geoms.hasOwnProperty(i)) {
+      if (pointIsInRectangle([x, y], global_constant.special_button_geoms[i])) {
         found_one = true
         doAction.setButtonHighlight(i)
         if ('submit' === i) handle_submit_button(state)

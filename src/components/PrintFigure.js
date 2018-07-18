@@ -1,11 +1,8 @@
 import React from 'react'
 import { View, StyleSheet } from 'react-native'
 import Tile, { animals, default_pixels_per_cm } from './Tile'
+import { global_constant } from '../App'
 //import { global_screen_width, global_screen_height} from './Workspace'
-
-const size11x17 = [1471, 2333]
-const size8p5x11 = [1112, 1471]
-const pixels_per_cm = 56.77
 
 const PrintFigure = ({ scale_factor }) => {
   const scale_down_for_laptop = false;
@@ -15,7 +12,8 @@ const PrintFigure = ({ scale_factor }) => {
   const rotate_whole_page = false;
 
   let content = []
-  const extra_scale = pixels_per_cm / default_pixels_per_cm
+  const extra_scale = global_constant.print_pixels_per_cm /
+    global_constant.screen_pixels_per_cm
   let anim1 = {  // first animal figure positions
     "ladybug": [5, 5],
     "mouse": [5, 100],
@@ -49,19 +47,19 @@ const PrintFigure = ({ scale_factor }) => {
   let width, height;
   if (use11x17) {
     if (landscape) {
-      width = size11x17[1]
-      height = size11x17[0]
+      width = global_constant.print_size11x17.height
+      height = global_constant.print_size11x17.width
     } else {
-      width = size11x17[0]
-      height = size11x17[1]
+      width = global_constant.print_size11x17.width
+      height = global_constant.print_size11x17.height
     }
   } else {  // use 8.5 x 11
     if (landscape) {
-      width = size8p5x11[1]
-      height = size8p5x11[0]
+      width = global_constant.print_size8p5x11.height
+      height = global_constant.print_size8p5x11.width
     } else {
-      width = size8p5x11[0]
-      height = size8p5x11[1]
+      width = global_constant.print_size8p5x11.width
+      height = global_constant.print_size8p5x11.height
     }
   }
   let transform = [];

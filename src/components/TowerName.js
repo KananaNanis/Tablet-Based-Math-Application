@@ -1,7 +1,8 @@
 import React from 'react'
 import { StyleSheet, View, Text } from 'react-native'
-import { global_size2symbol, global_size2color, global_size2fontsize, global_size2padding, global_fiver_shadow } from './Num'
+import { global_fiver_shadow } from './Num'
 import { query_whole_tower } from '../providers/query_store'
+import { global_constant } from '../App'
 
 const TowerName = ({ id, name, position }) => {
   // expand the name into individual texts
@@ -18,17 +19,17 @@ const TowerName = ({ id, name, position }) => {
       <Text style={[styles.tower_name_element,
       {
         bottom: name_info[i].bottom,
-        color: global_size2color[size],
-        fontSize: global_size2fontsize[size],
-        //paddingLeft: global_size2padding[size],
+        color: global_constant.tower.size2color[size],
+        fontSize: global_constant.tower.size2fontsize[size],
+        //paddingLeft: global_constant.tower.size2padding[size],
       },
       global_fiver_shadow[is_fiver],
       name_info[i].style]} key={i}>
         {name_info[i].quantity}
-        {' ' + global_size2symbol[size]}
+        {' ' + global_constant.tower.size2symbol[size]}
       </Text>
     )
-    height = name_info[i].bottom + global_size2fontsize[size]
+    height = name_info[i].bottom + global_constant.tower.size2fontsize[size]
   }
   height += 5
   //console.log(height)

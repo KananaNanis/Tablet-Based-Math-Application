@@ -112,6 +112,10 @@ export function setPrevConfigPath(c) {
   return { type: AT.SET_PREV_CONFIG_PATH, c }
 }
 
+export function setCenterText(text) {
+  return { type: AT.SET_CENTER_TEXT, text }
+}
+
 export function resetAll() {
   return { type: AT.RESET_ALL }
 }

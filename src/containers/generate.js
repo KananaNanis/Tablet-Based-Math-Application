@@ -1,6 +1,6 @@
-import { animals } from '../components/Tile'
 import { query_scale_factor } from '../providers/query_store';
 import { global_workspace_height } from '../components/Workspace';
+import { global_constant } from '../App'
 
 export function height_too_tall(height) {
   const pixels = query_scale_factor() * height
@@ -8,14 +8,14 @@ export function height_too_tall(height) {
 }
 
 export function animal_too_tall(animal_name) {
-  const height = animals[animal_name][0]
+  const height = global_constant.animals[animal_name].height
   return height_too_tall(height)
 }
 
 let animal_chosen = 'kitty'
 export function pick_animal_name() {
   //console.log('choose_random_animal', Object.keys(animals))
-  const animal_names = Object.keys(animals)
+  const animal_names = Object.keys(global_constant.animals)
   for (const i of Array(10).keys()) {
     const animal_name = animal_names[
       Math.floor(animal_names.length * Math.random())]

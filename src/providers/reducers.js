@@ -208,7 +208,7 @@ function freeze_display(state = null, action) {
   }
 }
 
-function num_stars(state = 3, action) {
+function num_stars(state = 0, action) {
   switch (action.type) {
     case AT.SET_NUM_STARS:
       return action.n
@@ -244,6 +244,15 @@ function prev_config_path(state = [], action) {
   }
 }
 
+function center_text(state = '', action) {
+  switch (action.type) {
+    case AT.SET_CENTER_TEXT:
+      return action.text
+    default:
+      return state
+  }
+}
+
 const suujiAppInner = combineReducers({
   tower_ids,
   tile_ids,
@@ -263,6 +272,7 @@ const suujiAppInner = combineReducers({
   config_path,
   config_iteration,
   prev_config_path,
+  center_text,
 })
 
 const initialState = {
@@ -270,6 +280,7 @@ const initialState = {
   tower_ids: [],
   tile_ids: [],
   lift_ids: [],
+  /*
   name: {},
   position: {},
   style: { //'tower_2': { 'opacity': 0.5 }
@@ -285,7 +296,9 @@ const initialState = {
 
   // keypad info
   keypad_kind: null,
+  */
   button_display: {},
+  /*
   button_highlight: null,
   freeze_display: false,
 
@@ -293,15 +306,19 @@ const initialState = {
   num_stars: 0,
   //scale_factor: 520,
   //scale_factor : 2,
+  */
 
   config_path: [],
+  /*
   config_iteration: 0,
   prev_config_path: [],
+  */
 }
 
 function suujiApp(state, action) {
   if (AT.RESET_ALL == action.type) return initialState
   return state ? suujiAppInner(state, action) : initialState
+  //return suujiAppInner(state, action)
 }
 
 export default suujiApp

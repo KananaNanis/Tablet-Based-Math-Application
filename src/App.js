@@ -10,8 +10,9 @@ import { global_store } from './index.js'
 import Sound from './assets/sound'
 import * as Actions from './providers/actions'
 import PrintFigure from './components/PrintFigure';
-import { enter_exit_config, get_config, first_config_path, next_config_path } from './providers/change_config'
+import { enter_exit_config, as_position } from './providers/change_config'
 import { query_config_path } from './providers/query_store';
+import { get_keypad_width_height } from './components/Keypad';
 
 export let doAction = {}
 export let global_sound = {}
@@ -20,12 +21,46 @@ let prev_response_text = ''
 export let config_tree = {}
 export let global_constant = false
 
+function convert_unicode(input) {
+  return input.replace(/\\u(\w\w\w\w)/g, function (a, b) {
+    var charcode = parseInt(b, 16);
+    return String.fromCharCode(charcode);
+  });
+}
+
+function update_constant_position_info() {
+  const p = global_constant.placard
+  p.position = as_position(p.position, p.width, p.height)
+  for (const item of ['special_button_geoms', 'keypad_info']) {
+    for (const key in global_constant[item]) {
+      let geom = global_constant[item][key], width, height
+      if ('keypad_info' == item) {
+        const g = get_keypad_width_height(key)
+        width = g.width
+        height = g.height
+      } else {
+        width = geom.width
+        height = geom.height
+      }
+      var pos = as_position(geom.position, width, height)
+      //console.log(key, geom.position, pos)
+      global_constant[item][key].position = pos
+    }
+  }
+}
+
 export async function load_config_tree() {
   try {
     if (!global_constant) {  // first load the constants
       let const_buffer = await fetch('assets/constant.yaml');
       let const_text = await const_buffer.text();
+      const_text = convert_unicode(const_text)
       global_constant = yaml.safeLoad(const_text);
+      update_constant_position_info()
+      if ('undefined' === typeof user_id)  // for testing
+        global_constant.username = 'Olaf'
+      else
+        global_constant.username = global_constant.first_name_of[user_id]
     }
     let response = await fetch('assets/config.yaml');
     let response_text = await response.text();
@@ -50,7 +85,7 @@ export async function load_config_tree() {
     //let path = ['measure_height', 'animal_height', 'level_1']
     //let path = ['measure_height', 'copy_tower', 'level_1']
     //let path = first_config_path()
-    const path = global_constant.starting_config_path
+    const path = config_tree.params.starting_config_path
     // clear the store
     doAction.resetAll()
 
@@ -61,7 +96,7 @@ export async function load_config_tree() {
 
     //doAction.setCurrentConfig('animal_height')
     //doAction.setCurrentConfig('in_between')
-    enter_exit_config(true);
+    enter_exit_config(true, true);
   } catch (error) {
     console.error(error);
   }

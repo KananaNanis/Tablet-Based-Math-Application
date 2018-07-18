@@ -1,9 +1,7 @@
-import { global_store } from '../index.js'
+import { global_store } from '../index'
+import { global_constant } from '../App'
 import { get_block_size_from_group, get_how_many_from_group, get_is_fiver_from_group } from '../components/Block'
-import { global_size2fontsize, global_size2depth } from '../components/Num'
-import { getButtonGeomsFor } from '../components/Keypad'
-import { special_button_names } from '../components/Workspace.js';
-import { width_from_name } from './change_config.js';
+import { get_button_geoms_for } from '../components/Keypad'
 
 export const consolidate_info_for_ids = (ids, name, position, style, tower_style = false, block_opacity = false, misc = false) => {
   //console.log('consolidate_info_for_ids', ids)
@@ -61,7 +59,7 @@ export function query_tower_blocks(num_id, tower = null, just_position) {
     //console.log('size ' + size + ' how_many ' + how_many)
     const height = scale_factor * (10 ** size)
     const is_tiny = height < 4
-    const width = scale_factor * global_size2depth[size]
+    const width = scale_factor * global_constant.tower.size2depth[size]
     if (is_fiver) {
       //width *= is_tiny ? 1.5 : 1.1
       height *= 5
@@ -167,7 +165,7 @@ export function query_whole_tower(num_id, tower = null, just_position) {
     if (is_fiver && was_fiver) is_fiver = 3 - was_fiver
     was_fiver = is_fiver
     //console.log('size ' + size + ' how_many ' + how_many)
-    const height = global_size2fontsize[size] + 2
+    const height = global_constant.tower.size2fontsize[size] + 2
     if (just_position) {
       name_info.push([tower.position[0], tower.position[1] + floor, width, height])
     } else {
@@ -192,12 +190,12 @@ export function query_keypad_kind() {
 export function query_visible_buttons() {
   const state = global_store.getState()
   let res = []
-  for (const i of special_button_names) {
+  for (const i in global_constant.special_button_geoms) {
     if (i in state.button_display && state.button_display[i] !== 'false')
       res.push(i)
   }
   if (state.keypad_kind) {
-    const i_end = getButtonGeomsFor(state.keypad_kind).length
+    const i_end = get_button_geoms_for(state.keypad_kind).length
     for (const i = 0; i < i_end; ++i) {
       const istr = i + ''
       if (!(istr in state.button_display) ||

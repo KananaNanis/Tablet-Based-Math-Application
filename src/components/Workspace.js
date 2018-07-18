@@ -1,10 +1,11 @@
 import React from 'react'
-import { View, Image, StyleSheet, Dimensions } from 'react-native'
+import { View, Image, Text, StyleSheet, Dimensions } from 'react-native'
 import Num from './Num'
 import Keypad from './Keypad'
 import Button from './Button'
 import Tile from './Tile'
 import Placard from './Placard'
+import { global_constant } from '../App'
 
 export const global_screen_width = Dimensions.get('window').width
 export const global_screen_height = Dimensions.get('window').height
@@ -14,19 +15,12 @@ export const global_workspace_height = global_screen_height - global_grass_heigh
 export const window2workspaceCoords = (pos0) =>
   [pos0[0], global_workspace_height - pos0[1]]
 
-export const special_button_names = ['submit', 'restart', 'delete', 'next']
-export const special_button_geoms = {
-  'submit': [5, 400, 210, 70],
-  'restart': [5, 330, 210, 70],
-  'delete': [5, 330, 210, 70],
-  'next': [180, 130, 210, 70],
-}
-
 const Workspace = ({ scale_factor, keypad_kind, button_display,
   button_highlight, freeze_display, num_stars, config_path,
-  all_nums, all_tiles, all_lifts }) => {
+  all_nums, all_tiles, all_lifts, center_text }) => {
 
   //console.log('Workspace all_nums', all_nums, 'all_tiles', all_tiles)
+  //console.log('Workspace center_text', center_text)
   let nums = []
   for (const id in all_nums) {
     const num = all_nums[id]
@@ -34,6 +28,7 @@ const Workspace = ({ scale_factor, keypad_kind, button_display,
       <Num id={id}
         name={num.name}
         position={num.position}
+        style={num.style}
         tower_style={num.tower_style}
         block_opacity={num.block_opacity}
         scale_factor={scale_factor}
@@ -47,6 +42,7 @@ const Workspace = ({ scale_factor, keypad_kind, button_display,
       <Tile
         name={tile.name}
         position={tile.position}
+        style={tile.style}
         scale_factor={scale_factor}
         key={id} />
     )
@@ -65,6 +61,18 @@ const Workspace = ({ scale_factor, keypad_kind, button_display,
   }
   */
   let misc = [], key = 0
+  if (1) { // add username
+    ++key
+    misc.push(<Text
+      style={styles.username}
+      key={key}>{global_constant.username}</Text>)
+  }
+  if (center_text) {
+    ++key
+    misc.push(<Text
+      style={styles.center_text}
+      key={key}>{center_text}</Text>)
+  }
   if (keypad_kind) {
     //console.log('keypad_kind', keypad_kind)
     ++key
@@ -75,20 +83,31 @@ const Workspace = ({ scale_factor, keypad_kind, button_display,
       freeze_display={freeze_display}
       key={key} />)
   }
+  if ('in_between' == config_path[0]) {
+    ++key
+    misc.push(
+      <Placard
+        position={global_constant.placard.position}
+        width={global_constant.placard.width}
+        height={global_constant.placard.height}
+        key={key}
+      />
+    )
+  }
   const button_view = {
     'submit': { borderColor: 'lime' },
   }
   const highlight_style = {
     backgroundColor: 'lightgreen'
   }
-  for (const special_button of special_button_names) {
+  for (const special_button in global_constant.special_button_geoms) {
     if (special_button in button_display) {
       ++key
       misc.push(
         <Button
-          position={special_button_geoms[special_button]}
-          width={special_button_geoms[special_button][2]}
-          height={special_button_geoms[special_button][3]}
+          position={global_constant.special_button_geoms[special_button].position}
+          width={global_constant.special_button_geoms[special_button].width}
+          height={global_constant.special_button_geoms[special_button].height}
           view_style={[
             styles.button_view_default,
             button_view[special_button],
@@ -111,15 +130,6 @@ const Workspace = ({ scale_factor, keypad_kind, button_display,
       />
     )
   }
-  if ('in_between' == config_path[0]) {
-    ++key
-    misc.push(
-      <Placard
-        position={[10, 100]}
-        key={key}
-      />
-    )
-  }
   return <View style={styles.workspace}>{nums}{tiles}{misc}</View>
   /*
   return <View style={styles.workspace}>
@@ -136,6 +146,8 @@ const styles = StyleSheet.create({
     position: 'absolute',
     left: 0,
     bottom: global_grass_height,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   button_view_default: {
     backgroundColor: 'green',
@@ -147,6 +159,15 @@ const styles = StyleSheet.create({
     fontSize: 40,
     color: 'white',
     marginBottom: 10,
+  },
+  username: {
+    position: 'absolute',
+    fontSize: 20,
+    top: 0,
+    left: global_screen_width/2
+  },
+  center_text: {
+    fontSize: 30
   }
 })
 
