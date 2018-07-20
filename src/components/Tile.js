@@ -1,6 +1,6 @@
 import React from 'react'
 import { StyleSheet, View, Image } from 'react-native'
-import { global_constant } from '../App'
+import { global_constant, image_location } from '../App'
 
 const Tile = ({ name, position, style, extra_scale }) => {
   console.log('Tile name', name)
@@ -20,7 +20,7 @@ const Tile = ({ name, position, style, extra_scale }) => {
     }]} >
       <Image
         style={{ position: 'absolute', width, height }}
-        source={require('../assets/img/' + name + '.png')} />
+        source={image_location(name)} />
     </View>
   )
 }

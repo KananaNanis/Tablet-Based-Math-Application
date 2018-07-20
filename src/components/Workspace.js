@@ -5,7 +5,7 @@ import Keypad from './Keypad'
 import Button from './Button'
 import Tile from './Tile'
 import Placard from './Placard'
-import { global_constant } from '../App'
+import { global_constant, image_location } from '../App'
 
 export const global_screen_width = Dimensions.get('window').width
 export const global_screen_height = Dimensions.get('window').height
@@ -125,10 +125,11 @@ const Workspace = ({ scale_factor, keypad_kind, button_display,
     misc.push(
       <Image
         style={{ position: 'absolute', right: 5 + 25 * i, top: 5, width: 20, height: 20 }}
-        source={require('../assets/img/star.png')}
+        source={image_location('star')}
         key={key}
       />
     )
+        //source={require('img/star.png')}
   }
   return <View style={styles.workspace}>{nums}{tiles}{misc}</View>
   /*

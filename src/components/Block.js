@@ -1,5 +1,6 @@
 import React from 'react'
 import { View, Image, Text } from 'react-native'
+import { image_location } from '../App';
 
 export function get_block_size_from_group(group) {
   return Math.ceil(-1 + .00001 + (Math.log(group) / Math.log(10)))
@@ -65,7 +66,7 @@ const Block = ({ width, height, radius_style, img_name, view_style, text_style, 
   if (img_name) {
     img = (<Image style={[radius_style,
                     {position: 'absolute', width, height }]}
-      source={require('../assets/img/' + img_name + '.png')} />)
+      source={image_location(img_name)} />)
   }
   return (<View style={[view_style, radius_style, {width, height}]}>
     {img}

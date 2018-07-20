@@ -17,6 +17,8 @@ import { get_keypad_width_height } from './components/Keypad';
 export let doAction = {}
 export let global_sound = {}
 
+export const image_location = (name) => (require("./assets/img/" + name + ".png"))
+
 let prev_response_text = ''
 export let config_tree = {}
 export let global_constant = false
@@ -52,7 +54,7 @@ function update_constant_position_info() {
 export async function load_config_tree() {
   try {
     if (!global_constant) {  // first load the constants
-      let const_buffer = await fetch('assets/constant.yaml');
+      let const_buffer = await fetch('assets/constant.yaml', { credentials: 'same-origin' });
       let const_text = await const_buffer.text();
       const_text = convert_unicode(const_text)
       global_constant = yaml.safeLoad(const_text);
@@ -60,9 +62,9 @@ export async function load_config_tree() {
       if ('undefined' === typeof user_id)  // for testing
         global_constant.username = 'Olaf'
       else
-        global_constant.username = global_constant.first_name_of[user_id]
+        global_constant.username = global_constant.first_name_for[user_id]
     }
-    let response = await fetch('assets/config.yaml');
+    let response = await fetch('assets/config.yaml', { credentials: 'same-origin' });
     let response_text = await response.text();
     if (response_text == prev_response_text) return
     prev_response_text = response_text
