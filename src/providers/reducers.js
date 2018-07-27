@@ -123,6 +123,18 @@ function style(state = {}, action) {
   }
 }
 
+function anim_info(state = {}, action) {
+  switch (action.type) {
+    case AT.SET_ANIM_INFO:
+      return Object.assign({}, state, {[action.id] : action.anim_info})
+    case AT.TOWER_DELETE:
+    case AT.TILE_DELETE:
+      return obj_add_remove_property(state, action.id, null);
+    default:
+      return state
+  }
+}
+
 function tower_style(state = {}, action) {
   let new_style = state[action.id] ? state[action.id] : {}
   switch (action.type) {
@@ -260,6 +272,7 @@ const suujiAppInner = combineReducers({
   name,
   position,
   style,
+  anim_info,
   tower_style,
   block_opacity,
   misc,

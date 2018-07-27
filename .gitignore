@@ -31,9 +31,11 @@ README.md.orig
 package-lock.json
 index.js.orig
 public/
+public_stub/
 src/assets
 src/index.css
 src/index.js
 src/registerServiceWorker.js
 src/providers/testThis.js
 src/downloadGoogleDoc.py
+src/old

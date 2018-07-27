@@ -20,20 +20,23 @@ const mapStateToProps = (state, ownProps) => {
       state.name,
       state.position,
       state.style,
+      state.anim_info,
+      state.misc,
       state.tower_style,
-      state.block_opacity,
-      state.misc),
+      state.block_opacity),
     all_tiles: consolidate_info_for_ids(
       state.tile_ids,
       state.name,
       state.position,
       state.style,
+      state.anim_info,
       state.misc),
     all_lifts: consolidate_info_for_ids(
       state.lift_ids,
       state.name,
       state.position,
       state.style,
+      state.anim_info,
       state.misc)
   }
 }

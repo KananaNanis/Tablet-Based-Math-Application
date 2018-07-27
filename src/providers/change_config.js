@@ -110,12 +110,15 @@ function do_timed_action(id, key, val) {
   // handle the following:
   // appear_after: 2000,
   // start_fade: 2500, end_fade: 3000
+  let delay = val
   if ('appear_after' == key) doAction.setOpacity(id, 0);
+  if ('fade_anim' == key) delay = val.start
   window.setTimeout(function () {
     if ('appear_after' == key) doAction.setOpacity(id, 1.0)
-    else if ('start_fade' == key) { }  // HOW?
-    else if ('end_fade' == key) doAction.setOpacity(id, 0)
-  }, val)
+    else if ('fade_anim' == key) {
+      doAction.setAnimInfo(id, {'fade_duration': val.duration} )
+    }
+  }, delay)
 }
 
 export function enter_exit_config(enter, verbose) {
@@ -188,7 +191,7 @@ export function enter_exit_config(enter, verbose) {
   if (config['modify']) {
     const c = config['modify']
     for (const id in c) {
-      if (id.startsWith('tower_')) {
+      if (id.startsWith('tower_') || id.startsWith('tile_')) {
         for (const key in c[id]) {
           if ('width' == key) {
             if (enter) {
@@ -199,7 +202,7 @@ export function enter_exit_config(enter, verbose) {
             } else doAction.towerSetWidth(id, null)
           } else if ('overflow' == key)
             doAction.towerSetOverflow(id, enter ? c[id][key] : null)
-          else if (['appear_after', 'start_fade', 'end_fade'].includes(key))
+          else if (['appear_after', 'fade_anim'].includes(key))
             do_timed_action(id, key, c[id][key])
         }
       }

@@ -19,16 +19,18 @@ const Workspace = ({ scale_factor, keypad_kind, button_display,
   button_highlight, freeze_display, num_stars, config_path,
   all_nums, all_tiles, all_lifts, center_text }) => {
 
-  //console.log('Workspace all_nums', all_nums, 'all_tiles', all_tiles)
+  console.log('Workspace all_nums', all_nums, 'all_tiles', all_tiles)
   //console.log('Workspace center_text', center_text)
   let nums = []
   for (const id in all_nums) {
     const num = all_nums[id]
+    console.log('num id', id, 'anim_info', num.anim_info)
     nums.push(
       <Num id={id}
         name={num.name}
         position={num.position}
         style={num.style}
+        anim_info={num.anim_info}
         tower_style={num.tower_style}
         block_opacity={num.block_opacity}
         scale_factor={scale_factor}
@@ -43,6 +45,7 @@ const Workspace = ({ scale_factor, keypad_kind, button_display,
         name={tile.name}
         position={tile.position}
         style={tile.style}
+        anim_info={tile.anim_info}
         scale_factor={scale_factor}
         key={id} />
     )
@@ -55,6 +58,8 @@ const Workspace = ({ scale_factor, keypad_kind, button_display,
       <Lift
         name={lift.name}
         position={lift.position}
+        style={lift.style}
+        anim_info={lift.anim_info}
         scale_factor={scale_factor}
         key={id} />
     )
@@ -100,9 +105,23 @@ const Workspace = ({ scale_factor, keypad_kind, button_display,
   const highlight_style = {
     backgroundColor: 'lightgreen'
   }
+  const freeze_highlight_style = {
+    backgroundColor: 'red'
+  }
+  const freeze_no_highlight_style = {
+    backgroundColor: 'grey'
+  }
+  console.log('freeze_display', freeze_display)
   for (const special_button in global_constant.special_button_geoms) {
     if (special_button in button_display) {
       ++key
+      let bg_style = {}
+      if (freeze_display) {
+        bg_style = (special_button === button_highlight) ?
+          freeze_highlight_style : freeze_no_highlight_style
+      } else if (special_button === button_highlight)
+        bg_style = highlight_style
+      console.log('bg_style', bg_style)
       misc.push(
         <Button
           position={global_constant.special_button_geoms[special_button].position}
@@ -111,7 +130,9 @@ const Workspace = ({ scale_factor, keypad_kind, button_display,
           view_style={[
             styles.button_view_default,
             button_view[special_button],
-            (special_button === button_highlight) ? highlight_style : {}
+            bg_style
+            //(special_button === button_highlight) ? 
+            //  (freeze_display ? freeze_highlight_style : highlight_style) : {}
           ]}
           label={special_button}
           label_style={styles.button_text_default}
@@ -129,7 +150,7 @@ const Workspace = ({ scale_factor, keypad_kind, button_display,
         key={key}
       />
     )
-        //source={require('img/star.png')}
+    //source={require('img/star.png')}
   }
   return <View style={styles.workspace}>{nums}{tiles}{misc}</View>
   /*
@@ -165,7 +186,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     fontSize: 20,
     top: 0,
-    left: global_screen_width/2
+    left: global_screen_width / 2
   },
   center_text: {
     fontSize: 30

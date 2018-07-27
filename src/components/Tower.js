@@ -1,67 +1,32 @@
 import React from 'react'
-import { StyleSheet, View, Animated } from 'react-native'
 import Block from './Block'
+import { StyleSheet, Animated, Text } from 'react-native'
 import { query_tower_blocks } from '../providers/query_store'
 import { global_workspace_height } from './Workspace'
 import { global_fiver_shadow } from './Num'
 import { global_constant } from '../App'
 
-/*
-class FadeInView extends React.Component {
-  state = {
-    fadeAnim: new Animated.Value(0),  // Initial value for opacity: 0
-  }
-
-  componentDidMount() {
-    Animated.timing(                  // Animate over time
-      this.state.fadeAnim,            // The animated value to drive
-      {
-        toValue: 1,                   // Animate to opacity: 1 (opaque)
-        duration: 10000,              // Make it take a while
-      }
-    ).start();                        // Starts the animation
-  }
-
-  render() {
-    let { fadeAnim } = this.state;
-
-    return (
-      <Animated.View                 // Special animatable View
-        style={{
-          ...this.props.style,
-          opacity: fadeAnim,         // Bind opacity to animated value
-        }}
-      >
-        {this.props.children}
-      </Animated.View>
-    );
-  }
+export function start_fade_anim(anim_var, duration) {
+  Animated.timing(anim_var,
+    {
+      toValue: 0,
+      duration: duration,
+    }
+  ).start();
 }
-*/
 
-class Tower extends React.Component
-//const Tower = ({ id, name, position, style = {}, block_opacity = [], scale_factor }) =>
-{
+class Tower extends React.Component {
   state = {
-    fadeAnim: new Animated.Value(0),  // Initial value for opacity: 0
+    fadeAnim: new Animated.Value(1),  // Initial value for opacity: 1
   }
-
-  /*
-  componentDidMount() {
-    Animated.timing(                  // Animate over time
-      this.state.fadeAnim,            // The animated value to drive
-      {
-        toValue: 1,                   // Animate to opacity: 1 (opaque)
-        duration: 10000,              // Make it take a while
-      }
-    ).start();                        // Starts the animation
-  }
-  */
 
   render() {
     let { fadeAnim } = this.state;
-    let { id, name, position, style={}, block_opacity=[]} = this.props
-    console.log('id', id, 'name', name)
+    let { id, name, position, style = {}, anim_info = {}, block_opacity = [] } = this.props
+    //console.log('id', id, 'name', name)
+    if (anim_info && anim_info.hasOwnProperty('fade_duration')) {
+      start_fade_anim(this.state.fadeAnim, anim_info.fade_duration);
+    }
 
     const block_info = query_tower_blocks(id, { name, position, block_opacity })
 
@@ -77,13 +42,6 @@ class Tower extends React.Component
       //console.log('size', size)
       if (is_small && !is_fiver)++small_in_a_row
       else small_in_a_row = 0
-      /*
-      if (is_fiver) {
-        if (size !== prev_size || 5 === fiver_in_a_row) fiver_in_a_row = 0
-        ++fiver_in_a_row
-      } else fiver_in_a_row = 0
-      prev_size = size
-      */
 
       const width = b.width
       let height = b.height
@@ -122,16 +80,6 @@ class Tower extends React.Component
       if (-1 === size && !is_fiver) img_name = 'turtle'
       else if (-1 === size && is_fiver) img_name = 'fiverTurtle'
       else if (0 === size && !is_fiver) img_name = 'unit'
-      /*
-      let width_factor = is_tiny ? .5 : is_small ? .4 : .1
-      const fiver_style = [{}, {
-        borderLeftWidth: width_factor * height,
-        borderLeftColor: is_tiny ? 'orange' : '#633',
-      }, {
-        borderRightWidth: width_factor * height,
-        borderRightColor: is_tiny ? 'orange' : '#633',
-      }][is_fiver]
-      */
       let view_style = {
         position: 'absolute',
         backgroundColor: (width < 10) ? 'black' : '#dbb',
@@ -168,12 +116,14 @@ class Tower extends React.Component
         text_content={text_content}
         key={i} />)
     }
-    return (<View style={[
+    return (<Animated.View style={[
       styles.tower,
       { 'height': global_workspace_height },
-      style]}>
+      { 'opacity': fadeAnim },
+      style,
+    ]}>
       {blocks}
-    </View>
+    </Animated.View>
     )
   }
 }

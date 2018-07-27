@@ -130,7 +130,7 @@ function handle_delete_button(state) {
 }
 
 function handle_next_button(state) {
-  if ('up' == state) 
+  if ('up' == state)
     transition_to_next_config()
 }
 
@@ -159,13 +159,23 @@ function answer_is_correct() {
   return res
 }
 
+function incorrect_button_response() {
+  reduce_num_stars()
+  doAction.setFreezeDisplay(true);
+  window.setTimeout(function () {
+    doAction.setButtonHighlight(null);
+    doAction.setFreezeDisplay(false);
+  }, 3000);
+}
+
 function handle_submit_button(state) {
   if ('up' == state) {
     if (answer_is_correct()) {
       global_sound['chirp1'].play()
+      doAction.setButtonHighlight(null)
       transition_to_next_config()
     } else {
-      reduce_num_stars()
+      incorrect_button_response()
     }
   }
 }
@@ -192,6 +202,7 @@ export function touch_dispatcher(state, x, y, touchID) {
         else if ('delete' === i) handle_delete_button(state)
         else if ('next' === i) handle_next_button(state)
         else console.warn('touch_dispatcher did not handle', i)
+        return
       }
     } else {
       if (pointIsInRectangle([x, y], button_geoms[i], pos.position)) {
@@ -203,12 +214,7 @@ export function touch_dispatcher(state, x, y, touchID) {
           const curr = (new_is_fiver ? 5 : 1) * 10 ** new_size;
           const correct = correct_next_button();
           if (curr !== correct) {
-            reduce_num_stars()
-            doAction.setFreezeDisplay(true);
-            window.setTimeout(function () {
-              doAction.setButtonHighlight(null);
-              doAction.setFreezeDisplay(false);
-            }, 3000);
+            incorrect_button_response()
             return;
           }
           const pixel_height = query_scale_factor() * query_tower_height('tower_2')

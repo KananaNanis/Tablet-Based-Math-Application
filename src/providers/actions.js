@@ -63,6 +63,10 @@ export function setOpacity(id, opacity) {
   return { type: AT.SET_OPACITY, id, opacity }
 }
 
+export function setAnimInfo(id, anim_info) {
+  return { type: AT.SET_ANIM_INFO, id, anim_info }
+}
+
 export function towerSetWidth(id, width) {
   return { type: AT.TOWER_SET_WIDTH, id, width }
 }

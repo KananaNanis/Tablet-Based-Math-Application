@@ -3,7 +3,8 @@ import { global_constant } from '../App'
 import { get_block_size_from_group, get_how_many_from_group, get_is_fiver_from_group } from '../components/Block'
 import { get_button_geoms_for } from '../components/Keypad'
 
-export const consolidate_info_for_ids = (ids, name, position, style, tower_style = false, block_opacity = false, misc = false) => {
+export const consolidate_info_for_ids = (ids, name, position,
+  style, anim_info, misc = false, tower_style = false, block_opacity = false) => {
   //console.log('consolidate_info_for_ids', ids)
   let res = {}
   for (const id of ids) {
@@ -11,9 +12,13 @@ export const consolidate_info_for_ids = (ids, name, position, style, tower_style
       name: name[id],
       position: position[id],
       style: style[id],
+      anim_info: anim_info[id],
       misc: misc[id]
     }
-    if (tower_style) res[id].tower_style = tower_style[id]
+    if (tower_style) {
+      console.log('tower_style', tower_style)
+      res[id].tower_style = tower_style[id]
+    }
     if (block_opacity) res[id].block_opacity = block_opacity[id]
   }
   return res

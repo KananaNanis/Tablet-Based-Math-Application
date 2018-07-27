@@ -17,12 +17,12 @@ export const global_fiver_shadow = [
   },
 ]
 
-const Num = ({ id, name, position, style, tower_style, block_opacity, scale_factor }) => (
+const Num = ({ id, name, position, style, anim_info, tower_style, block_opacity, scale_factor }) => (
   <View style={[styles.num, style,
   { left: position[0], bottom: position[1] }
   ]}>
-    <Tower id={id} name={name} position={position} style={tower_style} block_opacity={block_opacity} scale_factor={scale_factor} />
-    <TowerName id={id} name={name} position={position} />
+    <Tower id={id} name={name} position={position} style={tower_style} anim_info={anim_info} block_opacity={block_opacity} scale_factor={scale_factor} />
+    <TowerName id={id} name={name} position={position} anim_info={anim_info} />
   </View>
 )
 

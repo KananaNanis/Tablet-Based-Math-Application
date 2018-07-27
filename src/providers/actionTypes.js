@@ -1,6 +1,7 @@
 export const SET_NAME = 'SET_NAME'
 export const SET_POSITION = 'SET_POSITION'
 export const SET_OPACITY = 'SET_OPACITY'
+export const SET_ANIM_INFO = 'SET_ANIM_INFO'
 export const TOWER_CREATE = 'TOWER_CREATE'
 export const TOWER_DELETE = 'TOWER_DELETE'
 export const TOWER_ADD_BLOCK = 'TOWER_ADD_BLOCK'
