@@ -10,7 +10,8 @@ class Tile extends React.Component {
 
   render() {
     let { fadeAnim } = this.state;
-    let { name, position, style, anim_info, extra_scale } = this.props
+    let { name, position, style, anim_info, just_grey, extra_scale } = this.props
+    //just_grey = true
     //console.log('Tile  name', name)
     let use_anim = false;
     if (anim_info && anim_info.hasOwnProperty('fade_duration')) {
@@ -31,11 +32,12 @@ class Tile extends React.Component {
       use_anim ? { 'opacity': fadeAnim } : {},
       {
         width: width + 2,
-        height: height + 2
+        height: height + 2,
+        borderColor: just_grey ? 'lightgrey' : 'orange',
       }]} >
         <Image
           style={{ position: 'absolute', width, height }}
-          source={image_location(name)} />
+          source={image_location(name, just_grey)} />
       </Animated.View>
     )
   }
@@ -45,7 +47,6 @@ const styles = StyleSheet.create({
   tile: {
     position: 'absolute',
     borderWidth: 1,
-    borderColor: 'orange',
   },
 })
 

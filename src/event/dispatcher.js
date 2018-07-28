@@ -1,6 +1,6 @@
 import {
   query_keypad_kind, query_visible_buttons, query_tower_name, query_top_block, query_num_stars, query_name_of_tile,
-  query_tower_height, query_config_path, query_config_iteration, query_scale_factor, query_freeze_display, height2tower_name
+  query_tower_height, query_config_path, query_config_iteration, query_scale_factor, query_freeze_display, height2tower_name, query_name_of_door
 } from '../providers/query_store'
 import { get_button_geoms_for } from '../components/Keypad'
 import { global_workspace_height } from '../components/Workspace'
@@ -229,4 +229,12 @@ export function touch_dispatcher(state, x, y, touchID) {
     }
   }
   if ('up' == state || !found_one) doAction.setButtonHighlight(null)
+  if ('undefined' !== typeof query_name_of_door('door_1')) {  // handle door_1?
+    const scale_factor = query_scale_factor()
+    doAction.setName('door_1', y/scale_factor)
+  }
+  if ('undefined' !== typeof query_name_of_door('door_p1')) {  // same
+    const scale_factor = query_scale_factor()
+    doAction.setName('door_p1', y/scale_factor)
+  }
 }

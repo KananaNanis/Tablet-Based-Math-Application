@@ -5,7 +5,8 @@ params:
     button_submit: { position: [5, 200] }
   # starting_config_path: ['all_done']
   # starting_config_path: ['in_between']
-  starting_config_path: ['measure_height', 'animal_height_subitize', 'level_1']
+  starting_config_path: ['proportion']
+  # starting_config_path: ['measure_height', 'animal_height_subitize', 'level_1']
   # starting_config_path: ['measure_height', 'copy_tower_subitize', 'level_1']
   # starting_config_path: ['measure_height', 'animal_height', 'level_1']
   # starting_config_path: ['measure_height', 'copy_tower', 'level_1']
@@ -64,6 +65,17 @@ measure_height:
           fade_anim: { start: 2500, duration: 500 }
         }
       events: { submit: same_height }
+proportion:
+  params:
+    create:
+      door_p1: 0.5
+      tower_1: { name: [.5, .3] }
+      # tile_1: { name: "puppy" }
+      button_submit:
+    modify:
+      door_p1: { position: [5, 0] }
+      tower_1: { position: [50vw, 0] }
+      # tile_1: { position: [50vw, 0] }
 all_done:
   params:
     create:
@@ -78,7 +90,7 @@ all_done:
 #       - params: {op: +, left: 35}
 #       - bar1: {value: random1}
 #       - bar2: {value: random2}
-#       - lift1:
+#       - door1:
 #         - params: {-locked, +knob_hidden, +is_target}
 #     - button_submit: []
 #   - modify: []

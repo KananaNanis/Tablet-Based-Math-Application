@@ -27,8 +27,8 @@ export function tileCreate(id, name, position) {
   return { type: AT.TILE_CREATE, id, name, position }
 }
 
-export function liftCreate(id, name, position) {
-  return { type: AT.LIFT_CREATE, id, name, position }
+export function doorCreate(id, name, position) {
+  return { type: AT.DOOR_CREATE, id, name, position }
 }
 
 export function towerDelete(id) {
@@ -39,8 +39,8 @@ export function tileDelete(id, name, position) {
   return { type: AT.TILE_DELETE, id }
 }
 
-export function liftDelete(id, name, position) {
-  return { type: AT.LIFT_DELETE, id }
+export function doorDelete(id, name, position) {
+  return { type: AT.DOOR_DELETE, id }
 }
 
 export function setName(id, name) {

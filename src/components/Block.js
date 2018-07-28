@@ -61,12 +61,12 @@ export function add_block_to_name(new_size, new_is_fiver, name0) {
   return name
 }
 
-const Block = ({ width, height, radius_style, img_name, view_style, text_style, text_content }) => {
+const Block = ({ width, height, radius_style, img_name, view_style, text_style, text_content, just_grey }) => {
   let img = null;
   if (img_name) {
     img = (<Image style={[radius_style,
                     {position: 'absolute', width, height }]}
-      source={image_location(img_name)} />)
+      source={image_location(img_name, just_grey)} />)
   }
   return (<View style={[view_style, radius_style, {width, height}]}>
     {img}

@@ -16,7 +16,7 @@ export const consolidate_info_for_ids = (ids, name, position,
       misc: misc[id]
     }
     if (tower_style) {
-      console.log('tower_style', tower_style)
+      //console.log('tower_style', tower_style)
       res[id].tower_style = tower_style[id]
     }
     if (block_opacity) res[id].block_opacity = block_opacity[id]
@@ -217,6 +217,11 @@ export function query_num_stars() {
 }
 
 export function query_name_of_tile(id) {
+  const state = global_store.getState()
+  return state.name[id]
+}
+
+export function query_name_of_door(id) {
   const state = global_store.getState()
   return state.name[id]
 }

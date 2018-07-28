@@ -83,8 +83,7 @@ export function width_pixels_from_name(name, scale_factor) {
   if (!name) return 0
   if (global_constant.animals.hasOwnProperty(name)) {
     const a = global_constant.animals[name]
-    console.log('width_pixels_from_name name', name,
-      'scale_factor', scale_factor)
+    //console.log('width_pixels_from_name name', name, 'scale_factor', scale_factor)
     return scale_factor * a.height * a.pixel_width / a.pixel_height
   } else if (name.length >= 1) {
     const group = name[0]
@@ -155,7 +154,7 @@ export function enter_exit_config(enter, verbose) {
         if ('buildTower' == c[id]) {
           update_keypad_button_visibility(null, null, null)
         }
-      } else if (id.startsWith('tower_') || id.startsWith('tile_')) {
+      } else if (id.startsWith('tower_') || id.startsWith('tile_') || id.startsWith('door_')) {
         // assert: we have necessary info in the 'modify' area
         let name = null
         if (enter) {
@@ -177,13 +176,18 @@ export function enter_exit_config(enter, verbose) {
             //console.log('deleting', id)
             doAction.towerDelete(id)
           }
-        } else {
+        } else if (id.startsWith('tile_')) {
           if (enter) {
             const w = width_pixels_from_name(name, sc)
             const h = height_pixels_from_name(name, sc)
             doAction.tileCreate(id, name,
               as_position(config['modify'][id]['position'], w, h))
           } else doAction.tileDelete(id)
+        } else if (id.startsWith('door_')) {
+          if (enter) {
+            doAction.doorCreate(id, name,
+              as_position(config['modify'][id]['position']))
+          } else doAction.doorDelete(id)
         }
       }
     }

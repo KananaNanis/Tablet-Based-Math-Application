@@ -60,11 +60,11 @@ function tile_ids(state = [], action) {
   }
 }
 
-function lift_ids(state = [], action) {
+function door_ids(state = [], action) {
   switch (action.type) {
-    case AT.LIFT_CREATE:
+    case AT.DOOR_CREATE:
       return array_add_remove_element(state, action.id, true, true)
-    case AT.LIFT_DELETE:
+    case AT.DOOR_DELETE:
       return array_add_remove_element(state, action.id, false, true)
     default:
       return state
@@ -75,10 +75,12 @@ function name(state = {}, action) {
   switch (action.type) {
     case AT.TOWER_CREATE:
     case AT.TILE_CREATE:
+    case AT.DOOR_CREATE:
     case AT.SET_NAME:
       return obj_add_remove_property(state, action.id, action.name);
     case AT.TOWER_DELETE:
     case AT.TILE_DELETE:
+    case AT.DOOR_DELETE:
       return obj_add_remove_property(state, action.id, null);
     case AT.TOWER_ADD_BLOCK:
       return {
@@ -99,10 +101,12 @@ function position(state = {}, action) {
   switch (action.type) {
     case AT.TOWER_CREATE:
     case AT.TILE_CREATE:
+    case AT.DOOR_CREATE:
     case AT.SET_POSITION:
       return obj_add_remove_property(state, action.id, action.position);
     case AT.TOWER_DELETE:
     case AT.TILE_DELETE:
+    case AT.DOOR_DELETE:
       return obj_add_remove_property(state, action.id, null);
     default:
       return state
@@ -117,6 +121,7 @@ function style(state = {}, action) {
       return Object.assign({}, state, {[action.id] : new_style})
     case AT.TOWER_DELETE:
     case AT.TILE_DELETE:
+    case AT.DOOR_DELETE:
       return obj_add_remove_property(state, action.id, null);
     default:
       return state
@@ -129,6 +134,7 @@ function anim_info(state = {}, action) {
       return Object.assign({}, state, {[action.id] : action.anim_info})
     case AT.TOWER_DELETE:
     case AT.TILE_DELETE:
+    case AT.DOOR_DELETE:
       return obj_add_remove_property(state, action.id, null);
     default:
       return state
@@ -268,7 +274,7 @@ function center_text(state = '', action) {
 const suujiAppInner = combineReducers({
   tower_ids,
   tile_ids,
-  lift_ids,
+  door_ids,
   name,
   position,
   style,
@@ -289,10 +295,10 @@ const suujiAppInner = combineReducers({
 })
 
 const initialState = {
-  // general info on towers, tiles, and lifts
+  // general info on towers, tiles, and doors
   tower_ids: [],
   tile_ids: [],
-  lift_ids: [],
+  door_ids: [],
   /*
   name: {},
   position: {},

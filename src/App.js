@@ -10,14 +10,16 @@ import { global_store } from './index.js'
 import Sound from './assets/sound'
 import * as Actions from './providers/actions'
 import PrintFigure from './components/PrintFigure';
+import Door from './components/Door';
 import { enter_exit_config, as_position } from './providers/change_config'
-import { query_config_path } from './providers/query_store';
+import { query_config_path, query_scale_factor } from './providers/query_store';
 import { get_keypad_width_height } from './components/Keypad';
 
 export let doAction = {}
 export let global_sound = {}
 
-export const image_location = (name) => (require("./assets/img/" + name + ".png"))
+export const image_location = (name, just_grey = false) => (require("./assets/img/"
+  + name + (just_grey ? '.bw' : '') + ".png"))
 
 let prev_response_text = ''
 export let config_tree = {}
@@ -70,7 +72,7 @@ export async function load_config_tree() {
     prev_response_text = response_text
     //console.log(response_text);
     config_tree = yaml.safeLoad(response_text);
-    console.log('config_tree', config_tree);
+    //console.log('config_tree', config_tree);
 
     // create the bound action creators!
     if (0) { // verbose version
@@ -98,7 +100,8 @@ export async function load_config_tree() {
 
     //doAction.setCurrentConfig('animal_height')
     //doAction.setCurrentConfig('in_between')
-    enter_exit_config(true, true);
+    const verbose = false
+    enter_exit_config(true, verbose);
   } catch (error) {
     console.error(error);
   }
@@ -130,7 +133,8 @@ export default class App extends React.Component {
   }
   render() {
     if (0) {
-      return <PrintFigure />
+      //return <PrintFigure />
+      return <Door name={0.5} position={[100, 100]} />
     } else {
       return (
         <View style={styles.root}

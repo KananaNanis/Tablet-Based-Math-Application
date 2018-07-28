@@ -3,7 +3,7 @@ import { StyleSheet, Animated, Text } from 'react-native'
 import { global_fiver_shadow } from './Num'
 import { query_whole_tower } from '../providers/query_store'
 import { global_constant } from '../App'
-import { start_fade_anim } from './Tower';
+import { start_fade_anim, as_greyscale } from './Tower';
 
 class TowerName extends React.Component {
   state = {
@@ -12,7 +12,7 @@ class TowerName extends React.Component {
 
   render() {
     let { fadeAnim } = this.state;
-    let { id, name, position, anim_info } = this.props;
+    let { id, name, position, anim_info, just_grey = false } = this.props;
     if (anim_info && anim_info.hasOwnProperty('fade_duration')) {
       start_fade_anim(this.state.fadeAnim, anim_info.fade_duration);
     }
@@ -26,15 +26,24 @@ class TowerName extends React.Component {
     for (const i = 0; i < name_info.length; ++i) {
       var size = name_info[i].size
       const is_fiver = name_info[i].is_fiver
+      let color = global_constant.tower.size2color[size]
+      if (just_grey) color = as_greyscale(color)
+      let shadow_style = {...global_fiver_shadow[is_fiver]}
+      if (is_fiver) {
+        if (just_grey) {
+          const orig = shadow_style.textShadowColor
+          shadow_style.textShadowColor = as_greyscale(orig)
+        }
+      }
       name_elements.push(
         <Text style={[styles.tower_name_element,
         {
           bottom: name_info[i].bottom,
-          color: global_constant.tower.size2color[size],
+          color,
           fontSize: global_constant.tower.size2fontsize[size],
           //paddingLeft: global_constant.tower.size2padding[size],
         },
-        global_fiver_shadow[is_fiver],
+          shadow_style,
         name_info[i].style]} key={i}>
           {name_info[i].quantity}
           {' ' + global_constant.tower.size2symbol[size]}
