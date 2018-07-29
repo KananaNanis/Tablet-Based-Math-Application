@@ -68,14 +68,19 @@ measure_height:
 proportion:
   params:
     create:
-      door_p1: 0.5
-      tower_1: { name: [.5, .3] }
+      door_3: [0.3]
+      door_2: [0.8]
+      door_p1: [0.5, 0.5]
+      # tower_1: { name: [.5, .3] }
       # tile_1: { name: "puppy" }
       button_submit:
     modify:
+      door_3: { position: [320, 0] }
+      door_2: { position: [220, 0] }
       door_p1: { position: [5, 0] }
-      tower_1: { position: [50vw, 0] }
+      # tower_1: { position: [50vw, 0] }
       # tile_1: { position: [50vw, 0] }
+    misc: {config_iteration: 20}
 all_done:
   params:
     create:

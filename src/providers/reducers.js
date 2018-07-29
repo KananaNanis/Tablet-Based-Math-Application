@@ -271,6 +271,15 @@ function center_text(state = '', action) {
   }
 }
 
+function err_box(state = '', action) {
+  switch (action.type) {
+    case AT.SET_ERR_BOX:
+      return action.info
+    default:
+      return state
+  }
+}
+
 const suujiAppInner = combineReducers({
   tower_ids,
   tile_ids,
@@ -292,6 +301,7 @@ const suujiAppInner = combineReducers({
   config_iteration,
   prev_config_path,
   center_text,
+  err_box,
 })
 
 const initialState = {

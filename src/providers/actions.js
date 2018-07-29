@@ -120,6 +120,10 @@ export function setCenterText(text) {
   return { type: AT.SET_CENTER_TEXT, text }
 }
 
+export function setErrBox(info) {
+  return { type: AT.SET_ERR_BOX, info }
+}
+
 export function resetAll() {
   return { type: AT.RESET_ALL }
 }

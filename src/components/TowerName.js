@@ -3,7 +3,8 @@ import { StyleSheet, Animated, Text } from 'react-native'
 import { global_fiver_shadow } from './Num'
 import { query_whole_tower } from '../providers/query_store'
 import { global_constant } from '../App'
-import { start_fade_anim, as_greyscale } from './Tower';
+import { as_greyscale } from './Tower';
+import { start_anim } from './Workspace';
 
 class TowerName extends React.Component {
   state = {
@@ -11,10 +12,9 @@ class TowerName extends React.Component {
   }
 
   render() {
-    let { fadeAnim } = this.state;
     let { id, name, position, anim_info, just_grey = false } = this.props;
     if (anim_info && anim_info.hasOwnProperty('fade_duration')) {
-      start_fade_anim(this.state.fadeAnim, anim_info.fade_duration);
+      start_anim(this.state.fadeAnim, 0, anim_info.fade_duration);
     }
     // expand the name into individual texts
     const name_info = query_whole_tower(id, { name, position })
@@ -54,7 +54,7 @@ class TowerName extends React.Component {
     height += 5
     //console.log(height)
     return (<Animated.View style={[styles.tower_name,
-    { 'opacity': fadeAnim },
+    { 'opacity': this.state.fadeAnim },
     { height }]}>
       {name_elements}
     </Animated.View>

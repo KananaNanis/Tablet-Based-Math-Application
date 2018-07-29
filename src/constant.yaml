@@ -7,6 +7,12 @@ first_name_for:
   math: Olaf
   matsuura: Ryota
 scale_factor_from_yaml: 520
+door:
+  handle_fraction: 0.1
+  thickness_fraction: 0.01
+  frame_color: darkblue
+  portal_bg_color: lightgrey
+  border_radius: 50
 special_button_geoms:
   submit: 
     position: [5, top 5]
@@ -108,6 +114,12 @@ animals:
   rhino: {height: 1.7, pixel_width: 476, pixel_height: 430}
   dragon: {height: 1.8, pixel_width: 313, pixel_height: 523}
   giraffe: {height: 2.1, pixel_width: 413, pixel_height: 742}
+camels:
+  camel1: {pixel_width: 474, pixel_height: 384}
+  camel2: {pixel_width: 530, pixel_height: 377}
+  camel3: {pixel_width: 543, pixel_height: 327}
+  camel4: {pixel_width: 571, pixel_height: 291}
+  camel5: {pixel_width: 647, pixel_height: 208}
 screen_pixels_per_cm: 52
 print_pixels_per_cm: 56.77
 print_size11x17: {width: 1471, height: 2333}

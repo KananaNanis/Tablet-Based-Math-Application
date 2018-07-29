@@ -16,6 +16,7 @@ const mapStateToProps = (state, ownProps) => {
     num_stars: state.num_stars,
     config_path: state.config_path,
     center_text: state.center_text,
+    err_box: state.err_box,
     all_nums: consolidate_info_for_ids(
       state.tower_ids,
       state.name,

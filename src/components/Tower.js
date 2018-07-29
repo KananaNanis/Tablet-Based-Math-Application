@@ -2,18 +2,9 @@ import React from 'react'
 import Block from './Block'
 import { StyleSheet, Animated, Text } from 'react-native'
 import { query_tower_blocks } from '../providers/query_store'
-import { global_workspace_height } from './Workspace'
+import { global_workspace_height, start_anim } from './Workspace'
 import { global_fiver_shadow } from './Num'
 import { global_constant } from '../App'
-
-export function start_fade_anim(anim_var, duration) {
-  Animated.timing(anim_var,
-    {
-      toValue: 0,
-      duration: duration,
-    }
-  ).start();
-}
 
 function colorNameToHex(color) {
   const colors = {
@@ -85,11 +76,10 @@ class Tower extends React.Component {
   }
 
   render() {
-    let { fadeAnim } = this.state;
     let { id, name, position, style = {}, anim_info = {}, block_opacity = [], just_grey = false } = this.props
     //console.log('id', id, 'name', name)
     if (anim_info && anim_info.hasOwnProperty('fade_duration')) {
-      start_fade_anim(this.state.fadeAnim, anim_info.fade_duration);
+      start_anim(this.state.fadeAnim, 0, anim_info.fade_duration);
     }
 
     const block_info = query_tower_blocks(id, { name, position, block_opacity })
@@ -194,7 +184,7 @@ class Tower extends React.Component {
     return (<Animated.View style={[
       styles.tower,
       { 'height': global_workspace_height },
-      { 'opacity': fadeAnim },
+      { 'opacity': this.state.fadeAnim },
       style,
     ]}>
       {blocks}

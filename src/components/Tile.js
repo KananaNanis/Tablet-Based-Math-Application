@@ -1,7 +1,7 @@
 import React from 'react'
-import { StyleSheet, View, Animated, Image } from 'react-native'
+import { StyleSheet, Animated, Image } from 'react-native'
 import { global_constant, image_location } from '../App'
-import { start_fade_anim } from './Tower';
+import { start_anim } from './Workspace';
 
 class Tile extends React.Component {
   state = {
@@ -9,13 +9,12 @@ class Tile extends React.Component {
   }
 
   render() {
-    let { fadeAnim } = this.state;
     let { name, position, style, anim_info, just_grey, extra_scale } = this.props
     //just_grey = true
     //console.log('Tile  name', name)
     let use_anim = false;
     if (anim_info && anim_info.hasOwnProperty('fade_duration')) {
-      start_fade_anim(this.state.fadeAnim, anim_info.fade_duration);
+      start_anim(this.state.fadeAnim, 0, anim_info.fade_duration);
       use_anim = true;
     }
     extra_scale = extra_scale || 1.00
@@ -29,7 +28,7 @@ class Tile extends React.Component {
     //console.log('Tile name', name, ' style', style)
     return (
       <Animated.View style={[styles.tile, style, pos_info,
-      use_anim ? { 'opacity': fadeAnim } : {},
+      use_anim ? { 'opacity': this.state.fadeAnim } : {},
       {
         width: width + 2,
         height: height + 2,

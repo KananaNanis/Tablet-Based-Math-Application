@@ -1,11 +1,12 @@
 import React from 'react'
-import { View, Image, Text, StyleSheet, Dimensions } from 'react-native'
+import { View, Image, Text, Animated, StyleSheet, Dimensions } from 'react-native'
 import Num from './Num'
 import Keypad from './Keypad'
 import Button from './Button'
 import Tile from './Tile'
 import Placard from './Placard'
 import Door from './Door'
+import ErrBox from './ErrBox'
 import { global_constant, image_location } from '../App'
 
 export const global_screen_width = Dimensions.get('window').width
@@ -15,6 +16,15 @@ export const global_workspace_height = global_screen_height - global_grass_heigh
 
 export const window2workspaceCoords = (pos0) =>
   [pos0[0], global_workspace_height - pos0[1]]
+
+export function start_anim(anim_var, toValue, duration) {
+  Animated.timing(anim_var,
+    {
+      toValue,
+      duration: duration,
+    }
+  ).start();
+}
 
 export function render_nums(all_nums, scale_factor, offset_x = 0, just_grey = false) {
   //console.log('render_nums just_grey', just_grey)
@@ -98,7 +108,7 @@ export function render_doors(all_doors, skip, all_nums, all_tiles, scale_factor,
 
 const Workspace = ({ scale_factor, keypad_kind, button_display,
   button_highlight, freeze_display, num_stars, config_path,
-  all_nums, all_tiles, all_doors, center_text }) => {
+  all_nums, all_tiles, all_doors, center_text, err_box }) => {
 
   //console.log('Workspace all_nums', all_nums, 'all_tiles', all_tiles, 'all_doors', all_doors)
   //console.log('Workspace center_text', center_text)
@@ -117,6 +127,13 @@ const Workspace = ({ scale_factor, keypad_kind, button_display,
     misc.push(<Text
       style={styles.center_text}
       key={key}>{center_text}</Text>)
+  }
+  if (err_box) {
+    ++key
+    misc.push(<ErrBox position={err_box.position}
+      width={err_box.width}
+      height={err_box.height}
+      key={key} />)
   }
   if (keypad_kind) {
     //console.log('keypad_kind', keypad_kind)
@@ -192,7 +209,9 @@ const Workspace = ({ scale_factor, keypad_kind, button_display,
     )
     //source={require('img/star.png')}
   }
-  return <View style={styles.workspace}>{nums}{tiles}{doors}{misc}</View>
+  return (<View style={styles.workspace}>
+    {nums}{tiles}{doors}{misc}
+  </View>)
   /*
   return <View style={styles.workspace}>
      <Tile position={[0,0]} width={200} height={200} name="kitty" />

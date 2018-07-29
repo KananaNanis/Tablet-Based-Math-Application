@@ -30,7 +30,7 @@ export function query_scale_factor() {
 
 export function query_all_nums() {
   const state = global_store.getState()
-  const all_nums = consolidate_nums(
+  const all_nums = consolidate_info_for_ids(
     state.tower_ids,
     state.name,
     state.position,
@@ -219,6 +219,23 @@ export function query_num_stars() {
 export function query_name_of_tile(id) {
   const state = global_store.getState()
   return state.name[id]
+}
+
+export function query_all_doors() {
+  const state = global_store.getState()
+  const all_doors = consolidate_info_for_ids(
+    state.door_ids,
+    state.name,
+    state.position,
+    state.style,
+    state.misc
+  )
+  return all_doors
+}
+
+export function query_door(door_id, all_doors = null) {
+  if (!all_doors) all_doors = query_all_doors()
+  return all_doors[door_id]
 }
 
 export function query_name_of_door(id) {

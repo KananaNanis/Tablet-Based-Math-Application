@@ -1,6 +1,6 @@
 import {
   query_keypad_kind, query_visible_buttons, query_tower_name, query_top_block, query_num_stars, query_name_of_tile,
-  query_tower_height, query_config_path, query_config_iteration, query_scale_factor, query_freeze_display, height2tower_name, query_name_of_door
+  query_tower_height, query_config_path, query_config_iteration, query_scale_factor, query_freeze_display, height2tower_name, query_name_of_door, query_door
 } from '../providers/query_store'
 import { get_button_geoms_for } from '../components/Keypad'
 import { global_workspace_height } from '../components/Workspace'
@@ -92,6 +92,14 @@ function correct_next_button() {
   return res;
 }
 
+function extract_handle_position({ name, position }) {
+  const scale_factor = query_scale_factor()
+  let res = [position[0]
+    + global_constant.door.thickness_fraction * scale_factor
+    , position[1] + scale_factor * name[0]]
+  return res
+}
+
 export function update_keypad_button_visibility(size, is_fiver, how_many) {
   //console.log('update_keypad_button_visibility', size, is_fiver, how_many)
   const i_end = global_constant.buildTower_button_info.length
@@ -115,11 +123,13 @@ export function update_keypad_button_visibility(size, is_fiver, how_many) {
   }
 }
 
+/*
 let exercise_index = 0;
 const tower_exercise_list = [
   [.3],
   [1, .1],
 ]
+*/
 
 function handle_delete_button(state) {
   if ('up' == state) {
@@ -140,19 +150,55 @@ function reduce_num_stars() {
     doAction.setNumStars(curr_num_stars - 1)
 }
 
+function vec_sum(a, b) {
+  return [a[0] + b[0], a[1] + b[1]]
+}
+function vec_prod(s, a) {
+  return [s * a[0], s * a[1]]
+}
+
 function answer_is_correct() {
   let res = false
   const cp = query_config_path()
-  if (cp[1].startsWith('animal_height')) {
-    const name = query_name_of_tile('tile_1')
-    if (name) {
-      const animal_height = global_constant.animals[name].height
-      const tower_2_height = query_tower_height('tower_2')
-      //console.log(name, animal_height, tower_2_height)
-      res = approx_equal(animal_height, tower_2_height)
+  if (cp[0] == 'measure_height') {
+    if (cp[1].startsWith('animal_height')) {
+      const name = query_name_of_tile('tile_1')
+      if (name) {
+        const animal_height = global_constant.animals[name].height
+        const tower_2_height = query_tower_height('tower_2')
+        //console.log(name, animal_height, tower_2_height)
+        res = approx_equal(animal_height, tower_2_height)
+      }
+    } else if (cp[1].startsWith('copy_tower')) {
+      res = towersHaveIdenticalNames('tower_1', 'tower_2')
+    } else {
+      console.error('unrecognized config path inside measure_height?!')
     }
-  } else if (cp[1].startsWith('copy_tower')) {
-    res = towersHaveIdenticalNames('tower_1', 'tower_2')
+  } else if (cp[0] == 'proportion') {
+    /*
+    const f1 = query_name_of_door('door_p1')[0]
+    const f2 = query_name_of_door('door_2')[0]
+    const f3 = query_name_of_door('door_3')[0]
+    console.log('f1 * f2', f1*f2, 'f3', f3)
+    */
+    const d1 = query_door('door_p1')
+    let pos1 = extract_handle_position(d1)
+    console.log('pos1', pos1)
+    pos1[1] = 0
+    let pos2 = extract_handle_position(query_door('door_2'))
+    let implied_pos = // pos1 + val1 * (pos2 - pos1)
+      vec_sum(pos1,
+        vec_prod(d1.name[0],
+          vec_sum(pos2, vec_prod(-1, pos1))))
+    const pos3 = extract_handle_position(query_door('door_3'))
+    //console.log(implied_pos, pos3)
+    // let's place the err box
+    const position = [Math.min(implied_pos[0], pos3[0])
+      , Math.min(implied_pos[1], pos3[1])]
+    const width = Math.abs(implied_pos[0] - pos3[0])
+    const height = Math.abs(implied_pos[1] - pos3[1])
+    doAction.setErrBox({ position, width, height })
+    res = true
   } else {
     console.error('unrecognized config path?!')
   }
@@ -229,12 +275,14 @@ export function touch_dispatcher(state, x, y, touchID) {
     }
   }
   if ('up' == state || !found_one) doAction.setButtonHighlight(null)
-  if ('undefined' !== typeof query_name_of_door('door_1')) {  // handle door_1?
+  if ('undefined' !== typeof query_name_of_door('door_3')) {
     const scale_factor = query_scale_factor()
-    doAction.setName('door_1', y/scale_factor)
+    doAction.setName('door_3', [y / scale_factor])
   }
+  /*
   if ('undefined' !== typeof query_name_of_door('door_p1')) {  // same
     const scale_factor = query_scale_factor()
-    doAction.setName('door_p1', y/scale_factor)
+    doAction.setName('door_p1', [y/scale_factor, .5])
   }
+  */
 }
