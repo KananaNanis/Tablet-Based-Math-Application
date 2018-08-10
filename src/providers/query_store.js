@@ -2,12 +2,17 @@ import { global_store } from '../index'
 import { global_constant } from '../App'
 import { get_block_size_from_group, get_how_many_from_group, get_is_fiver_from_group } from '../components/Block'
 import { get_button_geoms_for } from '../components/Keypad'
+import { Map } from 'immutable';
 
 export const consolidate_info_for_ids = (ids, name, position,
-  style, anim_info, misc = false, tower_style = false, block_opacity = false) => {
+  style, anim_info = Map({}), misc = Map({}), tower_style = false, block_opacity = false) => {
   //console.log('consolidate_info_for_ids', ids)
-  let res = {}
+  //console.log('consolidate_info_for_ids', ids, 'anim_info', anim_info)
+  //console.log('consolidate_info_for_ids', ids.toJS(), 'misc', misc.toJS())
+  //let res = {}
+  let res = Map({})
   for (const id of ids) {
+    /*
     res[id] = {
       name: name[id],
       position: position[id],
@@ -15,29 +20,42 @@ export const consolidate_info_for_ids = (ids, name, position,
       anim_info: anim_info[id],
       misc: misc[id]
     }
-    if (tower_style) {
+    */
+    res = res.set(id, Map({
+      name: name.get(id),
+      position: position.get(id),
+      style: style.get(id),
+      anim_info: anim_info.get(id),
+      misc: misc.get(id)
+    }))
+    if (tower_style && tower_style.get(id)) {
       //console.log('tower_style', tower_style)
-      res[id].tower_style = tower_style[id]
+      //res[id].tower_style = tower_style[id]
+      res = res.setIn([id, 'tower_style'], tower_style.get(id))
     }
-    if (block_opacity) res[id].block_opacity = block_opacity[id]
+    if (block_opacity && block_opacity.get(id)) {
+      //res[id].block_opacity = block_opacity[id]
+      res = res.setIn([id, 'block_opacity'], block_opacity.get(id))
+    }
   }
+  //console.log('consolidate_info_for_ids res', res.toJS())
   return res
 }
 
 export function query_scale_factor() {
-  return global_store.getState().scale_factor
+  return global_store.getState().get('scale_factor')
 }
 
 export function query_all_nums() {
   const state = global_store.getState()
   const all_nums = consolidate_info_for_ids(
-    state.tower_ids,
-    state.name,
-    state.position,
-    state.style,
-    state.tower_style,
-    state.block_opacity,
-    state.misc
+    state.get('tower_ids'),
+    state.get('name'),
+    state.get('position'),
+    state.get('style'),
+    state.get('tower_style'),
+    state.get('block_opacity'),
+    state.get('misc')
   )
   return all_nums
 }
@@ -55,7 +73,9 @@ export function query_tower_blocks(num_id, tower = null, just_position) {
   let blocks = []
   let floor = 0
   let was_fiver = 0
-  for (const group of tower.name) {
+  //const tower_name = tower.get('name')
+  const tower_name = tower.name
+  for (const group of tower_name) {
     const size = get_block_size_from_group(group)
     const how_many = get_how_many_from_group(group)
     const is_fiver = get_is_fiver_from_group(group)
@@ -91,7 +111,7 @@ export function query_tower_blocks(num_id, tower = null, just_position) {
 
 export function query_tower_name(num_id) {
   const state = global_store.getState()
-  return state.name[num_id]
+  return state.getIn(['name', num_id])
 }
 
 export function tower_name2height(name) {
@@ -130,7 +150,7 @@ export function height2tower_name(height) {
 
 export function query_tower_height(num_id) {
   const state = global_store.getState()
-  return tower_name2height(state.name[num_id])
+  return tower_name2height(state.getIn(['name', num_id]))
 }
 
 /*
@@ -143,8 +163,8 @@ export function query_tower_width(num_id) {
 export function query_top_block(num_id) {
   const name = query_tower_name(num_id);
   let size = null, is_fiver = null, how_many = null
-  if (name && name.length >= 1) {
-    const group = name[name.length - 1]
+  if (name && name.size >= 1) {
+    const group = name.get(name.size - 1)
     size = get_block_size_from_group(group)
     is_fiver = get_is_fiver_from_group(group)
     how_many = get_how_many_from_group(group)
@@ -156,7 +176,8 @@ export function query_whole_tower(num_id, tower = null, just_position) {
   if (!tower) {
     if (just_position) {
       const state = global_store.getState()
-      tower = { name: name[num_id], position: position[num_id] }
+      const { name, position } = state
+      tower = Map({ name: name.get(num_id), position: position.get(num_id) })
     } else tower = query_tower(num_id)
   }
   // expand the name into individual blocks
@@ -172,7 +193,8 @@ export function query_whole_tower(num_id, tower = null, just_position) {
     //console.log('size ' + size + ' how_many ' + how_many)
     const height = global_constant.tower.size2fontsize[size] + 2
     if (just_position) {
-      name_info.push([tower.position[0], tower.position[1] + floor, width, height])
+      let pos = tower.position
+      name_info.push([pos.get(0), pos.get(1) + floor, width, height])
     } else {
       name_info.push({
         size,
@@ -189,22 +211,23 @@ export function query_whole_tower(num_id, tower = null, just_position) {
 
 export function query_keypad_kind() {
   const state = global_store.getState()
-  return state.keypad_kind
+  return state.get('keypad_kind')
 }
 
 export function query_visible_buttons() {
   const state = global_store.getState()
   let res = []
   for (const i in global_constant.special_button_geoms) {
-    if (i in state.button_display && state.button_display[i] !== 'false')
+    if (state.get('button_display').has(i)
+      && state.getIn(['button_display', i]) !== 'false')
       res.push(i)
   }
-  if (state.keypad_kind) {
-    const i_end = get_button_geoms_for(state.keypad_kind).length
+  if (state.get('keypad_kind')) {
+    const i_end = get_button_geoms_for(state.get('keypad_kind')).length
     for (const i = 0; i < i_end; ++i) {
       const istr = i + ''
-      if (!(istr in state.button_display) ||
-        state.button_display[istr] !== false)
+      if (!(istr in state.get('button_display')) ||
+        state.getIn(['button_display', istr]) !== false)
         res.push(i)
     }
   }
@@ -213,57 +236,165 @@ export function query_visible_buttons() {
 
 export function query_num_stars() {
   const state = global_store.getState()
-  return state.num_stars
+  return state.get('num_stars')
 }
 
 export function query_name_of_tile(id) {
   const state = global_store.getState()
-  return state.name[id]
+  return state.getIn(['name', id])
 }
 
-export function query_all_doors() {
+export function query_position_of_tile(id) {
   const state = global_store.getState()
+  return state.getIn(['position', id])
+}
+
+export function query_all_doors() {  // include portals!
+  const state = global_store.getState()
+  const ids = [...state.get('door_ids'), ...state.get('portal_ids')]
   const all_doors = consolidate_info_for_ids(
-    state.door_ids,
-    state.name,
-    state.position,
-    state.style,
-    state.misc
+    ids,
+    state.get('name'),
+    state.get('position'),
+    state.get('style'),
+    state.get('misc')
   )
   return all_doors
 }
 
 export function query_door(door_id, all_doors = null) {
   if (!all_doors) all_doors = query_all_doors()
-  return all_doors[door_id]
+  return all_doors.get(door_id)
 }
 
 export function query_name_of_door(id) {
   const state = global_store.getState()
-  return state.name[id]
-}
-
-export function query_config_path() {
-  const state = global_store.getState()
-  return state.config_path
+  const res = state.getIn(['name', id])
+  //console.log('query_name_of_door id', id, 'res', res)
+  return res
 }
 
 export function query_config_iteration() {
   const state = global_store.getState()
-  return state.config_iteration
+  return state.get('config_iteration')
 }
 
-export function query_prev_config_path() {
+export function query_skip_submit() {
   const state = global_store.getState()
-  return state.prev_config_path
+  return state.get('skip_submit')
+}
+
+export function query_skip_in_between() {
+  const state = global_store.getState()
+  return state.get('skip_in_between')
+}
+
+export function query_goto_iteration() {
+  const state = global_store.getState()
+  return state.get('goto_iteration')
+}
+
+export function query_target() {
+  const state = global_store.getState()
+  return state.getIn(['event_handling', 'target'])
+}
+
+export function query_comparison_source() {
+  const state = global_store.getState()
+  return state.getIn(['event_handling', 'comparison_source'])
+}
+
+export function query_arg(n) {
+  const state = global_store.getState()
+  //console.log('state.event_handling', state.get('event_handling'))
+  if (1 == n)
+    return state.getIn(['event_handling', 'arg_1'])
+  else if (2 == n)
+    return state.getIn(['event_handling', 'arg_2'])
+  else if ('result' == n)
+    return state.getIn(['event_handling', 'result'])
+}
+
+export function query_correctness() {
+  const state = global_store.getState()
+  return state.getIn(['event_handling', 'correctness'])
+}
+
+export function query_event_move() {
+  const state = global_store.getState()
+  return state.getIn(['event_handling', 'move'])
+}
+
+export function query_event_top_right_text() {
+  const state = global_store.getState()
+  return state.getIn(['event_handling', 'top_right_text'])
+}
+
+export function query_event_show_camel() {
+  const state = global_store.getState()
+  return state.getIn(['event_handling', 'show_camel'])
+}
+
+export function query_event_slide_portal() {
+  const state = global_store.getState()
+  return state.getIn(['event_handling', 'slide_portal'])
+}
+
+export function query_star_policy() {
+  const state = global_store.getState()
+  return state.getIn(['event_handling', 'star_policy'])
 }
 
 export function query_freeze_display() {
   const state = global_store.getState()
-  return state.freeze_display;
+  return state.get('freeze_display')
+}
+
+export function query_has_anim_info(id) {
+  const state = global_store.getState()
+  return state.get('anim_info').has(id)
+}
+
+export function query_obj_style(id) {
+  const state = global_store.getState()
+  return state.getIn(['style', id])
+}
+
+export function query_obj_misc(id) {
+  const state = global_store.getState()
+  return state.getIn(['misc', id])
+}
+
+/*
+export function query_config_path() {
+  const state = global_store.getState()
+  return state.get('config_path')
+}
+
+export function query_prev_config_path() {
+  const state = global_store.getState()
+  return state.get('prev_config_path')
+}
+
+export function query_goto_path() {
+  const state = global_store.getState()
+  return state.get('goto_path')
+}
+*/
+
+export function query_path(key) {
+  if (!global_constant.path_types.includes(key))
+    console.error("Warning:  unrecognized path key", key)
+  const state = global_store.getState()
+  return state.getIn(['path', key])
+}
+
+export function query_log() {
+  const state = global_store.getState()
+  return state.get('log')
 }
 
 export function query_test() {
   let state = global_store.getState()
-  console.log('state', state)
+  console.log('state', state.toJS())
 }

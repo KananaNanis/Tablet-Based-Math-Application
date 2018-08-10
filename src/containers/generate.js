@@ -58,3 +58,7 @@ export function pick_from_range(begin, end, incr, prev_value) {
   }
   return pick_from_list(list, prev_value)
 }
+
+export function from_uniform_range(begin, end) {
+  return begin + (end - begin)*Math.random()
+}

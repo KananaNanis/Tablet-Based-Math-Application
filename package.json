@@ -40,6 +40,7 @@
     "expo": "^27.0.1",
     "expo-web": "^0.0.14",
     "howler": "^2.0.14",
+    "immutable": "^3.8.2",
     "jest": "^23.4.1",
     "js-yaml": "^3.12.0",
     "react": "16.4.1",
@@ -47,6 +48,7 @@
     "react-native": "~0.56.0",
     "react-native-svg": "^6.4.1",
     "react-native-web": "^0.8.9",
+    "redux-immutable": "^4.0.0",
     "webpack": "^4.16.2",
     "webpack-dev-server": "3.1.5"
   }

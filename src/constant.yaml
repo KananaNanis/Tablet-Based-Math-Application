@@ -9,9 +9,15 @@ first_name_for:
 scale_factor_from_yaml: 520
 door:
   handle_fraction: 0.1
+  min_dist_from_handle: 50
   thickness_fraction: 0.01
   frame_color: darkblue
-  portal_bg_color: lightgrey
+  # frame_color_grey: '#d0d0d0'
+  frame_color_grey: '#f5f5f5'
+  portal_width: 300
+  # portal_bg_color: lightgrey
+  portal_bg_color: white
+  portal_min_value: 0.01
   border_radius: 50
 special_button_geoms:
   submit: 
@@ -115,11 +121,22 @@ animals:
   dragon: {height: 1.8, pixel_width: 313, pixel_height: 523}
   giraffe: {height: 2.1, pixel_width: 413, pixel_height: 742}
 camels:
+  camel_scale: 0.2
+  camel_offsets: [50, -10]
+  baggage_scale: 0.5
+  baggage_offset: 40
   camel1: {pixel_width: 474, pixel_height: 384}
   camel2: {pixel_width: 530, pixel_height: 377}
   camel3: {pixel_width: 543, pixel_height: 327}
   camel4: {pixel_width: 571, pixel_height: 291}
   camel5: {pixel_width: 647, pixel_height: 208}
+star_policy:
+  extraLoose: [6.0001, 10.0001, 20.0001, 30]
+  loose: [3.0001, 6.0001, 10.0001, 20]
+  moderate: [1.0001, 3.0001, 5.0001, 10]
+  strict: [0.5001, 1.0001, 3.0001, 5]
+path_types: [config, prev_config, goto]
+top_right_text_offset: 80
 screen_pixels_per_cm: 52
 print_pixels_per_cm: 56.77
 print_size11x17: {width: 1471, height: 2333}

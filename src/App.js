@@ -9,11 +9,12 @@ import { touchHandler } from './event/event'
 import { global_store } from './index.js'
 import Sound from './assets/sound'
 import * as Actions from './providers/actions'
-import PrintFigure from './components/PrintFigure';
+//import PrintFigure from './components/PrintFigure';
 import Door from './components/Door';
 import { enter_exit_config, as_position } from './providers/change_config'
-import { query_config_path, query_scale_factor } from './providers/query_store';
+import { query_path } from './providers/query_store';
 import { get_keypad_width_height } from './components/Keypad';
+import { fromJS } from '../node_modules/immutable';
 
 export let doAction = {}
 export let global_sound = {}
@@ -89,19 +90,25 @@ export async function load_config_tree() {
     //let path = ['measure_height', 'animal_height', 'level_1']
     //let path = ['measure_height', 'copy_tower', 'level_1']
     //let path = first_config_path()
+    if ('undefined' === typeof config_tree)
+      console.error('config_tree not defined!!')
     const path = config_tree.params.starting_config_path
     // clear the store
+    //console.log('RESET ALL')
     doAction.resetAll()
 
-    doAction.setConfigPath(path)
-    doAction.setPrevConfigPath(query_config_path())
+    doAction.setPath('config', path)
+    doAction.setPath('prev_config', query_path('config'))
     doAction.setScaleFactor(global_constant.scale_factor_from_yaml)
     //get_config(path)
 
     //doAction.setCurrentConfig('animal_height')
     //doAction.setCurrentConfig('in_between')
     const verbose = false
-    enter_exit_config(true, verbose);
+    enter_exit_config(true, verbose)
+    //doAction.addObjStyle('door_3', 'opacity', .5)
+    //doAction.addObjMisc('door_3', 'blink', .5)
+    //doAction.addObjMisc('door_2', 'handle_blink', .5)
   } catch (error) {
     console.error(error);
   }
@@ -117,9 +124,9 @@ export default App = (props) => {
 export default class App extends React.Component {
   constructor(props) {
     super(props)
-    //load_config_tree()
-    // poll to see if the tree has changed
-    window.setInterval(load_config_tree, 1000)
+    if (0) load_config_tree()
+    else // poll to see if the tree has changed
+      window.setInterval(load_config_tree, 1000)
   }
   componentDidMount() {
     //query_block_positions()
@@ -130,6 +137,7 @@ export default class App extends React.Component {
     for (const snd of available_sounds)
       global_sound[snd] = new Sound('assets/snd/' + snd + '.wav')
     global_sound['chirp1'] = new Sound('assets/snd/chirp1.wav')
+    //console.log(Date.now())
   }
   render() {
     if (0) {

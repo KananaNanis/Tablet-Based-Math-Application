@@ -15,7 +15,7 @@ export var ignore_touches = false
 
 function myPreventDefault(synthetic_event) {
   //if (isTeacherInfoLevel()) return;  // don't prevent on this special level!
-  var evt = synthetic_event.nativeEvent
+  //var evt = synthetic_event.nativeEvent
   if (global_is_mobile && !global_is_safari) {
     // check whether we cannot prevent it anyway
     const type = synthetic_event.type.substr(5)
@@ -49,14 +49,12 @@ export function touchHandler(synthetic_event, on_grant) {
   }
   if (6 === currentNumTouches) { // check whether reload is requested
     if (4 === numTouchesAtTop) { // this is to make it harder to do accidentally
-      console.warn('reloading not implemented yet')
-      /*
       if (Platform.OS === 'web') { // reload!
         alert('reloading!')
         window.location.reload(true)
       } else {
+        console.warn('reloading not implemented yet')
       }
-      */
       return
     }
   }

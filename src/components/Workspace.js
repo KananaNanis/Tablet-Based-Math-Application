@@ -1,5 +1,6 @@
 import React from 'react'
 import { View, Image, Text, Animated, StyleSheet, Dimensions } from 'react-native'
+import { Map } from 'immutable'
 import Num from './Num'
 import Keypad from './Keypad'
 import Button from './Button'
@@ -7,7 +8,9 @@ import Tile from './Tile'
 import Placard from './Placard'
 import Door from './Door'
 import ErrBox from './ErrBox'
+import CamelContainer from '../containers/CamelContainer'
 import { global_constant, image_location } from '../App'
+import { query_event_show_camel } from '../providers/query_store';
 
 export const global_screen_width = Dimensions.get('window').width
 export const global_screen_height = Dimensions.get('window').height
@@ -17,104 +20,138 @@ export const global_workspace_height = global_screen_height - global_grass_heigh
 export const window2workspaceCoords = (pos0) =>
   [pos0[0], global_workspace_height - pos0[1]]
 
-export function start_anim(anim_var, toValue, duration) {
+export function start_anim(anim_var, toValue, duration, delay = 0) {
   Animated.timing(anim_var,
     {
       toValue,
-      duration: duration,
+      duration,
+      delay,
     }
   ).start();
 }
 
+export function add_offset(pos, offset_x=0) { return [pos.get(0) + offset_x, pos.get(1)] }
+
+function my_get(obj, key) {
+  const raw = obj.get(key)
+  return raw ? raw.toJS() : raw
+}
+
 export function render_nums(all_nums, scale_factor, offset_x = 0, just_grey = false) {
   //console.log('render_nums just_grey', just_grey)
-  function add_offset(pos) { return [pos[0] + offset_x, pos[1]] }
+  //console.log('render_nums all_nums', all_nums)
   let nums = []
-  for (const id in all_nums) {
-    const num = all_nums[id]
-    //console.log('num id', id, 'anim_info', num.anim_info)
+  if (!Map.isMap(all_nums)) return nums
+  //for (const id in all_nums)
+  all_nums.keySeq().forEach((id) => {
+    //console.log('num id ', id)
+    const num = all_nums.get(id)
+    //console.log('num id ', id, 'anim_info', num.get('anim_info'))
     nums.push(
       <Num id={id}
-        name={num.name}
-        position={add_offset(num.position)}
-        style={num.style}
-        anim_info={num.anim_info}
-        tower_style={num.tower_style}
-        block_opacity={num.block_opacity}
+        name={num.get('name').toJS()}
+        position={add_offset(num.get('position'), offset_x)}
+        style={my_get(num, 'style')}
+        anim_info={my_get(num, 'anim_info')}
+        misc={my_get(num, 'misc')}
+        tower_style={my_get(num, 'tower_style')}
+        block_opacity={my_get(num, 'block_opacity')}
         scale_factor={scale_factor}
         just_grey={just_grey}
         key={id} />
     )
-  }
+  })
   return nums
 }
 
 export function render_tiles(all_tiles, scale_factor, offset_x = 0, just_grey = false) {
-  function add_offset(pos) { return [pos[0] + offset_x, pos[1]] }
   let tiles = []
-  for (const id in all_tiles) {
-    const tile = all_tiles[id]
+  if (!Map.isMap(all_tiles)) return tiles
+  //console.log('render_tiles all_tiles ', all_tiles)
+  //for (const id in all_tiles)
+  all_tiles.keySeq().forEach((id) => {
+    const tile = all_tiles.get(id)
     tiles.push(
       <Tile
-        name={tile.name}
-        position={add_offset(tile.position)}
-        style={tile.style}
-        anim_info={tile.anim_info}
+        name={tile.get('name')}
+        position={add_offset(tile.get('position'), offset_x)}
+        style={my_get(tile, 'style')}
+        anim_info={my_get(tile, 'anim_info')}
+        misc={my_get(tile, 'misc')}
         scale_factor={scale_factor}
         just_grey={just_grey}
         key={id} />
     )
-  }
+  })
   return tiles
 }
 
-export function render_doors(all_doors, skip, all_nums, all_tiles, scale_factor, offset_x = 0, just_grey = false) {
-  function add_offset(pos) { return [pos[0] + offset_x, pos[1]] }
+export function render_doors(all_doors, skip, scale_factor, offset_x = 0, just_grey = false) {
   let doors = []
-  for (const id in all_doors) {
-    if (id == skip) continue
-    const door = all_doors[id]
-    if (id.startsWith("door_p")) {
+  if (!Map.isMap(all_doors)) return doors
+  //console.log('render_doors all_doors ', all_doors.toJS())
+  //for (const id in all_doors)
+  all_doors.keySeq().forEach((id) => {
+    if (id != skip) {
+      const door = all_doors.get(id)
       doors.push(
         <Door
-          name={door.name}
-          position={add_offset(door.position)}
-          style={door.style}
-          anim_info={door.anim_info}
-          scale_factor={scale_factor}
-          all_nums={all_nums}
-          all_tiles={all_tiles}
-          all_doors={all_doors}
-          just_grey={just_grey}
-          id={id}
-          key={id} />
-      )
-    } else {
-      doors.push(
-        <Door
-          name={door.name}
-          position={add_offset(door.position)}
-          style={door.style}
-          anim_info={door.anim_info}
+          name={door.get('name').toJS()}
+          position={add_offset(door.get('position'), offset_x)}
+          style={my_get(door, 'style')}
+          anim_info={my_get(door, 'anim_info')}
+          misc={my_get(door, 'misc')}
           scale_factor={scale_factor}
           just_grey={just_grey}
           id={id}
           key={id} />
       )
     }
-  }
+  })
   return doors
+}
+
+export function render_portals(all_portals, skip, all_nums, all_tiles, all_doors, scale_factor, offset_x = 0, just_grey = false) {
+  let portals = []
+  if (!Map.isMap(all_portals)) return portals
+  //for (const id in all_portals)
+  all_portals.keySeq().forEach((id) => {
+    if (id != skip) {
+      const portal = all_portals.get(id)
+      portals.push(
+        <Door
+          name={portal.get('name').toJS()}
+          position={add_offset(portal.get('position'), offset_x)}
+          style={my_get(portal, 'style')}
+          anim_info={my_get(portal, 'anim_info')}
+          misc={my_get(portal, 'misc')}
+          scale_factor={scale_factor}
+          all_nums={all_nums}
+          all_tiles={all_tiles}
+          all_doors={all_doors}
+          all_portals={all_portals}
+          just_grey={just_grey}
+          id={id}
+          key={id} />
+      )
+    }
+  })
+  return portals
 }
 
 const Workspace = ({ scale_factor, keypad_kind, button_display,
   button_highlight, freeze_display, num_stars, config_path,
-  all_nums, all_tiles, all_doors, center_text, err_box }) => {
+  all_nums, all_tiles, all_doors, all_portals, center_text,
+  top_right_text, err_box }) => {
 
   //console.log('Workspace all_nums', all_nums, 'all_tiles', all_tiles, 'all_doors', all_doors)
-  //console.log('Workspace center_text', center_text)
+  //console.log('Workspace all_portals', all_portals)
+  //console.log('Workspace config_path', config_path)
+  if ('undefined' === typeof config_path) return []
   const nums = render_nums(all_nums, scale_factor)
   const tiles = render_tiles(all_tiles, scale_factor)
-  const doors = render_doors(all_doors, skip = null, all_nums, all_tiles, scale_factor)
+  const doors = render_doors(all_doors, skip = null, scale_factor)
+  const portals = render_portals(all_portals, skip = null, all_nums, all_tiles, all_doors, scale_factor)
   let misc = [], key = 0
   if (1) { // add username
     ++key
@@ -122,12 +159,30 @@ const Workspace = ({ scale_factor, keypad_kind, button_display,
       style={styles.username}
       key={key}>{global_constant.username}</Text>)
   }
+  if (err_box) { // add camel container, for now!
+    //console.log('err_box', err_box)
+    ++key
+    if (query_event_show_camel())
+      misc.push(<CamelContainer key={key} />)
+    else if (err_box.has('position'))
+      misc.push(<ErrBox position={err_box.get('position').toJS()}
+        width={err_box.get('width')} height={err_box.get('height')} key={key} />)
+  }
   if (center_text) {
     ++key
     misc.push(<Text
       style={styles.center_text}
       key={key}>{center_text}</Text>)
   }
+  if (top_right_text) {
+    ++key
+    misc.push(<Text
+      style={[styles.top_right_text,
+        {right: global_constant.top_right_text_offset},
+      ]}
+      key={key}>{top_right_text}</Text>)
+  }
+  /*
   if (err_box) {
     ++key
     misc.push(<ErrBox position={err_box.position}
@@ -135,6 +190,7 @@ const Workspace = ({ scale_factor, keypad_kind, button_display,
       height={err_box.height}
       key={key} />)
   }
+  */
   if (keypad_kind) {
     //console.log('keypad_kind', keypad_kind)
     ++key
@@ -145,7 +201,7 @@ const Workspace = ({ scale_factor, keypad_kind, button_display,
       freeze_display={freeze_display}
       key={key} />)
   }
-  if ('in_between' == config_path[0]) {
+  if ('in_between' == config_path.get(0)) {
     ++key
     misc.push(
       <Placard
@@ -169,8 +225,10 @@ const Workspace = ({ scale_factor, keypad_kind, button_display,
     backgroundColor: 'grey'
   }
   //console.log('freeze_display', freeze_display)
+  //console.log('button_display', button_display)
   for (const special_button in global_constant.special_button_geoms) {
-    if (special_button in button_display) {
+    //if (special_button in button_display)
+    if (button_display.has(special_button)) {
       ++key
       let bg_style = {}
       if (freeze_display) {
@@ -210,7 +268,8 @@ const Workspace = ({ scale_factor, keypad_kind, button_display,
     //source={require('img/star.png')}
   }
   return (<View style={styles.workspace}>
-    {nums}{tiles}{doors}{misc}
+    {nums}{tiles}{doors}{portals}
+    {misc}
   </View>)
   /*
   return <View style={styles.workspace}>
@@ -249,6 +308,11 @@ const styles = StyleSheet.create({
   },
   center_text: {
     fontSize: 30
+  },
+  top_right_text: {
+    position: 'absolute',
+    fontSize: 20,
+    top: 0,
   }
 })
 

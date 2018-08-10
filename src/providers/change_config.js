@@ -1,7 +1,14 @@
+import { List } from 'immutable'
 import { doAction, config_tree, global_constant } from '../App'
-import { query_config_path, query_config_iteration, height2tower_name, query_prev_config_path, query_scale_factor, tower_name2height } from './query_store'
+import {
+  query_path, query_config_iteration, height2tower_name,
+  query_scale_factor, tower_name2height,
+  query_goto_iteration,
+  query_skip_in_between,
+  query_test
+} from './query_store'
 import { update_keypad_button_visibility } from '../event/dispatcher'
-import { pick_from_range, pick_from_list, pick_animal_name } from '../containers/generate'
+import { pick_from_range, pick_from_list, pick_animal_name, from_uniform_range } from '../containers/generate'
 import { global_screen_width, global_workspace_height } from '../components/Workspace'
 import { get_block_size_from_group } from '../components/Block'
 
@@ -13,12 +20,16 @@ const attach_properties = (to, from) => {
 }
 
 export function get_config(path) {
+  if (!List.isList(path))
+    console.error('Error:  expecting a List!', path)
+  //const path = path0.toJS()
   let tree_loc = config_tree;
   let res = deep_clone(tree_loc.params)
   // console.log('tree_loc', tree_loc)
   // console.log('init res ', res)
-  for (var i = 0; i < path.length; ++i) {
-    tree_loc = tree_loc[path[i]]
+  //console.log('get_config path.size', path.size)
+  for (var i = 0; i < path.size; ++i) {
+    tree_loc = tree_loc[path.get(i)]
     if (tree_loc) {
       for (const category in tree_loc.params) {
         if (!res.hasOwnProperty(category)) {
@@ -27,10 +38,14 @@ export function get_config(path) {
           if ('create' == category || 'modify' == category) {
             // consider the ids one by one
             for (const id in tree_loc.params[category]) {
-              if (!res[category].hasOwnProperty(id))
-                res[category][id] = deep_clone(tree_loc.params[category][id])
+              const subtree = tree_loc.params[category][id]
+              if (subtree && 'remove' === subtree) {
+                delete res['create'][id]
+                delete res['modify'][id]
+              } else if (!res[category].hasOwnProperty(id))
+                res[category][id] = deep_clone(subtree)
               else
-                attach_properties(res[category][id], tree_loc.params[category][id])
+                attach_properties(res[category][id], subtree)
             }
           } else {
             attach_properties(res[category], tree_loc.params[category])
@@ -39,7 +54,7 @@ export function get_config(path) {
       }
     }
   }
-  //console.log('get_config path', path, 'res', res)
+  //console.log('get_config path', path.toJS(), 'res', res)
   return res
 }
 
@@ -115,33 +130,110 @@ function do_timed_action(id, key, val) {
   window.setTimeout(function () {
     if ('appear_after' == key) doAction.setOpacity(id, 1.0)
     else if ('fade_anim' == key) {
-      doAction.setAnimInfo(id, {'fade_duration': val.duration} )
+      doAction.setAnimInfo(id, { 'fade_duration': val.duration })
     }
   }, delay)
 }
 
+function find_gen_values_for_words(words, gen_vars) {
+  let res = words.slice()
+  for (const j = 0; j < res.length; ++j) {
+    if (gen_vars.hasOwnProperty(res[j]))
+      res[j] = gen_vars[res[j]]
+    if (global_constant.animals.hasOwnProperty(res[j]))
+      res[j] = global_constant.animals[res[j]].height
+  }
+  return res
+}
+
+function is_binary_op(s) {
+  return '+' === s || '-' === s || '*' === s || '/' === s
+}
+
+function generate_with_restrictions(c) {
+  const verbose = false
+
+  let gen_vars = {}
+  // move restrictions to the end, and binary ops just before
+  let restrict = [], binary = [], all = []
+  for (const id in c) {
+    let words = ('string' == typeof c[id]) ? c[id].split(' ') : null
+    if (id.startsWith('restriction_')) restrict.push(id)
+    else if (words && 3 == words.length && is_binary_op(words[1]))
+      binary.push(id)
+    else all.push(id)
+  }
+  all = all.concat(binary)
+  all = all.concat(restrict)
+
+  // try to create a valid set of values, and then check restrictions
+  let i, max_i = 100
+  for (i = 0; i < max_i; ++i) {
+    let ok = true
+    for (const id of all) {
+      //console.log('id', id)
+      const inst = c[id]
+      if (id.startsWith('restriction_')) {
+        const words = inst.split(' ')
+        if (3 == words.length && '<' === words[1]) {
+          //if (verbose) console.log(id, 'words', words)
+          let vals = find_gen_values_for_words([words[0], words[2]], gen_vars)
+          if (vals[0] >= vals[1]) ok = false
+          if (verbose) console.log('vals', vals, 'ok', ok)
+        } else if (3 == words.length && '>' === words[1]) {
+          //if (verbose) console.log(id, 'words', words)
+          let vals = find_gen_values_for_words([words[0], words[2]], gen_vars)
+          if (vals[0] <= vals[1]) ok = false
+          if (verbose) console.log('vals', vals, 'ok', ok)
+        } else {
+          console.error('Warning:  unrecognized generate restriction.', id, inst)
+        }
+      } else if (Array.isArray(inst)) {
+        if ('pick_from_list' == inst[0]) {
+          gen_vars[id] = pick_from_list(inst, gen_vars[id], true)
+        } else if ('pick_from_range' == inst[0]) {
+          gen_vars[id] = pick_from_range(inst[1], inst[2],
+            inst[3] ? inst[3] : 1, gen_vars[id])
+        } else if ('uniform' == inst[0]) {
+          gen_vars[id] = from_uniform_range(inst[1], inst[2])
+        } else if ('pick_animal_name' == inst[0]) {
+          gen_vars[id] = pick_animal_name()
+        } else {
+          console.error('Warning:  unrecognized generate array instruction.', id, inst)
+        }
+      } else if ('string' === typeof inst) {
+        const words = inst.split(' ')
+        if (3 == words.length && '+' === words[1]) {
+          let vals = find_gen_values_for_words([words[0], words[2]], gen_vars)
+          gen_vars[id] = vals[0] + vals[1]
+        } else if (3 == words.length && '*' === words[1]) {
+          let vals = find_gen_values_for_words([words[0], words[2]], gen_vars)
+          gen_vars[id] = vals[0] * vals[1]
+          //console.log('id', id, 'words', words, 'vals', vals, 'gen_vars[id]', gen_vars[id])
+        } else {
+          console.error('Warning:  unrecognized generate string instruction.', id, inst)
+        }
+      } else {
+        console.error('Warning:  unrecognized generate instruction.', id, inst)
+      }
+    }
+    if (verbose) console.log(gen_vars)
+    if (ok) break
+  }
+  if (i >= max_i) {
+    console.error('could not generate successfully!')
+  }
+  return gen_vars
+}
+
 export function enter_exit_config(enter, verbose) {
-  const cp = query_config_path();
+  const cp = query_path('config')
+  //console.log('cp', cp)
   const config = get_config(cp)
   if (verbose) console.log('enter_exit_config config ', config)
   // let's handle the various parts of the config one at a time
-  let gen_vars = {}
   let sc = global_constant.scale_factor_from_yaml  // may not be available
-  if (config['generate'] && enter) {
-    const c = config['generate']
-    for (const id in c) {
-      const inst = c[id]
-      if ('pick_from_list' == inst[0]) {
-        gen_vars[id] = pick_from_list(inst, gen_vars[id], true)
-      } else if ('pick_from_range' == inst[0]) {
-        gen_vars[id] = pick_from_range(inst[1], inst[2],
-          inst[3] ? inst[3] : 1, gen_vars[id])
-      } else if ('pick_animal_name' == inst[0]) {
-        //tile_1_name: [pick_animal_name]
-        gen_vars[id] = pick_animal_name()
-      }
-    }
-  }
+  const gen_vars = enter ? generate_with_restrictions(config['generate']) : {}
   if (config['create']) {
     const c = config['create']
     for (const id in c) {
@@ -149,20 +241,28 @@ export function enter_exit_config(enter, verbose) {
       else if ('button_delete' == id) doAction.setButtonDisplay('delete', enter ? true : null)
       else if ('button_next' == id) doAction.setButtonDisplay('next', enter ? true : null)
       else if ('center_text' == id) doAction.setCenterText(enter ? c[id] : null)
+      else if ('err_box' == id) doAction.setErrBox(enter ? { 'show': true } : null)
       else if ('keypad_kind' == id) {
         doAction.setKeypadKind(enter ? c[id] : null)
         if ('buildTower' == c[id]) {
           update_keypad_button_visibility(null, null, null)
         }
-      } else if (id.startsWith('tower_') || id.startsWith('tile_') || id.startsWith('door_')) {
+      } else if (id.startsWith('tower_') || id.startsWith('tile_') || id.startsWith('door_') || id.startsWith('portal_')) {
         // assert: we have necessary info in the 'modify' area
         let name = null
         if (enter) {
           name = c[id]
           if ('object' == typeof name && name['name'])
             name = name['name']
-          if (gen_vars.hasOwnProperty(name))
-            name = gen_vars[name]
+          if (Array.isArray(name)) {
+            for (const i = 0; i < name.length; ++i) {
+              if (gen_vars.hasOwnProperty(name[i]))
+                name[i] = gen_vars[name[i]]
+            }
+          } else {
+            if (gen_vars.hasOwnProperty(name))
+              name = gen_vars[name]
+          }
         }
         if (id.startsWith('tower_')) {
           if (enter) {
@@ -188,6 +288,12 @@ export function enter_exit_config(enter, verbose) {
             doAction.doorCreate(id, name,
               as_position(config['modify'][id]['position']))
           } else doAction.doorDelete(id)
+        } else if (id.startsWith('portal_')) {
+          if (enter) {
+            //console.log('reading a portal')
+            doAction.portalCreate(id, name,
+              as_position(config['modify'][id]['position']))
+          } else doAction.portalDelete(id)
         }
       }
     }
@@ -195,8 +301,21 @@ export function enter_exit_config(enter, verbose) {
   if (config['modify']) {
     const c = config['modify']
     for (const id in c) {
-      if (id.startsWith('tower_') || id.startsWith('tile_')) {
-        for (const key in c[id]) {
+      for (const key in c[id]) {
+        if (['appear_after', 'fade_anim'].includes(key)) {
+          do_timed_action(id, key, c[id][key])
+        } else if ('style' == key) {
+          let props = c[id][key]
+          for (const key2 in props)
+            doAction.addObjStyle(id, key2, enter ? props[key2] : null)
+        } else if ('misc' == key) {
+          let props = c[id][key]
+          for (const key2 in props) {
+            const val2 = enter ? props[key2] : null
+            // console.log('misc id', id, 'key2', key2, 'val2', val2)
+            doAction.addObjMisc(id, key2, val2)
+          }
+        } else if (id.startsWith('tower_') || id.startsWith('tile_')) {
           if ('width' == key) {
             if (enter) {
               let val = c[id][key]
@@ -206,35 +325,70 @@ export function enter_exit_config(enter, verbose) {
             } else doAction.towerSetWidth(id, null)
           } else if ('overflow' == key)
             doAction.towerSetOverflow(id, enter ? c[id][key] : null)
-          else if (['appear_after', 'fade_anim'].includes(key))
-            do_timed_action(id, key, c[id][key])
         }
       }
     }
   }
-  if (config['events']) {
-    const c = config['events']
+  if (config['event_handling']) {
+    const c = config['event_handling']
+    for (const key in c) {
+      doAction.setEventHandlingParam(key, enter ? c[key] : null)
+    }
   }
   if (config['misc']) {
     const c = config['misc']
-    for (const key in config['misc']) {
-      if ('config_iteration' == key) doAction.setConfigIteration(enter ? c[key] : null)
-      else if ('num_stars' == key) doAction.setNumStars(enter ? c[key] : null)
+    for (const key in c) {
+      if ('config_iteration' == key) {
+        let iter_val = c[key]
+        if (0 == iter_val || !enter) iter_val = null
+        doAction.setConfigIteration(iter_val)
+      } else if ('goto_config' == key) {
+        // this attribute is special:  it is not erased at the end!
+        if (enter) {
+          const iter = query_goto_iteration()
+          if (iter == null || !(iter > 0)) {
+            console.log('iter was', iter, 'setting goto iteration', c[key][0], 'path', c[key][1])
+            doAction.setGotoIteration(c[key][0])
+          } else {
+            console.log('skipping setting iteration, iter', iter)
+          }
+        }
+        doAction.setPath('goto', enter ? c[key][1] : null)
+      } else if ('num_stars' == key)
+        doAction.setNumStars(enter ? c[key] : null)
+      else if ('skip_submit' == key)
+        doAction.setSkipSubmit(enter ? c[key] : null)
+      else if ('skip_in_between' == key)
+        doAction.setSkipInBetween(enter ? c[key] : null)
     }
   }
-  //query_test()
+  // query_test()
 }
 
 export function transition_to_next_config() {
-  if ('in_between' === query_config_path()[0]) {  // special case
+  doAction.clearEventHandling()
+  if ('in_between' === query_path('config').get(0)) {  // special case
     enter_exit_config(false)
-    const prev_path = query_prev_config_path()
+    const prev_path = query_path('prev_config')
     const new_path = next_config_path(prev_path)
     console.log('transition_to_next_config', new_path)
-    doAction.setConfigPath(new_path)
+    doAction.addLogEntry(Date.now(), [new_path, 'next_config', 'start'])
+    doAction.setPath('config', new_path)
     enter_exit_config(true)
+  } else if (query_path('goto') != null && query_goto_iteration() > 1) {
+    // possibly jump directly to some other path
+    const iter = query_goto_iteration()
+    const new_path = query_path('goto')
+    doAction.addLogEntry(Date.now(), [query_path('config').toJS(), 'next_config', iter])
+    enter_exit_config(false)
+    doAction.setPath('prev_config', query_path('config'))
+    console.log('new_path', new_path)
+    doAction.setPath('config', new_path)
+    enter_exit_config(true)
+    doAction.setGotoIteration(iter - 1)
   } else if (query_config_iteration() > 1) {
     const iter = query_config_iteration()
+    doAction.addLogEntry(Date.now(), [query_path('config').toJS(), 'next_config', iter])
     enter_exit_config(true)
     doAction.setConfigIteration(iter - 1)
     /*
@@ -248,10 +402,17 @@ export function transition_to_next_config() {
     doAction.setName('tower_2', []);
     update_keypad_button_visibility(null, null, null)
     */
+  } else if (query_skip_in_between()) {
+    enter_exit_config(false)
+    const curr_path = query_path('config')
+    const new_path = next_config_path(curr_path)
+    doAction.setPath('prev_config', curr_path)
+    doAction.setPath('config', new_path)
+    enter_exit_config(true)
   } else {
     enter_exit_config(false)
-    doAction.setPrevConfigPath(query_config_path())
-    doAction.setConfigPath(['in_between'])
+    doAction.setPath('prev_config', query_path('config'))
+    doAction.setPath('config', ['in_between'])
     enter_exit_config(true)
   }
 }
@@ -282,17 +443,17 @@ export function next_config_path(path) {
   let res = null
   let tree_loc = config_tree;
   // find the lowest node at which the path does not take the last option
-  for (const i = 0; i < path.length; ++i) {
+  for (const i = 0; i < path.size; ++i) {
     const k = Object.keys(tree_loc)
-    if (k.indexOf(path[i]) + 1 < k.length) {
+    if (k.indexOf(path.get(i)) + 1 < k.length) {
       res = []
       for (const j = 0; j < i; ++j)
-        res.push(path[j])
-      res.push(k[k.indexOf(path[i]) + 1])
+        res.push(path.get(j))
+      res.push(k[k.indexOf(path.get(i)) + 1])
       // now find the longest continuation of this path
       res = first_config_path(res)
     }
-    tree_loc = tree_loc[path[i]]
+    tree_loc = tree_loc[path.get(i)]
   }
   //console.log('next_config_path res', res)
   return res

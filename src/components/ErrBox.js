@@ -1,28 +1,43 @@
 import React from 'react'
 import { StyleSheet, Animated } from 'react-native'
-import { global_constant, image_location } from '../App'
 import { start_anim } from './Workspace';
 
 class ErrBox extends React.Component {
   state = {
-    fadeAnim: new Animated.Value(1),  // Initial value for opacity: 1
+    animTime: new Animated.Value(0),
   }
 
   render() {
     let { position, width, height, style, anim_info } = this.props
-    let use_anim = false;
-    if (anim_info && anim_info.hasOwnProperty('fade_duration')) {
-      start_anim(this.state.fadeAnim, 0, anim_info.fade_duration);
+    //console.log('ErrBox render position', position)
+    let as_baggage = true
+    let use_anim = false
+    let leftR, bottomR, widthR, heightR
+    if (anim_info && anim_info.hasOwnProperty('position')) {
+      //console.log('anim_info.position ', anim_info.position)
+      leftR = [anim_info.position[0], position[0]]
+      bottomR = [anim_info.position[1], position[1]]
+      widthR = [anim_info.width, width]
+      heightR = [anim_info.height, height]
+      start_anim(this.state.animTime, 1, anim_info.duration, anim_info.delay)
       use_anim = true;
     }
+    //console.log('bottomR', bottomR)
     let err_style = [styles.err_box, style,
-      use_anim ? { 'opacity': this.state.fadeAnim } : {},
-      {
-        width,
-        height,
-        left: position[0],
-        bottom: position[1],
-      }]
+    as_baggage ? { backgroundColor: 'brown' } : {},
+    {
+      width,
+      height,
+      left: position[0],
+      bottom: position[1],
+    },
+    use_anim ? {
+      left: this.state.animTime.interpolate({ inputRange: [0, 1], outputRange: leftR }),
+      bottom: this.state.animTime.interpolate({ inputRange: [0, 1], outputRange: bottomR }),
+      width: this.state.animTime.interpolate({ inputRange: [0, 1], outputRange: widthR }),
+      height: this.state.animTime.interpolate({ inputRange: [0, 1], outputRange: heightR }),
+    } : {},
+    ]
     return <Animated.View style={err_style} />
   }
 }
