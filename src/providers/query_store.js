@@ -42,10 +42,6 @@ export const consolidate_info_for_ids = (ids, name, position,
   return res
 }
 
-export function query_scale_factor() {
-  return global_store.getState().get('scale_factor')
-}
-
 export function query_all_nums() {
   const state = global_store.getState()
   const all_nums = consolidate_info_for_ids(
@@ -67,7 +63,7 @@ export function query_tower(num_id, all_nums = null) {
 
 export function query_tower_blocks(num_id, tower = null, just_position) {
   if (!tower) tower = query_tower(num_id)
-  const scale_factor = query_scale_factor()
+  const scale_factor = query_prop('scale_factor')
   // expand the name into individual blocks
   //console.log(tower.name)
   let blocks = []
@@ -234,11 +230,6 @@ export function query_visible_buttons() {
   return res
 }
 
-export function query_num_stars() {
-  const state = global_store.getState()
-  return state.get('num_stars')
-}
-
 export function query_name_of_tile(id) {
   const state = global_store.getState()
   return state.getIn(['name', id])
@@ -274,34 +265,14 @@ export function query_name_of_door(id) {
   return res
 }
 
-export function query_config_iteration() {
+export function query_obj_style(id) {
   const state = global_store.getState()
-  return state.get('config_iteration')
+  return state.getIn(['style', id])
 }
 
-export function query_skip_submit() {
+export function query_obj_misc(id) {
   const state = global_store.getState()
-  return state.get('skip_submit')
-}
-
-export function query_skip_in_between() {
-  const state = global_store.getState()
-  return state.get('skip_in_between')
-}
-
-export function query_goto_iteration() {
-  const state = global_store.getState()
-  return state.get('goto_iteration')
-}
-
-export function query_target() {
-  const state = global_store.getState()
-  return state.getIn(['event_handling', 'target'])
-}
-
-export function query_comparison_source() {
-  const state = global_store.getState()
-  return state.getIn(['event_handling', 'comparison_source'])
+  return state.getIn(['misc', id])
 }
 
 export function query_arg(n) {
@@ -313,6 +284,17 @@ export function query_arg(n) {
     return state.getIn(['event_handling', 'arg_2'])
   else if ('result' == n)
     return state.getIn(['event_handling', 'result'])
+}
+
+/*
+export function query_target() {
+  const state = global_store.getState()
+  return state.getIn(['event_handling', 'target'])
+}
+
+export function query_comparison_source() {
+  const state = global_store.getState()
+  return state.getIn(['event_handling', 'comparison_source'])
 }
 
 export function query_correctness() {
@@ -344,10 +326,13 @@ export function query_star_policy() {
   const state = global_store.getState()
   return state.getIn(['event_handling', 'star_policy'])
 }
+*/
 
-export function query_freeze_display() {
+export function query_event(key) {
+  if (!global_constant.event_handling_types.includes(key))
+    console.error("Warning:  unrecognized event_handling key", key)
   const state = global_store.getState()
-  return state.get('freeze_display')
+  return state.getIn(['event_handling', key])
 }
 
 export function query_has_anim_info(id) {
@@ -355,14 +340,47 @@ export function query_has_anim_info(id) {
   return state.get('anim_info').has(id)
 }
 
-export function query_obj_style(id) {
-  const state = global_store.getState()
-  return state.getIn(['style', id])
+/*
+export function query_scale_factor() {
+  return global_store.getState().get('scale_factor')
 }
 
-export function query_obj_misc(id) {
+export function query_freeze_display() {
   const state = global_store.getState()
-  return state.getIn(['misc', id])
+  return state.get('freeze_display')
+}
+
+export function query_num_stars() {
+  const state = global_store.getState()
+  return state.get('num_stars')
+}
+
+export function query_config_iteration() {
+  const state = global_store.getState()
+  return state.get('config_iteration')
+}
+
+export function query_goto_iteration() {
+  const state = global_store.getState()
+  return state.get('goto_iteration')
+}
+
+export function query_skip_submit() {
+  const state = global_store.getState()
+  return state.get('skip_submit')
+}
+
+export function query_skip_in_between() {
+  const state = global_store.getState()
+  return state.get('skip_in_between')
+}
+*/
+
+export function query_prop(key) {
+  if (!global_constant.prop_types.includes(key))
+    console.error("Warning:  unrecognized prop key", key)
+  const state = global_store.getState()
+  return state.getIn(['prop', key])
 }
 
 /*

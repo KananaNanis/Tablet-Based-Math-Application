@@ -255,15 +255,6 @@ function misc(state = Map({}), action) {
   }
 }
 
-function scale_factor(state = 520, action) {
-  switch (action.type) {
-    case AT.SET_SCALE_FACTOR:
-      return action.val
-    default:
-      return state
-  }
-}
-
 function keypad_kind(state = null, action) {
   switch (action.type) {
     case AT.SET_KEYPAD_KIND:
@@ -286,6 +277,36 @@ function button_highlight(state = null, action) {
   switch (action.type) {
     case AT.SET_BUTTON_HIGHLIGHT:
       return action.index
+    default:
+      return state
+  }
+}
+
+function event_handling(state = Map({}), action) {
+  switch (action.type) {
+    case AT.CLEAR_EVENT_HANDLING:
+      return Map({})
+    case AT.SET_EVENT_HANDLING_PARAM:
+      return obj_add_remove_property(state, action.key, action.val);
+    default:
+      return state
+  }
+}
+
+function err_box(state = '', action) {
+  switch (action.type) {
+    case AT.SET_ERR_BOX:
+      return action.info
+    default:
+      return state
+  }
+}
+
+/*
+function scale_factor(state = 520, action) {
+  switch (action.type) {
+    case AT.SET_SCALE_FACTOR:
+      return action.val
     default:
       return state
   }
@@ -362,22 +383,12 @@ function top_right_text(state = '', action) {
       return state
   }
 }
+*/
 
-function event_handling(state = Map({}), action) {
+function prop(state = Map({}), action) {
   switch (action.type) {
-    case AT.CLEAR_EVENT_HANDLING:
-      return Map({})
-    case AT.SET_EVENT_HANDLING_PARAM:
-      return obj_add_remove_property(state, action.key, action.val);
-    default:
-      return state
-  }
-}
-
-function err_box(state = '', action) {
-  switch (action.type) {
-    case AT.SET_ERR_BOX:
-      return action.info
+    case AT.SET_PROP:
+      return state.set(action.key, action.value)
     default:
       return state
   }
@@ -453,7 +464,8 @@ const suujiAppInner = combineReducers({
   event_handling,
   err_box,
 
-  //prop,
+  prop,
+  /*
   scale_factor,
   freeze_display,
   config_iteration,
@@ -463,6 +475,7 @@ const suujiAppInner = combineReducers({
   center_text,
   top_right_text,
   num_stars,
+  */
 
   path,
   /*

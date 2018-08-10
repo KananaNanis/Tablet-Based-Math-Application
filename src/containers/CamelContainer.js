@@ -2,11 +2,11 @@ import { connect } from 'react-redux'
 import Camel from '../components/Camel'
 import { global_constant, doAction } from '../App'
 import { global_screen_width } from '../components/Workspace';
-import { query_star_policy, query_config_iteration, query_log, query_event_top_right_text } from '../providers/query_store';
+import { query_event, query_log } from '../providers/query_store';
 
 export function num_stars(err) {
   let n = -1
-  const policy = query_star_policy()
+  const policy = query_event('star_policy')
   if (policy) {
     const thresh = global_constant.star_policy[policy]
     if (err < thresh[0] / 100) n = 3;
@@ -41,9 +41,9 @@ const mapStateToProps = (state, ownProps) => {
     const a = log_entries[i][1][4]
     const b = log_entries[i][1][5]
     let err = Math.abs(response - a * b)
-    if (query_star_policy()) {
+    if (query_event('star_policy')) {
       if (-1 == num_stars(err)) {  // too high... cap it
-        const thresh = global_constant.star_policy[query_star_policy()]
+        const thresh = global_constant.star_policy[query_event('star_policy')]
         err = thresh[thresh.length - 1] / 100
       } else if (3 == num_stars(err)) {  // quite low... ignore it
         err = 0
@@ -55,17 +55,17 @@ const mapStateToProps = (state, ownProps) => {
   }
   if (log_entries.length > 0) {
     let average_error = err_total / log_entries.length
-    if ('average_error' == query_event_top_right_text()) {
+    if ('average_error' == query_event('top_right_text')) {
       const average_error_string = (100 * average_error).toFixed(1) + '%'
-      doAction.setTopRightText(average_error_string)
+      doAction.setProp('top_right_text', average_error_string)
     }
   } else {
-    doAction.setTopRightText(null)
+    doAction.setProp('top_right_text', null)
   }
-  let predicted_error = err_total / (log_entries.length + query_config_iteration())
+  let predicted_error = err_total / (log_entries.length + query_prop('config_iteration'))
   let camel_index = 6 - (num_stars(predicted_error) + 2)
   //console.log('err_total', err_total, 'predicted_error', predicted_error, 'camel_index', camel_index)
-  //console.log(global_constant.star_policy[query_star_policy()], 'err_total', err_total)
+  //console.log(global_constant.star_policy[query_event('star_policy')], 'err_total', err_total)
   //console.log(log_entries[log_entries.length-1][1])
   const err_box = state.get('err_box')
   let err_box_updated = {}
@@ -85,7 +85,7 @@ const mapStateToProps = (state, ownProps) => {
   return {
     camel_index,
     err_list,
-    scale_factor: state.get('scale_factor'),
+    scale_factor: state.getIn(['prop', 'scale_factor']),
     err_box_updated,
     style: ownProps.style,
   }

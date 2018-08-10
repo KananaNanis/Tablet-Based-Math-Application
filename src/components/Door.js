@@ -46,6 +46,7 @@ class Door extends React.Component {
 
     const is_portal = id.startsWith("portal_")
     const height = 1.0 * scale_factor
+    //console.log('scale_factor', scale_factor)
     const width = is_portal ? global_constant.door.portal_width : 0
     const thickness = height * global_constant.door.thickness_fraction
     //console.log('Door name', name, 'position', position, 'scale_factor', scale_factor, 'height', height)

@@ -1,12 +1,8 @@
 import { List } from 'immutable'
 import { doAction, config_tree, global_constant } from '../App'
 import {
-  query_path, query_config_iteration, height2tower_name,
-  query_scale_factor, tower_name2height,
-  query_goto_iteration,
-  query_skip_in_between,
-  query_test
-} from './query_store'
+  query_path, query_prop, height2tower_name,
+  tower_name2height, query_test } from './query_store'
 import { update_keypad_button_visibility } from '../event/dispatcher'
 import { pick_from_range, pick_from_list, pick_animal_name, from_uniform_range } from '../containers/generate'
 import { global_screen_width, global_workspace_height } from '../components/Workspace'
@@ -103,7 +99,7 @@ export function width_pixels_from_name(name, scale_factor) {
   } else if (name.length >= 1) {
     const group = name[0]
     const size = get_block_size_from_group(group)
-    scale_factor = scale_factor || query_scale_factor()
+    scale_factor = scale_factor || query_prop('scale_factor')
     return scale_factor * global_constant.tower.size2depth[size]
   }
   return 0
@@ -115,7 +111,7 @@ export function height_pixels_from_name(name, scale_factor) {
     const a = global_constant.animals[name]
     return scale_factor * a.height
   } else {
-    scale_factor = scale_factor || query_scale_factor()
+    scale_factor = scale_factor || query_prop('scale_factor')
     return scale_factor * tower_name2height(name, scale_factor)
   }
 }
@@ -240,7 +236,7 @@ export function enter_exit_config(enter, verbose) {
       if ('button_submit' == id) doAction.setButtonDisplay('submit', enter ? true : null)
       else if ('button_delete' == id) doAction.setButtonDisplay('delete', enter ? true : null)
       else if ('button_next' == id) doAction.setButtonDisplay('next', enter ? true : null)
-      else if ('center_text' == id) doAction.setCenterText(enter ? c[id] : null)
+      else if ('center_text' == id) doAction.setProp('center_text', enter ? c[id] : null)
       else if ('err_box' == id) doAction.setErrBox(enter ? { 'show': true } : null)
       else if ('keypad_kind' == id) {
         doAction.setKeypadKind(enter ? c[id] : null)
@@ -341,25 +337,25 @@ export function enter_exit_config(enter, verbose) {
       if ('config_iteration' == key) {
         let iter_val = c[key]
         if (0 == iter_val || !enter) iter_val = null
-        doAction.setConfigIteration(iter_val)
+        doAction.setProp('config_iteration', iter_val)
       } else if ('goto_config' == key) {
         // this attribute is special:  it is not erased at the end!
         if (enter) {
-          const iter = query_goto_iteration()
+          const iter = query_prop('goto_iteration')
           if (iter == null || !(iter > 0)) {
             console.log('iter was', iter, 'setting goto iteration', c[key][0], 'path', c[key][1])
-            doAction.setGotoIteration(c[key][0])
+            doAction.setProp('goto_iteration', c[key][0])
           } else {
             console.log('skipping setting iteration, iter', iter)
           }
         }
         doAction.setPath('goto', enter ? c[key][1] : null)
       } else if ('num_stars' == key)
-        doAction.setNumStars(enter ? c[key] : null)
+        doAction.setProp('num_stars', enter ? c[key] : null)
       else if ('skip_submit' == key)
-        doAction.setSkipSubmit(enter ? c[key] : null)
+        doAction.setProp('skip_submit', enter ? c[key] : null)
       else if ('skip_in_between' == key)
-        doAction.setSkipInBetween(enter ? c[key] : null)
+        doAction.setProp('skip_in_between', enter ? c[key] : null)
     }
   }
   // query_test()
@@ -375,9 +371,9 @@ export function transition_to_next_config() {
     doAction.addLogEntry(Date.now(), [new_path, 'next_config', 'start'])
     doAction.setPath('config', new_path)
     enter_exit_config(true)
-  } else if (query_path('goto') != null && query_goto_iteration() > 1) {
+  } else if (query_path('goto') != null && query_prop('goto_iteration') > 1) {
     // possibly jump directly to some other path
-    const iter = query_goto_iteration()
+    const iter = query_prop('goto_iteration')
     const new_path = query_path('goto')
     doAction.addLogEntry(Date.now(), [query_path('config').toJS(), 'next_config', iter])
     enter_exit_config(false)
@@ -385,12 +381,12 @@ export function transition_to_next_config() {
     console.log('new_path', new_path)
     doAction.setPath('config', new_path)
     enter_exit_config(true)
-    doAction.setGotoIteration(iter - 1)
-  } else if (query_config_iteration() > 1) {
-    const iter = query_config_iteration()
+    doAction.setProp('goto_iteration', iter - 1)
+  } else if (query_prop('config_iteration') > 1) {
+    const iter = query_prop('config_iteration')
     doAction.addLogEntry(Date.now(), [query_path('config').toJS(), 'next_config', iter])
     enter_exit_config(true)
-    doAction.setConfigIteration(iter - 1)
+    doAction.setProp('config_iteration', iter - 1)
     /*
     doAction.setName('tile_1', pick_animal_name())
     doAction.setName('tower_2', []);
@@ -402,7 +398,7 @@ export function transition_to_next_config() {
     doAction.setName('tower_2', []);
     update_keypad_button_visibility(null, null, null)
     */
-  } else if (query_skip_in_between()) {
+  } else if (query_prop('skip_in_between')) {
     enter_exit_config(false)
     const curr_path = query_path('config')
     const new_path = next_config_path(curr_path)

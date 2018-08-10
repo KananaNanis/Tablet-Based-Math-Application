@@ -10,15 +10,15 @@ const mapStateToProps = (state, ownProps) => {
   //console.log('mapStateToProps misc', state.get('misc'))
   return {
     style: ownProps.style,
-    scale_factor: state.get('scale_factor'),
+    scale_factor: state.getIn(['prop', 'scale_factor']),
     keypad_kind: state.get('keypad_kind'),
     button_display: state.get('button_display'),
     button_highlight: state.get('button_highlight'),
-    freeze_display: state.get('freeze_display'),
-    num_stars: state.get('num_stars'),
+    freeze_display: state.getIn(['prop', 'freeze_display']),
+    num_stars: state.getIn(['prop', 'num_stars']),
     config_path: state.getIn(['path', 'config']),
-    center_text: state.get('center_text'),
-    top_right_text: state.get('top_right_text'),
+    center_text: state.getIn(['prop', 'center_text']),
+    top_right_text: state.getIn(['prop', 'top_right_text']),
     err_box: state.get('err_box'),
     all_nums: consolidate_info_for_ids(
       state.get('tower_ids'),

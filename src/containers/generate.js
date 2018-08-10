@@ -3,7 +3,7 @@ import { global_workspace_height } from '../components/Workspace';
 import { global_constant } from '../App'
 
 export function height_too_tall(height) {
-  const pixels = query_scale_factor() * height
+  const pixels = query_prop('scale_factor') * height
   return pixels > global_workspace_height
 }
 

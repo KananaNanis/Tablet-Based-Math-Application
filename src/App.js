@@ -99,7 +99,7 @@ export async function load_config_tree() {
 
     doAction.setPath('config', path)
     doAction.setPath('prev_config', query_path('config'))
-    doAction.setScaleFactor(global_constant.scale_factor_from_yaml)
+    doAction.setProp('scale_factor', global_constant.scale_factor_from_yaml)
     //get_config(path)
 
     //doAction.setCurrentConfig('animal_height')

@@ -136,6 +136,13 @@ star_policy:
   moderate: [1.0001, 3.0001, 5.0001, 10]
   strict: [0.5001, 1.0001, 3.0001, 5]
 path_types: [config, prev_config, goto]
+prop_types: [scale_factor, freeze_display, num_stars,
+    config_iteration, goto_iteration, skip_submit, skip_in_between,
+    center_text, top_right_text]
+prop_value_types: [number, string, boolean]
+event_handling_types: [target, comparison_source, correctness,
+  event_move, top_right_text, show_camel, slide_portal,
+  star_policy, move, arg_1, arg_2, result]
 top_right_text_offset: 80
 screen_pixels_per_cm: 52
 print_pixels_per_cm: 56.77

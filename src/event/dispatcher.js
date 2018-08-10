@@ -1,7 +1,7 @@
 import {
-  query_keypad_kind, query_visible_buttons, query_tower_name, query_top_block, query_num_stars, query_name_of_tile,
-  query_tower_height, query_comparison_source, query_scale_factor, query_freeze_display, height2tower_name, query_name_of_door,
-  query_door, query_target, query_correctness, query_arg, query_event_move, query_path, query_star_policy, query_has_anim_info, query_event_top_right_text, query_position_of_tile, query_event_show_camel, query_obj_misc, query_event_slide_portal, query_skip_submit
+  query_keypad_kind, query_visible_buttons, query_tower_name, query_top_block, query_name_of_tile,
+  query_tower_height, query_prop, height2tower_name, query_name_of_door,
+  query_door, query_event, query_arg, query_path, query_has_anim_info, query_position_of_tile, query_obj_misc
 } from '../providers/query_store'
 import { get_button_geoms_for } from '../components/Keypad'
 import { global_workspace_height, add_offset } from '../components/Workspace'
@@ -56,9 +56,9 @@ function correct_next_button() {
   const verbose = false
   let expand = false
   let correct, curr, res = null
-  const how = query_correctness()
-  const tgt = query_target()
-  const src = query_comparison_source()
+  const how = query_event('correctness')
+  const tgt = query_event('target')
+  const src = query_event('comparison_source')
   if ('identical' == how) {
     correct = query_tower_name(src).toJS()
     curr = query_tower_name(tgt).toJS()
@@ -104,7 +104,7 @@ function extract_handle_position(door_info, secondary_handle) {
   let name = door_info.get('name')
   const val = name.get(secondary_handle ? 1 : 0)
   let position = door_info.get('position')
-  const scale_factor = query_scale_factor()
+  const scale_factor = query_prop('scale_factor')
   let res = [position.get(0)
     + global_constant.door.thickness_fraction * scale_factor
     , position.get(1) + scale_factor * val]
@@ -144,8 +144,8 @@ const tower_exercise_list = [
 
 function handle_delete_button(state) {
   if ('up' == state) {
-    doAction.towerRemoveBlock(query_target())
-    const [size, is_fiver, how_many] = query_top_block(query_target())
+    doAction.towerRemoveBlock(query_event('target'))
+    const [size, is_fiver, how_many] = query_top_block(query_event('target'))
     update_keypad_button_visibility(size, is_fiver, how_many)
   }
 }
@@ -156,9 +156,9 @@ function handle_next_button(state) {
 }
 
 function reduce_num_stars() {
-  const curr_num_stars = query_num_stars()
+  const curr_num_stars = query_prop('num_stars')
   if (curr_num_stars > 0)
-    doAction.setNumStars(curr_num_stars - 1)
+    doAction.setProp('num_stars', curr_num_stars - 1)
 }
 
 function vec_sum(a, b) {
@@ -225,7 +225,7 @@ function describe_numerical(arg_1, arg_2, result, arg_1_index) {
   //console.log('f1', f1.toFixed(2), 'f2', f2.toFixed(2), 'f1 * f2', (f1 * f2).toFixed(2), 'f3', f3.toFixed(2))
   console.log('f1 ', f1, 'f2', f2, 'f1 * f2', f1 * f2, 'f3', f3)
   const err = Math.abs(f3 - f1 * f2)
-  if (!query_star_policy()) console.error('need star policy!')
+  if (!query_event('star_policy')) console.error('Warning: need star policy!')
   const stars = num_stars(err)
   return { f1, f2, f3, err, stars }
 }
@@ -234,9 +234,9 @@ let delay = 0  // ugly style... maybe?
 
 function is_correct() {
   let res = false
-  const tgt = query_target()
-  const src = query_comparison_source()
-  const how = query_correctness()
+  const tgt = query_event('target')
+  const src = query_event('comparison_source')
+  const how = query_event('correctness')
   const curr_time = Date.now()  // when anwer was given
   const cp = query_path('config').toJS()
   delay = 0
@@ -261,7 +261,7 @@ function is_correct() {
     const { f1, f2, f3, err, stars } = describe_numerical(arg_1, arg_2, result)
     res = true
 
-    if (!query_event_show_camel()) {  // just show the err_box
+    if (!query_event('show_camel')) {  // just show the err_box
       if (3 == stars) {   // close enough... don't show the box
         doAction.setAnimInfo(arg_1, { slide_target: f1, slide_duration: 200 })
         delay = 300
@@ -311,10 +311,10 @@ function is_correct() {
 
 function incorrect_button_response() {
   reduce_num_stars()
-  doAction.setFreezeDisplay(true);
+  doAction.setProp('freeze_display', true);
   window.setTimeout(function () {
     doAction.setButtonHighlight(null);
-    doAction.setFreezeDisplay(false);
+    doAction.setProp('freeze_display', false);
   }, 3000);
 }
 
@@ -392,7 +392,7 @@ function handle_is_hidden(id) {
 
 export function touch_dispatcher(state, x, y, touchID) {
   //console.log('touch_dispatcher state ' + state + ' x ' + x + ' y ' + y + ' touchID ' + touchID)
-  if (query_freeze_display()) {  // perhaps allow submit?
+  if (query_prop('freeze_display')) {  // perhaps allow submit?
     if ('down' == state || 'up' == state) console.log('frozen')
     return
   }
@@ -428,7 +428,7 @@ export function touch_dispatcher(state, x, y, touchID) {
             incorrect_button_response()
             return;
           }
-          const pixel_height = query_scale_factor() * query_tower_height(tgt)
+          const pixel_height = query_prop('scale_factor') * query_tower_height(tgt)
           // console.log('pixel_height', pixel_height, 'h', global_workspace_height)
           if (pixel_height < global_workspace_height) {
             doAction.towerAddBlock(tgt, new_size, new_is_fiver)
@@ -440,11 +440,11 @@ export function touch_dispatcher(state, x, y, touchID) {
     }
   }
   if ('up' == state || !found_one) doAction.setButtonHighlight(null)
-  //console.log('target', query_target())
-  if (null != typeof query_target()) {
-    const tgt = query_target()
-    const scale_factor = query_scale_factor()
-    const move = query_event_move()
+  //console.log('target', query_event('target'))
+  if (null != typeof query_event('target')) {
+    const tgt = query_event('target')
+    const scale_factor = query_prop('scale_factor')
+    const move = query_event('move')
     if (0) {
       //  old position was just the height above the ground
       set_primary_height(tgt, y / scale_factor)
@@ -516,7 +516,7 @@ export function touch_dispatcher(state, x, y, touchID) {
           set_primary_height(tgt, y1 + y_delta)
         }
         if ('up' == state) {
-          if (query_event_slide_portal() == true) {
+          if (query_event('slide_portal') == true) {
             const arg_1 = query_arg(1)
             const result = query_arg('result')
             if (handle_close_to_goal()) {
@@ -529,7 +529,7 @@ export function touch_dispatcher(state, x, y, touchID) {
               //console.log('f1', f1, 'correct', correct)
               doAction.setAnimInfo(tgt, { slide_target: correct, slide_duration: 200 })
               doAction.addObjStyle(result, 'opacity', 1)
-              if (query_skip_submit()) {
+              if (query_prop('skip_submit')) {
                 global_sound['chirp1'].play()
                 transition_to_next_config()
               } else doAction.setButtonDisplay('submit', true)

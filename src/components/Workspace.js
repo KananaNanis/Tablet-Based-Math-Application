@@ -1,6 +1,6 @@
 import React from 'react'
 import { View, Image, Text, Animated, StyleSheet, Dimensions } from 'react-native'
-import { Map } from 'immutable'
+import { Map, toJS } from 'immutable'
 import Num from './Num'
 import Keypad from './Keypad'
 import Button from './Button'
@@ -146,8 +146,8 @@ const Workspace = ({ scale_factor, keypad_kind, button_display,
 
   //console.log('Workspace all_nums', all_nums, 'all_tiles', all_tiles, 'all_doors', all_doors)
   //console.log('Workspace all_portals', all_portals)
-  //console.log('Workspace config_path', config_path)
   if ('undefined' === typeof config_path) return []
+  //console.log('Workspace config_path', config_path.toJS())
   const nums = render_nums(all_nums, scale_factor)
   const tiles = render_tiles(all_tiles, scale_factor)
   const doors = render_doors(all_doors, skip = null, scale_factor)
@@ -162,7 +162,7 @@ const Workspace = ({ scale_factor, keypad_kind, button_display,
   if (err_box) { // add camel container, for now!
     //console.log('err_box', err_box)
     ++key
-    if (query_event_show_camel())
+    if (query_event('show_camel'))
       misc.push(<CamelContainer key={key} />)
     else if (err_box.has('position'))
       misc.push(<ErrBox position={err_box.get('position').toJS()}
@@ -267,6 +267,7 @@ const Workspace = ({ scale_factor, keypad_kind, button_display,
     )
     //source={require('img/star.png')}
   }
+  //console.log(doors.length)
   return (<View style={styles.workspace}>
     {nums}{tiles}{doors}{portals}
     {misc}

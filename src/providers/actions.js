@@ -93,10 +93,6 @@ export function towerSetBlockOpacity(id, index, opacity) {
   return { type: AT.TOWER_SET_BLOCK_OPACITY, id, index, opacity }
 }
 
-export function setScaleFactor(val) {
-  return { type: AT.SET_SCALE_FACTOR, val }
-}
-
 export function setKeypadKind(kind) {
   return { type: AT.SET_KEYPAD_KIND, kind }
 }
@@ -108,6 +104,26 @@ export function setButtonDisplay(index, val) {
 
 export function setButtonHighlight(index) {
   return { type: AT.SET_BUTTON_HIGHLIGHT, index }
+}
+
+export function clearEventHandling() {
+  return { type: AT.CLEAR_EVENT_HANDLING }
+}
+
+export function setEventHandlingParam(key, val) {
+  if (!global_constant.event_handling_types.includes(key))
+    console.error("Warning:  unrecognized event_handling key", key)
+  return { type: AT.SET_EVENT_HANDLING_PARAM, key, val }
+}
+
+export function setErrBox(info) {
+  //console.log('setErrBox ', info)
+  return { type: AT.SET_ERR_BOX, info: fromJS(info) }
+}
+
+/*
+export function setScaleFactor(val) {
+  return { type: AT.SET_SCALE_FACTOR, val }
 }
 
 export function setFreezeDisplay(t) {
@@ -142,18 +158,15 @@ export function setCenterText(text) {
 export function setTopRightText(text) {
   return { type: AT.SET_TOP_RIGHT_TEXT, text }
 }
+*/
 
-export function clearEventHandling() {
-  return { type: AT.CLEAR_EVENT_HANDLING }
-}
-
-export function setEventHandlingParam(key, val) {
-  return { type: AT.SET_EVENT_HANDLING_PARAM, key, val }
-}
-
-export function setErrBox(info) {
-  //console.log('setErrBox ', info)
-  return { type: AT.SET_ERR_BOX, info: fromJS(info) }
+export function setProp(key, value) {
+  if (!global_constant.prop_types.includes(key))
+    console.error("Warning:  unrecognized prop key", key)
+  if (null !== value &&
+    !global_constant.prop_value_types.includes(typeof value))
+    console.error("Warning:  prop value has unrecognized type", value)
+  return { type: AT.SET_PROP, key, value }
 }
 
 /*
