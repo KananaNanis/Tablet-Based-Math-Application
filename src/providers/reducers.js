@@ -12,21 +12,10 @@ function array_add_remove_element(state, elt, add, skip_duplicate) {
     if (skip_duplicate && state.indexOf(elt) > -1)
       return state
     else
-      /*
-      return [
-        ...state,
-        elt
-      ]
-      */
       return state.push(elt)
   } else {
     const index = state.indexOf(elt);
     if (index > -1) {
-      /*
-      let cpy = [...state]
-      cpy.splice(index, 1);
-      return cpy
-      */
       return state.delete(index)
     }
     return state
@@ -36,20 +25,9 @@ function array_add_remove_element(state, elt, add, skip_duplicate) {
 function obj_add_remove_property(state, key, val) {
   if (null === val) {
     if (state.has(key)) {
-      /*
-      let cpy = { ...state }
-      delete cpy[key]
-      return cpy
-      */
       return state.delete(key)
     } else return state
   } else {
-    /*
-    return {
-      ...state,
-      [key]: val,
-    }
-    */
     return state.set(key, val)
   }
 }
@@ -112,21 +90,9 @@ function name(state = Map({}), action) {
     case AT.PORTAL_DELETE:
       return obj_add_remove_property(state, action.id, null);
     case AT.TOWER_ADD_BLOCK:
-      /*
-      return {
-        ...state,
-        [action.id]: add_block_to_name(action.size, action.is_fiver, state[action.id])
-      }
-      */
       return state.set(action.id,
         add_block_to_name(action.size, action.is_fiver, state.get(action.id)))
     case AT.TOWER_REMOVE_BLOCK:
-      /*
-      return {
-        ...state,
-        [action.id]: remove_block_from_name(state[action.id])
-      }
-      */
       console.error('how?')
       return state.set(action.id,
         remove_block_from_name(state.get(action.id)))
@@ -302,88 +268,6 @@ function err_box(state = '', action) {
   }
 }
 
-/*
-function scale_factor(state = 520, action) {
-  switch (action.type) {
-    case AT.SET_SCALE_FACTOR:
-      return action.val
-    default:
-      return state
-  }
-}
-
-function freeze_display(state = null, action) {
-  switch (action.type) {
-    case AT.SET_FREEZE_DISPLAY:
-      return action.t
-    default:
-      return state
-  }
-}
-
-function num_stars(state = 0, action) {
-  switch (action.type) {
-    case AT.SET_NUM_STARS:
-      return action.n
-    default:
-      return state
-  }
-}
-
-function config_iteration(state = 0, action) {
-  switch (action.type) {
-    case AT.SET_CONFIG_ITERATION:
-      return action.n
-    default:
-      return state
-  }
-}
-
-function skip_submit(state = 0, action) {
-  switch (action.type) {
-    case AT.SET_SKIP_SUBMIT:
-      return action.g
-    default:
-      return state
-  }
-}
-
-function skip_in_between(state = 0, action) {
-  switch (action.type) {
-    case AT.SET_SKIP_IN_BETWEEN:
-      return action.g
-    default:
-      return state
-  }
-}
-
-function goto_iteration(state = 0, action) {
-  switch (action.type) {
-    case AT.SET_GOTO_ITERATION:
-      return action.n
-    default:
-      return state
-  }
-}
-
-function center_text(state = '', action) {
-  switch (action.type) {
-    case AT.SET_CENTER_TEXT:
-      return action.text
-    default:
-      return state
-  }
-}
-
-function top_right_text(state = '', action) {
-  switch (action.type) {
-    case AT.SET_TOP_RIGHT_TEXT:
-      return action.text
-    default:
-      return state
-  }
-}
-*/
 
 function prop(state = Map({}), action) {
   switch (action.type) {
@@ -394,34 +278,6 @@ function prop(state = Map({}), action) {
   }
 }
 
-/*
-function config_path(state = List([]), action) {
-  switch (action.type) {
-    case AT.SET_CONFIG_PATH:
-      return action.c
-    default:
-      return state
-  }
-}
-
-function prev_config_path(state = List([]), action) {
-  switch (action.type) {
-    case AT.SET_PREV_CONFIG_PATH:
-      return action.c
-    default:
-      return state
-  }
-}
-
-function goto_path(state = 0, action) {
-  switch (action.type) {
-    case AT.SET_GOTO_PATH:
-      return action.g
-    default:
-      return state
-  }
-}
-*/
 
 function path(state = Map({}), action) {
   switch (action.type) {
@@ -463,27 +319,8 @@ const suujiAppInner = combineReducers({
   // other
   event_handling,
   err_box,
-
   prop,
-  /*
-  scale_factor,
-  freeze_display,
-  config_iteration,
-  goto_iteration,
-  skip_submit,
-  skip_in_between,
-  center_text,
-  top_right_text,
-  num_stars,
-  */
-
   path,
-  /*
-  prev_config_path,
-  config_path,
-  goto_path,
-  */
-
   log,
 })
 
@@ -493,39 +330,7 @@ const initialState = fromJS({
   tile_ids: [],
   door_ids: [],
   portal_ids: [],
-  /*
-  name: {},
-  position: {},
-  style: { 'door_3': { 'opacity': 0.5 }
-  },
-  misc: { //'tower_1': { 'role': 'left_operand' },
-  },
-
-  // tower info
-  tower_style: { // 'tower_1': { 'width': 150, 'overflow': 'hidden' }
-  },
-  block_opacity: { //'tower_1': [null, 0.5]
-  },
-
-  // keypad info
-  keypad_kind: null,
-  */
   button_display: {},
-  /*
-  button_highlight: null,
-  freeze_display: false,
-
-  // other info
-  num_stars: 0,
-  //scale_factor: 520,
-  //scale_factor : 2,
-  */
-
-  /*
-  config_path: [],
-  config_iteration: 0,
-  prev_config_path: [],
-  */
   /*
   log: [
     [1533395800000, [['proportion'], 'is_correct', true, .26, .5, .8]],

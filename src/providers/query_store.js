@@ -286,48 +286,6 @@ export function query_arg(n) {
     return state.getIn(['event_handling', 'result'])
 }
 
-/*
-export function query_target() {
-  const state = global_store.getState()
-  return state.getIn(['event_handling', 'target'])
-}
-
-export function query_comparison_source() {
-  const state = global_store.getState()
-  return state.getIn(['event_handling', 'comparison_source'])
-}
-
-export function query_correctness() {
-  const state = global_store.getState()
-  return state.getIn(['event_handling', 'correctness'])
-}
-
-export function query_event_move() {
-  const state = global_store.getState()
-  return state.getIn(['event_handling', 'move'])
-}
-
-export function query_event_top_right_text() {
-  const state = global_store.getState()
-  return state.getIn(['event_handling', 'top_right_text'])
-}
-
-export function query_event_show_camel() {
-  const state = global_store.getState()
-  return state.getIn(['event_handling', 'show_camel'])
-}
-
-export function query_event_slide_portal() {
-  const state = global_store.getState()
-  return state.getIn(['event_handling', 'slide_portal'])
-}
-
-export function query_star_policy() {
-  const state = global_store.getState()
-  return state.getIn(['event_handling', 'star_policy'])
-}
-*/
-
 export function query_event(key) {
   if (!global_constant.event_handling_types.includes(key))
     console.error("Warning:  unrecognized event_handling key", key)
@@ -340,41 +298,6 @@ export function query_has_anim_info(id) {
   return state.get('anim_info').has(id)
 }
 
-/*
-export function query_scale_factor() {
-  return global_store.getState().get('scale_factor')
-}
-
-export function query_freeze_display() {
-  const state = global_store.getState()
-  return state.get('freeze_display')
-}
-
-export function query_num_stars() {
-  const state = global_store.getState()
-  return state.get('num_stars')
-}
-
-export function query_config_iteration() {
-  const state = global_store.getState()
-  return state.get('config_iteration')
-}
-
-export function query_goto_iteration() {
-  const state = global_store.getState()
-  return state.get('goto_iteration')
-}
-
-export function query_skip_submit() {
-  const state = global_store.getState()
-  return state.get('skip_submit')
-}
-
-export function query_skip_in_between() {
-  const state = global_store.getState()
-  return state.get('skip_in_between')
-}
-*/
 
 export function query_prop(key) {
   if (!global_constant.prop_types.includes(key))
@@ -383,22 +306,6 @@ export function query_prop(key) {
   return state.getIn(['prop', key])
 }
 
-/*
-export function query_config_path() {
-  const state = global_store.getState()
-  return state.get('config_path')
-}
-
-export function query_prev_config_path() {
-  const state = global_store.getState()
-  return state.get('prev_config_path')
-}
-
-export function query_goto_path() {
-  const state = global_store.getState()
-  return state.get('goto_path')
-}
-*/
 
 export function query_path(key) {
   if (!global_constant.path_types.includes(key))

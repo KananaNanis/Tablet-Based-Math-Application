@@ -2,25 +2,6 @@ import * as AT from './actionTypes'
 import { List, fromJS } from 'immutable'
 import { global_constant } from '../App';
 
-/*  example action objects
-{
-  type : AT.TOWER_CREATE,
-  id : 'num4',
-  name : [],
-  position : [20, 0]
-}
-{
-  type : AT.SET_NAME,
-  id : 'num4',
-  name : [2],
-}
-{
-  type : AT.SET_POSITION,
-  id : 'num4',
-  position : [30, 0]
-}
-*/
-
 export function towerCreate(id, name, position) {
   return { type: AT.TOWER_CREATE, id, name: fromJS(name), position: fromJS(position) }
 }
@@ -121,44 +102,7 @@ export function setErrBox(info) {
   return { type: AT.SET_ERR_BOX, info: fromJS(info) }
 }
 
-/*
-export function setScaleFactor(val) {
-  return { type: AT.SET_SCALE_FACTOR, val }
-}
 
-export function setFreezeDisplay(t) {
-  return { type: AT.SET_FREEZE_DISPLAY, t }
-}
-
-export function setNumStars(n) {
-  //console.log('setNumStars', n)
-  return { type: AT.SET_NUM_STARS, n }
-}
-
-export function setConfigIteration(n) {
-  return { type: AT.SET_CONFIG_ITERATION, n }
-}
-
-export function setSkipSubmit(g) {
-  return { type: AT.SET_SKIP_SUBMIT, g }
-}
-
-export function setSkipInBetween(g) {
-  return { type: AT.SET_SKIP_IN_BETWEEN, g }
-}
-
-export function setGotoIteration(n) {
-  return { type: AT.SET_GOTO_ITERATION, n }
-}
-
-export function setCenterText(text) {
-  return { type: AT.SET_CENTER_TEXT, text }
-}
-
-export function setTopRightText(text) {
-  return { type: AT.SET_TOP_RIGHT_TEXT, text }
-}
-*/
 
 export function setProp(key, value) {
   if (!global_constant.prop_types.includes(key))
@@ -169,19 +113,6 @@ export function setProp(key, value) {
   return { type: AT.SET_PROP, key, value }
 }
 
-/*
-export function setConfigPath(c) {
-  return { type: AT.SET_CONFIG_PATH, c: fromJS(c) }
-}
-
-export function setPrevConfigPath(c) {
-  return { type: AT.SET_PREV_CONFIG_PATH, c: fromJS(c) }
-}
-
-export function setGotoPath(g) {
-  return { type: AT.SET_GOTO_PATH, g: fromJS(g) }
-}
-*/
 
 export function setPath(key, value) {
   if (!global_constant.path_types.includes(key))
