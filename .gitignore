@@ -38,4 +38,5 @@ src/index.js
 src/registerServiceWorker.js
 src/providers/testThis.js
 src/downloadGoogleDoc.py
+src/lessonOutline
 src/old

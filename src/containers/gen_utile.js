@@ -1,6 +1,6 @@
-import { query_scale_factor } from '../providers/query_store';
 import { global_workspace_height } from '../components/Workspace';
 import { global_constant } from '../App'
+import { query_prop } from '../providers/query_store';
 
 export function height_too_tall(height) {
   const pixels = query_prop('scale_factor') * height
@@ -59,6 +59,13 @@ export function pick_from_range(begin, end, incr, prev_value) {
   return pick_from_list(list, prev_value)
 }
 
-export function from_uniform_range(begin, end) {
-  return begin + (end - begin)*Math.random()
+export function from_uniform_range(begin, end, prev_value) {
+  for (const i = 0; i < 10; ++i) {
+    const val = begin + (end - begin) * Math.random()
+    if ('undefined' === typeof prev_value
+      || 10 * Math.abs(val - prev_value) > Math.abs(end - begin))
+      return val
+  }
+  console.error('Warning:  did not generate inside uniform range after 10 tries.', begin, end, prev_value)
+  return (begin + end) / 2
 }

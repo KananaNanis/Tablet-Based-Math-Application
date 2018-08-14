@@ -18,6 +18,12 @@ class Tile extends React.Component {
     loopAnim: new Animated.Value(0),
   }
 
+  componentDidUpdate() {
+    let { misc } = this.props
+    if (misc && misc.hasOwnProperty('blink')) {
+    } else this.state.loopAnim.setValue(0)
+  }
+
   render() {
     let { name, position, style, anim_info, misc, just_grey, extra_scale } = this.props
     //just_grey = true
@@ -45,9 +51,9 @@ class Tile extends React.Component {
       <Animated.View style={[styles.tile, style, pos_info,
       extra_style,
       {
-        width: width + 2,
-        height: height + 2,
-        borderColor: just_grey ? 'grey' : 'orange',
+        width: width,
+        height: height + 1,
+        borderTopColor: just_grey ? 'grey' : 'orange',
       }]} >
         <Image
           style={{ position: 'absolute', width, height }}
@@ -60,7 +66,7 @@ class Tile extends React.Component {
 const styles = StyleSheet.create({
   tile: {
     position: 'absolute',
-    borderWidth: 1,
+    borderTopWidth: 1,
   },
 })
 

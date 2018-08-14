@@ -18,7 +18,6 @@ export function handle_next_button(state) {
 
 export function incorrect_button_response() {
   reduce_num_stars()
-  doAction.setProp('freeze_display', true);
   window.setTimeout(function () {
     doAction.setButtonHighlight(null);
     doAction.setProp('freeze_display', false);
@@ -27,20 +26,26 @@ export function incorrect_button_response() {
 
 export function handle_submit_button(state) {
   if ('up' == state) {
+    doAction.setProp('freeze_display', true);
     let delay = is_correct()
     if ('incorrect' == delay)
       incorrect_button_response()
     else {
-      global_sound['chirp1'].play()
       doAction.setButtonHighlight(null)
       if ('do_not_transition' === delay) {  // special case...
+        doAction.setProp('freeze_display', false);
       } else if (delay) {
         // do animation!
-        console.log('animating now ')
+        global_sound['chirp1'].play()
+        doAction.setButtonDisplay('submit', null)
+        console.log('animating now')
         window.setTimeout(function () {
           transition_to_next_config()
         }, delay)
-      } else transition_to_next_config()
+      } else {
+        global_sound['chirp1'].play()
+        transition_to_next_config()
+      }
     }
   }
 }

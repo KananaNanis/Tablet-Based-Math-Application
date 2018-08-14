@@ -1,8 +1,9 @@
 import {
-  query_keypad_kind, query_visible_buttons, query_top_block,
-  query_tower_height, query_prop, query_name_of_door,
+  query_keypad_kind, query_visible_buttons,
+  query_prop, query_name_of_door,
   query_door, query_event, query_arg, query_has_anim_info,
 } from '../providers/query_store'
+import { query_top_block, query_tower_height } from '../providers/query_tower'
 import { get_button_geoms_for } from '../components/Keypad'
 import { global_workspace_height, add_offset } from '../components/Workspace'
 import { doAction, global_sound, global_constant } from '../App'
@@ -92,13 +93,13 @@ export function touch_dispatcher(state, x, y, touchID) {
         pos_x = extract_handle_position(query_door(arg_1))[0]
         di = dist2D([pos_x, 0], [x, y])
         if (di <= 0) di = .001
-        console.log('di', di)
+        //console.log('di ', di)
       }
-      if ('down' == state) {  // store scaling_delta
-        if ('touch_image' == move) {
+      if ('down' == state) {
+        if ('touch_image' == move) {  // store scaling_delta
           const f1 = query_name_of_door(arg_1).get(0)
           scaling_delta = f1 / (di / scale_factor)
-          console.log('scaling_delta', scaling_delta)
+          console.log('scaling_delta ', scaling_delta)
           if (is_blinking(arg_2)) {
             doAction.addObjMisc(arg_2, 'blink', null)
             //doAction.addObjMisc(tgt, 'opacity', 1)
@@ -110,6 +111,10 @@ export function touch_dispatcher(state, x, y, touchID) {
             doAction.addObjStyle(tgt, 'opacity', 1)
             doAction.addObjMisc(tgt, 'blink', null)
             doAction.addObjMisc(tgt, 'handle_opacity', 1)
+            if (query_event('touch_reveals_button')) {
+              button = query_event('touch_reveals_button')
+              doAction.setButtonDisplay(button, true)
+            }
             y_delta = 0
             set_primary_height(tgt, y1 + y_delta)
           }
@@ -132,7 +137,7 @@ export function touch_dispatcher(state, x, y, touchID) {
           doAction.setAnimInfo(tgt, null)
         if ('touch_image' == move) {
           const h = scaling_delta * di / scale_factor
-          console.log('h', h)
+          //console.log('h', h)
           set_primary_height(tgt, h)
         } else if (y_delta !== null) {  // change position
           set_primary_height(tgt, y1 + y_delta)
@@ -142,15 +147,20 @@ export function touch_dispatcher(state, x, y, touchID) {
             const arg_1 = query_arg(1)
             const result = query_arg('result')
             if (handle_close_to_goal()) {
-              //const correct = query_name_of_door(tgt).get(1)
-              const f1 = query_name_of_door(arg_1).get(0)
-              const f2 = get_door_or_tile_height(arg_2)
-              const f3 = query_name_of_door(result).get(0)
-              const correct = f3 / f2
-              if (tgt !== arg_1) correct = f1 * f2
-              //console.log('f1', f1, 'correct', correct)
-              doAction.setAnimInfo(tgt, { slide_target: correct, slide_duration: 200 })
-              doAction.addObjStyle(result, 'opacity', 1)
+              //console.log('return_to_top', query_event('return_to_top'), 'tgt', tgt)
+              if (query_event('return_to_top') == tgt) {
+                doAction.setAnimInfo(tgt, { slide_target: 1, slide_duration: 200 })
+              } else {
+                //const correct = query_name_of_door(tgt).get(1)
+                const f1 = query_name_of_door(arg_1).get(0)
+                const f2 = get_door_or_tile_height(arg_2)
+                const f3 = query_name_of_door(result).get(0)
+                const correct = f3 / f2
+                if (tgt !== arg_1) correct = f1 * f2
+                //console.log('f1', f1, 'correct', correct)
+                doAction.setAnimInfo(tgt, { slide_target: correct, slide_duration: 200 })
+                doAction.addObjStyle(result, 'opacity', 1)
+              }
               if (query_prop('skip_submit')) {
                 global_sound['chirp1'].play()
                 transition_to_next_config()

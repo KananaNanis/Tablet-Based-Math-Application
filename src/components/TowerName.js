@@ -1,7 +1,7 @@
 import React from 'react'
 import { StyleSheet, Animated, Text } from 'react-native'
 import { global_fiver_shadow } from './Num'
-import { query_whole_tower } from '../providers/query_store'
+import { query_whole_tower } from '../providers/query_tower'
 import { global_constant } from '../App'
 import { as_greyscale } from './Tower';
 import { start_anim } from './Workspace';

@@ -1,7 +1,7 @@
 import React from 'react'
 import Block from './Block'
 import { StyleSheet, Animated, Text } from 'react-native'
-import { query_tower_blocks } from '../providers/query_store'
+import { query_tower_blocks } from '../providers/query_tower'
 import { global_workspace_height, start_anim } from './Workspace'
 import { global_fiver_shadow } from './Num'
 import { global_constant } from '../App'

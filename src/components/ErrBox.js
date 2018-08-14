@@ -23,8 +23,10 @@ class ErrBox extends React.Component {
       use_anim = true;
     }
     //console.log('bottomR', bottomR)
-    let err_style = [styles.err_box, style,
+    //console.log('style', style)
+    let err_style = [styles.err_box,
     as_baggage ? { backgroundColor: 'brown' } : {},
+    style,
     {
       width,
       height,

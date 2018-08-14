@@ -11,10 +11,12 @@ import Sound from './assets/sound'
 import * as Actions from './providers/actions'
 //import PrintFigure from './components/PrintFigure';
 import Door from './components/Door';
-import { enter_exit_config, as_position } from './providers/change_config'
+import { as_position } from './providers/change_config'
 import { query_path } from './providers/query_store';
 import { get_keypad_width_height } from './components/Keypad';
 import { fromJS } from '../node_modules/immutable';
+import { enter_exit_config } from './providers/enter_exit';
+//import { show_thin_height } from './event/extract';
 
 export let doAction = {}
 export let global_sound = {}
@@ -109,6 +111,7 @@ export async function load_config_tree() {
     //doAction.addObjStyle('door_3', 'opacity', .5)
     //doAction.addObjMisc('door_3', 'blink', .5)
     //doAction.addObjMisc('door_2', 'handle_blink', .5)
+    //show_thin_height('portal_1', 'tile_2', 'door_3')
   } catch (error) {
     console.error(error);
   }

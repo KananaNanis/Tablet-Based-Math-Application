@@ -2,7 +2,7 @@ import { connect } from 'react-redux'
 import Camel from '../components/Camel'
 import { global_constant, doAction } from '../App'
 import { global_screen_width } from '../components/Workspace';
-import { query_event, query_log } from '../providers/query_store';
+import { query_event, query_log, query_prop } from '../providers/query_store';
 
 export function num_stars(err) {
   let n = -1

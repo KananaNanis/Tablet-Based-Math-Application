@@ -138,11 +138,12 @@ star_policy:
 path_types: [config, prev_config, goto]
 prop_types: [scale_factor, freeze_display, num_stars,
     config_iteration, goto_iteration, skip_submit, skip_in_between,
-    center_text, top_right_text]
+    center_text, top_right_text, problem_stage]
 prop_value_types: [number, string, boolean]
 event_handling_types: [target, comparison_source, correctness,
   event_move, top_right_text, show_camel, slide_portal,
-  star_policy, move, arg_1, arg_2, result]
+  return_to_top, star_policy, touch_reveals_button,
+  move, arg_1, arg_2, result]
 top_right_text_offset: 80
 screen_pixels_per_cm: 52
 print_pixels_per_cm: 56.77

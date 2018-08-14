@@ -1,7 +1,8 @@
 import React from 'react'
 import { StyleSheet, View, Animated, Image } from 'react-native'
 import { as_greyscale } from './Tower';
-import { start_anim, render_nums, render_tiles, render_doors } from './Workspace';
+import { start_anim } from './Workspace';
+import { render_nums, render_tiles, render_doors } from './render_geoms';
 import { global_constant } from '../App';
 
 export function start_anim_loop(anim_var) {
@@ -25,6 +26,7 @@ class Door extends React.Component {
     fadeAnim: new Animated.Value(1),  // Initial value for opacity: 1
     slideAnim: new Animated.Value(0),
     loopAnim: new Animated.Value(0),
+    //has_listener: false
     /*
     handlePosAnim: new Animated.Value(
       this.props.scale_factor * (this.props.name[0]
@@ -38,6 +40,15 @@ class Door extends React.Component {
     let { anim_info } = this.props
     if (anim_info && anim_info.hasOwnProperty('slide_duration')) {
     } else this.state.slideAnim.setValue(0)
+    /*
+    if (!this.state.has_listener) {
+      this.state.has_listener = true
+      console.log('adding listener')
+      this.state.slideAnim.addListener(function (x) {
+        console.log('x', x)
+      })
+    }
+    */
   }
 
   render() {
@@ -119,6 +130,9 @@ class Door extends React.Component {
           inputRange: [0, 1], outputRange: [handle_bot, end_bot]
         })
       })
+    }
+    if (misc && misc.handle_color && !just_grey) {
+      handle_style.push({'borderTopColor': misc.handle_color})
     }
     let handles = [<Animated.View style={handle_style} key={1} />]
     if (name.length > 1) {  // add a second handle

@@ -4,11 +4,11 @@ import {
   query_door, query_event, query_arg,
   query_position_of_tile, query_obj_misc
 } from '../providers/query_store'
-import { add_offset } from '../components/Workspace'
-import { global_constant } from '../App'
+import { global_constant, doAction } from '../App'
 import { num_stars } from '../containers/CamelContainer';
 import { current_pixel_size_of_animal } from '../components/Tile';
 import { vec_sum, vec_prod } from './utils';
+import { add_offset } from '../components/render_geoms';
 
 export function extract_handle_position(door_info, secondary_handle) {
   //let { name, position } = door_info
@@ -23,17 +23,19 @@ export function extract_handle_position(door_info, secondary_handle) {
   return res
 }
 
-export function get_err_box_location(arg_1, arg_2, result) {
+export function get_err_box_location(arg_1, arg_2, result, just_thin) {
+  //console.log('get_err_box_location', arg_1, arg_2, result)
   const d1 = query_door(arg_1)
   let pos1 = extract_handle_position(d1)
   pos1[1] = 0
-  let pos2 = [0, 0]
+  let pos2 = [0, 0], animal_width
   if (arg_2.startsWith('door_'))
     pos2 = extract_handle_position(query_door(arg_2))
   else if (arg_2.startsWith('tile_')) {
     // want the top right corner of this tile
     const animal_name = query_name_of_tile(arg_2)
-    const [animal_width, animal_height] = current_pixel_size_of_animal(animal_name)
+    const [aw, animal_height] = current_pixel_size_of_animal(animal_name)
+    animal_width = aw
     const anim_pos = add_offset(query_position_of_tile(arg_2))
     pos2 = [anim_pos[0] + animal_width, anim_pos[1] + animal_height]
     console.log('animal_width', animal_width, 'anim_pos', anim_pos, 'pos2', pos2)
@@ -46,11 +48,24 @@ export function get_err_box_location(arg_1, arg_2, result) {
         vec_sum(pos2, vec_prod(-1, pos1))))
   const pos3 = extract_handle_position(query_door(result))
   // let's place the err box
-  const position = [Math.min(implied_pos[0], pos3[0])
+  let position = [Math.min(implied_pos[0], pos3[0])
     , Math.min(implied_pos[1], pos3[1])]
   const width = Math.abs(implied_pos[0] - pos3[0])
-  const height = Math.abs(implied_pos[1] - pos3[1])
+  let height = Math.abs(implied_pos[1] - pos3[1])
+  if (just_thin) {
+    height = 1
+    position[1] = pos3[1]
+  }
   return [position, width, height]
+}
+
+export const show_thin_height = (arg_1, arg_2, result) => {
+  const [position, width, height] = get_err_box_location(arg_1, arg_2, result, true)
+  //const position = [200,200]
+  //const width = 100
+  //const height = 100
+  const style = {backgroundColor: 'orange'}
+  doAction.setErrBox({position, width, height, style})
 }
 
 export function handle_close_to_goal() {
