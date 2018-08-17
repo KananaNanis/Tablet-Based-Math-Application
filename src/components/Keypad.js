@@ -1,5 +1,6 @@
 import React from 'react'
 import { StyleSheet, View, Text } from 'react-native'
+import { toJS } from 'immutable'
 import Button from './Button'
 import { global_fiver_shadow } from './Num'
 import { global_constant } from '../App'
@@ -31,15 +32,15 @@ export function get_keypad_width_height(kind) {
   }
 }
 
-const Keypad = ({ kind, button_display, button_highlight,
-  freeze_display }) => {
+const Keypad = ({ kind, button_display, button_highlight, freeze_display }) => {
   let buttons = []
+  const button_display2 = button_display.toJS()
   const pos = global_constant.keypad_info[kind]
   const geoms = get_button_geoms_for(kind)
   for (const row = 0; row < pos.num_rows; ++row) {
     for (const col = 0; col < pos.num_cols; ++col) {
       const index = col + pos.num_cols * row
-      if (index in button_display && false === button_display[index])
+      if (index in button_display2 && false === button_display2[index])
         continue
       const button_position = geoms[index].position
       const height = pos.button_height

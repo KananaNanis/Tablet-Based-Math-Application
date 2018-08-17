@@ -37,10 +37,14 @@ const mapStateToProps = (state, ownProps) => {
   let err_total = 0
   let err_list = []
   for (const i = 0; i < log_entries.length; ++i) {
-    const response = log_entries[i][1][3]
-    const a = log_entries[i][1][4]
-    const b = log_entries[i][1][5]
-    let err = Math.abs(response - a * b)
+    const f3 = log_entries[i][1][3]
+    const f1 = log_entries[i][1][4]
+    const f2 = log_entries[i][1][5]
+    let err
+    if (query_event('just_proportion'))
+      err = Math.abs(f3 - f2)
+    else
+      err = Math.abs(f3 - f1 * f2)
     if (query_event('star_policy')) {
       if (-1 == num_stars(err)) {  // too high... cap it
         const thresh = global_constant.star_policy[query_event('star_policy')]
@@ -59,6 +63,18 @@ const mapStateToProps = (state, ownProps) => {
       const average_error_string = (100 * average_error).toFixed(1) + '%'
       doAction.setProp('top_right_text', average_error_string)
     }
+    if (!(query_prop('config_iteration') > 1)) {
+      //console.log('checking for repeat', num_stars(average_error))
+      const policy = query_event('star_policy')
+      if (policy && num_stars(average_error) < 1) {
+        console.log('REPEAT average_error', average_error,
+          'num_stars', num_stars(average_error))
+        // console.log('policy', policy)
+        // const thresh = global_constant.star_policy[policy]
+        // console.log('thresh', thresh)
+        doAction.setProp('repeat_level', 1)
+      }
+    }
   } else {
     doAction.setProp('top_right_text', null)
   }
@@ -69,7 +85,13 @@ const mapStateToProps = (state, ownProps) => {
   //console.log(log_entries[log_entries.length-1][1])
   const err_box = state.get('err_box')
   let err_box_updated = {}
-  if (err_box.has('position')) {
+  const result = state.getIn(['event_handling', 'result'])
+  const result_name = state.getIn(['name', result])
+  //const already_correct = (result_name.size > 1) && (result_name.get(0) == result_name.get(1))
+  const nearly_correct = (err_box && err_box.has('misc')
+    && err_box.getIn(['misc', 'is_thin_height']))
+  // console.log('result', result, 'result_name', result_name, 'already_correct', already_correct)
+  if (!nearly_correct && err_box.has('position')) {
     // console.log('err_box.position', err_box.get('position'))
     err_box_updated = state.get('err_box').toJS()
     let img_name = 'camel' + camel_index

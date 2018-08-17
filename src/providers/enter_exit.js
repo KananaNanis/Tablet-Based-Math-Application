@@ -1,37 +1,64 @@
 import { doAction, global_constant } from '../App'
-import {
-  query_path, query_prop, height2tower_name,
-} from './query_store'
-import { update_keypad_button_visibility } from '../event/dispatcher'
+import { query_path, query_prop, query_option_values } from './query_store'
+import { height2tower_name } from './query_tower'
+// import { update_keypad_button_visibility } from '../event/dispatcher'
 import { generate_with_restrictions } from '../containers/generate'
 import { global_screen_width } from '../components/Workspace'
 import { get_config, as_position, width_pixels_from_name, height_pixels_from_name } from './change_config';
+import { set_primary_height, update_keypad_button_visibility } from '../event/utils';
 
 function do_timed_action(id, key, val) {
   // handle the following:
   // appear_after: 2000,
   // start_fade: 2500, end_fade: 3000
-  let delay = val
-  if ('appear_after' == key) doAction.setOpacity(id, 0);
-  if ('fade_anim' == key) delay = val.start
-  window.setTimeout(function () {
-    if ('appear_after' == key) doAction.setOpacity(id, 1.0)
-    else if ('fade_anim' == key) {
-      doAction.setAnimInfo(id, { 'fade_duration': val.duration })
-    }
-  }, delay)
+  if ('zoom_anim' == key) {
+    //console.log('SETTING ZOOM')
+    let anim_info = { ...val, zoom: true }
+    doAction.setAnimInfo(id, anim_info)
+  } else {
+    let delay = val
+    if ('appear_after' == key) doAction.addObjStyle(id, 'opacity', 0);
+    if ('fade_anim' == key) delay = val.start
+    window.setTimeout(function () {
+      if ('appear_after' == key) doAction.addObjStyle(id, 'opacity', 1.0)
+      else if ('fade_anim' == key)
+        doAction.setAnimInfo(id, { 'fade_duration': val.duration })
+    }, delay)
+  }
+}
+
+export function remove_on_exit(lis) {
+  for (const what of lis) {
+    if ('button_submit' == what) doAction.setButtonDisplay('submit', null)
+    else if ('err_box' == what) doAction.setErrBox(null)
+  }
 }
 
 export function enter_exit_config(enter, verbose) {
   let keep_names = false
-  if (query_prop('problem_stage')) {
-    if (enter) keep_names = true
-    else return
-  }
   const cp = query_path('config')
   //console.log('cp', cp)
   const config = get_config(cp)
   if (verbose) console.log('enter_exit_config enter', enter, 'config', config)
+  if (enter) doAction.setProp('top_left_text', cp.toJS().join(' '))
+  else {
+    if (query_option_values()) {
+      doAction.setOptionValues(null)
+      doAction.setProp('correct_option_index', null)
+    }
+  }
+  if (query_prop('problem_stage')) {
+    if (enter) keep_names = true
+    else {  // check for geometry that should be removed
+      if (config['misc']) {
+        const c = config['misc']
+        for (const key in c) {
+          if ('remove_on_exit' == key) remove_on_exit(c[key])
+        }
+      }
+      return
+    }
+  }
   // let's handle the various parts of the config one at a time
   let sc = global_constant.scale_factor_from_yaml  // may not be available
   const gen_vars = enter ? generate_with_restrictions(config['generate']) : {}
@@ -106,8 +133,22 @@ export function enter_exit_config(enter, verbose) {
     const c = config['modify']
     for (const id in c) {
       for (const key in c[id]) {
-        if (['appear_after', 'fade_anim'].includes(key)) {
-          do_timed_action(id, key, c[id][key])
+        if (['appear_after', 'fade_anim', 'zoom_anim', 'unzoom_anim'].includes(key)) {
+          if (enter) {
+            const val = c[id][key]
+            let new_val = val
+            if (key.endsWith('_anim')) {
+              new_val = {}
+              for (const key2 in val) {
+                let val2 = val[key2]
+                //console.log('val2', val2)
+                if (gen_vars.hasOwnProperty(val2))
+                  val2 = gen_vars[val2]
+                new_val[key2] = val2
+              }
+            }
+            do_timed_action(id, key, new_val)
+          }
         } else if ('style' == key) {
           let props = c[id][key]
           for (const key2 in props)
@@ -115,8 +156,10 @@ export function enter_exit_config(enter, verbose) {
         } else if ('misc' == key) {
           let props = c[id][key]
           for (const key2 in props) {
-            const val2 = enter ? props[key2] : null
-            // console.log('misc id', id, 'key2', key2, 'val2', val2)
+            let val2 = enter ? props[key2] : null
+            if (gen_vars.hasOwnProperty(val2))
+              val2 = gen_vars[val2]
+            //console.log('misc id', id, 'key2', key2, 'val2', val2)
             doAction.addObjMisc(id, key2, val2)
           }
         } else if (id.startsWith('tower_') || id.startsWith('tile_')) {
@@ -145,7 +188,7 @@ export function enter_exit_config(enter, verbose) {
       if ('config_iteration' == key) {
         let iter_val = c[key]
         if (0 == iter_val || !enter) iter_val = null
-        doAction.setProp('config_iteration', iter_val)
+        doAction.setProp(key, iter_val)
       } else if ('goto_config' == key) {
         // this attribute is special:  it is not erased at the end!
         if (enter) {
@@ -158,18 +201,16 @@ export function enter_exit_config(enter, verbose) {
           }
         }
         doAction.setPath('goto', enter ? c[key][1] : null)
-      } else if ('num_stars' == key)
-        doAction.setProp('num_stars', enter ? c[key] : null)
-      else if ('skip_submit' == key)
-        doAction.setProp('skip_submit', enter ? c[key] : null)
-      else if ('skip_in_between' == key)
-        doAction.setProp('skip_in_between', enter ? c[key] : null)
-      else if ('problem_stage' == key)
-        doAction.setProp('problem_stage', enter ? c[key] : null)
-      else if ('remove_on_exit' == key && !enter) {
+      } else if (['num_stars',
+        'skip_submit', 'skip_in_between', 'skip_slide_down',
+        'problem_stage'].includes(key)) {
+        doAction.setProp(key, enter ? c[key] : null)
+      } else if ('blank_between_exercises' == key) {
+        doAction.setProp(key, !enter ? c[key] : null)
+        //console.log('blank', query_prop('blank_between_exercises'))
+      } else if ('remove_on_exit' == key && !enter) {
         //console.log('remove_on_exit', c[key])
-        if ('button_submit' == c[key]) doAction.setButtonDisplay('submit', null)
-        else if ('err_box' == c[key]) doAction.setErrBox(null)
+        remove_on_exit(c[key])
       }
     }
   }

@@ -1,5 +1,5 @@
 import {
-  query_name_of_tile, query_event, query_arg, query_path
+  query_name_of_tile, query_event, query_arg, query_path, query_prop
 } from '../providers/query_store'
 import {
   query_tower_name,
@@ -8,6 +8,7 @@ import {
 import { doAction, global_constant } from '../App'
 import { expand_into_units, approx_equal, namesAreIdentical, reduce_num_stars } from './utils';
 import { describe_numerical, get_err_box_location, show_thin_height } from './extract';
+import { SET_PROP } from '../providers/actionTypes';
 
 export function correct_next_button() {
   const verbose = false
@@ -113,28 +114,50 @@ export function is_correct() {
       return delay
     }
 
-    if (-1 == stars || 3 == stars) {
-      if (-1 == stars) {   // error is huge, don't animate at all
-        delay = 'do_not_transition'
-      } else if (3 == stars) {  // error is small, round to zero
+    const arg_1_name = query_tower_name(arg_1)
+    if (3 == stars) { // error is small, round to zero
+      if (query_event('just_proportion'))
+        doAction.setName(result, [f3])
+      else
         doAction.setName(result, [f3, f3])
-        const correct = f1 * f2
-        doAction.setAnimInfo(result, { slide_target: correct, slide_duration: 200 })
+      const correct = f1 * f2
+      doAction.setAnimInfo(result, { slide_target: correct, slide_duration: 200 })
+      if ((arg_1_name.size <= 1) || (arg_1_name.get(0) != arg_1_name.get(1))) {
+        doAction.setAnimInfo(arg_1, { slide_target: f1, slide_duration: 200 })
+        window.setTimeout(function () {
+          show_thin_height(arg_1, arg_2, result)
+        }, 400)
+        delay = 2000
+      } else {
+        //console.log('show_thin')
+        show_thin_height(arg_1, arg_2, result)
         delay = 1000
       }
       doAction.addLogEntry(curr_time, [cp, 'is_correct', stars, f3, f1, f2])
-      doAction.setErrBox({})
       return delay
     }
 
-    doAction.setAnimInfo(arg_1, { slide_target: f1, slide_duration: 500 })
+    let err_box_delay = 0
+    //console.log('skip_slide_down', query_prop('skip_slide_down'))
+    if (!query_prop('skip_slide_down')) {
+      if ((arg_1_name.size <= 1) || (arg_1_name.get(0) != arg_1_name.get(1))) {
+        doAction.setAnimInfo(arg_1, { slide_target: f1, slide_duration: 500 })
+        err_box_delay = 1500
+      }
+    }
     window.setTimeout(function () {
       doAction.addLogEntry(curr_time, [cp, 'is_correct', stars, f3, f1, f2])
       const [position, width, height] = get_err_box_location(arg_1, arg_2, result)
       //console.log('setting err_box with position', position)
       doAction.setErrBox({ position, width, height, duration: 500, delay: 500 })
-    }, 1500)
-    delay = 3000
+      if (-1 == stars) {  // slide back
+        window.setTimeout(function () {
+          doAction.setAnimInfo(arg_1, { slide_target: 1, slide_duration: 500 })
+        }, 1500)
+      }
+    }, err_box_delay)
+    delay = 1500 + err_box_delay
+    if (-1 == stars) delay = 'do_not_transition'
     //delay = 'do_not_transition'
   } else {
     console.error('unrecognized correctness attribute?!', how)

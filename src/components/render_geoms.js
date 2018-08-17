@@ -60,26 +60,41 @@ export function render_tiles(all_tiles, scale_factor, offset_x = 0, just_grey = 
   return tiles
 }
 
-export function render_doors(all_doors, skip, scale_factor, offset_x = 0, just_grey = false) {
+function doorAsJSX(name, door, id, scale_factor, offset_x, just_grey, is_option) {
+  let misc = my_get(door, 'misc')
+  if (is_option) misc.is_option = true
+  return (
+          <Door
+            name={name}
+            position={add_offset(door.get('position'), offset_x)}
+            style={my_get(door, 'style')}
+            anim_info={my_get(door, 'anim_info')}
+            misc={misc}
+            scale_factor={scale_factor}
+            just_grey={just_grey}
+            id={id}
+            key={id} />
+        )
+}
+
+export function render_doors(all_doors, skip, scale_factor, offset_x = 0, just_grey = false, option_values = null) {
   let doors = []
   if (!Map.isMap(all_doors)) return doors
-  //console.log('render_doors all_doors ', all_doors.toJS())
-  //for (const id in all_doors)
   all_doors.keySeq().forEach((id) => {
     if (id != skip) {
       const door = all_doors.get(id)
-      doors.push(
-        <Door
-          name={door.get('name').toJS()}
-          position={add_offset(door.get('position'), offset_x)}
-          style={my_get(door, 'style')}
-          anim_info={my_get(door, 'anim_info')}
-          misc={my_get(door, 'misc')}
-          scale_factor={scale_factor}
-          just_grey={just_grey}
-          id={id}
-          key={id} />
-      )
+      if (option_values && door.getIn(['misc', 'is_option'])) {
+        //console.log('id', id, 'option', option_values ? option_values.toJS() : null)
+        //console.log('id', id, 'misc', my_get(door, 'misc'))
+        // const name = option_values ? option_values[doors.length] : door.get('name').toJS()
+        for (const i = 0; i < 4; ++i) {
+          const name = option_values.get(doors.length).toJS()
+          doors.push(doorAsJSX(name, door, id, scale_factor,offset_x,just_grey,true))
+        }
+      } else if (!option_values && !door.getIn(['misc', 'is_option'])) {
+        const name = door.get('name').toJS()
+        doors.push(doorAsJSX(name, door, id, scale_factor, offset_x, just_grey))
+      }
     }
   })
   return doors

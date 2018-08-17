@@ -1,7 +1,7 @@
-import { List } from 'immutable'
+import { List, toJS, fromJS } from 'immutable'
 import { doAction, config_tree, global_constant } from '../App'
-import { query_path, query_prop,
-  tower_name2height, query_test } from './query_store'
+import { query_path, query_prop, query_test } from './query_store'
+import { tower_name2height } from './query_tower'
 import { global_screen_width, global_workspace_height } from '../components/Workspace'
 import { get_block_size_from_group } from '../components/Block'
 import { enter_exit_config } from './enter_exit';
@@ -9,8 +9,11 @@ import { enter_exit_config } from './enter_exit';
 const deep_clone = (obj) => JSON.parse(JSON.stringify(obj))
 
 const attach_properties = (to, from) => {
-  for (const key in from)
-    to[key] = deep_clone(from[key])
+  for (const key in from) {
+    if ('misc' == key && to.hasOwnProperty(key)) {
+      attach_properties(to.misc, from.misc)
+    } else to[key] = deep_clone(from[key])
+  }
 }
 
 export function get_config(path) {
@@ -58,25 +61,31 @@ export function as_position(pos_info, width = 0, height = 0) {
     if ('number' === typeof pos_info[i]) res[i] = pos_info[i]
     else if ('string' === typeof pos_info[i]) {
       let val = pos_info[i]
-      let swap_sides = false
-      if (val.startsWith('left ')) val = val.slice(5)  // ignore
-      else if (val.startsWith('bottom ')) val = val.slice(7)  // ignore
-      else if (val.startsWith('right ')) {
-        val = val.slice(6)
-        swap_sides = 'right'
-      } else if (val.startsWith('top ')) {
-        val = val.slice(4)
-        swap_sides = 'top'
+      let position_modifier = false
+      let words = val.split(' ')
+      if (global_constant.position_modifiers.includes(words[0])) {
+        position_modifier = words[0]
+        val = val.slice(words[0].length + 1)
       }
       if (val.endsWith('vw'))
         val = global_screen_width * (+val.slice(0, -2)) / 100.
       else if (val.endsWith('vh'))
         val = global_workspace_height * (+val.slice(0, -2)) / 100.
-      if ('right' == swap_sides) {
+
+      if (['left', 'bottom'].includes(position_modifier)) { // ignore
+      } else if ('right' == position_modifier)
         val = global_screen_width - width - val
-      } else if ('top' == swap_sides) {
+      else if ('top' == position_modifier)
         val = global_workspace_height - height - val
-      }
+      else if ('left_from_right' == position_modifier)
+        val = global_screen_width - val
+      else if ('right_from_left' == position_modifier)
+        val = val - width
+      else if ('bottom_from_top' == position_modifier)
+        val = global_workspace_height - val
+      else if ('top_from_bottom' == position_modifier)
+        val = val - height
+
       if ('center' == val) {
         if (0 == i) val = (global_screen_width - width) / 2.
         else val = (global_workspace_height - height) / 2
@@ -119,8 +128,14 @@ export function transition_to_next_config() {
   if ('in_between' === query_path('config').get(0)) {  // special case
     enter_exit_config(false)
     const prev_path = query_path('prev_config')
-    const new_path = next_config_path(prev_path)
-    console.log('transition_to_next_config', new_path)
+    const repeat_level = query_prop('repeat_level')
+    let new_path
+    if (repeat_level && repeat_level > 0) {
+      doAction.setProp('repeat_level', repeat_level - 1)
+      console.log('new repeat_level', query_prop('repeat_level'))
+      new_path = prev_path
+    } else new_path = next_config_path(prev_path)
+    console.log('transition_to_next_config', new_path.toJS())
     doAction.addLogEntry(Date.now(), [new_path, 'next_config', 'start'])
     doAction.setPath('config', new_path)
     enter_exit_config(true)
@@ -130,8 +145,10 @@ export function transition_to_next_config() {
     const new_path = query_path('goto')
     doAction.addLogEntry(Date.now(), [query_path('config').toJS(), 'next_config', iter])
     enter_exit_config(false)
+    //console.log('HACK  remove this next line')
+    //doAction.setErrBox(null)
     doAction.setPath('prev_config', query_path('config'))
-    console.log('new_path', new_path)
+    console.log('new_path ', new_path.toJS())
     doAction.setPath('config', new_path)
     enter_exit_config(true)
     doAction.setProp('goto_iteration', iter - 1)
@@ -139,8 +156,16 @@ export function transition_to_next_config() {
     const iter = query_prop('config_iteration')
     doAction.addLogEntry(Date.now(), [query_path('config').toJS(), 'next_config', iter])
     enter_exit_config(false)
-    enter_exit_config(true)
-    doAction.setProp('config_iteration', iter - 1)
+    if (query_prop('blank_between_exercises')) {
+      //console.log('applying blank of ', query_prop('blank_between_exercises'))
+      window.setTimeout(function () {
+        enter_exit_config(true)
+        doAction.setProp('config_iteration', iter - 1)
+      }, query_prop('blank_between_exercises'))
+    } else {
+      enter_exit_config(true)
+      doAction.setProp('config_iteration', iter - 1)
+    }
     /*
     doAction.setName('tile_1', pick_animal_name())
     doAction.setName('tower_2', []);
@@ -206,5 +231,5 @@ export function next_config_path(path) {
     tree_loc = tree_loc[path.get(i)]
   }
   //console.log('next_config_path res', res)
-  return res
+  return fromJS(res)
 }

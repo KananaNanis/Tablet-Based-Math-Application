@@ -8,10 +8,12 @@ class ErrBox extends React.Component {
   }
 
   render() {
-    let { position, width, height, style, anim_info } = this.props
+    let { position, width, height, style, anim_info, misc } = this.props
     //console.log('ErrBox render position', position)
+    //console.log('ErrBox render misc', misc)
     let as_baggage = true
     let use_anim = false
+    const is_thin = misc && misc.hasOwnProperty('is_thin_height')
     let leftR, bottomR, widthR, heightR
     if (anim_info && anim_info.hasOwnProperty('position')) {
       //console.log('anim_info.position ', anim_info.position)
@@ -26,6 +28,7 @@ class ErrBox extends React.Component {
     //console.log('style', style)
     let err_style = [styles.err_box,
     as_baggage ? { backgroundColor: 'brown' } : {},
+    is_thin ? styles.is_thin : {},
     style,
     {
       width,
@@ -49,6 +52,10 @@ const styles = StyleSheet.create({
     position: 'absolute',
     backgroundColor: 'red',
   },
+  is_thin: {
+    backgroundColor: 'orange',
+    opacity: 0.5
+  }
 })
 
 export default ErrBox

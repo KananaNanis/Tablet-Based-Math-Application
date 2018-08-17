@@ -268,6 +268,15 @@ function err_box(state = '', action) {
   }
 }
 
+function option_values(state = '', action) {
+  switch (action.type) {
+    case AT.SET_OPTION_VALUES:
+      return action.values
+    default:
+      return state
+  }
+}
+
 
 function prop(state = Map({}), action) {
   switch (action.type) {
@@ -319,6 +328,7 @@ const suujiAppInner = combineReducers({
   // other
   event_handling,
   err_box,
+  option_values,
   prop,
   path,
   log,

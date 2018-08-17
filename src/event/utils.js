@@ -1,8 +1,18 @@
-import { query_prop, query_name_of_door } from '../providers/query_store'
+import { query_prop, query_name_of_door, query_obj_misc } from '../providers/query_store'
 import { doAction, global_constant } from '../App'
 import { get_block_size_from_group, get_how_many_from_group, get_is_fiver_from_group } from '../components/Block'
 
+export function elapsed_time(){
+  return Date.now() - global_constant.start_time
+}
+
+export function tlog(...args) {
+  const t = (elapsed_time()/1000).toFixed(2)
+  console.log(t, ...args)
+}
+
 export function pointIsInRectangle(point, geom, offset = [0, 0]) {
+  //console.log('pointIsInRectangle point', point, 'geom', geom, 'offset', offset)
   return (geom.position[0] + offset[0]) <= point[0] &&
     point[0] <= (geom.position[0] + offset[0] + geom.width) &&
     (geom.position[1] + offset[1]) <= point[1] &&
@@ -63,9 +73,16 @@ export function reduce_num_stars() {
     doAction.setProp('num_stars', curr_num_stars - 1)
 }
 
+export function apply_bounds(val, lo, hi) {
+  return (val > hi) ? hi : (val < lo) ? lo : val
+}
+
 export function set_primary_height(id, val) {
   let name = query_name_of_door(id).toJS()
-  name[0] = val
+  const m = query_obj_misc(id)
+  if (m && m.has('extra_scale')) {
+    name[0] = val / m.get('extra_scale')
+  } else name[0] = val
   doAction.setName(id, name)
 }
 

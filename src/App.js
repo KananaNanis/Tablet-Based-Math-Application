@@ -16,7 +16,9 @@ import { query_path } from './providers/query_store';
 import { get_keypad_width_height } from './components/Keypad';
 import { fromJS } from '../node_modules/immutable';
 import { enter_exit_config } from './providers/enter_exit';
-//import { show_thin_height } from './event/extract';
+import { show_thin_height } from './event/extract';
+import { elapsed_time } from './event/utils';
+import { query_top_block } from './providers/query_tower';
 
 export let doAction = {}
 export let global_sound = {}
@@ -68,6 +70,7 @@ export async function load_config_tree() {
         global_constant.username = 'Olaf'
       else
         global_constant.username = global_constant.first_name_for[user_id]
+      global_constant.start_time = Date.now()
     }
     let response = await fetch('assets/config.yaml', { credentials: 'same-origin' });
     let response_text = await response.text();
@@ -92,9 +95,12 @@ export async function load_config_tree() {
     //let path = ['measure_height', 'animal_height', 'level_1']
     //let path = ['measure_height', 'copy_tower', 'level_1']
     //let path = first_config_path()
-    if ('undefined' === typeof config_tree)
-      console.error('config_tree not defined!!')
-    const path = config_tree.params.starting_config_path
+    if ('undefined' === typeof config_tree) {
+      console.error('config_tree not defined!')
+      return
+    }
+    let path = global_constant.starting_level_for[global_constant.username]
+    if (!path) path = config_tree.params.starting_config_path
     // clear the store
     //console.log('RESET ALL')
     doAction.resetAll()
@@ -112,6 +118,10 @@ export async function load_config_tree() {
     //doAction.addObjMisc('door_3', 'blink', .5)
     //doAction.addObjMisc('door_2', 'handle_blink', .5)
     //show_thin_height('portal_1', 'tile_2', 'door_3')
+    //doAction.towerAddBlock('tower_2', -1, true)
+    //query_top_block('tower_2')
+    //doAction.setProp('top_left_text', 'HELLO')
+    //doAction.setButtonHighlight('option_' + 1)
   } catch (error) {
     console.error(error);
   }

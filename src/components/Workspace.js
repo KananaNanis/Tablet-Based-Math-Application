@@ -9,8 +9,9 @@ import Placard from './Placard'
 import Door from './Door'
 import ErrBox from './ErrBox'
 import CamelContainer from '../containers/CamelContainer'
+import OptionBackground from '../components/OptionBackground'
 import { global_constant, image_location } from '../App'
-import { query_event_show_camel, query_event } from '../providers/query_store';
+import { query_event_show_camel, query_event, query_option_values } from '../providers/query_store';
 import { render_nums, render_tiles, render_doors, render_portals } from './render_geoms';
 
 export const global_screen_width = Dimensions.get('window').width
@@ -22,7 +23,7 @@ export const window2workspaceCoords = (pos0) =>
   [pos0[0], global_workspace_height - pos0[1]]
 
 
-export function start_anim(anim_var, toValue, duration, delay = 0) {
+export function start_anim(anim_var, toValue, duration, delay = 0, ending_function) {
   //console.log('start_anim toValue', toValue, 'duration', duration)
   /*
   function onEnd(x) {
@@ -30,19 +31,20 @@ export function start_anim(anim_var, toValue, duration, delay = 0) {
     anim_var.setValue(0)
   }
   */
+  //anim_var.setValue(0)
   Animated.timing(anim_var,
     {
       toValue,
       duration,
       delay,
     }
-  ).start();
+  ).start(ending_function);
 }
 
 const Workspace = ({ scale_factor, keypad_kind, button_display,
   button_highlight, freeze_display, num_stars, config_path,
   all_nums, all_tiles, all_doors, all_portals, center_text,
-  top_right_text, err_box }) => {
+  top_left_text, top_right_text, err_box, option_values }) => {
 
   //console.log('Workspace all_nums', all_nums, 'all_tiles', all_tiles, 'all_doors', all_doors)
   //console.log('Workspace all_portals', all_portals)
@@ -52,25 +54,46 @@ const Workspace = ({ scale_factor, keypad_kind, button_display,
   const tiles = render_tiles(all_tiles, scale_factor)
   const doors = render_doors(all_doors, skip = null, scale_factor)
   const portals = render_portals(all_portals, skip = null, all_nums, all_tiles, all_doors, scale_factor)
-  let misc = [], key = 0
+  //console.log('len', doors.length)
+  //console.log('option_values', option_values ? option_values.toJS() : null)
+  let misc = [], key = 0, options = []
   if (1) { // add username
     ++key
     misc.push(<Text
       style={styles.username}
       key={key}>{global_constant.username}</Text>)
   }
+  if (query_option_values()) {  // add options
+    const option_doors = render_doors(all_doors, skip = null, scale_factor, 0, false, option_values)
+    for (const i = 0; i < option_doors.length; ++i) {
+      ++key
+      options.push(<OptionBackground
+        i={i}
+        button_highlight={button_highlight}
+        key={i}>
+        {option_doors[i]}
+      </OptionBackground>)
+    }
+  }
   if (err_box) {
-    //console.log('err_box', err_box)
-    ++key
-    if (query_event('show_camel'))
+    // console.log('err_box', err_box.toJS())
+    if (query_event('show_camel')) {
+      ++key
       misc.push(<CamelContainer key={key} />)
-    else if (err_box.has('position')) {
-      let style = {}
+    }
+    if (err_box.has('position')
+      && (!query_event('show_camel')
+        || (err_box.has('misc') && err_box.getIn(['misc', 'is_thin_height'])))) {
+      //console.log('err_box beyond camel')
+      let style = {}, err_misc = {}
       if (err_box.get('style')) style = err_box.get('style').toJS()
+      if (err_box.get('misc')) err_misc = err_box.get('misc').toJS()
+      ++key
       misc.push(<ErrBox
         position={err_box.get('position').toJS()}
         width={err_box.get('width')} height={err_box.get('height')}
         style={style}
+        misc={err_misc}
         key={key} />)
     }
   }
@@ -87,6 +110,14 @@ const Workspace = ({ scale_factor, keypad_kind, button_display,
       { right: global_constant.top_right_text_offset },
       ]}
       key={key}>{top_right_text}</Text>)
+  }
+  if (top_left_text) {
+    ++key
+    misc.push(<Text
+      style={[styles.top_left_text,
+      { left: 0 },
+      ]}
+      key={key}>{top_left_text}</Text>)
   }
   /*
   if (err_box) {
@@ -175,8 +206,7 @@ const Workspace = ({ scale_factor, keypad_kind, button_display,
   }
   //console.log(doors.length)
   return (<View style={styles.workspace}>
-    {nums}{tiles}{doors}{portals}
-    {misc}
+    {options}{nums}{tiles}{doors}{portals}{misc}
   </View>)
   /*
   return <View style={styles.workspace}>
@@ -219,6 +249,11 @@ const styles = StyleSheet.create({
   top_right_text: {
     position: 'absolute',
     fontSize: 20,
+    top: 0,
+  },
+  top_left_text: {
+    position: 'absolute',
+    fontSize: 8,
     top: 0,
   }
 })

@@ -1,5 +1,6 @@
 import React from 'react'
 import { View, Image, Text } from 'react-native'
+import { fromJS, toJS } from 'immutable'
 import { image_location } from '../App';
 
 export function get_block_size_from_group(group) {
@@ -24,7 +25,8 @@ export function get_fiver_incomplete_from_group(group) {
 
 export function remove_block_from_name(name0) {
   //console.log('remove_block_from_name', name0)
-  let name = name0.slice()
+  //let name = name0.slice()
+  let name = name0.toJS()
   if (0 == name.length) return name
   let group = name.pop()
   let size = get_block_size_from_group(group)
@@ -36,13 +38,14 @@ export function remove_block_from_name(name0) {
     if (is_fiver) name.push((5 + how_many - 1) * (10 ** size))
     else name.push((how_many - 1) * (10 ** size))
   }
-  return name
+  return fromJS(name)
 }
 
 export function add_block_to_name(new_size, new_is_fiver, name0) {
   let new_group = (new_is_fiver ? 5 : 1) * 10 ** new_size
   if (0 == name0.length) return [new_group]
-  let name = name0.slice()
+  //let name = name0.slice()
+  let name = name0.toJS()
   let group = name[name.length - 1]
   let size = get_block_size_from_group(group)
   let how_many = get_how_many_from_group(group)
@@ -58,7 +61,7 @@ export function add_block_to_name(new_size, new_is_fiver, name0) {
       else name.push(new_group)
     }
   }
-  return name
+  return fromJS(name)
 }
 
 const Block = ({ width, height, radius_style, img_name, view_style, text_style, text_content, just_grey }) => {

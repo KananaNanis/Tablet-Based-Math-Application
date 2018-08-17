@@ -5,7 +5,12 @@ params:
     button_submit: { position: [5, 200] }
   # starting_config_path: ['all_done']
   # starting_config_path: ['in_between']
-  starting_config_path: ['multiply_height', 'animal_target', 'touch_image']
+  starting_config_path: ['proportion', 'option_test']
+  # starting_config_path: ['proportion', 'pure_copy', 'level_2']
+  # starting_config_path: ['proportion', 'zoom_down', 'level_1']
+  # starting_config_path: ['proportion', 'bounce', 'level_3']
+  # starting_config_path: ['proportion', 'no_bounce', 'level_3']
+  # starting_config_path: ['multiply_height', 'animal_target', 'touch_image']
   # starting_config_path: ['multiply_height', 'animal_target', 'move_handle']
   # starting_config_path: ['multiply_height', 'door_target', 'move_portal_handle_to_match']
   # starting_config_path: ['multiply_height', 'door_target', 'move_portal_handle_to_shadow']
@@ -14,8 +19,8 @@ params:
   # starting_config_path: ['multiply_height', 'door_target',
   #   'move_portal_handle_to_shadow', 'levels_with_stages', 'level_3a']
   # starting_config_path: ['multiply_height', 'door_target', 'actual_multiplication', 'level_1']
-  # starting_config_path: ['measure_height', 'animal_height_subitize', 'level_1']
-  # starting_config_path: ['measure_height', 'copy_tower_subitize', 'level_1']
+  # starting_config_path: ['measure_height', 'animal_height_subitize']
+  # starting_config_path: ['measure_height', 'copy_tower_subitize']
   # starting_config_path: ['measure_height', 'animal_height', 'level_1']
   # starting_config_path: ['measure_height', 'copy_tower', 'level_1']
 measure_height:
@@ -27,16 +32,19 @@ measure_height:
     event_handling: { target: tower_2 }
     modify:
       tower_2: { position: [65vw, 0] }
-    misc: {config_iteration: 1, num_stars: 3}
+    misc: 
+      config_iteration: 4
+      num_stars: 3
   copy_tower:
     params:
       generate: { tower_1_name: [pick_from_range, .1, 1.8, .1] }
       create:
         tower_1: { name: tower_1_name }
       modify:
-        tower_1: { position: [5, 0],
-          width: 60vw, overflow: 'hidden'
-        }
+        tower_1: 
+          position: [5, 0]
+          width: 60vw
+          overflow: 'hidden'
       event_handling: { comparison_source: tower_1, correctness: identical }
     level_1:
     level_2:
@@ -73,6 +81,158 @@ measure_height:
           fade_anim: { start: 2500, duration: 500 }
         }
       event_handling: { comparison_source: tile_1, correctness: same_height }
+proportion:
+  params:
+    generate: { portal_1_name: [uniform, .2, .9], 
+                door_2_name: [uniform, .1, .9],
+                # door_2_name: [fixed, .5],
+                door_3_name: portal_1_name * door_2_name,
+                restriction_2: door_3_name < door_2_name }
+    create:
+      portal_1: { name:  [1, portal_1_name] }
+      door_2: { name: [door_2_name] }
+      door_3: { name: [door_3_name] }
+      err_box:
+    modify:
+      portal_1: { position: [0, 0], misc: {stealth_mode: true} }
+      door_2: { position: [220, 0], misc: {handle_color: orange} }
+      door_3: 
+        position: [320, 0]
+        style: { opacity: 1 }
+        misc: 
+          blink: { target: 0 }
+          handle_opacity: 0
+          handle_color: orange
+          extra_scale: portal_1_name
+    event_handling: 
+      arg_1: portal_1
+      arg_2: door_2
+      result: door_3
+      correctness: near_height
+      top_right_text: average_error
+      just_proportion: true
+      move: move_handle
+      target: door_3
+      show_camel: true
+      slide_portal: false
+      touch_reveals_button: submit
+      star_policy: loose
+    misc: 
+      config_iteration: 4
+      num_stars: 3
+      remove_on_exit: [err_box]
+      blank_between_exercises: 500
+  option_test:
+    params:
+      generate:
+        portal_1_name: [fixed, .5]
+        option_value_delta: 0.2
+        option_value_seed: door_2_name
+        restriction_2: null
+        restriction_3: option > 0
+        restriction_4: option < 1
+      create:
+        portal_1: { name:  [portal_1_name, portal_1_name] }
+      modify:
+        door_3:
+          position: [0, 0]
+          misc: 
+            is_option: true
+            blink: null
+            handle_opacity: null
+      event_handling: 
+        show_camel: null
+  pure_copy:
+    params:
+      generate: { restriction_2: null }
+      create:
+        portal_1: { name:  [portal_1_name, portal_1_name] }
+    level_1: { params: { generate: { portal_1_name: [fixed, 1] } } }
+    level_2: { params: { generate: { portal_1_name: [fixed, .5] } } }
+    level_3: { params: { generate: { portal_1_name: [fixed, .25] } } }
+  zoom_down:
+    params:
+    level_1:
+      params:
+        modify:
+          portal_1:
+            zoom_anim: 
+              source: 1
+              target: portal_1_name
+              time: [ {delay: 1000, duration: 1000} ]
+          door_3:
+            appear_after: 3000
+            misc:
+              blink: { target: 0, delay: 3000 }
+        misc: 
+          skip_slide_down: true
+    level_2:
+      params:
+        modify:
+          portal_1:
+            zoom_anim: 
+              source: 1
+              target: portal_1_name
+              time: [ {delay: 1000, duration: 500} ]
+          door_3:
+            appear_after: 2500
+            misc:
+              blink: { target: 0, delay: 2500 }
+  bounce:
+    params:
+    level_1:
+      params:
+        generate: { door_2_name: [fixed, .5] }
+        modify:
+          portal_1:
+            zoom_anim: 
+              source: 1
+              target: portal_1_name
+              time: [ {delay: 1000, duration: 500}, {delay: 2000, duration: 250} ]
+          door_3:
+            appear_after: 4500
+            misc:
+              blink: { target: 0, delay: 4500 }
+    level_2:
+      params:
+        generate: { door_2_name: [pick_from_list, [.25, .5, .75]] }
+        modify:
+          portal_1:
+            zoom_anim: 
+              source: 1
+              target: portal_1_name
+              time: [ {delay: 1000, duration: 250}, {delay: 1000, duration: 250} ]
+          door_3:
+            appear_after: 3500
+            misc:
+              blink: { target: 0, delay: 3500 }
+    level_3:
+      params:
+        modify:
+          portal_1:
+            zoom_anim: 
+              source: 1
+              target: portal_1_name
+              time: [ {delay: 1000, duration: 250}, {delay: 500, duration: 500} ]
+          door_3:
+            appear_after: 3000
+            misc:
+              blink: { target: 0, delay: 3000 }
+  no_bounce:
+    params:
+      modify:
+        door_3:
+          appear_after: 1000
+          misc:
+            blink: { target: 0, delay: 1000 }
+    level_1:
+      params:
+        generate: { door_2_name: [fixed, .5] }
+    level_2:
+      params:
+        generate: { door_2_name: [pick_from_list, [.25, .5, .75]] }
+    level_3:
+    level_4:
 multiply_height:
   params:
     generate: { portal_1_name: [uniform, .1, .9], 
@@ -81,7 +241,7 @@ multiply_height:
       door_3: { name: [door_3_name] }
       # door_3: [0.29]
       # portal_1: { name: [1] }
-      portal_1: [.9]
+      portal_1: [1.]
       # tower_1: { name: [.5, .3] }
       # button_submit:
     modify:
@@ -97,7 +257,8 @@ multiply_height:
     misc: 
       config_iteration: 2
       num_stars: 3
-      remove_on_exit: err_box
+      remove_on_exit: [err_box]
+      blank_between_exercises: 500
   animal_target:
     params:
       generate: { tile_2_name: [pick_animal_name],
@@ -107,7 +268,7 @@ multiply_height:
         # tile_2: { name: "puppy" }
         tile_2: { name: tile_2_name }
       modify:
-        tile_2: { position: [right 180, 0] }
+        tile_2: { position: [right_from_left 280, 0] }
       event_handling: 
         arg_2: tile_2
         target: portal_1
@@ -115,7 +276,7 @@ multiply_height:
       params:
         modify:
           portal_1: { position: [0, 0], misc: {handle_blink: null} }
-          tile_2: { misc: {blink: .5} }
+          tile_2: { misc: { blink: {target: .5} } }
         event_handling: 
           move: touch_image
           star_policy: extraLoose 
@@ -163,7 +324,7 @@ multiply_height:
           params:
             modify:
               portal_1: { misc: {handle_blink: null} }
-              door_3: { style: {opacity: 1}, misc: {blink: 0, handle_opacity: 0} }
+              door_3: { style: {opacity: 1}, misc: {blink: { target: 0}, handle_opacity: 0} }
             event_handling: 
               target: door_3
             misc: 
@@ -172,7 +333,7 @@ multiply_height:
               problem_stage: null
               goto_config: [2, ['multiply_height', 'door_target',
                 'move_portal_handle_to_shadow', 'levels_with_stages', 'level_2a']]
-              remove_on_exit: button_submit
+              remove_on_exit: [err_box, button_submit]
         level_3a:
           params:
             event_handling: 
@@ -184,7 +345,7 @@ multiply_height:
               button_submit:
             modify:
               portal_1: { misc: {handle_blink: null} }
-              door_3: { style: {opacity: 1}, misc: {blink: 0, handle_opacity: 0} }
+              door_3: { style: {opacity: 1}, misc: {blink: {target: 0}, handle_opacity: 0} }
             event_handling: 
               target: door_3
               show_camel: true
@@ -195,7 +356,7 @@ multiply_height:
               problem_stage: null
               goto_config: [2, ['multiply_height', 'door_target',
                 'move_portal_handle_to_shadow', 'levels_with_stages', 'level_3a']]
-              remove_on_exit: button_submit
+              remove_on_exit: [err_box, button_submit]
     actual_multiplication:
       params:
         create:
@@ -206,7 +367,7 @@ multiply_height:
           door_3: 
             style: {opacity: 1}
             misc: 
-              blink: 0
+              blink: { target: 0 }
               handle_opacity: 0
               handle_color: orange
         event_handling: 

@@ -34,11 +34,12 @@ class Tile extends React.Component {
       start_anim(this.state.fadeAnim, 0, anim_info.fade_duration);
       extra_style = { 'opacity': this.state.fadeAnim }
     }
-    if (misc && ('undefined' !== typeof misc.blink) && !just_grey) {
+    if (misc && ('undefined' !== typeof misc.blink) && !just_grey
+             && ('undefined' !== typeof misc.blink.target)) {
       start_anim_loop(this.state.loopAnim)
       extra_style = {
         'opacity': this.state.loopAnim.interpolate({
-          inputRange: [0, 1], outputRange: [misc.blink, 1]
+          inputRange: [0, 1], outputRange: [misc.blink.target, 1]
         })
       }
     }

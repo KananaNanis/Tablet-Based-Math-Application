@@ -2,7 +2,7 @@ import { global_store } from '../index'
 import { global_constant } from '../App'
 import { get_block_size_from_group, get_how_many_from_group, get_is_fiver_from_group } from '../components/Block'
 import { Map } from 'immutable';
-import { consolidate_info_for_ids } from './query_store';
+import { consolidate_info_for_ids, query_prop } from './query_store';
 
 export function query_all_nums() {
   const state = global_store.getState()
@@ -127,6 +127,7 @@ export function query_top_block(num_id) {
     is_fiver = get_is_fiver_from_group(group)
     how_many = get_how_many_from_group(group)
   }
+  //console.log('query_top_block name', name.toJS(), 'size', size)
   return [size, is_fiver, how_many]
 }
 

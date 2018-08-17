@@ -102,6 +102,10 @@ export function setErrBox(info) {
   return { type: AT.SET_ERR_BOX, info: fromJS(info) }
 }
 
+export function setOptionValues(values) {
+  return { type: AT.SET_OPTION_VALUES, values: fromJS(values) }
+}
+
 
 
 export function setProp(key, value) {

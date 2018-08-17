@@ -12,18 +12,16 @@ export function animal_too_tall(animal_name) {
   return height_too_tall(height)
 }
 
-let animal_chosen = 'kitty'
-export function pick_animal_name() {
+export function pick_animal_name(prev_value) {
   //console.log('choose_random_animal', Object.keys(animals))
   const animal_names = Object.keys(global_constant.animals)
   for (const i of Array(10).keys()) {
     const animal_name = animal_names[
       Math.floor(animal_names.length * Math.random())]
-    if (animal_name !== animal_chosen &&
+    if (animal_name !== prev_value &&
       animal_name != 'chimpanzee' &&
       !animal_too_tall(animal_name)) {
       //console.log('choose_random_animal result ', animal_name)
-      animal_chosen = animal_name
       return animal_name
     }
   }
@@ -32,6 +30,7 @@ export function pick_animal_name() {
 }
 
 export function pick_from_list(list, prev_value, skip_first) {
+  //console.log('pick_from_list list', list, 'prev_value', prev_value)
   //tower_1_name: [pickOne, [.1, .5], [.2]] 
   for (const i = 0; i < 10; ++i) {
     const r = Math.floor((list.length) * Math.random())

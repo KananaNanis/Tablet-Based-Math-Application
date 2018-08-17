@@ -134,6 +134,12 @@ export function query_has_anim_info(id) {
   return state.get('anim_info').has(id)
 }
 
+export function query_option_values() {
+  const state = global_store.getState()
+  return state.get('option_values')
+}
+
+
 
 export function query_prop(key) {
   if (!global_constant.prop_types.includes(key))

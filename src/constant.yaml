@@ -6,10 +6,25 @@ first_name_for:
   m89: Kaia
   math: Olaf
   matsuura: Ryota
+starting_level_for:
+  Anita: ['proportion', 'pure_copy', 'level_1']
+  Jimmi: ['proportion', 'pure_copy', 'level_1']
+  Frances: ['proportion', 'pure_copy', 'level_1']
+  Kaia: ['proportion', 'pure_copy', 'level_1']
+  # Olaf: ['proportion', 'pure_copy', 'level_1']
+  Ryota: ['proportion', 'pure_copy', 'level_1']
+
+  # Anita:  ['measure_height', 'copy_tower', 'level_1']
+  # Jimmi:  ['measure_height', 'copy_tower', 'level_1']
+  # Frances:  ['measure_height', 'copy_tower', 'level_1']
+  # Kaia:  ['measure_height', 'copy_tower', 'level_1']
+  # Olaf: ['measure_height', 'copy_tower', 'level_1']
+  # Ryota:  ['measure_height', 'copy_tower', 'level_1']
 scale_factor_from_yaml: 520
 door:
   handle_fraction: 0.1
-  min_dist_from_handle: 50
+  min_dist_from_handle: 200
+  min_dist_from_door: 200
   thickness_fraction: 0.01
   frame_color: darkblue
   # frame_color_grey: '#d0d0d0'
@@ -138,12 +153,18 @@ star_policy:
 path_types: [config, prev_config, goto]
 prop_types: [scale_factor, freeze_display, num_stars,
     config_iteration, goto_iteration, skip_submit, skip_in_between,
-    center_text, top_right_text, problem_stage]
+    center_text, top_left_text, top_right_text, problem_stage, blank_between_exercises,
+    repeat_level, skip_slide_down, correct_option_index]
 prop_value_types: [number, string, boolean]
 event_handling_types: [target, comparison_source, correctness,
   event_move, top_right_text, show_camel, slide_portal,
   return_to_top, star_policy, touch_reveals_button,
+  just_proportion,
   move, arg_1, arg_2, result]
+position_modifiers: [left, right, top, bottom,
+  left_from_right, right_from_left, top_from_bottom,
+  bottom_from_top]
+prompt_width: 300
 top_right_text_offset: 80
 screen_pixels_per_cm: 52
 print_pixels_per_cm: 56.77
