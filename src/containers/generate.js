@@ -123,12 +123,17 @@ export function generate_with_restrictions(c) {
         }
       } else if ('string' === typeof inst) {
         const words = inst.split(' ')
-        if (3 == words.length && '+' === words[1]) {
+        if (3 == words.length && is_binary_op(words[1])) {
           let vals = find_gen_values_for_words([words[0], words[2]], gen_vars)
-          gen_vars[id] = vals[0] + vals[1]
-        } else if (3 == words.length && '*' === words[1]) {
-          let vals = find_gen_values_for_words([words[0], words[2]], gen_vars)
-          gen_vars[id] = vals[0] * vals[1]
+          if ('+' === words[1]) {
+            gen_vars[id] = vals[0] + vals[1]
+          } else if ('-' === words[1]) {
+            gen_vars[id] = vals[0] - vals[1]
+          } else if ('*' === words[1]) {
+            gen_vars[id] = vals[0] * vals[1]
+          } else if ('/' === words[1]) {
+            gen_vars[id] = vals[0] / vals[1]
+          }
           //console.log('id', id, 'words', words, 'vals', vals, 'gen_vars[id]', gen_vars[id])
         } else {
           console.error('Warning:  unrecognized generate string instruction.', id, inst)

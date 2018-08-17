@@ -1,9 +1,10 @@
-import { query_top_block, query_event, query_prop } from '../providers/query_store'
+import { query_top_block, query_event, query_prop, query_arg } from '../providers/query_store'
 import { doAction, global_sound } from '../App'
 import { transition_to_next_config } from '../providers/change_config'
-import { is_correct } from './correctness';
+import { is_correct, show_err_with_delay } from './correctness';
 import { reduce_num_stars, pointIsInRectangle } from './utils';
 import { option_geometry } from '../components/OptionBackground';
+import { describe_numerical } from './extract';
 
 export function handle_delete_button(state) {
   if ('up' == state) {
@@ -69,9 +70,26 @@ export function handle_options(state, x, y, touchID) {
       doAction.setButtonHighlight('option_' + i)
       if ('up' == state) {
         if (option_is_correct(i)) {
-          doAction.setButtonHighlight(null)
           global_sound['chirp1'].play()
-          transition_to_next_config()
+          doAction.setAnimInfo('portal_1', null)
+          doAction.setAnimInfo('door_2', null)
+          //doAction.addObjStyle('portal_1', 'opacity', null)
+          //doAction.addObjStyle('door_2', 'opacity', null)
+          if (1) {
+            const arg_1 = query_arg(1)
+            const arg_2 = query_arg(2)
+            const result = 'option'
+            const { f1, f2, f3, err, stars } = describe_numerical(arg_1, arg_2, result)
+            const curr_time = Date.now()
+            const delay = show_err_with_delay(arg_1, arg_2, result, stars, curr_time, f1, f2, f3)
+            window.setTimeout(function(){
+              doAction.setButtonHighlight(null)
+              transition_to_next_config()
+            }, delay)
+          } else {
+            doAction.setButtonHighlight(null)
+            transition_to_next_config()
+          }
         } else {
           console.log('incorrect ')
           incorrect_button_response()

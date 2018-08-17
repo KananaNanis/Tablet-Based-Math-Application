@@ -56,6 +56,57 @@ export function correct_next_button() {
   return res
 }
 
+export function show_err_with_delay(arg_1, arg_2, result, stars, curr_time, f1, f2, f3) {
+  const cp = query_path('config').toJS()
+  const arg_1_name = query_tower_name(arg_1)
+
+  if (3 == stars) { // error is small, round to zero
+    if (query_event('just_proportion'))
+      doAction.setName(result, [f3])
+    else
+      doAction.setName(result, [f3, f3])
+    const correct = f1 * f2
+    doAction.setAnimInfo(result, { slide_target: correct, slide_duration: 200 })
+    if ((arg_1_name.size <= 1) || (arg_1_name.get(0) != arg_1_name.get(1))) {
+      doAction.setAnimInfo(arg_1, { slide_target: f1, slide_duration: 200 })
+      window.setTimeout(function () {
+        show_thin_height(arg_1, arg_2, result)
+      }, 400)
+      delay = 2000
+    } else {
+      //console.log('show_thin')
+      show_thin_height(arg_1, arg_2, result)
+      delay = 1000
+    }
+    doAction.addLogEntry(curr_time, [cp, 'is_correct', stars, f3, f1, f2])
+    return delay
+  }
+
+  let err_box_delay = 0
+  //console.log('skip_slide_down', query_prop('skip_slide_down'))
+  if (!query_prop('skip_slide_down')) {
+    if ((arg_1_name.size <= 1) || (arg_1_name.get(0) != arg_1_name.get(1))) {
+      doAction.setAnimInfo(arg_1, { slide_target: f1, slide_duration: 500 })
+      err_box_delay = 1500
+    }
+  }
+  window.setTimeout(function () {
+    doAction.addLogEntry(curr_time, [cp, 'is_correct', stars, f3, f1, f2])
+    if ('option' != result) {
+      const [position, width, height] = get_err_box_location(arg_1, arg_2, result)
+      //console.log('setting err_box with position', position)
+      doAction.setErrBox({ position, width, height, duration: 500, delay: 500 })
+    }
+    if (-1 == stars) {  // slide back
+      window.setTimeout(function () {
+        doAction.setAnimInfo(arg_1, { slide_target: 1, slide_duration: 500 })
+      }, 1500)
+    }
+  }, err_box_delay)
+  let delay = 1500 + err_box_delay
+  return delay
+}
+
 export function is_correct() {
   const tgt = query_event('target')
   const src = query_event('comparison_source')
@@ -115,48 +166,7 @@ export function is_correct() {
     }
 
     const arg_1_name = query_tower_name(arg_1)
-    if (3 == stars) { // error is small, round to zero
-      if (query_event('just_proportion'))
-        doAction.setName(result, [f3])
-      else
-        doAction.setName(result, [f3, f3])
-      const correct = f1 * f2
-      doAction.setAnimInfo(result, { slide_target: correct, slide_duration: 200 })
-      if ((arg_1_name.size <= 1) || (arg_1_name.get(0) != arg_1_name.get(1))) {
-        doAction.setAnimInfo(arg_1, { slide_target: f1, slide_duration: 200 })
-        window.setTimeout(function () {
-          show_thin_height(arg_1, arg_2, result)
-        }, 400)
-        delay = 2000
-      } else {
-        //console.log('show_thin')
-        show_thin_height(arg_1, arg_2, result)
-        delay = 1000
-      }
-      doAction.addLogEntry(curr_time, [cp, 'is_correct', stars, f3, f1, f2])
-      return delay
-    }
-
-    let err_box_delay = 0
-    //console.log('skip_slide_down', query_prop('skip_slide_down'))
-    if (!query_prop('skip_slide_down')) {
-      if ((arg_1_name.size <= 1) || (arg_1_name.get(0) != arg_1_name.get(1))) {
-        doAction.setAnimInfo(arg_1, { slide_target: f1, slide_duration: 500 })
-        err_box_delay = 1500
-      }
-    }
-    window.setTimeout(function () {
-      doAction.addLogEntry(curr_time, [cp, 'is_correct', stars, f3, f1, f2])
-      const [position, width, height] = get_err_box_location(arg_1, arg_2, result)
-      //console.log('setting err_box with position', position)
-      doAction.setErrBox({ position, width, height, duration: 500, delay: 500 })
-      if (-1 == stars) {  // slide back
-        window.setTimeout(function () {
-          doAction.setAnimInfo(arg_1, { slide_target: 1, slide_duration: 500 })
-        }, 1500)
-      }
-    }, err_box_delay)
-    delay = 1500 + err_box_delay
+    delay = show_err_with_delay(arg_1, arg_2, result, stars, curr_time, f1, f2, f3)
     if (-1 == stars) delay = 'do_not_transition'
     //delay = 'do_not_transition'
   } else {

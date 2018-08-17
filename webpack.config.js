@@ -85,7 +85,7 @@ module.exports = {
   // configures where the build ends up
   output: {
     filename: 'bundle.js',
-    publicPath: '/assets/',
+    publicPath: '/suuji/assets/',
     path: path.resolve(appDirectory, './public/assets'),
   },
 

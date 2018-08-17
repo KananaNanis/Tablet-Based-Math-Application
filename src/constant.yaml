@@ -7,12 +7,12 @@ first_name_for:
   math: Olaf
   matsuura: Ryota
 starting_level_for:
-  Anita: ['proportion', 'pure_copy', 'level_1']
-  Jimmi: ['proportion', 'pure_copy', 'level_1']
-  Frances: ['proportion', 'pure_copy', 'level_1']
-  Kaia: ['proportion', 'pure_copy', 'level_1']
+  Anita: ['proportion', 'option', 'pure_copy', 'level_1']
+  Jimmi: ['proportion', 'option', 'pure_copy', 'level_1']
+  Frances: ['proportion', 'option', 'pure_copy', 'level_1']
+  Kaia: ['proportion', 'option', 'pure_copy', 'level_1']
   # Olaf: ['proportion', 'pure_copy', 'level_1']
-  Ryota: ['proportion', 'pure_copy', 'level_1']
+  # Ryota: ['proportion', 'pure_copy', 'level_1']
 
   # Anita:  ['measure_height', 'copy_tower', 'level_1']
   # Jimmi:  ['measure_height', 'copy_tower', 'level_1']

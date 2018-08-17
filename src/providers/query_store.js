@@ -143,7 +143,7 @@ export function query_option_values() {
 
 export function query_prop(key) {
   if (!global_constant.prop_types.includes(key))
-    console.error("Warning:  unrecognized prop key", key)
+    console.error("Warning: unrecognized prop key", key)
   const state = global_store.getState()
   return state.getIn(['prop', key])
 }

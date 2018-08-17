@@ -2,24 +2,33 @@ import {
   query_name_of_tile,
   query_prop, query_name_of_door,
   query_door, query_event, query_arg,
-  query_position_of_tile, query_obj_misc
+  query_position_of_tile, query_obj_misc, query_option_values
 } from '../providers/query_store'
 import { global_constant, doAction } from '../App'
+import { fromJS } from 'immutable'
 import { num_stars } from '../containers/CamelContainer';
 import { current_pixel_size_of_animal } from '../components/Tile';
 import { vec_sum, vec_prod, apply_bounds } from './utils';
 import { add_offset } from '../components/render_geoms';
+import { option_geometry } from '../components/OptionBackground';
 
 export function extract_handle_position(id, door_info, secondary_handle) {
   //let { name, position } = door_info
   // console.log('door_info', door_info)
-  let name = door_info.get('name')
-  let val = name.get(secondary_handle ? 1 : 0)
-  val = apply_bounds(val, 0, 1)
-  let position = door_info.get('position')
+  let val, position
+  if ('option' == id) {
+    val = value_of_correct_option()
+    position = fromJS(position_of_correct_option())
+  } else {
+    let name = door_info.get('name')
+    val = name.get(secondary_handle ? 1 : 0)
+    val = apply_bounds(val, 0, 1)
+    position = door_info.get('position')
+  }
   const scale_factor = query_prop('scale_factor')
   let extra_scale = 1
-  const m = query_obj_misc(id)
+  let id2 = ('option' == id) ? 'door_3' : id
+  const m = query_obj_misc(id2)
   if (m && m.has('extra_scale'))
     extra_scale = m.get('extra_scale')
   let res = [position.get(0)
@@ -59,7 +68,9 @@ export function get_err_box_location(arg_1, arg_2, result, just_thin) {
   let height = Math.abs(implied_pos[1] - pos3[1])
   if (just_thin) {
     const scale_factor = query_prop('scale_factor')
-    const misc = query_obj_misc(result).toJS()
+    let result2 = result
+    if ('option' == result) result2 = 'door_3'
+    const misc = query_obj_misc(result2).toJS()
     const extra_scale = (misc && 'undefined' !== typeof misc.extra_scale) ? misc.extra_scale : 1
     let thickness = extra_scale * scale_factor * global_constant.door.thickness_fraction
     if (thickness < 1) thickness = 1
@@ -103,15 +114,31 @@ export function get_door_or_tile_height(id) {
   return res
 }
 
+function value_of_correct_option() {
+  const i = query_prop('correct_option_index')
+  const option_values = query_option_values()
+  //console.log('i', i, 'option_values', option_values.toJS())
+  return option_values.getIn([i, 0])
+}
+
+function position_of_correct_option() {
+  const i = query_prop('correct_option_index')
+  let { position } = option_geometry(i)
+  return position
+}
+
 export function describe_numerical(arg_1, arg_2, result, arg_1_index) {
   const arg_1_name = query_name_of_door(arg_1)
   if ('undefined' == typeof arg_1_index)
     arg_1_index = (arg_1_name.size > 1) ? 1 : 0
-  let f1 = arg_1_name.get(arg_1_index)
-  const f2 = get_door_or_tile_height(arg_2)
-  let f3 = query_name_of_door(result).get(0)
+  let f1 = arg_1_name.get(arg_1_index), f3
   f1 = apply_bounds(f1, 0, 1)
-  f3 = apply_bounds(f3, 0, 1)
+  const f2 = get_door_or_tile_height(arg_2)
+  if ('option' == result) f3 = value_of_correct_option()
+  else {
+    f3 = query_name_of_door(result).get(0)
+    f3 = apply_bounds(f3, 0, 1)
+  }
   let err
   if (query_event('just_proportion'))
     err = Math.abs(f3 - f2)

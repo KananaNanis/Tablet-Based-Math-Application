@@ -93,7 +93,7 @@ class Door extends React.Component {
     let { name, position, style, anim_info, misc, scale_factor, just_grey, id } = this.props
     //console.log('Door  id', id, 'name', name)
     //if (!name) name = [.1]
-    //console.log('Door  id', id, 'style', style, 'misc', misc)
+    //console.log('Door  id', id, 'style', style, 'anim_info', anim_info, 'misc', misc)
 
     const is_portal = id.startsWith("portal_")
     const extra_scale = (misc && 'undefined' !== typeof misc.extra_scale) ? misc.extra_scale : 1
