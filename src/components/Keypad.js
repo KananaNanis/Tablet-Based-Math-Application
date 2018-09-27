@@ -34,6 +34,7 @@ export function get_keypad_width_height(kind) {
 
 const Keypad = ({ kind, button_display, button_highlight, freeze_display }) => {
   let buttons = []
+  const add_words_on_side = false
   const button_display2 = button_display.toJS()
   const pos = global_constant.keypad_info[kind]
   const geoms = get_button_geoms_for(kind)
@@ -73,7 +74,7 @@ const Keypad = ({ kind, button_display, button_highlight, freeze_display }) => {
     }
   }
   let extras = []
-  if ("buildTower" == kind) {
+  if (add_words_on_side && "buildTower" == kind) {
     extras.push(<Text style={{
       position: 'absolute',
       left: -120, bottom: 160, fontSize: 50

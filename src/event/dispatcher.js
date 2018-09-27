@@ -1,7 +1,7 @@
 import {
   query_keypad_kind, query_visible_buttons,
   query_prop, query_name_of_door,
-  query_door, query_event, query_arg, query_has_anim_info, query_obj_misc, query_option_values,
+  query_door, query_event, query_arg, query_has_anim_info, query_obj_misc, query_option_values, query_position_of_tile, query_name_of_tile,
 } from '../providers/query_store'
 import { query_top_block, query_tower_height } from '../providers/query_tower'
 import { get_button_geoms_for } from '../components/Keypad'
@@ -9,15 +9,34 @@ import { global_workspace_height, add_offset } from '../components/Workspace'
 import { doAction, global_sound, global_constant } from '../App'
 import { transition_to_next_config } from '../providers/change_config'
 import { pointIsInRectangle, set_primary_height, dist2D, apply_bounds, update_keypad_button_visibility } from './utils';
-import { handle_submit_button, handle_delete_button, handle_next_button, incorrect_button_response, handle_options } from './handlers';
+import { handle_submit_button, handle_delete_button, handle_next_button, handle_start_button, incorrect_button_response, handle_options, handle_create_tower_by_height } from './handlers';
 import { correct_next_button } from './correctness';
 import { extract_handle_position, is_blinking, handle_is_hidden, dist_from_door, dist_from_handle, handle_is_blinking, handle_close_to_goal, get_door_or_tile_height } from './extract';
+import { current_pixel_size_of_animal, landmark_location, with_diameter_offset, with_diameter_offset2 } from '../components/Tile';
+import { List } from 'immutable';
+
+function perhaps_reveal_button() {
+  const trb = query_event('touch_reveals_button')
+  if (trb) {
+    if ('string' === typeof trb) {
+      doAction.setButtonDisplay(trb, true)
+    } else if (Array.isArray(trb)) {
+      for (const button of trb)
+        doAction.setButtonDisplay(button, true)
+    } else console.error('Warning: touch_reveals_button has', trb)
+  }
+}
 
 export function touch_dispatcher(state, x, y, touchID) {
   //console.log('touch_dispatcher state ' + state + ' x ' + x + ' y ' + y + ' touchID ' + touchID)
-  if (query_prop('freeze_display')) {  // perhaps allow submit?
-    if ('down' == state || 'up' == state) console.log('frozen')
-    return
+  const visible = query_visible_buttons()
+  // console.log('visible', visible)
+  if (query_prop('freeze_display')) {  // perhaps allow start or submit?
+    if (visible.includes('start')) { }  // allow
+    else {
+      if ('down' == state || 'up' == state) console.log('frozen')
+      return
+    }
   }
   //console.log('option_values' + query_option_values())
   if (query_option_values()) return handle_options(state, x, y, touchID)
@@ -27,7 +46,6 @@ export function touch_dispatcher(state, x, y, touchID) {
   const button_geoms = kind ? get_button_geoms_for(kind) : null
   // console.log('button_geoms', button_geoms)
   let found_one = false
-  const visible = query_visible_buttons()
   const tgt = query_event('target')
   //console.log('visible', visible)
   for (const i of visible) {
@@ -38,6 +56,7 @@ export function touch_dispatcher(state, x, y, touchID) {
         if ('submit' === i) handle_submit_button(state)
         else if ('delete' === i) handle_delete_button(state)
         else if ('next' === i) handle_next_button(state)
+        else if ('start' === i) handle_start_button(state)
         else console.warn('touch_dispatcher did not handle', i)
         return
       }
@@ -49,10 +68,12 @@ export function touch_dispatcher(state, x, y, touchID) {
           const new_size = global_constant.buildTower_button_info[i][0]
           const new_is_fiver = global_constant.buildTower_button_info[i][1]
           const curr = (new_is_fiver ? 5 : 1) * 10 ** new_size;
-          const correct = correct_next_button();
-          if (curr !== correct) {
-            incorrect_button_response()
-            return;
+          if (0) {  // require incremental correctness
+            const correct = correct_next_button();
+            if (curr !== correct) {
+              incorrect_button_response()
+              return;
+            }
           }
           const pixel_height = query_prop('scale_factor') * query_tower_height(tgt)
           // console.log('pixel_height', pixel_height, 'h', global_workspace_height)
@@ -67,31 +88,71 @@ export function touch_dispatcher(state, x, y, touchID) {
     }
   }
   if ('up' == state || !found_one) doAction.setButtonHighlight(null)
+  if (query_prop('freeze_display')) return // after button
   //console.log('target', query_event('target'))
 
-  if (null != query_event('target') && null != query_event('move')) {
+  if ('down' == state) {
+    perhaps_reveal_button()
+  }
+  if (query_event('create_tower_by_height')) {
+    handle_create_tower_by_height(state, x, y, touchID)
+  } else if (null != query_event('target') && null != query_event('move')) {
     const tgt = query_event('target')
     const scale_factor = query_prop('scale_factor')
     const move = query_event('move')
     if (0) {
       //  old position was just the height above the ground
       set_primary_height(tgt, y / scale_factor)
-    /*
-    } else if (false && 'touch_image' == move) {
-      // what is the x position of the portal?
-      const arg_1 = query_arg(1)
-      let pos_x = extract_handle_position(arg_1, query_door(arg_1))[0]
-      let d = dist2D([pos_x, 0], [x, y])
-      if (d <= 0) d = .001
-      //console.log('[x,y]', [x, y], 'pos_x', pos_x, 'd', d)
-      if ('down' == state) {  // store scaling_delta
-        const f1 = query_name_of_door(arg_1).get(0)
-        scaling_delta = f1 / (d / scale_factor)
-        //console.log('f1', f1, 'd', d, 'scaling_delta', scaling_delta)
-      } else {
-        set_primary_height(tgt, scaling_delta * d / scale_factor)
+      /*
+      } else if (false && 'touch_image' == move) {
+        // what is the x position of the portal?
+        const arg_1 = query_arg(1)
+        let pos_x = extract_handle_position(arg_1, query_door(arg_1))[0]
+        let d = dist2D([pos_x, 0], [x, y])
+        if (d <= 0) d = .001
+        //console.log('[x,y]', [x, y], 'pos_x', pos_x, 'd', d)
+        if ('down' == state) {  // store scaling_delta
+          const f1 = query_name_of_door(arg_1).get(0)
+          scaling_delta = f1 / (d / scale_factor)
+          //console.log('f1', f1, 'd', d, 'scaling_delta', scaling_delta)
+        } else {
+          set_primary_height(tgt, scaling_delta * d / scale_factor)
+        }
+      */
+    } else if ('move_dot' == move || 'move_handle_dot' == move) {
+      const tile_tgt = 'tile_2'
+      const pos = query_position_of_tile(tile_tgt)
+      let xp = x - pos.get(0)
+      let yp = y - pos.get(1)
+      // console.log('pos', pos.toJS(), 'xp', xp, 'yp', yp)
+      const animal_name = query_name_of_tile(tile_tgt)
+      let extra_scale = 1
+      if (query_obj_misc(tile_tgt).get('extra_scale'))
+        extra_scale = +query_obj_misc(tile_tgt).get('extra_scale')
+      const [width, height] = current_pixel_size_of_animal(animal_name, extra_scale)
+      xp = Math.max(0, xp)
+      xp = Math.min(width, xp)
+      yp = Math.max(0, yp)
+      yp = Math.min(height, yp)
+      if ('move_dot' == move)
+        doAction.addObjMisc(tile_tgt, 'extra_dot', [xp, yp])
+      else {
+        doAction.addObjMisc(tgt, 'blink', null)
+        doAction.addObjMisc(tgt, 'handle_opacity', null)
+        doAction.addObjStyle(tgt, 'opacity', 1)
+        doAction.setName('door_2', [yp / height])
+        const misc_1 = query_obj_misc('tile_1')
+        const landmark_index = misc_1.get('landmark_index')
+        const loc = landmark_location(animal_name, landmark_index)
+        //const diameter = global_constant.animal_landmarks.extra_dot_diameter
+        const diameter = 0  // will be added later
+        // console.log('landmark_index', landmark_index, 'loc', loc, 'diameter', diameter)
+        const locB = with_diameter_offset(loc, diameter, extra_scale)
+        doAction.addObjMisc('tile_2', 'extra_dot', [locB[0], yp])
       }
-    */
+      if ('up' == state) {
+        //console.log('xp', xp, 'yp', yp)
+      }
     } else if ('move_handle' == move || 'touch_image' == move) {
       let y1 = y / scale_factor, pos_x, di
       const arg_1 = query_arg(1)
@@ -120,10 +181,7 @@ export function touch_dispatcher(state, x, y, touchID) {
             doAction.addObjStyle(tgt, 'opacity', 1)
             doAction.addObjMisc(tgt, 'blink', null)
             doAction.addObjMisc(tgt, 'handle_opacity', 1)
-            if (query_event('touch_reveals_button')) {
-              button = query_event('touch_reveals_button')
-              doAction.setButtonDisplay(button, true)
-            }
+            perhaps_reveal_button()
             y_delta = 0
             set_primary_height(tgt, y1 + y_delta)
           }

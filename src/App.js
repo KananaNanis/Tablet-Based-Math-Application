@@ -9,7 +9,7 @@ import { touchHandler } from './event/event'
 import { global_store } from './index.js'
 import Sound from './assets/sound'
 import * as Actions from './providers/actions'
-//import PrintFigure from './components/PrintFigure';
+import PrintFigure from './components/PrintFigure';
 import Door from './components/Door';
 import { as_position } from './providers/change_config'
 import { query_path } from './providers/query_store';
@@ -29,6 +29,10 @@ export const image_location = (name, just_grey = false) => (require("./assets/im
 let prev_response_text = ''
 export let config_tree = {}
 export let global_constant = false
+
+export function sum(x, y) {
+  return x + y
+}
 
 function convert_unicode(input) {
   return input.replace(/\\u(\w\w\w\w)/g, function (a, b) {
@@ -58,21 +62,23 @@ function update_constant_position_info() {
   }
 }
 
-export async function load_config_tree() {
+export async function load_config_tree(appObj) {
   try {
     if (!global_constant) {  // first load the constants
-      let const_buffer = await fetch('assets/constant.yaml', { credentials: 'same-origin' });
+      let const_buffer = await fetch('assets/constant.yaml', { credentials: 'same-origin', cache: 'no-store' });
       let const_text = await const_buffer.text();
       const_text = convert_unicode(const_text)
       global_constant = yaml.safeLoad(const_text);
       update_constant_position_info()
       if ('undefined' === typeof user_id)  // for testing
         global_constant.username = 'Olaf'
+      else if (null == global_constant.first_name_for[user_id])
+        global_constant.username = user_id
       else
         global_constant.username = global_constant.first_name_for[user_id]
       global_constant.start_time = Date.now()
     }
-    let response = await fetch('assets/config.yaml', { credentials: 'same-origin' });
+    let response = await fetch('assets/config.yaml', { credentials: 'same-origin', cache: 'no-store' });
     let response_text = await response.text();
     if (response_text == prev_response_text) return
     prev_response_text = response_text
@@ -99,8 +105,10 @@ export async function load_config_tree() {
       console.error('config_tree not defined!')
       return
     }
-    let path = global_constant.starting_level_for[global_constant.username]
-    if (!path) path = config_tree.params.starting_config_path
+    let path = config_tree.params.starting_config_path
+    if (global_constant && global_constant.starting_level_for
+      && global_constant.starting_level_for.hasOwnProperty(global_constant.username))
+      path = global_constant.starting_level_for[global_constant.username]
     // clear the store
     //console.log('RESET ALL')
     doAction.resetAll()
@@ -122,6 +130,9 @@ export async function load_config_tree() {
     //query_top_block('tower_2')
     //doAction.setProp('top_left_text', 'HELLO')
     //doAction.setButtonHighlight('option_' + 1)
+    //console.log('changing state')
+    const printPDF = false
+    if (printPDF) appObj.setState(previousState => { return { do_print: true } })
   } catch (error) {
     console.error(error);
   }
@@ -137,9 +148,10 @@ export default App = (props) => {
 export default class App extends React.Component {
   constructor(props) {
     super(props)
-    if (0) load_config_tree()
+    this.state = { do_print: false }
+    if (0) load_config_tree(this)
     else // poll to see if the tree has changed
-      window.setInterval(load_config_tree, 1000)
+      window.setInterval(load_config_tree, 3000, this)
   }
   componentDidMount() {
     //query_block_positions()
@@ -153,9 +165,10 @@ export default class App extends React.Component {
     //console.log(Date.now())
   }
   render() {
-    if (0) {
-      //return <PrintFigure />
-      return <Door name={0.5} position={[100, 100]} />
+    // console.log('this.state', this.state)
+    if (this.state.do_print) {
+      return <PrintFigure />
+      //return <Door name={0.5} position={[100, 100]} />
     } else {
       return (
         <View style={styles.root}

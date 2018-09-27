@@ -70,7 +70,7 @@ class Door extends React.Component {
       Animated.sequence(timings).start(clear_anim_info)
     }
     if (anim_info && anim_info.hasOwnProperty('slide_duration')) {
-      //if ('portal_1' == id) tlog('  STARTING ANIMATION')
+      //if ('door_2' == id) tlog('  STARTING ANIMATION')
       //Animated.timing(this.state.slideAnim).stop()
       //this.state.slideAnim.setValue(0)
       start_anim(this.state.slideAnim, 1,
@@ -143,7 +143,7 @@ class Door extends React.Component {
         })
       })
     }
-    let bounded_name = apply_bounds(name[0], 0, 1)
+    let bounded_name = apply_bounds(name[0], 0, 2)
     if (is_portal && name[0] < global_constant.door.portal_min_value)
       name[0] = global_constant.door.portal_min_value
     const handle_bot = (bounded_name * scale_factor * extra_scale) - thickness / 2.
@@ -179,7 +179,7 @@ class Door extends React.Component {
       else if (name.length > 1)
         end_bot = scale_factor * name[1] - thickness / 2.
       else end_bot = handle_bot
-      //tlog('starting slide from', start_bot, 'to', end_bot)
+      // tlog('starting slide from', start_bot, 'to', end_bot)
       //this.state.slideAnim.setValue(0)
       if (false && flip) {
         handle_style.push({

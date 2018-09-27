@@ -93,7 +93,6 @@ function name(state = Map({}), action) {
       return state.set(action.id,
         add_block_to_name(action.size, action.is_fiver, state.get(action.id)))
     case AT.TOWER_REMOVE_BLOCK:
-      console.error('how?')
       return state.set(action.id,
         remove_block_from_name(state.get(action.id)))
     default:
@@ -162,12 +161,15 @@ function tower_style(state = Map({}), action) {
   let new_style = state.get(action.id) ? state.get(action.id) : Map({})
   switch (action.type) {
     case AT.TOWER_SET_WIDTH:
-      new_style = obj_add_remove_property(new_style, 'width', action.width);
+      new_style = obj_add_remove_property(new_style, 'width', action.width)
       //return Object.assign({}, state, { [action.id]: new_style })
       return state.set(action.id, new_style)
     case AT.TOWER_SET_OVERFLOW:
-      new_style = obj_add_remove_property(new_style, 'overflow', action.overflow);
+      new_style = obj_add_remove_property(new_style, 'overflow', action.overflow)
       //return Object.assign({}, state, { [action.id]: new_style })
+      return state.set(action.id, new_style)
+    case AT.TOWER_ADD_STYLE:
+      new_style = obj_add_remove_property(new_style, action.key, action.value)
       return state.set(action.id, new_style)
     case AT.TOWER_CREATE:
     case AT.TOWER_DELETE:

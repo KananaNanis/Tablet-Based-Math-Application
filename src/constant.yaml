@@ -1,25 +1,25 @@
 # these constants should be fixed!
 first_name_for:
-  m22: Anita
-  m78: Jimmi
-  m79: Frances
-  m89: Kaia
-  math: Olaf
+  # m22: Anita
+  # m78: Jimmi
+  # m79: Frances
+  # m89: Kaia
+  # math: Olaf
   matsuura: Ryota
 starting_level_for:
-  Anita: ['proportion', 'option', 'pure_copy', 'level_1']
-  Jimmi: ['proportion', 'option', 'pure_copy', 'level_1']
-  Frances: ['proportion', 'option', 'pure_copy', 'level_1']
-  Kaia: ['proportion', 'option', 'pure_copy', 'level_1']
-  # Olaf: ['proportion', 'pure_copy', 'level_1']
-  # Ryota: ['proportion', 'pure_copy', 'level_1']
-
-  # Anita:  ['measure_height', 'copy_tower', 'level_1']
-  # Jimmi:  ['measure_height', 'copy_tower', 'level_1']
-  # Frances:  ['measure_height', 'copy_tower', 'level_1']
-  # Kaia:  ['measure_height', 'copy_tower', 'level_1']
+  # Anita:  ['animal_sum', 'level_1']
+  # Jimmi:  ['animal_sum', 'level_1']
+  # Frances:  ['animal_sum', 'level_1']
+  # Kaia:  ['animal_sum', 'level_1']
   # Olaf: ['measure_height', 'copy_tower', 'level_1']
   # Ryota:  ['measure_height', 'copy_tower', 'level_1']
+
+  # Anita: ['proportion', 'option', 'pure_copy', 'level_1']
+  # Jimmi: ['proportion', 'option', 'pure_copy', 'level_1']
+  # Frances: ['proportion', 'option', 'pure_copy', 'level_1']
+  # Kaia: ['proportion', 'option', 'pure_copy', 'level_1']
+  # Olaf: ['proportion', 'pure_copy', 'level_1']
+  # Ryota: ['proportion', 'pure_copy', 'level_1']
 scale_factor_from_yaml: 520
 door:
   handle_fraction: 0.1
@@ -40,15 +40,19 @@ special_button_geoms:
     width: 210
     height: 70
   restart: 
-    position: [5, 330]
+    position: [5, top 80]
     width: 210
     height: 70
   delete: 
-    position: [5, 330]
+    position: [5, top 80]
     width: 210
     height: 70
   next: 
     position: [center, 30vh]
+    width: 210
+    height: 70
+  start: 
+    position: [right 5, top 30]
     width: 210
     height: 70
 keypad_info:
@@ -153,20 +157,50 @@ star_policy:
 path_types: [config, prev_config, goto]
 prop_types: [scale_factor, freeze_display, num_stars,
     config_iteration, goto_iteration, skip_submit, skip_in_between,
-    center_text, top_left_text, top_right_text, problem_stage, blank_between_exercises,
-    repeat_level, skip_slide_down, correct_option_index]
+    center_text, top_left_text, top_right_text, problem_stage,
+    blank_between_exercises, hide_dot, big_op,
+    repeat_level, skip_slide_down, correct_option_index,
+    top_block_under_construction]
 prop_value_types: [number, string, boolean]
 event_handling_types: [target, comparison_source, correctness,
   event_move, top_right_text, show_camel, slide_portal,
   return_to_top, star_policy, touch_reveals_button,
-  just_proportion,
+  just_proportion, create_tower_by_height,
   move, arg_1, arg_2, result]
 position_modifiers: [left, right, top, bottom,
   left_from_right, right_from_left, top_from_bottom,
   bottom_from_top]
 prompt_width: 300
+extra_dot_threshold: 0.2
 top_right_text_offset: 80
 screen_pixels_per_cm: 52
 print_pixels_per_cm: 56.77
 print_size11x17: {width: 1471, height: 2333}
 print_size8p5x11: {width: 1112, height: 1471}
+animal_landmarks:
+  extra_dot_diameter: 50
+  sloth:
+    #claw: [387, 511]
+    shoulder: [303, 77]
+    head_bottom: [525, 109]
+    eye: [546, 236]
+    head_top: [470, 326]
+    leg: [186, 408]
+    branch_below: [380, 499]
+    branch_above: [380, 557]
+  unicorn:
+    lower_leg: [390, 113]
+    knee: [466, 210]
+    mane: [435, 300]
+    nose: [462, 459]
+    eye: [443, 567]
+    horn: [580, 654]
+    ear: [483, 698]
+  dragon:
+    front1: [436, 160]
+    front2: [440, 292]
+    front3: [428, 412]
+    front4: [400, 514]
+    front5: [386, 586]
+    nose: [540, 688]
+    ear: [364, 846]

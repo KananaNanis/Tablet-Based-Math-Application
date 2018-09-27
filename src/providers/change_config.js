@@ -32,7 +32,7 @@ export function get_config(path) {
         if (!res.hasOwnProperty(category)) {
           res[category] = deep_clone(tree_loc.params[category])
         } else {
-          if ('create' == category || 'modify' == category) {
+          if ('create' == category || 'modify' == category || 'delay' == category) {
             // consider the ids one by one
             for (const id in tree_loc.params[category]) {
               const subtree = tree_loc.params[category][id]
@@ -55,7 +55,7 @@ export function get_config(path) {
   return res
 }
 
-export function as_position(pos_info, width = 0, height = 0) {
+export function as_position(pos_info, width = 0, height = 0, extra_scale = 1) {
   let res = [0, 0]
   for (const i = 0; i < 2; ++i) {
     if ('number' === typeof pos_info[i]) res[i] = pos_info[i]
@@ -74,17 +74,17 @@ export function as_position(pos_info, width = 0, height = 0) {
 
       if (['left', 'bottom'].includes(position_modifier)) { // ignore
       } else if ('right' == position_modifier)
-        val = global_screen_width - width - val
+        val = global_screen_width - extra_scale * width - val
       else if ('top' == position_modifier)
-        val = global_workspace_height - height - val
+        val = global_workspace_height - extra_scale * height - val
       else if ('left_from_right' == position_modifier)
         val = global_screen_width - val
       else if ('right_from_left' == position_modifier)
-        val = val - width
+        val = val - extra_scale * width
       else if ('bottom_from_top' == position_modifier)
         val = global_workspace_height - val
       else if ('top_from_bottom' == position_modifier)
-        val = val - height
+        val = val - extra_scale * height
 
       if ('center' == val) {
         if (0 == i) val = (global_screen_width - width) / 2.
@@ -124,6 +124,7 @@ export function height_pixels_from_name(name, scale_factor) {
 }
 
 export function transition_to_next_config() {
+  const curr_num_stars = query_prop('num_stars')
   doAction.clearEventHandling()
   if ('in_between' === query_path('config').get(0)) {  // special case
     enter_exit_config(false)
@@ -152,19 +153,23 @@ export function transition_to_next_config() {
     doAction.setPath('config', new_path)
     enter_exit_config(true)
     doAction.setProp('goto_iteration', iter - 1)
+    doAction.setProp('num_stars', curr_num_stars)
   } else if (query_prop('config_iteration') > 1) {
     const iter = query_prop('config_iteration')
+    console.log('iter', iter)
     doAction.addLogEntry(Date.now(), [query_path('config').toJS(), 'next_config', iter])
     enter_exit_config(false)
     if (query_prop('blank_between_exercises')) {
       //console.log('applying blank of ', query_prop('blank_between_exercises'))
       window.setTimeout(function () {
-        enter_exit_config(true)
+        enter_exit_config(true, verbose = false, curr_config_iter = iter - 1)
         doAction.setProp('config_iteration', iter - 1)
+        doAction.setProp('num_stars', curr_num_stars)
       }, query_prop('blank_between_exercises'))
     } else {
-      enter_exit_config(true)
+      enter_exit_config(true, verbose = false, curr_config_iter = iter - 1)
       doAction.setProp('config_iteration', iter - 1)
+      doAction.setProp('num_stars', curr_num_stars)
     }
     /*
     doAction.setName('tile_1', pick_animal_name())
@@ -193,25 +198,43 @@ export function transition_to_next_config() {
 }
 
 export function first_config_path(starter) {
-  let res = starter ? starter : []
-  let tree_loc = config_tree;
+  let res = starter ? starter.slice() : []
+  let tree_loc = config_tree
   if (starter) {  // move down to the implied node, first!
     for (const i = 0; i < starter.length; ++i)
       tree_loc = tree_loc[starter[i]]
   }
   while (('object' === typeof tree_loc) &&
     (null !== tree_loc) &&
-    (Object.keys(tree_loc).length > 1)) {
+    (Object.keys(tree_loc).length > 1) &&
+    ("skip_node_above" !== Object.keys(tree_loc)[0])) {
     if ("params" !== Object.keys(tree_loc)[0]) {
-      console.error("Error in first_config_path: first key not 'params'")
+      console.error("Error in first_config_path: first key not 'params' instead", Object.keys(tree_loc)[0])
       break
     }
     var k2 = Object.keys(tree_loc)[1]
     res.push(k2)
     tree_loc = tree_loc[k2]
   }
-  //console.log('first_config_path res', res)
+  //console.log('first_config_path starter', starter, 'res', res)
   return res
+}
+
+function path_marked_as_skip(path) {
+  if (!path) return false
+  let tree_loc = config_tree;
+  for (const i = 0; i < path.size; ++i) {
+    tree_loc = tree_loc[path.get(i)]
+    if (('object' === typeof tree_loc) && (null !== tree_loc)) {
+      const k0 = Object.keys(tree_loc)[0]
+      if ('skip_node_above' == k0) {
+        //console.log('path_marked_as_skip path', path.toJS(), 'res', true)
+        return true
+      }
+    }
+  }
+  //console.log('path_marked_as_skip path', path.toJS(), 'res', false)
+  return false
 }
 
 export function next_config_path(path) {
@@ -224,12 +247,22 @@ export function next_config_path(path) {
       res = []
       for (const j = 0; j < i; ++j)
         res.push(path.get(j))
-      res.push(k[k.indexOf(path.get(i)) + 1])
+      const level_name = k[k.indexOf(path.get(i)) + 1]
+      // console.log('res', res, 'level_name', level_name)
+      res.push(level_name)
       // now find the longest continuation of this path
       res = first_config_path(res)
+      // console.log('  after first_config_path, res', res)
     }
     tree_loc = tree_loc[path.get(i)]
   }
-  //console.log('next_config_path res', res)
-  return fromJS(res)
+  // console.log('next_config_path path', path.toJS(), 'res0', res)
+  res = fromJS(res)
+  if (path_marked_as_skip(res)) {  // try again
+    return next_config_path(res)
+  } else {
+    //console.log('next_config_path res', res)
+    //console.log('next_config_path path', path.toJS(), 'final res', res.toJS())
+    return res
+  }
 }

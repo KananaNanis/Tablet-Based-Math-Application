@@ -76,7 +76,7 @@ class Tower extends React.Component {
   }
 
   render() {
-    let { id, name, position, style = {}, anim_info = {}, block_opacity = [], just_grey = false } = this.props
+    let { id, name, position, style = {}, anim_info = {}, misc = null, block_opacity = [], just_grey = false } = this.props
     //console.log('id', id, 'name', name)
     if (anim_info && anim_info.hasOwnProperty('fade_duration')) {
       start_anim(this.state.fadeAnim, 0, anim_info.fade_duration);
@@ -97,7 +97,7 @@ class Tower extends React.Component {
       if (is_small && !is_fiver)++small_in_a_row
       else small_in_a_row = 0
 
-      const width = b.width
+      let width = b.width
       let height = b.height
       const bottom = b.bottom
       let marginBottom = (is_tiny || is_fiver) ? 0 : 1
@@ -152,6 +152,10 @@ class Tower extends React.Component {
       let textBottom = ((0 === size) ? .25 : (-2 === size) ? -1 : .10) * height
       let fontSize = (is_tiny ? 0 : is_small ? 2 : .75) * height
       let shadow_style = {}
+      if (misc && misc.as_diagram) {
+        img_name = 'diagram'
+        view_style.backgroundColor = 'none'
+      }
       if (is_fiver) {
         text_content += "\n" + text_content + "\n" + text_content + "\n" + text_content + "\n" + text_content
         fontSize /= 5
@@ -162,6 +166,15 @@ class Tower extends React.Component {
           //console.log('orig', orig)
           shadow_style.textShadowColor = as_greyscale(orig)
         }
+        if (misc && misc.as_diagram) {
+          let bCol = 'darkred'
+          if (just_grey) bCol = as_greyscale(bCol)
+          view_style.borderColor = bCol
+          view_style.borderWidth = 10
+          //view_style.width = 50
+          width = 75
+          textBottom -= 15
+        }
       }
       let text_style = {
         position: 'absolute',
@@ -171,7 +184,15 @@ class Tower extends React.Component {
         bottom: textBottom,
         ...shadow_style
       }
-      blocks.push(<Block width={width}
+      if (0 === size && !is_fiver) { // stretch the blue symbol
+        text_style.transformOrigin = 'bottom left'
+        text_style.transform = [{scaleY: 2.0}]
+        text_style.bottom = 0
+      }
+      if (i + 1 === block_info.length && misc && misc.top_just_outline)
+        just_grey = 'outline'
+      blocks.push(<Block
+        width={width}
         height={height}
         radius_style={radius_style}
         img_name={img_name}
@@ -197,7 +218,7 @@ const styles = StyleSheet.create({
   tower: {
     position: 'absolute',
     bottom: 0,
-  },
+  }
 })
 
 export default Tower

@@ -36,11 +36,11 @@ export function pick_from_list(list, prev_value, skip_first) {
     const r = Math.floor((list.length) * Math.random())
     if (0 == r && skip_first) continue
     const elt = list[r]
-    if (height_too_tall(elt)) continue
+    //if (height_too_tall(elt)) continue  // should be an explicit restriction
     if (prev_value == elt) continue
     return elt
   }
-  console.warn('Warning in choose_from_list:  tried ten times!')
+  console.warn('Warning in choose_from_list:  tried ten times to choose from', list, 'prev_value', prev_value, 'skip_first', skip_first)
   return (list.length > 1) ? list[1] : list[0]
 }
 

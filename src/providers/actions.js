@@ -70,6 +70,10 @@ export function towerSetOverflow(id, overflow) {
   return { type: AT.TOWER_SET_OVERFLOW, id, overflow }
 }
 
+export function towerAddStyle(id, key, value) {
+  return { type: AT.TOWER_ADD_STYLE, id, key, value: fromJS(value) }
+}
+
 export function towerSetBlockOpacity(id, index, opacity) {
   return { type: AT.TOWER_SET_BLOCK_OPACITY, id, index, opacity }
 }
@@ -125,6 +129,22 @@ export function setPath(key, value) {
 }
 
 export function addLogEntry(time, info) {
+  console.log('addLogEntry', time, info)
+  if (1) {  // send this info to the server
+    fetch(
+      // 'https://www.cs.stolaf.edu/suuji/ajax2.php',
+      'ajax2.php',
+      {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: "write_log\n" + time + ' '
+          + JSON.stringify(info) + '\n',
+        credentials: 'same-origin',
+      })
+  }
   return { type: AT.ADD_LOG_ENTRY, time, info: fromJS(info) }
 }
 

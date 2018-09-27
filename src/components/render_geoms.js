@@ -3,6 +3,7 @@ import { Map } from 'immutable'
 import Num from './Num'
 import Tile from './Tile'
 import Door from './Door'
+import { height2tower_name } from '../providers/query_tower'
 
 export function add_offset(pos, offset_x=0) { return [pos.get(0) + offset_x, pos.get(1)] }
 
@@ -11,7 +12,28 @@ function my_get(obj, key) {
   return raw ? raw.toJS() : raw
 }
 
-export function render_nums(all_nums, scale_factor, offset_x = 0, just_grey = false) {
+function numAsJSX(name, num, id, scale_factor, offset_x, just_grey, is_option) {
+  let misc = my_get(num, 'misc')
+  if (is_option) {
+    misc.is_option = true
+    //console.log('name', name, 'pos', add_offset(num.get('position'), offset_x))
+  }
+  return (
+      <Num id={id}
+        name={name}
+        position={add_offset(num.get('position'), offset_x)}
+        style={my_get(num, 'style')}
+        anim_info={my_get(num, 'anim_info')}
+        misc={misc}
+        tower_style={my_get(num, 'tower_style')}
+        block_opacity={my_get(num, 'block_opacity')}
+        scale_factor={scale_factor}
+        just_grey={just_grey}
+        key={id} />
+  )
+}
+
+export function render_nums(all_nums, scale_factor, offset_x = 0, just_grey = false, option_values=null) {
   //console.log('render_nums just_grey', just_grey)
   //console.log('render_nums all_nums', all_nums)
   let nums = []
@@ -20,20 +42,22 @@ export function render_nums(all_nums, scale_factor, offset_x = 0, just_grey = fa
   all_nums.keySeq().forEach((id) => {
     //console.log('num id ', id)
     const num = all_nums.get(id)
-    //console.log('num id ', id, 'anim_info', num.get('anim_info'))
-    nums.push(
-      <Num id={id}
-        name={num.get('name').toJS()}
-        position={add_offset(num.get('position'), offset_x)}
-        style={my_get(num, 'style')}
-        anim_info={my_get(num, 'anim_info')}
-        misc={my_get(num, 'misc')}
-        tower_style={my_get(num, 'tower_style')}
-        block_opacity={my_get(num, 'block_opacity')}
-        scale_factor={scale_factor}
-        just_grey={just_grey}
-        key={id} />
-    )
+      if (option_values && num.getIn(['misc', 'is_option'])) {
+        // console.log('id', id, 'option', option_values ? option_values.toJS() : null)
+        for (const i = 0; i < 4; ++i) {
+          let name = option_values.get(nums.length).toJS()
+          // this name is not canonical, yet
+          name = height2tower_name(name[0])
+          nums.push(numAsJSX(name, num, id, scale_factor,offset_x,just_grey,true))
+        }
+      } else if (!option_values && !num.getIn(['misc', 'is_option'])) {
+        //console.log('name', num.get('name'))
+        const name = num.get('name') ? num.get('name').toJS() : [0]
+        //console.log('num id ', id, 'anim_info', num.get('anim_info'))
+        nums.push(
+          numAsJSX(name, num, id, scale_factor, offset_x, just_grey)
+        )
+      }
   })
   return nums
 }
@@ -54,6 +78,7 @@ export function render_tiles(all_tiles, scale_factor, offset_x = 0, just_grey = 
         misc={my_get(tile, 'misc')}
         scale_factor={scale_factor}
         just_grey={just_grey}
+        id={id}
         key={id} />
     )
   })
@@ -62,7 +87,9 @@ export function render_tiles(all_tiles, scale_factor, offset_x = 0, just_grey = 
 
 function doorAsJSX(name, door, id, scale_factor, offset_x, just_grey, is_option) {
   let misc = my_get(door, 'misc')
-  if (is_option) misc.is_option = true
+  if (is_option) {
+    misc.is_option = true
+  }
   return (
           <Door
             name={name}

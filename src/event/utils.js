@@ -71,6 +71,8 @@ export function reduce_num_stars() {
   const curr_num_stars = query_prop('num_stars')
   if (curr_num_stars > 0)
     doAction.setProp('num_stars', curr_num_stars - 1)
+  if (query_prop('num_stars') < 1)
+    doAction.setProp('repeat_level', 1)
 }
 
 export function apply_bounds(val, lo, hi) {

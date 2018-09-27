@@ -1,6 +1,7 @@
 import { connect } from 'react-redux'
 import Workspace from '../components/Workspace'
 import { consolidate_info_for_ids } from '../providers/query_store'
+import { toJS } from './to_js'
 
 const mapStateToProps = (state, ownProps) => {
   //console.log(ownProps)
@@ -22,6 +23,7 @@ const mapStateToProps = (state, ownProps) => {
     center_text: state.getIn(['prop', 'center_text']),
     top_left_text: state.getIn(['prop', 'top_left_text']),
     top_right_text: state.getIn(['prop', 'top_right_text']),
+    big_op: state.getIn(['prop', 'big_op']),
     err_box: state.get('err_box'),
     option_values: state.get('option_values'),
     all_nums: consolidate_info_for_ids(
@@ -64,6 +66,7 @@ const mapDispatchToProps = dispatch => {
 const WorkspaceContainer = connect(
   mapStateToProps,
   mapDispatchToProps
-)(Workspace)
+) (Workspace)
+//(toJS(Workspace))
 
 export default WorkspaceContainer

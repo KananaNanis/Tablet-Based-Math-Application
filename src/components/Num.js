@@ -17,14 +17,20 @@ export const global_fiver_shadow = [
   },
 ]
 
-const Num = ({ id, name, position, style, anim_info, tower_style, block_opacity, scale_factor, just_grey=false }) => (
-  <View style={[styles.num, style,
-  { left: position[0], bottom: position[1] }
-  ]}>
-    <Tower id={id} name={name} position={position} style={tower_style} anim_info={anim_info} block_opacity={block_opacity} scale_factor={scale_factor} just_grey={just_grey}/>
-    <TowerName id={id} name={name} position={position} anim_info={anim_info} just_grey={just_grey}/>
-  </View>
-)
+const Num = ({ id, name, position, style, anim_info, misc, tower_style, block_opacity, scale_factor, just_grey = false }) => {
+  const tn = misc && misc.hide_tower_name ? null
+    : <TowerName id={id} name={name} position={position} anim_info={anim_info} just_grey={just_grey} />
+  // misc = { top_just_outline: true }
+  //misc = { as_diagram: true }
+  return (
+    <View style={[styles.num, style,
+    { left: position[0], bottom: position[1] }
+    ]}>
+      <Tower id={id} name={name} position={position} style={tower_style} misc={misc} anim_info={anim_info} block_opacity={block_opacity} scale_factor={scale_factor} just_grey={just_grey} />
+      {tn}
+    </View>
+  )
+}
 
 const styles = StyleSheet.create({
   num: {

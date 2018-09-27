@@ -1,14 +1,15 @@
 import {
-  query_name_of_tile, query_event, query_arg, query_path, query_prop
+  query_name_of_tile, query_event, query_arg, query_path, query_prop, query_obj_misc, query_name_of_door
 } from '../providers/query_store'
 import {
   query_tower_name,
   query_tower_height, height2tower_name,
 } from '../providers/query_tower'
 import { doAction, global_constant } from '../App'
-import { expand_into_units, approx_equal, namesAreIdentical, reduce_num_stars } from './utils';
-import { describe_numerical, get_err_box_location, show_thin_height } from './extract';
-import { SET_PROP } from '../providers/actionTypes';
+import { expand_into_units, approx_equal, namesAreIdentical, reduce_num_stars, dist2D } from './utils';
+import { describe_numerical, get_err_box_location, show_thin_height, get_door_or_tile_height } from './extract';
+import { landmark_location } from '../components/Tile';
+import { incorrect_button_response } from './handlers';
 
 export function correct_next_button() {
   const verbose = false
@@ -22,10 +23,14 @@ export function correct_next_button() {
     curr = query_tower_name(tgt).toJS()
     expand = true
   } else if ('same_height' == how) {
-    const animal_name = query_name_of_tile(src)
-    const height = global_constant.animals[animal_name].height
+    let height
+    if (src.startsWith('tile_')) {
+      const animal_name = query_name_of_tile(src)
+      height = global_constant.animals[animal_name].height
+    } else height = query_name_of_door(src).get(0)
     correct = height2tower_name(height)
     //console.log('animal_name', animal_name, 'correct', correct)
+    // console.log('height', height, 'correct', correct)
     curr = query_tower_name(tgt).toJS()
     expand = true
   } else {
@@ -115,13 +120,23 @@ export function is_correct() {
   const cp = query_path('config').toJS()
   let delay = 'incorrect'
   if ('same_height' == how) {
-    const name = query_name_of_tile(src)
-    if (name) {
-      const animal_height = global_constant.animals[name].height
-      const tgt_height = query_tower_height(tgt)
-      //console.log(name, animal_height, tgt_height)
-      if (approx_equal(animal_height, tgt_height)) delay = 0
-      doAction.addLogEntry(curr_time, [cp, 'is_correct', (0 == delay), tgt_height, animal_height])
+    const tgt_height = query_tower_height(tgt)
+    var eq = 'unchecked'
+    let src_height
+    if (src.startsWith('tile_')) {
+      const name = query_name_of_tile(src)
+      if (name) {
+        src_height = global_constant.animals[name].height
+        eq = approx_equal(src_height, tgt_height)
+      }
+    } else {
+      src_height = query_name_of_door(src).get(0)
+      eq = approx_equal(src_height, tgt_height)
+    }
+    console.log('src_height', src_height, 'tgt_height', tgt_height, 'eq', eq)
+    if (eq !== 'unchecked') {
+      if (eq) delay = 0
+      doAction.addLogEntry(curr_time, [cp, 'is_correct', (0 == delay), tgt_height, src_height])
     }
   } else if ('identical' == how) {
     const name1 = query_tower_name(src).toJS()
@@ -169,6 +184,83 @@ export function is_correct() {
     delay = show_err_with_delay(arg_1, arg_2, result, stars, curr_time, f1, f2, f3)
     if (-1 == stars) delay = 'do_not_transition'
     //delay = 'do_not_transition'
+  } else if ('near_discrete_height' == how) {
+    let correct_height
+    //const src_height = query_tower_height(src)
+    if (src) {
+      correct_height = query_tower_height(src)
+    } else {
+      const arg_1 = query_arg(1)
+      const name_1 = query_name_of_tile(arg_1)
+      const val_1 = get_door_or_tile_height(arg_1)
+      const arg_2 = query_arg(2)
+      const name_2 = query_name_of_tile(arg_2)
+      const val_2 = get_door_or_tile_height(arg_2)
+      //console.log('arg_1', arg_1, 'name_1', name_1, 'val_1', val_1)
+      correct_height = val_1 + val_2
+      // console.log('correct_height', correct_height)
+    }
+    const tgt_height = query_name_of_door(tgt).get(0)
+    // console.log('correct_height', correct_height)
+    // console.log('tgt_height', tgt_height)
+    if (Math.abs(correct_height - tgt_height) < 0.1) {
+      // console.log('got it!')
+      const curr = query_name_of_door('door_3').get(0)
+      doAction.setName('door_3', [curr, curr])
+      doAction.towerAddStyle('tower_1', 'opacity', null)
+      const scale_factor = query_prop('scale_factor')
+      const duration = 10 * scale_factor * Math.abs(correct_height - tgt_height)
+      doAction.setAnimInfo('door_3', { slide_target: correct_height, slide_duration: duration })
+      delay = duration + 1000
+    } else {  // still incorrect
+    }
+  } else if ('move_dot' == how) {
+    const arg_1 = query_arg(1)
+    const landmark_index = query_obj_misc(arg_1).get('landmark_index')
+    const tile_tgt = 'tile_2'
+    //console.log('arg_1', arg_1, 'landmark_index', landmark_index)
+    //  do we need to know how far it moves?  Yes!
+    const name = query_name_of_tile(arg_1)
+    const loc0 = landmark_location(name, landmark_index)
+    const misc2 = query_obj_misc(tile_tgt)
+    const extra_scale2 = (misc2 && 'undefined' !== typeof misc2.get('extra_scale')) ? misc2.get('extra_scale') : 1
+    const loc0b = [extra_scale2 * loc0[0], extra_scale2 * loc0[1]]
+    const loc1 = misc2.get('extra_dot').toJS()
+    const d_pixels = dist2D(loc0b, loc1)
+    const scale_factor = query_prop('scale_factor')
+    const d = d_pixels / (extra_scale2 * scale_factor)
+    //console.log('extra_scale2', extra_scale2, 'loc0b', loc0b, 'd', d)
+    // decide whether we are too far from the correct location
+    let too_far = false
+    if ('move_handle_dot' == query_event('move')) {
+      const delta_pixels = Math.abs(loc0b[1] - loc1[1])
+      const delta = delta_pixels / (extra_scale2 * scale_factor)
+      // console.log('delta_pixels', delta_pixels, 'delta', delta)
+      too_far = delta > global_constant.extra_dot_threshold
+    } else {  // just the dot
+      too_far = d > global_constant.extra_dot_threshold
+    }
+    //console.log('loc0b', loc0b, 'loc1', loc1, 'd', d)
+    if (too_far) {
+      reduce_num_stars()
+      //incorrect_button_response()  // doesn't seem to work!
+      delay = 'do_not_transition'
+    } else {
+      doAction.addObjStyle('tile_1', 'opacity', 1)
+      doAction.addObjStyle(tile_tgt, 'opacity', 1)
+      doAction.addObjMisc(tile_tgt, 'landmark_index', landmark_index)
+      doAction.setAnimInfo(tile_tgt, { move_extra_dot: true })
+      if ('move_handle_dot' == query_event('move')) {
+        // also move the handle into place
+        const y3 = loc0b[1] / scale_factor
+        const animal_value = global_constant.animals[name].height
+        const y3b = y3 / (animal_value * extra_scale2)
+        doAction.setName('door_2', [query_name_of_door('door_2').get(0), y3b])
+        doAction.setAnimInfo('door_2', { slide_target: y3, slide_duration: 100 * d })
+      }
+      // delay = 'do_not_transition'
+      delay = 100 * d_pixels + 1000
+    }
   } else {
     console.error('unrecognized correctness attribute?!', how)
   }

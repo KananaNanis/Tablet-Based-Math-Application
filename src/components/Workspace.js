@@ -16,7 +16,7 @@ import { render_nums, render_tiles, render_doors, render_portals } from './rende
 
 export const global_screen_width = Dimensions.get('window').width
 export const global_screen_height = Dimensions.get('window').height
-export const global_grass_height = 100
+export const global_grass_height = 50
 export const global_workspace_height = global_screen_height - global_grass_height
 
 export const window2workspaceCoords = (pos0) =>
@@ -44,7 +44,7 @@ export function start_anim(anim_var, toValue, duration, delay = 0, ending_functi
 const Workspace = ({ scale_factor, keypad_kind, button_display,
   button_highlight, freeze_display, num_stars, config_path,
   all_nums, all_tiles, all_doors, all_portals, center_text,
-  top_left_text, top_right_text, err_box, option_values }) => {
+  top_left_text, top_right_text, big_op, err_box, option_values }) => {
 
   //console.log('Workspace all_nums', all_nums, 'all_tiles', all_tiles, 'all_doors', all_doors)
   //console.log('Workspace all_portals', all_portals)
@@ -64,14 +64,21 @@ const Workspace = ({ scale_factor, keypad_kind, button_display,
       key={key}>{global_constant.username}</Text>)
   }
   if (query_option_values()) {  // add options
-    const option_doors = render_doors(all_doors, skip = null, scale_factor, 0, false, option_values)
-    for (const i = 0; i < option_doors.length; ++i) {
+    // are the options doors or nums?
+    let option_inner = []
+    //console.log('nums actual', all_nums.size, 'nums rendered', nums.length)
+    //console.log('doors actual', all_doors.size, 'doors rendered', doors.length)
+    if (all_doors.size = doors.length + 1)
+      option_inner = render_doors(all_doors, skip = null, scale_factor, 0, false, option_values)
+    if (all_nums.size = nums.length + 1)
+      option_inner = render_nums(all_nums, scale_factor, 0, false, option_values)
+    for (const i = 0; i < option_inner.length; ++i) {
       ++key
       options.push(<OptionBackground
         i={i}
         button_highlight={button_highlight}
         key={i}>
-        {option_doors[i]}
+        {option_inner[i]}
       </OptionBackground>)
     }
   }
@@ -119,6 +126,13 @@ const Workspace = ({ scale_factor, keypad_kind, button_display,
       ]}
       key={key}>{top_left_text}</Text>)
   }
+  if (big_op) {
+    //console.log(' big_op', big_op)
+    ++key
+    misc.push(<Text
+      style={[styles.big_op ]}
+      key={key}>{big_op}</Text>)
+  }
   /*
   if (err_box) {
     ++key
@@ -151,6 +165,7 @@ const Workspace = ({ scale_factor, keypad_kind, button_display,
   }
   const button_view = {
     'submit': { borderColor: 'lime' },
+    'start': { borderColor: 'forestgreen' },
   }
   const highlight_style = {
     backgroundColor: 'lightgreen'
@@ -168,7 +183,7 @@ const Workspace = ({ scale_factor, keypad_kind, button_display,
     if (button_display.has(special_button)) {
       ++key
       let bg_style = {}
-      if (freeze_display) {
+      if (freeze_display && 'start' !== special_button) {
         bg_style = (special_button === button_highlight) ?
           freeze_highlight_style : freeze_no_highlight_style
       } else if (special_button === button_highlight)
@@ -206,7 +221,7 @@ const Workspace = ({ scale_factor, keypad_kind, button_display,
   }
   //console.log(doors.length)
   return (<View style={styles.workspace}>
-    {options}{nums}{tiles}{doors}{portals}{misc}
+    {nums}{options}{tiles}{doors}{portals}{misc}
   </View>)
   /*
   return <View style={styles.workspace}>
@@ -255,6 +270,13 @@ const styles = StyleSheet.create({
     position: 'absolute',
     fontSize: 8,
     top: 0,
+  },
+  big_op: {
+    position: 'absolute',
+    fontSize: 200,
+    left: 70,
+    bottom: 160,
+    color: 'grey',
   }
 })
 
