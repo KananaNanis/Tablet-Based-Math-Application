@@ -92,7 +92,7 @@ class Door extends React.Component {
 
   render() {
     let { name, position, style, anim_info, misc, scale_factor, just_grey, id } = this.props
-    //console.log('Door  id', id, 'name', name, 'scale_factor', scale_factor)
+    //console.log('Door  id', id, 'name', name)
     //if (!name) name = [.1]
     //console.log('Door  id', id, 'style', style, 'anim_info', anim_info, 'misc', misc)
 
