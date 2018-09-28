@@ -1,4 +1,5 @@
 import React from 'react'
+import { Map, fromJS } from 'immutable'
 import { StyleSheet, View, Animated, Image } from 'react-native'
 import { as_greyscale } from './Tower';
 import { start_anim } from './Workspace';
@@ -91,7 +92,7 @@ class Door extends React.Component {
 
   render() {
     let { name, position, style, anim_info, misc, scale_factor, just_grey, id } = this.props
-    //console.log('Door  id', id, 'name', name)
+    //console.log('Door  id', id, 'name', name, 'scale_factor', scale_factor)
     //if (!name) name = [.1]
     //console.log('Door  id', id, 'style', style, 'anim_info', anim_info, 'misc', misc)
 
@@ -226,7 +227,7 @@ class Door extends React.Component {
     if (is_portal) {
       // this is a portal, so we need to add all the other geometry,
       //   twice!
-      //console.log('id', id, misc', misc)
+      //console.log('id', id, 'scale_factor', scale_factor, 'misc', misc)
       door_style.unshift(styles.portal)
       door_style.push({
         borderBottomRightRadius: global_constant.door.border_radius,
@@ -238,17 +239,32 @@ class Door extends React.Component {
           'borderTopColor': 'transparent',
           'borderRightColor': 'transparent',
         })
-      let { all_nums, all_tiles, all_doors } = this.props
+      // let { all_nums, all_tiles, all_doors } = this.props
+      let { tower_ids, tile_ids, door_ids } = this.props
+      if (!Map.isMap(tower_ids)) tower_ids = fromJS(tower_ids)
+      if (!Map.isMap(tile_ids)) tile_ids = fromJS(tile_ids)
+      if (!Map.isMap(door_ids)) door_ids = fromJS(door_ids)
+      //console.log('id', id, 'door_ids', door_ids)
       let offset_x = -1 * (position[0] + thickness)
       let nums_grey, tiles_grey, doors_grey
       if (!misc || ('undefined' === typeof misc.stealth_mode)) {
+        /*
         nums_grey = render_nums(all_nums, scale_factor, offset_x = offset_x, just_grey = true)
         tiles_grey = render_tiles(all_tiles, scale_factor, offset_x = offset_x, just_grey = true)
         doors_grey = render_doors(all_doors, skip = id, scale_factor, offset_x = offset_x, just_grey = true)
+        */
+        nums_grey = render_nums(tower_ids, offset_x = offset_x, just_grey = true)
+        tiles_grey = render_tiles(tile_ids, offset_x = offset_x, just_grey = true)
+        doors_grey = render_doors(door_ids, skip = id, offset_x = offset_x, just_grey = true)
       }
+      /*
       const nums = render_nums(all_nums, scale_factor, offset_x = offset_x)
       const tiles = render_tiles(all_tiles, scale_factor, offset_x = offset_x)
       const doors = render_doors(all_doors, skip = id, scale_factor, offset_x = offset_x)
+      */
+      const nums = render_nums(tower_ids, offset_x = offset_x)
+      const tiles = render_tiles(tile_ids, offset_x = offset_x)
+      const doors = render_doors(door_ids, skip = id, offset_x = offset_x)
       const transform = [{ 'scale': bounded_name }]
       let inner_style = [styles.inner, {
         width, height, transform,

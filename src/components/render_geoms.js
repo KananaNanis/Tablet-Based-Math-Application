@@ -5,7 +5,8 @@ import NumContainer from '../containers/NumContainer'
 //import Tile from './Tile'
 import TileContainer from '../containers/TileContainer'
 import Door from './Door'
-import { query_obj_misc } from '../providers/query_store'
+import DoorContainer from '../containers/DoorContainer'
+import { query_obj_misc, query_prop } from '../providers/query_store'
 import { height2tower_name } from '../providers/query_tower'
 
 export function add_offset(pos, offset_x=0) {
@@ -17,6 +18,7 @@ function my_get(obj, key) {
   return raw ? raw.toJS() : raw
 }
 
+/*
 function numAsJSX(name, num, id, scale_factor, offset_x, just_grey, is_option) {
   let misc = my_get(num, 'misc')
   if (is_option) {
@@ -37,6 +39,7 @@ function numAsJSX(name, num, id, scale_factor, offset_x, just_grey, is_option) {
         key={id} />
   )
 }
+*/
 
 export function render_nums(tower_ids, offset_x = 0, just_grey = false, option_values=null) {
   //console.log('render_nums just_grey', just_grey)
@@ -110,6 +113,7 @@ export function render_tiles(tile_ids, offset_x = 0, just_grey = false) {
   })
 */
 
+/*
 function doorAsJSX(name, door, id, scale_factor, offset_x, just_grey, is_option) {
   let misc = my_get(door, 'misc')
   if (is_option) {
@@ -128,9 +132,29 @@ function doorAsJSX(name, door, id, scale_factor, offset_x, just_grey, is_option)
             key={id} />
         )
 }
+*/
 
-export function render_doors(all_doors, skip, scale_factor, offset_x = 0, just_grey = false, option_values = null) {
+export function render_doors(door_ids, skip, offset_x = 0, just_grey = false, option_values = null) {
+  // console.log('render_doors door_ids', door_ids.toJS(), 'option_values', option_values)
   let doors = []
+  for (const i = 0; i < door_ids.size; ++i) {
+    const id = door_ids.get(i)
+    const m = query_obj_misc(id)
+    // console.log('id', id, 'm', m ? m.toJS() : null)
+    let is_option = m ? m.get('is_option') : false
+    if (skip == id) continue
+    if (option_values && is_option) {
+      // console.log('id', id, 'option', option_values ? option_values.toJS() : null)
+      for (const j = 0; j < 4; ++j) {
+        let name = option_values.get(doors.length).toJS()
+        doors.push(<DoorContainer id={id} name={name} offset_x={offset_x} just_grey={just_grey} key={id + '_' + j} />)
+      }
+    } else if (!option_values && !is_option) {
+      // console.log('id', id)
+      doors.push(<DoorContainer id={id} offset_x={offset_x} just_grey={just_grey} key={id} />)
+    }
+  }
+/*
   if (!Map.isMap(all_doors)) return doors
   all_doors.keySeq().forEach((id) => {
     if (id != skip) {
@@ -149,12 +173,23 @@ export function render_doors(all_doors, skip, scale_factor, offset_x = 0, just_g
       }
     }
   })
+*/
   return doors
 }
 
-export function render_portals(all_portals, skip, all_nums, all_tiles, all_doors, scale_factor, offset_x = 0, just_grey = false) {
+export function render_portals(portal_ids, skip, tower_ids, tile_ids, door_ids, offset_x = 0, just_grey = false)
+//export function render_portals(all_portals, skip, tower_ids, tile_ids, door_ids, all_nums, all_tiles, all_doors, offset_x = 0, just_grey = false)
+{
+  //console.log('render_portals door_ids', door_ids)
   let portals = []
+  for (const i = 0; i < door_ids.size; ++i) {
+    const id = portal_ids.get(i)
+    if (skip == id) continue
+    portals.push(<DoorContainer id={id} tower_ids={tower_ids} tile_ids={tile_ids} door_ids={door_ids} offset_x={offset_x} just_grey={just_grey} key={id} />)
+  }
+/*
   if (!Map.isMap(all_portals)) return portals
+  const scale_factor = query_prop('scale_factor')
   //for (const id in all_portals)
   all_portals.keySeq().forEach((id) => {
     if (id != skip) {
@@ -167,6 +202,9 @@ export function render_portals(all_portals, skip, all_nums, all_tiles, all_doors
           anim_info={my_get(portal, 'anim_info')}
           misc={my_get(portal, 'misc')}
           scale_factor={scale_factor}
+          tower_ids={tower_ids}
+          tile_ids={tile_ids}
+          door_ids={door_ids}
           all_nums={all_nums}
           all_tiles={all_tiles}
           all_doors={all_doors}
@@ -177,5 +215,6 @@ export function render_portals(all_portals, skip, all_nums, all_tiles, all_doors
       )
     }
   })
+*/
   return portals
 }

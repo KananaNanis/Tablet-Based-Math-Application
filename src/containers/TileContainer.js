@@ -32,7 +32,7 @@ const mapStateToProps = (state, ownProps) => {
 	style: state.getIn(['style', id]),
 	anim_info: state.getIn(['anim_info', id]),
 	misc: state.getIn(['misc', id]),
-	scale_factor: state.getIn(['props', 'scale_factor']),
+	scale_factor: state.getIn(['prop', 'scale_factor']),
         just_grey,
   }
 }

@@ -52,7 +52,6 @@ const Workspace = ({ scale_factor, keypad_kind, button_display,
   //console.log('Workspace all_portals', all_portals)
   if ('undefined' === typeof config_path) return []
   //console.log('Workspace config_path', config_path.toJS())
-  let doors = [], portals = []
   //nums = render_nums(all_nums, scale_factor)
   const nums = render_nums(tower_ids)
   //const tiles = render_tiles(all_tiles, scale_factor)
@@ -75,7 +74,10 @@ const Workspace = ({ scale_factor, keypad_kind, button_display,
   }
     */
   //const doors = render_doors(all_doors, skip = null, scale_factor)
-  //const portals = render_portals(all_portals, skip = null, all_nums, all_tiles, all_doors, scale_factor)
+  const doors = render_doors(door_ids)
+  //const portals = []
+  //const portals = render_portals(all_portals, skip = null, tower_ids, tile_ids, door_ids, all_nums, all_tiles, all_doors)
+  const portals = render_portals(portal_ids, skip = null, tower_ids, tile_ids, door_ids)
   //console.log('len', doors.length)
   //console.log('option_values', option_values ? option_values.toJS() : null)
   let misc = [], key = 0, options = []
@@ -86,12 +88,13 @@ const Workspace = ({ scale_factor, keypad_kind, button_display,
       key={key}>{global_constant.username}</Text>)
   }
   if (query_option_values()) {  // add options
+    //console.log('q', query_option_values())
     // are the options doors or nums?
     let option_inner = []
     //console.log('nums actual', all_nums.size, 'nums rendered', nums.length)
-    //console.log('doors actual', all_doors.size, 'doors rendered', doors.length)
-    if (all_doors.size == doors.length + 1)
-      option_inner = render_doors(all_doors, skip = null, scale_factor, 0, false, option_values)
+    //console.log('doors actual', door_ids.size, 'doors rendered', doors.length)
+    if (door_ids.size == doors.length + 1)
+      option_inner = render_doors(door_ids, skip = null, 0, false, option_values)
     if (tower_ids.size == nums.length + 1)
       option_inner = render_nums(tower_ids, 0, false, option_values)
     for (const i = 0; i < option_inner.length; ++i) {
