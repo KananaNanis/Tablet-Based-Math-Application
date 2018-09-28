@@ -3,7 +3,8 @@ image: node:latest
 stages:
   - format
 
-before_script: npm install
+before_script:
+  - npm install
 
 run_prettier:
   stage: format
