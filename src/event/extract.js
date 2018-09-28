@@ -70,7 +70,8 @@ export function get_err_box_location(arg_1, arg_2, result, just_thin) {
 	}
 	const d1_name = d1.get('name')
 	let d1_val = d1_name.get(d1_name.size > 1 ? 1 : 0)
-	let implied_pos = vec_sum( // pos1 + val1 * (pos2 - pos1)
+	let implied_pos = vec_sum(
+		// pos1 + val1 * (pos2 - pos1)
 		pos1,
 		vec_prod(d1_val, vec_sum(pos2, vec_prod(-1, pos1))),
 	)
