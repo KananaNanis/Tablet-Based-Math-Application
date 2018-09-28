@@ -15,5 +15,5 @@ run_prettier:
 run_lint:
   stage: format
   script:
-    - npm install -g eslint eslint-config-prettier eslint-plugin-babel eslint-plugin-react eslint-plugin-react-native
+    - npm install -g eslint babel-eslint eslint-config-prettier eslint-plugin-babel eslint-plugin-react eslint-plugin-react-native
     - eslint --report-unused-disable-directives --max-warnings=0 --cache src/ *.js

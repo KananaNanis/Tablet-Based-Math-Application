@@ -10,6 +10,7 @@
   "private": true,
   "devDependencies": {
     "babel-core": "^6.26.3",
+    "babel-eslint": "^10.0.1",
     "babel-jest": "^23.6.0",
     "babel-loader": "^7.1.5",
     "babel-plugin-expo-web": "^0.0.14",

@@ -3,6 +3,9 @@
 # expo
 .expo/
 
+#eslint
+.eslintcache
+
 # dependencies
 /node_modules
 
