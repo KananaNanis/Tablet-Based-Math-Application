@@ -1,16 +1,15 @@
 image: node:latest
 
 stages:
-  - prettier
-  - lint
+  - format
 
 before_script:
   - npm install
 
 run_prettier:
-  stage: prettier
+  stage: format
   script: prettier --list-different 'src/**/*.{js,json}' '*.js'
 
 run_lint:
-  stage: lint
+  stage: format
   script: eslint --report-unused-disable-directives --max-warnings=0 --cache src/ *.js
