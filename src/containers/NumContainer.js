@@ -1,8 +1,8 @@
 import React from 'react'
-import { Iterable } from 'immutable'
-import { connect } from 'react-redux'
-import { add_offset } from '../components/render_geoms'
-import { toJS } from './to_js'
+import {Iterable} from 'immutable'
+import {connect} from 'react-redux'
+import {add_offset} from '../components/render_geoms'
+import {toJS} from './to_js'
 import Num from '../components/Num'
 
 /*
@@ -28,27 +28,27 @@ const toJS_num = WrappedComponent => wrappedComponentProps => {
 */
 
 const mapStateToProps = (state, ownProps) => {
-  let {id, name, offset_x = 0, just_grey = false} = ownProps
-  if (!name) name = state.getIn(['name', id])
+	let {id, name, offset_x = 0, just_grey = false} = ownProps
+	if (!name) name = state.getIn(['name', id])
 
-  const verbose = false
-  if (verbose) {
-    let misc = state.getIn(['misc', id])
-    if (misc) misc = misc.toJS()
-    console.log('NumContainer id', id, 'name', name, 'misc', misc)
-  }
+	const verbose = false
+	if (verbose) {
+		let misc = state.getIn(['misc', id])
+		if (misc) misc = misc.toJS()
+		console.log('NumContainer id', id, 'name', name, 'misc', misc)
+	}
 
-  return {
-	id,
-	name,
-	position: add_offset(state.getIn(['position', id]), offset_x),
-	style: state.getIn(['style', id]),
-	anim_info: state.getIn(['anim_info', id]),
-	misc: state.getIn(['misc', id]),
-	tower_style: state.getIn(['tower_style', id]),
-	block_opacity: state.getIn(['block_opacity', id]),
-	scale_factor: state.getIn(['prop', 'scale_factor']),
-        just_grey,
-  }
+	return {
+		id,
+		name,
+		position: add_offset(state.getIn(['position', id]), offset_x),
+		style: state.getIn(['style', id]),
+		anim_info: state.getIn(['anim_info', id]),
+		misc: state.getIn(['misc', id]),
+		tower_style: state.getIn(['tower_style', id]),
+		block_opacity: state.getIn(['block_opacity', id]),
+		scale_factor: state.getIn(['prop', 'scale_factor']),
+		just_grey,
+	}
 }
 export default connect(mapStateToProps)(toJS(Num))
