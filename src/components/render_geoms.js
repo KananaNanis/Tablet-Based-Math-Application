@@ -1,11 +1,16 @@
 import React from 'react'
 import { Map } from 'immutable'
 import Num from './Num'
-import Tile from './Tile'
+import NumContainer from '../containers/NumContainer'
+//import Tile from './Tile'
+import TileContainer from '../containers/TileContainer'
 import Door from './Door'
+import { query_obj_misc } from '../providers/query_store'
 import { height2tower_name } from '../providers/query_tower'
 
-export function add_offset(pos, offset_x=0) { return [pos.get(0) + offset_x, pos.get(1)] }
+export function add_offset(pos, offset_x=0) {
+  return [pos.get(0) + offset_x, pos.get(1)]
+}
 
 function my_get(obj, key) {
   const raw = obj.get(key)
@@ -33,10 +38,25 @@ function numAsJSX(name, num, id, scale_factor, offset_x, just_grey, is_option) {
   )
 }
 
-export function render_nums(all_nums, scale_factor, offset_x = 0, just_grey = false, option_values=null) {
+export function render_nums(tower_ids, offset_x = 0, just_grey = false, option_values=null) {
   //console.log('render_nums just_grey', just_grey)
-  //console.log('render_nums all_nums', all_nums)
   let nums = []
+  for (const i = 0; i < tower_ids.size; ++i) {
+    const m = query_obj_misc(tower_ids.get(i))
+    let is_option = m ? m.get('is_option') : false
+    if (option_values && is_option) {
+      // console.log('id', id, 'option', option_values ? option_values.toJS() : null)
+      for (const j = 0; j < 4; ++j) {
+        let name = option_values.get(nums.length).toJS()
+        // this name is not canonical, yet
+        name = height2tower_name(name[0])
+        nums.push(<NumContainer id={tower_ids.get(i)} name={name} offset_x={offset_x} just_grey={just_grey} key={tower_ids.get(i) + '_' + j} />)
+      }
+    } else if (!option_values && !is_option) {
+      nums.push(<NumContainer id={tower_ids.get(i)} offset_x={offset_x} just_grey={just_grey} key={tower_ids.get(i)} />)
+    }
+  }
+/*
   if (!Map.isMap(all_nums)) return nums
   //for (const id in all_nums)
   all_nums.keySeq().forEach((id) => {
@@ -59,11 +79,17 @@ export function render_nums(all_nums, scale_factor, offset_x = 0, just_grey = fa
         )
       }
   })
+*/
   return nums
 }
 
-export function render_tiles(all_tiles, scale_factor, offset_x = 0, just_grey = false) {
+export function render_tiles(tile_ids, offset_x = 0, just_grey = false) {
   let tiles = []
+  for (const i = 0; i < tile_ids.size; ++i)
+    tiles.push(<TileContainer id={tile_ids.get(i)} offset_x={offset_x} just_grey={just_grey} key={tile_ids.get(i)} />)
+  return tiles
+}
+/*
   if (!Map.isMap(all_tiles)) return tiles
   //console.log('render_tiles all_tiles ', all_tiles)
   //for (const id in all_tiles)
@@ -82,8 +108,7 @@ export function render_tiles(all_tiles, scale_factor, offset_x = 0, just_grey = 
         key={id} />
     )
   })
-  return tiles
-}
+*/
 
 function doorAsJSX(name, door, id, scale_factor, offset_x, just_grey, is_option) {
   let misc = my_get(door, 'misc')

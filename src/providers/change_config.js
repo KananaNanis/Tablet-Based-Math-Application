@@ -51,7 +51,7 @@ export function get_config(path) {
       }
     }
   }
-  //console.log('get_config path', path.toJS(), 'res', res)
+  //console.log('get_config  path', path.toJS(), 'res', res)
   return res
 }
 

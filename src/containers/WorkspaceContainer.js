@@ -26,6 +26,10 @@ const mapStateToProps = (state, ownProps) => {
     big_op: state.getIn(['prop', 'big_op']),
     err_box: state.get('err_box'),
     option_values: state.get('option_values'),
+    tower_ids: state.get('tower_ids'),
+    tile_ids: state.get('tile_ids'),
+    door_ids: state.get('door_ids'),
+    portal_ids: state.get('portal_ids'),
     all_nums: consolidate_info_for_ids(
       state.get('tower_ids'),
       state.get('name'),
@@ -42,6 +46,8 @@ const mapStateToProps = (state, ownProps) => {
       state.get('style'),
       state.get('anim_info'),
       state.get('misc')),
+      /*
+      */
     all_doors: consolidate_info_for_ids(
       state.get('door_ids'),
       state.get('name'),
