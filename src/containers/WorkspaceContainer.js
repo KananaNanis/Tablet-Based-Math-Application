@@ -30,38 +30,6 @@ const mapStateToProps = (state, ownProps) => {
     tile_ids: state.get('tile_ids'),
     door_ids: state.get('door_ids'),
     portal_ids: state.get('portal_ids'),
-    all_nums: consolidate_info_for_ids(
-      state.get('tower_ids'),
-      state.get('name'),
-      state.get('position'),
-      state.get('style'),
-      state.get('anim_info'),
-      state.get('misc'),
-      state.get('tower_style'),
-      state.get('block_opacity')),
-    all_tiles: consolidate_info_for_ids(
-      state.get('tile_ids'),
-      state.get('name'),
-      state.get('position'),
-      state.get('style'),
-      state.get('anim_info'),
-      state.get('misc')),
-      /*
-      */
-    all_doors: consolidate_info_for_ids(
-      state.get('door_ids'),
-      state.get('name'),
-      state.get('position'),
-      state.get('style'),
-      state.get('anim_info'),
-      state.get('misc')),
-    all_portals: consolidate_info_for_ids(
-      state.get('portal_ids'),
-      state.get('name'),
-      state.get('position'),
-      state.get('style'),
-      state.get('anim_info'),
-      state.get('misc')),
   }
 }
 

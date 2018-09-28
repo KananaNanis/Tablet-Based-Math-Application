@@ -1,13 +1,8 @@
 import React from 'react'
 import { View, Image, Text, Animated, StyleSheet, Dimensions } from 'react-native'
-import { Map, toJS } from 'immutable'
-import Num from './Num'
 import Keypad from './Keypad'
 import Button from './Button'
-import Tile from './Tile'
-import TileContainer from '../containers/TileContainer'
 import Placard from './Placard'
-import Door from './Door'
 import ErrBox from './ErrBox'
 import CamelContainer from '../containers/CamelContainer'
 import OptionBackground from '../components/OptionBackground'
@@ -52,31 +47,9 @@ const Workspace = ({ scale_factor, keypad_kind, button_display,
   //console.log('Workspace all_portals', all_portals)
   if ('undefined' === typeof config_path) return []
   //console.log('Workspace config_path', config_path.toJS())
-  //nums = render_nums(all_nums, scale_factor)
   const nums = render_nums(tower_ids)
-  //const tiles = render_tiles(all_tiles, scale_factor)
   const tiles = render_tiles(tile_ids)
-  /*
-  for (const i = 0; i < tile_ids.size; ++i)
-    tiles.push(<TileContainer id={tile_ids.get(i)} scale_factor={scale_factor} key={tile_ids.get(i)} />)
-  */
-    /*
-  if (tile_ids.size > 0) {
-    tiles.push(
-        <Tile
-        name={'kitty'}
-        position={[300,0]}
-        scale_factor={scale_factor}
-        id={'tile_1'}
-        key={'tile_1b'} />
-    )
-    tiles.push(<TileContainer id={'tile_1'} scale_factor={scale_factor} key={'tile_1'} />)
-  }
-    */
-  //const doors = render_doors(all_doors, skip = null, scale_factor)
   const doors = render_doors(door_ids)
-  //const portals = []
-  //const portals = render_portals(all_portals, skip = null, tower_ids, tile_ids, door_ids, all_nums, all_tiles, all_doors)
   const portals = render_portals(portal_ids, skip = null, tower_ids, tile_ids, door_ids)
   //console.log('len', doors.length)
   //console.log('option_values', option_values ? option_values.toJS() : null)
