@@ -40,18 +40,18 @@ export function query_tower_blocks(num_id, tower = null, just_position) {
 	for (const group of tower_name) {
 		const size = get_block_size_from_group(group)
 		const how_many = get_how_many_from_group(group)
-		const is_fiver = get_is_fiver_from_group(group)
+		let is_fiver = get_is_fiver_from_group(group)
 		if (is_fiver && was_fiver) is_fiver = 3 - was_fiver
 		was_fiver = is_fiver
 		//console.log('size ' + size + ' how_many ' + how_many)
-		const height = scale_factor * 10 ** size
-		const is_tiny = height < 4
+		let height = scale_factor * 10 ** size
+		//const is_tiny = height < 4
 		const width = scale_factor * global_constant.tower.size2depth[size]
 		if (is_fiver) {
 			//width *= is_tiny ? 1.5 : 1.1
 			height *= 5
 		}
-		for (const i = 0; i < how_many; ++i) {
+		for (let i = 0; i < how_many; ++i) {
 			if (just_position) {
 				blocks.push([
 					tower.position[0],
@@ -98,11 +98,13 @@ export function height2tower_name(height) {
 	//    1 -> [1]
 	//    .999999 -> [1]
 	let res = []
-	if (height > 10000)
+	if (height > 10000) {
 		console.error('Error in height2tower_name:  height', height, '(too large)')
-	if (height < 0.0001)
+	}
+	if (height < 0.0001) {
 		console.error('Error in height2tower_name:  height', height, '(too small)')
-	for (const size = 3; size >= -3; --size) {
+	}
+	for (let size = 3; size >= -3; --size) {
 		if (10 ** size < height + 0.000000001) {
 			let how_many = Math.floor((height + 0.000000001) / 10 ** size)
 			height -= how_many * 10 ** size
@@ -159,7 +161,7 @@ export function query_whole_tower(num_id, tower = null, just_position) {
 	for (const group of tower.name) {
 		const size = get_block_size_from_group(group)
 		const how_many = get_how_many_from_group(group)
-		const is_fiver = get_is_fiver_from_group(group)
+		let is_fiver = get_is_fiver_from_group(group)
 		if (is_fiver && was_fiver) is_fiver = 3 - was_fiver
 		was_fiver = is_fiver
 		//console.log('size ' + size + ' how_many ' + how_many)

@@ -1,5 +1,5 @@
-import React from 'react'
-import {Iterable} from 'immutable'
+//import React from 'react'
+//import {Iterable} from 'immutable'
 import {connect} from 'react-redux'
 import {add_offset} from '../components/render_geoms'
 import {toJS} from './to_js'

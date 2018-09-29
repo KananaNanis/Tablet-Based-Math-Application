@@ -6,25 +6,25 @@ import ErrBox from './ErrBox'
 const CamelBaggage = ({err_box_updated, scale_factor, bottom, err_list}) => {
 	let floor = 0
 	let scale = global_constant.camels.baggage_scale
-	boxes = []
-	for (const i = 0; i < err_list.length; ++i) {
+	let boxes = []
+	for (let i = 0; i < err_list.length; ++i) {
 		const err = err_list[i]
 		let h = err * scale * scale_factor
 		let anim_info = null
 		if (
 			err_box_updated.hasOwnProperty('position') &&
-			i + 1 == err_list.length
+			i + 1 === err_list.length
 		) {
 			anim_info = err_box_updated
 		}
 		//console.log('err', err, 'floor', floor, 'h', h)
 		boxes.push(
 			<ErrBox
+				key={i}
+				anim_info={anim_info}
+				height={h}
 				position={[0, floor]}
 				width={40}
-				height={h}
-				anim_info={anim_info}
-				key={i}
 			/>,
 		)
 		if (h > 0) floor += h + 1
@@ -57,8 +57,8 @@ const Camel = ({
 	if (img_name) {
 		img = (
 			<Image
-				style={{position: 'absolute', width, height}}
 				source={image_location(img_name)}
+				style={[styles.image_default, {width, height}]}
 			/>
 		)
 	}
@@ -77,16 +77,19 @@ const Camel = ({
 		>
 			{img}
 			<CamelBaggage
-				err_box_updated={err_box_updated}
-				scale_factor={scale_factor}
 				bottom={height}
+				err_box_updated={err_box_updated}
 				err_list={err_list}
+				scale_factor={scale_factor}
 			/>
 		</View>
 	)
 }
 
 const styles = StyleSheet.create({
+	image_default: {
+		position: 'absolute',
+	},
 	camel: {
 		position: 'absolute',
 	},

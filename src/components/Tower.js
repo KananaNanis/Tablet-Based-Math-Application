@@ -1,6 +1,6 @@
 import React from 'react'
 import Block from './Block'
-import {StyleSheet, Animated, Text} from 'react-native'
+import {StyleSheet, Animated} from 'react-native'
 import {query_tower_blocks} from '../providers/query_tower'
 import {global_workspace_height, start_anim} from './Workspace'
 import {global_fiver_shadow} from './Num'
@@ -151,7 +151,7 @@ function colorNameToHex(color) {
 		yellowgreen: '#9acd32',
 	}
 
-	return typeof colors[color.toLowerCase()] != 'undefined'
+	return typeof colors[color.toLowerCase()] !== 'undefined'
 		? colors[color.toLowerCase()]
 		: false
 }
@@ -161,19 +161,20 @@ function from_hex(char0, char1 = '') {
 }
 
 export function as_greyscale(color) {
-	if ('rgb' == color.substr(0, 3)) {
+	let rgb
+	if ('rgb' === color.substr(0, 3)) {
 		console.error('as_greyscale not prepared for rgb input!', color)
 		return color
 	} else {
 		let hex = ''
-		if ('#' == color.charAt(0)) {
+		if ('#' === color.charAt(0)) {
 			// already hex
 			hex = color
 		} else {
 			hex = colorNameToHex(color)
 		}
 		hex = hex.substr(1)
-		if (6 == hex.length) {
+		if (6 === hex.length) {
 			rgb = [
 				from_hex(hex.charAt(0), hex.charAt(1)),
 				from_hex(hex.charAt(2), hex.charAt(3)),
@@ -219,8 +220,8 @@ class Tower extends React.Component {
 
 		let blocks = [],
 			small_in_a_row = 0
-		//let fiver_in_a_row = 0, prev_size = null
-		for (const i = 0; i < block_info.length; ++i) {
+		let fiver_in_a_row = 0 // prev_size = null
+		for (let i = 0; i < block_info.length; ++i) {
 			// compute all the style info for the blocks here, where we have context
 			const b = block_info[i]
 			const is_small = b.height < 10
@@ -237,16 +238,16 @@ class Tower extends React.Component {
 			let marginBottom = is_tiny || is_fiver ? 0 : 1
 			const radius = 0.1 * (0.5 * (height + width))
 			let radius_style = {}
-			if (false && is_fiver) {
-				if (1 == fiver_in_a_row || 5 == fiver_in_a_row) height -= 1
-				if (1 == fiver_in_a_row) {
+			if (1 === 0 && is_fiver) {
+				if (1 === fiver_in_a_row || 5 === fiver_in_a_row) height -= 1
+				if (1 === fiver_in_a_row) {
 					marginBottom = 1
 					radius_style = {
 						borderBottomLeftRadius: radius,
 						borderBottomRightRadius: radius,
 					}
 				}
-				if (5 == fiver_in_a_row) {
+				if (5 === fiver_in_a_row) {
 					radius_style = {
 						borderTopLeftRadius: radius,
 						borderTopRightRadius: radius,
@@ -263,8 +264,9 @@ class Tower extends React.Component {
 				if (
 					//is_fiver ||
 					!(small_in_a_row % 2)
-				)
+				) {
 					marginLeft = 1
+				}
 			}
 			let img_name = null
 			if (-1 === size && !is_fiver) img_name = 'turtle'
@@ -334,19 +336,20 @@ class Tower extends React.Component {
 				text_style.transform = [{scaleY: 2.0}]
 				text_style.bottom = 0
 			}
-			if (i + 1 === block_info.length && misc && misc.top_just_outline)
+			if (i + 1 === block_info.length && misc && misc.top_just_outline) {
 				just_grey = 'outline'
+			}
 			blocks.push(
 				<Block
-					width={width}
-					height={height}
-					radius_style={radius_style}
-					img_name={img_name}
-					view_style={view_style}
-					text_style={text_style}
-					text_content={text_content}
-					just_grey={just_grey}
 					key={i}
+					height={height}
+					img_name={img_name}
+					just_grey={just_grey}
+					radius_style={radius_style}
+					text_content={text_content}
+					text_style={text_style}
+					view_style={view_style}
+					width={width}
 				/>,
 			)
 		}

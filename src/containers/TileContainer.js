@@ -4,7 +4,7 @@ import {connect} from 'react-redux'
 import {add_offset} from '../components/render_geoms'
 import Tile from '../components/Tile'
 
-const toJS_tile = WrappedComponent => wrappedComponentProps => {
+const toJS_tile = _ => wrappedComponentProps => {
 	const KEY = 0
 	const VALUE = 1
 

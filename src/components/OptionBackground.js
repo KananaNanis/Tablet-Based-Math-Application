@@ -4,8 +4,10 @@ import {global_constant} from '../App'
 import {
 	global_screen_width,
 	global_workspace_height,
+	start_anim,
 } from '../components/Workspace'
 import {query_prop} from '../providers/query_store'
+import {start_anim_loop} from './Door'
 
 export function option_geometry(i) {
 	const width = (global_screen_width - global_constant.prompt_width) / 4
@@ -22,15 +24,14 @@ class OptionBackground extends React.Component {
 
 	componentDidUpdate() {
 		let {misc} = this.props
-		if (misc && misc.hasOwnProperty('blink')) {
-		} else this.state.loopAnim.setValue(0)
+		if (!misc || !misc.hasOwnProperty('blink')) this.state.loopAnim.setValue(0)
 	}
 
 	render() {
 		let {i, button_highlight, style, misc, anim_info} = this.props
 		//console.log('button_highlight', button_highlight)
 		let extra_style = {}
-		if ('option_' + i == button_highlight) {
+		if ('option_' + i === button_highlight) {
 			extra_style.backgroundColor = query_prop('freeze_display')
 				? 'red'
 				: 'white'
@@ -73,10 +74,11 @@ class OptionBackground extends React.Component {
 	}
 }
 
+const almostWhite = '#eee'
 const styles = StyleSheet.create({
 	bg: {
 		position: 'absolute',
-		backgroundColor: '#eee',
+		backgroundColor: almostWhite,
 		justifyContent: 'flex-end',
 		alignItems: 'center',
 	},

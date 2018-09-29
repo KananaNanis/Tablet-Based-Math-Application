@@ -24,8 +24,8 @@ class TowerName extends React.Component {
     */
 		let name_elements = [],
 			height
-		for (const i = 0; i < name_info.length; ++i) {
-			var size = name_info[i].size
+		for (let i = 0; i < name_info.length; ++i) {
+			let size = name_info[i].size
 			const is_fiver = name_info[i].is_fiver
 			let color = global_constant.tower.size2color[size]
 			if (just_grey) color = as_greyscale(color)
@@ -38,6 +38,7 @@ class TowerName extends React.Component {
 			}
 			name_elements.push(
 				<Text
+					key={i}
 					style={[
 						styles.tower_name_element,
 						{
@@ -49,7 +50,6 @@ class TowerName extends React.Component {
 						shadow_style,
 						name_info[i].style,
 					]}
-					key={i}
 				>
 					{name_info[i].quantity}
 					{' ' + global_constant.tower.size2symbol[size]}
@@ -69,9 +69,10 @@ class TowerName extends React.Component {
 	}
 }
 
+const towerNameBGcolor = 'white'
 const styles = StyleSheet.create({
 	tower_name: {
-		backgroundColor: 'white',
+		backgroundColor: towerNameBGcolor,
 		width: 70,
 		position: 'absolute',
 		bottom: 10,

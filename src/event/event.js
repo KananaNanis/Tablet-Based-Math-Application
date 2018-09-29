@@ -1,17 +1,18 @@
 import {Platform} from 'react-native'
 import {global_screen_width} from '../components/Workspace'
-import {load_config_tree, global_constant} from '../App'
+import {global_constant} from '../App'
 import {window2workspaceCoords} from '../components/Workspace'
 import {touch_dispatcher} from './dispatcher'
 
 let mouseTouchID = 100
 let currentNumTouches = 0
 let mouseIsDown = false
-export var numTouchesAtLeft = 0
-export var numTouchesAtRight = 0
-export var numTouchesAtTop = 0
-export var stored_touches = {}
-export var ignore_touches = false
+export let numTouchesAtLeft = 0
+export let numTouchesAtRight = 0
+export let numTouchesAtTop = 0
+export let numTouchesAtTopLeft = 0
+export let stored_touches = {}
+export let ignore_touches = false
 
 function myPreventDefault(synthetic_event) {
 	//if (isTeacherInfoLevel()) return;  // don't prevent on this special level!
@@ -19,14 +20,15 @@ function myPreventDefault(synthetic_event) {
 	if (global_constant.is_mobile && !global_constant.is_safari) {
 		// check whether we cannot prevent it anyway
 		const type = synthetic_event.type.substr(5)
-		if ('start' === type || 'move' === type) {
-		} else synthetic_event.preventDefault()
+		if ('start' !== type && 'move' !== type) {
+			synthetic_event.preventDefault()
+		}
 	} else synthetic_event.preventDefault()
 }
 
-export function touchHandler(synthetic_event, on_grant) {
+export function touchHandler(synthetic_event) {
 	myPreventDefault(synthetic_event) // prevent default on everything
-	var evt = synthetic_event.nativeEvent
+	let evt = synthetic_event.nativeEvent
 	const type = synthetic_event.type.substr(5)
 	//if ('move' != type) console.log('touchHandler ' + type)
 	const touches = evt.changedTouches // , first = touches[0]
@@ -35,19 +37,15 @@ export function touchHandler(synthetic_event, on_grant) {
 	numTouchesAtRight = 0
 	numTouchesAtTop = 0
 	numTouchesAtTopLeft = 0
-	for (const i = 0, i_end = evt.touches.length; i < i_end; ++i) {
+	for (let i = 0, i_end = evt.touches.length; i < i_end; ++i) {
 		if (evt.touches[i].clientX < 100) ++numTouchesAtLeft
 		if (evt.touches[i].clientX > global_screen_width - 100) ++numTouchesAtRight
 		if (evt.touches[i].clientY < 100) ++numTouchesAtTop
-		if (evt.touches[i].clientX < 100 && evt.touches[i].clientY < 100)
+		if (evt.touches[i].clientX < 100 && evt.touches[i].clientY < 100) {
 			++numTouchesAtTopLeft
+		}
 	}
 	//console.log('numTouchesAtLeft ' + numTouchesAtLeft + ' numTouchesAtTop ' + numTouchesAtTop)
-	if (false && 1 === numTouchesAtTopLeft) {
-		// reload
-		load_config_tree()
-		return
-	}
 	if (6 === currentNumTouches) {
 		// check whether reload is requested
 		if (4 === numTouchesAtTop) {
@@ -65,7 +63,7 @@ export function touchHandler(synthetic_event, on_grant) {
 	const is_mouse = Platform.OS === 'web'
 	if (is_mouse) mouseTouchID++
 	let handled = []
-	for (const i = 0, i_end = touches.length; i < i_end; ++i) {
+	for (let i = 0, i_end = touches.length; i < i_end; ++i) {
 		const x0 = touches[i].clientX,
 			y0 = touches[i].clientY
 		// x += document.documentElement.scrollLeft ? document.documentElement.scrollLeft : document.body.scrollLeft;  // handle scroll position?
@@ -83,7 +81,7 @@ export function touchHandler(synthetic_event, on_grant) {
 	if (!is_mouse) extraTouchCleanup(evt, handled)
 }
 
-function handlerDispatch(type, x, y, touchID, e) {
+function handlerDispatch(type, x, y, touchID) {
 	//document.getElementById('currentUserButton').textContent = type + ' ' + touchID + ' ignore ' + ignore_touches + ' until ' + global.ignore_until_full_release
 	//log(type + ' ' + touchID)
 	const v = false
@@ -110,14 +108,14 @@ function handlerDispatch(type, x, y, touchID, e) {
 		if (v) console.log('handerDispatch ' + x + ' ' + y + ' raw ')
 		mouseIsDown = true
 	} else if (
-		'up' == type ||
-		'end' == type ||
-		'cancel' == type ||
-		'cleanup' == type
+		'up' === type ||
+		'end' === type ||
+		'cancel' === type ||
+		'cleanup' === type
 	) {
 		// store_this_touch(type, x, y, touchID);  // wait until after event
 		mouseIsDown = false
-	} else if (global.is_mobile && 'move' == type) {
+	} else if (global.is_mobile && 'move' === type) {
 		mouseIsDown = true // needed for multi-touch
 	}
 	let recordTouchesRightAway = mouseIsDown
@@ -141,12 +139,13 @@ function handlerDispatch(type, x, y, touchID, e) {
 			console.log('unrecognized event type: ' + type)
 			return
 	}
-	if ('up' == type || 'end' == type || 'cleanup' == type || 'cancel' == type) {
+	if (['up', 'end', 'cleanup', 'cancel'].includes(type)) {
 		store_this_touch(type, x, y, touchID) // wait until after event
 	}
 }
 
 function addHTMLcircle(x, y, radius) {
+	console.log(x, y, radius)
 	/*
     // this is for the tablet, that seems not to understand the old addPoint fn?
     var c = document.createElement('div')
@@ -161,22 +160,22 @@ function addHTMLcircle(x, y, radius) {
 }
 
 function store_this_touch(type, x, y, touchID) {
-	var showCircles = false
-	var radius = 200
+	let showCircles = false
+	let radius = 200
 	if ('down' === type || 'start' === type) {
 		stored_touches[touchID] = {}
 		stored_touches[touchID].x = x
 		stored_touches[touchID].y = y
 		// console.log('creating ' + touchID)
 		if (showCircles) {
-			var circle = addHTMLcircle(x, y, radius)
+			let circle = addHTMLcircle(x, y, radius)
 			circle.textContent = touchID
 			stored_touches[touchID].circle = circle
 			// document.getElementById('currentUserButton').textContent = type + ' ' + touchID
 		}
 	} else if ('move' === type) {
 		if (showCircles && stored_touches[touchID].circle) {
-			var circle = stored_touches[touchID].circle
+			let circle = stored_touches[touchID].circle
 			circle.style.left = x - radius / 2 + 'px'
 			circle.style.top = y - radius / 2 + 'px'
 		}
@@ -187,7 +186,7 @@ function store_this_touch(type, x, y, touchID) {
 	} else if (
 		'up' === type ||
 		'end' === type ||
-		'cleanup' == type ||
+		'cleanup' === type ||
 		'cancel' === type
 	) {
 		if (
@@ -195,7 +194,7 @@ function store_this_touch(type, x, y, touchID) {
 			stored_touches[touchID] &&
 			stored_touches[touchID].circle
 		) {
-			var circle = stored_touches[touchID].circle
+			let circle = stored_touches[touchID].circle
 			circle.parentNode.removeChild(circle)
 			delete stored_touches[touchID].circle
 		}
@@ -213,7 +212,7 @@ function store_this_touch(type, x, y, touchID) {
 }
 
 function arrayContainsInteger(arr, val) {
-	for (const i = 0; i < arr.length; ++i) if (arr[i] == val) return true
+	for (let i = 0; i < arr.length; ++i) if (arr[i] === val) return true
 	return false
 }
 
@@ -223,14 +222,15 @@ function extraTouchCleanup(e, handled = []) {
 	// log('extraTouchCleanup page ' + Object.keys(stored_touches).length + ' tablet ' + (e ? e.touches.length : 'NaN'))
 	if (Object.keys(stored_touches).length > 0) {
 		// look for touches that should no longer be in the global touch list
-		var allIds = []
+		let allIds = []
 		if (e && e.touches) {
-			for (var i = 0, i_end = e.touches.length; i < i_end; ++i)
+			for (let i = 0, i_end = e.touches.length; i < i_end; ++i) {
 				allIds.push(e.touches[i].identifier)
+			}
 		}
-		var cancelled = [],
+		let cancelled = [],
 			numPreserved = 0
-		for (var key in stored_touches) {
+		for (let key in stored_touches) {
 			if (!stored_touches.hasOwnProperty(key)) continue
 			//if (!allIds.includes(key) && !handled.includes(key))
 			if (
@@ -243,7 +243,7 @@ function extraTouchCleanup(e, handled = []) {
 				cancelled.push(key)
 			} else if (stored_touches[key].preserve) ++numPreserved
 		}
-		// log('  numPreserved ' + numPreserved)
+		console.log('  numPreserved ' + numPreserved)
 		// document.getElementById('currentUserButton').textContent = ' cancelled: ' + cancelled + ' allIds ' + allIds
 	}
 }

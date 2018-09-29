@@ -1,5 +1,5 @@
 import React from 'react'
-import {StyleSheet, View, Animated, Image} from 'react-native'
+import {StyleSheet, View, Animated} from 'react-native'
 import {global_constant, image_location} from '../App'
 import {start_anim} from './Workspace'
 import {start_anim_loop} from './Door'
@@ -21,7 +21,9 @@ export function current_pixel_size_of_animal(name, extra_scale = 1) {
 export function landmark_location(animal_name, landmark_index) {
 	const landmarks = global_constant.animal_landmarks[animal_name]
 	let land_pos = []
-	for (const ln in landmarks) land_pos.push(landmarks[ln])
+	for (const ln in landmarks) {
+		if (landmarks.hasOwnProperty(ln)) land_pos.push(landmarks[ln])
+	}
 	return land_pos[landmark_index]
 }
 
@@ -48,12 +50,11 @@ class Tile extends React.Component {
 
 	componentDidUpdate() {
 		let {misc} = this.props
-		if (misc && misc.hasOwnProperty('blink')) {
-		} else this.state.loopAnim.setValue(0)
+		if (!misc || !misc.hasOwnProperty('blink')) this.state.loopAnim.setValue(0)
 	}
 
 	render() {
-		let {name, position, style, anim_info, misc, just_grey, id} = this.props
+		let {name, position, style, anim_info, misc, just_grey} = this.props
 		//just_grey = true
 		//console.log('Tile  name', name)
 		const extra_scale =
@@ -92,20 +93,21 @@ class Tile extends React.Component {
 		if (!query_prop('hide_dot')) {
 			//console.log('Tile name', name, ' style', style)
 			const has_dot = misc && 'undefined' !== typeof misc.extra_dot
-			let locB, loc2B
+			let locB
 			const diameter = global_constant.animal_landmarks.extra_dot_diameter
 			if (
 				global_constant.animal_landmarks[name] &&
 				misc &&
 				'undefined' !== typeof misc.landmark_index
 			) {
-				const loc = landmark_location(name, +misc.landmark_index)
+				const loc = landmark_location(name, Number(misc.landmark_index))
 				locB = with_diameter_offset(loc, diameter, extra_scale)
+				const half = 0.5
 				landmark = (
 					<View
 						style={[
 							styles.extra_dot,
-							has_dot ? {opacity: 0.5} : {},
+							has_dot ? {opacity: half} : {},
 							{
 								width: extra_scale * diameter,
 								height: extra_scale * diameter,
@@ -189,8 +191,8 @@ class Tile extends React.Component {
 				]}
 			>
 				<Animated.Image
-					style={{position: 'absolute', width, height, opacity: image_opacity}}
 					source={image_location(name, just_grey)}
+					style={[styles.tileImage, {width, height, opacity: image_opacity}]}
 				/>
 				{extra_dot}
 				{landmark}
@@ -199,13 +201,17 @@ class Tile extends React.Component {
 	}
 }
 
+const dotColor = 'red'
 const styles = StyleSheet.create({
 	tile: {
 		position: 'absolute',
 	},
+	tileImage: {
+		position: 'absolute',
+	},
 	extra_dot: {
 		position: 'absolute',
-		backgroundColor: 'red',
+		backgroundColor: dotColor,
 		borderRadius: '50%',
 	},
 })

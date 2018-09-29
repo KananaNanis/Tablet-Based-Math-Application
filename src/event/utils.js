@@ -34,9 +34,10 @@ export function approx_equal(x, y, thresh = 1e-8) {
 }
 
 export function namesAreIdentical(name1, name2) {
-	if (name1.length != name2.length) return false
-	for (const i = 0; i < name1.length; ++i)
+	if (name1.length !== name2.length) return false
+	for (let i = 0; i < name1.length; ++i) {
 		if (!approx_equal(name1[i], name2[i])) return false
+	}
 	return true
 }
 
@@ -50,13 +51,13 @@ export function towersHaveIdenticalNames(num_id1, num_id2) {
 
 export function expand_into_units(name) {
 	let res = []
-	for (const i = 0; i < name.length; ++i) {
+	for (let i = 0; i < name.length; ++i) {
 		const size = get_block_size_from_group(name[i])
 		const how_many = get_how_many_from_group(name[i])
 		if (get_is_fiver_from_group(name[i])) {
 			res.push(name[i])
 		} else {
-			for (const j = 0; j < how_many; ++j) res.push(10 ** size)
+			for (let j = 0; j < how_many; ++j) res.push(10 ** size)
 		}
 	}
 	return res
@@ -71,8 +72,8 @@ export function vec_prod(s, a) {
 }
 
 export function dist2D(a, b) {
-	dx = a[0] - b[0]
-	dy = a[1] - b[1]
+	const dx = a[0] - b[0]
+	const dy = a[1] - b[1]
 	return Math.sqrt(dx * dx + dy * dy)
 }
 
@@ -99,21 +100,21 @@ export function update_keypad_button_visibility(size, is_fiver, how_many) {
 	//console.log('update_keypad_button_visibility', size, is_fiver, how_many)
 	const i_end = global_constant.buildTower_button_info.length
 	const require_standard_tower = true
-	for (const i = 0; i < i_end; ++i) {
+	for (let i = 0; i < i_end; ++i) {
 		const bsize = global_constant.buildTower_button_info[i][0]
 		const bfiver = global_constant.buildTower_button_info[i][1]
 		let show = null === size || bsize <= size
 		if (require_standard_tower) {
-			if (size == bsize) {
+			if (size === bsize) {
 				if (bfiver) show = false
 				else if (!is_fiver && how_many > 3) show = false
 			}
 		}
-		if (1) {
-			// hide minis and tinys
+		const hide_minis_and_tinys = true
+		if (hide_minis_and_tinys) {
 			if (bsize < -1) show = false
 			if (bsize > 0) show = false
-			if (bsize == 0 && bfiver) show = false
+			if (bsize === 0 && bfiver) show = false
 		}
 		doAction.setButtonDisplay(i, show)
 	}

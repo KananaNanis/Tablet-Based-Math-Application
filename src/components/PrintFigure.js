@@ -1,6 +1,6 @@
 import React from 'react'
 import {Text, View, StyleSheet} from 'react-native'
-import Tile, {animals, default_pixels_per_cm} from './Tile'
+import Tile from './Tile'
 import FiveFrame from './FiveFrame'
 import Num from './Num'
 import {global_constant} from '../App'
@@ -63,7 +63,9 @@ const PrintFigure = () => {
 		global_constant.print_pixels_per_cm / global_constant.screen_pixels_per_cm
 
 	let content = []
-	if (0) {
+	const skip = false
+	const keep = true
+	if (skip) {
 		// print all the animals, multiple per sheet
 		let anim1 = {
 			// first animal figure positions
@@ -92,70 +94,74 @@ const PrintFigure = () => {
 			bull: [720, 5],
 			unicorn: [5, 5],
 		}
+		anim1, anim2, anim3
 		const anim = anim3
-		for (name in anim)
-			content.push(
-				<Tile
-					name={name}
-					position={anim[name]}
-					extra_scale={extra_scale}
-					key={name}
-				/>,
-			)
-	} else if (0) {
+		for (const name in anim) {
+			if (anim.hasOwnProperty(name)) {
+				content.push(
+					<Tile
+						key={name}
+						extra_scale={extra_scale}
+						name={name}
+						position={anim[name]}
+					/>,
+				)
+			}
+		}
+	} else if (skip) {
 		// print just one animal, large!
-		if (0) {
-			name = 'unicorn'
+		if (skip) {
+			const name = 'unicorn'
 			const misc = {extra_scale: 2.9 * extra_scale}
 			content.push(
-				<Tile name={name} position={[-350, 5]} misc={misc} key={name} />,
+				<Tile key={name} misc={misc} name={name} position={[-350, 5]} />,
 			)
-		} else if (0) {
+		} else if (skip) {
 			// two somewhat smaller unicorns
-			name = 'unicorn'
+			const name = 'unicorn'
 			let misc = {extra_scale: 2 * extra_scale}
-			content.push(<Tile name={name} position={[5, 5]} misc={misc} key={1} />)
+			content.push(<Tile key={1} misc={misc} name={name} position={[5, 5]} />)
 			misc = {extra_scale: 1.5 * extra_scale}
 			content.push(
 				<Tile
+					key={2}
+					misc={misc}
 					name={name}
 					position={[300, 1500]}
 					style={{transform: [{rotate: '90deg'}]}}
-					misc={misc}
-					key={2}
 				/>,
 			)
-		} else if (1) {
-			name = 'giraffe'
+		} else if (keep) {
+			const name = 'giraffe'
 			const misc = {extra_scale: 1.94 * extra_scale}
 			content.push(
-				<Tile name={name} position={[5, 5]} misc={misc} key={name} />,
+				<Tile key={name} misc={misc} name={name} position={[5, 5]} />,
 			)
-		} else if (0) {
+		} else if (skip) {
 			// two somewhat smaller giraffes
-			name = 'giraffe'
+			const name = 'giraffe'
 			let misc = {extra_scale: 1.4 * extra_scale}
-			content.push(<Tile name={name} position={[5, 5]} misc={misc} key={1} />)
+			content.push(<Tile key={1} misc={misc} name={name} position={[5, 5]} />)
 			misc = {extra_scale: 1.2 * extra_scale}
 			content.push(
 				<Tile
+					key={2}
+					misc={misc}
 					name={name}
 					position={[300, 1370]}
 					style={{transform: [{rotate: '90deg'}]}}
-					misc={misc}
-					key={2}
 				/>,
 			)
 		}
-	} else if (0) {
+	} else if (skip) {
 		// print 5-frames
 		use11x17 = false
 		landscape = true
 		show_purple_border = false
-		for (const i = 0; i < 6; ++i) {
-			content.push(<FiveFrame name={5} position={[5 + i * 245, 5]} key={i} />)
+		for (let i = 0; i < 6; ++i) {
+			content.push(<FiveFrame key={i} name={5} position={[5 + i * 245, 5]} />)
 		}
-	} else if (0) {
+	} else if (skip) {
 		// print worksheets for learning to draw tower diagrams
 		use11x17 = false
 		landscape = true
@@ -163,15 +169,7 @@ const PrintFigure = () => {
 		const page1 = true
 		if (page1) {
 			content.push(
-				<Text
-					style={{
-						position: 'absolute',
-						left: 50,
-						top: 50,
-						fontSize: 30,
-					}}
-					key={'name'}
-				>
+				<Text key="name" style={styles.draw_diagram_page1}>
 					9/20/2018 Name: _________________
 				</Text>,
 			)
@@ -179,34 +177,23 @@ const PrintFigure = () => {
 		const vals = page1 ? [0.6, 1.1, 0.4] : [0.8, 1.6, 1.9]
 		const opacity = [1, 0.05, 0]
 		const scale_factor = query_prop('scale_factor')
-		for (const i = 0; i < 3; ++i) {
-			for (const j = 0; j < 3; ++j) {
+		for (let i = 0; i < 3; ++i) {
+			for (let j = 0; j < 3; ++j) {
 				content.push(
 					<Num
+						key={3 * i + j}
 						id={'tower_' + i}
+						just_grey={true}
+						misc={{as_diagram: true, hide_tower_name: true}}
 						name={height2tower_name(vals[i % 3])}
 						position={[150 * (3 * i + j) + 50 * i + 50, 0]}
-						style={{opacity: opacity[j]}}
-						misc={{as_diagram: true, hide_tower_name: true}}
 						scale_factor={scale_factor}
-						just_grey={true}
-						key={3 * i + j}
+						style={{opacity: opacity[j]}}
 					/>,
 				)
 			}
 			content.push(
-				<View
-					style={{
-						position: 'absolute',
-						left: 500 * i,
-						bottom: 0,
-						width: 0,
-						height: 1000,
-						borderLeftWidth: 2,
-						borderLeftColor: 'black',
-					}}
-					key={'sep' + i}
-				/>,
+				<View key={'sep' + i} style={[styles.draw_diagram, {left: 500 * i}]} />,
 			)
 		}
 	} else {
@@ -217,49 +204,38 @@ const PrintFigure = () => {
 		const page = 1
 		const vals = [1.1, 0.3, 0.4, 1.2, 0.6, 0.8, 1.7, 1.8]
 		const val = vals[page]
-		if (0) {
+		if (skip) {
 			content.push(
-				<Text
-					style={{
-						position: 'absolute',
-						left: 50,
-						top: 50,
-						fontSize: 30,
-					}}
-					key={'name'}
-				>
+				<Text key="name" style={styles.draw_diagram_page1}>
 					9/20/2018 Name: _________________
 				</Text>,
 			)
 		}
 		const scale_factor = query_prop('scale_factor')
-		for (const i = 0; i < 4; ++i) {
-			for (const j = 0; j < 2; ++j) {
+		for (let i = 0; i < 4; ++i) {
+			for (let j = 0; j < 2; ++j) {
 				let val2 = (page + j) % 2 ? 0 : val
 				val2 = vals[2 * i + j] // temporary!
 				content.push(
 					<Num
+						key={2 * i + j}
 						id={'tower_' + (2 * i + j)}
+						just_grey={true}
+						misc={{as_diagram: true, hide_tower_name: true}}
 						name={height2tower_name(val2)}
 						position={[150 * (2 * i + j) + 50 * i + 50, 0]}
-						misc={{as_diagram: true, hide_tower_name: true}}
 						scale_factor={scale_factor}
-						just_grey={true}
-						key={2 * i + j}
 					/>,
 				)
 				content.push(
 					<View
-						style={{
-							position: 'absolute',
-							left: 175 * (2 * i + j),
-							bottom: 0,
-							width: 0,
-							height: 1000,
-							borderLeftWidth: 2,
-							borderLeftColor: 'black',
-						}}
 						key={'sep' + i}
+						style={[
+							{
+								left: 175 * (2 * i + j),
+							},
+							styles.draw_diagram,
+						]}
 					/>,
 				)
 			}
@@ -282,11 +258,27 @@ const PrintFigure = () => {
 	)
 }
 
+const pageBorder = 'purple'
+const diagramBorder = 'black'
 const styles = StyleSheet.create({
 	print_figure: {
 		position: 'absolute',
-		borderColor: 'purple',
+		borderColor: pageBorder,
 		transformOrigin: 'top left',
+	},
+	draw_diagram_page1: {
+		position: 'absolute',
+		left: 50,
+		top: 50,
+		fontSize: 30,
+	},
+	draw_diagram: {
+		position: 'absolute',
+		bottom: 0,
+		width: 0,
+		height: 1000,
+		borderLeftWidth: 2,
+		borderLeftColor: diagramBorder,
 	},
 })
 

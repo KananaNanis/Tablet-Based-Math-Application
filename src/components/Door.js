@@ -1,16 +1,11 @@
 import React from 'react'
 import {Map, fromJS} from 'immutable'
-import {StyleSheet, View, Animated, Image} from 'react-native'
+import {StyleSheet, View, Animated} from 'react-native'
 import {as_greyscale} from './Tower'
 import {start_anim} from './Workspace'
 import {render_nums, render_tiles, render_doors} from './render_geoms'
 import {global_constant, doAction} from '../App'
-import {
-	apply_bounds,
-	set_primary_height,
-	tlog,
-	elapsed_time,
-} from '../event/utils'
+import {apply_bounds} from '../event/utils'
 
 export function start_anim_loop(anim_var, delay = 0) {
 	//console.log('start_anim_loop delay', delay)
@@ -60,7 +55,7 @@ class Door extends React.Component {
 		if (anim_info && anim_info.hasOwnProperty('zoom')) {
 			//if ('portal_1' == id) tlog('  STARTING ANIMATION')
 			let timings = []
-			for (const i = 0; i < anim_info.time.length; ++i) {
+			for (let i = 0; i < anim_info.time.length; ++i) {
 				const t = anim_info.time[i]
 				timings.push(
 					Animated.timing(this.state.slideAnim, {
@@ -110,7 +105,7 @@ class Door extends React.Component {
 		const is_portal = id.startsWith('portal_')
 		const extra_scale =
 			misc && 'undefined' !== typeof misc.extra_scale ? misc.extra_scale : 1
-		const height = 1.0 * scale_factor * extra_scale
+		const height = scale_factor * extra_scale
 		//console.log('scale_factor', scale_factor)
 		const width = is_portal
 			? global_constant.door.portal_width * extra_scale
@@ -153,8 +148,9 @@ class Door extends React.Component {
 				'undefined' !== typeof misc.handle_blink)
 		) {
 			let delay
-			if ('undefined' !== typeof misc.blink && misc.blink.delay)
+			if ('undefined' !== typeof misc.blink && misc.blink.delay) {
 				delay = misc.blink.delay
+			}
 			//console.log('id', id, 'blink', misc.blink)
 			start_anim_loop(this.state.loopAnim, delay)
 		}
@@ -167,8 +163,9 @@ class Door extends React.Component {
 			})
 		}
 		let bounded_name = apply_bounds(name[0], 0, 2)
-		if (is_portal && name[0] < global_constant.door.portal_min_value)
+		if (is_portal && name[0] < global_constant.door.portal_min_value) {
 			name[0] = global_constant.door.portal_min_value
+		}
 		const handle_bot = bounded_name * scale_factor * extra_scale - thickness / 2
 		let handle_style = [
 			styles.handle,
@@ -179,8 +176,9 @@ class Door extends React.Component {
 				borderTopColor: frame_color,
 			},
 		]
-		if (misc && 'undefined' !== typeof misc.handle_opacity)
+		if (misc && 'undefined' !== typeof misc.handle_opacity) {
 			handle_style.push({opacity: misc.handle_opacity})
+		}
 		if (misc && 'undefined' !== typeof misc.handle_blink) {
 			handle_style.push({
 				opacity: this.state.loopAnim.interpolate({
@@ -198,16 +196,18 @@ class Door extends React.Component {
       */
 			let start_bot = handle_bot
 			let flip = anim_info.hasOwnProperty('flip')
-			if (anim_info.hasOwnProperty('slide_source'))
+			if (anim_info.hasOwnProperty('slide_source')) {
 				start_bot = scale_factor * anim_info.slide_source - thickness / 2
+			}
 			let end_bot
-			if (anim_info.hasOwnProperty('slide_target'))
+			if (anim_info.hasOwnProperty('slide_target')) {
 				end_bot = scale_factor * anim_info.slide_target - thickness / 2
-			else if (name.length > 1) end_bot = scale_factor * name[1] - thickness / 2
-			else end_bot = handle_bot
+			} else if (name.length > 1) {
+				end_bot = scale_factor * name[1] - thickness / 2
+			} else end_bot = handle_bot
 			// tlog('starting slide from', start_bot, 'to', end_bot)
 			//this.state.slideAnim.setValue(0)
-			if (false && flip) {
+			if (0 === 1 && flip) {
 				handle_style.push({
 					bottom: this.state.slideAnim.interpolate({
 						inputRange: [1, 2],
@@ -240,22 +240,24 @@ class Door extends React.Component {
 		if (misc && misc.handle_color && !just_grey) {
 			handle_style.push({borderTopColor: misc.handle_color})
 		}
-		if (misc && 'undefined' !== typeof misc.stealth_mode)
+		if (misc && 'undefined' !== typeof misc.stealth_mode) {
 			handle_style.push({borderTopColor: 'transparent'})
+		}
 		//console.log('handle_style', handle_style)
-		let handles = [<Animated.View style={handle_style} key={1} />]
+		let handles = [<Animated.View key={1} style={handle_style} />]
 		if (name.length > 1) {
 			// add a second handle
+			const second_handle_opacity = 0.25
 			handles.push(
 				<View
+					key={2}
 					style={[
 						handle_style,
 						{
-							opacity: 0.25,
+							opacity: second_handle_opacity,
 							bottom: name[1] * scale_factor * extra_scale - thickness / 2,
 						},
 					]}
-					key={2}
 				/>,
 			)
 		}
@@ -268,12 +270,13 @@ class Door extends React.Component {
 				borderBottomRightRadius: global_constant.door.border_radius,
 				borderTopRightRadius: global_constant.door.border_radius,
 			})
-			if (misc && 'undefined' !== typeof misc.stealth_mode)
+			if (misc && 'undefined' !== typeof misc.stealth_mode) {
 				door_style.push({
 					borderLeftColor: 'transparent',
 					borderTopColor: 'transparent',
 					borderRightColor: 'transparent',
 				})
+			}
 			let {tower_ids, tile_ids, door_ids} = this.props
 			if (!Map.isMap(tower_ids)) tower_ids = fromJS(tower_ids)
 			if (!Map.isMap(tile_ids)) tile_ids = fromJS(tile_ids)
@@ -282,26 +285,13 @@ class Door extends React.Component {
 			let offset_x = -1 * (position[0] + thickness)
 			let nums_grey, tiles_grey, doors_grey
 			if (!misc || 'undefined' === typeof misc.stealth_mode) {
-				nums_grey = render_nums(
-					tower_ids,
-					(offset_x = offset_x),
-					(just_grey = true),
-				)
-				tiles_grey = render_tiles(
-					tile_ids,
-					(offset_x = offset_x),
-					(just_grey = true),
-				)
-				doors_grey = render_doors(
-					door_ids,
-					(skip = id),
-					(offset_x = offset_x),
-					(just_grey = true),
-				)
+				nums_grey = render_nums(tower_ids, offset_x, true)
+				tiles_grey = render_tiles(tile_ids, offset_x, true)
+				doors_grey = render_doors(door_ids, id, offset_x, true)
 			}
-			const nums = render_nums(tower_ids, (offset_x = offset_x))
-			const tiles = render_tiles(tile_ids, (offset_x = offset_x))
-			const doors = render_doors(door_ids, (skip = id), (offset_x = offset_x))
+			const nums = render_nums(tower_ids, offset_x)
+			const tiles = render_tiles(tile_ids, offset_x)
+			const doors = render_doors(door_ids, id, offset_x)
 			const transform = [{scale: bounded_name}]
 			let inner_style = [
 				styles.inner,
@@ -321,9 +311,9 @@ class Door extends React.Component {
         inner_style.push({ transform: [{ scale: this.state.scaleAnim }] })
         */
 				let end_scale
-				if (anim_info.hasOwnProperty('slide_target'))
+				if (anim_info.hasOwnProperty('slide_target')) {
 					end_scale = anim_info.slide_target
-				else if (name.length > 1) end_scale = name[1]
+				} else if (name.length > 1) end_scale = name[1]
 				else end_scale = bounded_name
 				inner_style.push({
 					transform: [
@@ -368,13 +358,14 @@ class Door extends React.Component {
 	}
 }
 
+const lightgrey = 'lightgrey'
 const styles = StyleSheet.create({
 	door: {
 		position: 'absolute',
 		borderRightWidth: 1,
-		borderRightColor: 'lightgrey',
+		borderRightColor: lightgrey,
 		borderTopWidth: 1,
-		borderTopColor: 'lightgrey',
+		borderTopColor: lightgrey,
 	},
 	portal: {
 		overflow: 'hidden',

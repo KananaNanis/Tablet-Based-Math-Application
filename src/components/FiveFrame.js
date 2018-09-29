@@ -1,6 +1,5 @@
 import React from 'react'
 import {StyleSheet, View} from 'react-native'
-import {query_prop} from '../providers/query_store'
 
 const squareSide = 220
 const borderWidth = 10
@@ -14,17 +13,19 @@ const FiveFrameSquare = ({empty, id}) => {
 const FiveFrame = ({name, position, misc}) => {
 	const extra_scale =
 		misc && 'undefined' !== typeof misc.extra_scale ? misc.extra_scale : 1
+	extra_scale // use this where?
 
 	let pos_info = {left: position[0], bottom: position[1]}
 	let squares = []
-	for (const i = 0; i < 5; ++i) {
+	for (let i = 0; i < 5; ++i) {
 		squares.push(
-			<FiveFrameSquare style={styles.dot} empty={i >= name} id={i} key={i} />,
+			<FiveFrameSquare key={i} empty={i >= name} id={i} style={styles.dot} />,
 		)
 	}
 	return <View style={[styles.frame, pos_info]}>{squares}</View>
 }
 
+const black = 'black'
 const styles = StyleSheet.create({
 	frame: {
 		position: 'absolute',
@@ -33,7 +34,7 @@ const styles = StyleSheet.create({
 		position: 'absolute',
 		width: squareSide,
 		height: squareSide,
-		borderColor: 'black',
+		borderColor: black,
 		borderWidth: borderWidth,
 	},
 	dot: {
@@ -42,7 +43,7 @@ const styles = StyleSheet.create({
 		bottom: squareSide / 4 - borderWidth,
 		width: squareSide / 2,
 		height: squareSide / 2,
-		backgroundColor: 'black',
+		backgroundColor: black,
 		borderRadius: '50%',
 	},
 })

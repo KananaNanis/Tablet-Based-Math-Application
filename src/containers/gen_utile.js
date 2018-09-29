@@ -16,11 +16,12 @@ export function pick_animal_name(prev_value) {
 	//console.log('choose_random_animal', Object.keys(animals))
 	const animal_names = Object.keys(global_constant.animals)
 	for (const i of Array(10).keys()) {
+		i
 		const animal_name =
 			animal_names[Math.floor(animal_names.length * Math.random())]
 		if (
 			animal_name !== prev_value &&
-			animal_name != 'chimpanzee' &&
+			animal_name !== 'chimpanzee' &&
 			!animal_too_tall(animal_name)
 		) {
 			//console.log('choose_random_animal result ', animal_name)
@@ -34,12 +35,12 @@ export function pick_animal_name(prev_value) {
 export function pick_from_list(list, prev_value, skip_first) {
 	//console.log('pick_from_list list', list, 'prev_value', prev_value)
 	//tower_1_name: [pickOne, [.1, .5], [.2]]
-	for (const i = 0; i < 10; ++i) {
+	for (let i = 0; i < 10; ++i) {
 		const r = Math.floor(list.length * Math.random())
-		if (0 == r && skip_first) continue
+		if (0 === r && skip_first) continue
 		const elt = list[r]
 		//if (height_too_tall(elt)) continue  // should be an explicit restriction
-		if (prev_value == elt) continue
+		if (prev_value === elt) continue
 		return elt
 	}
 	console.warn(
@@ -56,9 +57,9 @@ export function pick_from_list(list, prev_value, skip_first) {
 export function pick_from_range(begin, end, incr, prev_value) {
 	let list = []
 	if (incr > 0) {
-		for (const i = begin; i < end; i += incr) list.push(i)
+		for (let i = begin; i < end; i += incr) list.push(i)
 	} else if (incr < 0) {
-		for (const i = begin; i > end; i -= incr) list.push(i)
+		for (let i = begin; i > end; i -= incr) list.push(i)
 	} else {
 		// incr === 0
 		list.push(begin)
@@ -67,13 +68,14 @@ export function pick_from_range(begin, end, incr, prev_value) {
 }
 
 export function from_uniform_range(begin, end, prev_value) {
-	for (const i = 0; i < 10; ++i) {
+	for (let i = 0; i < 10; ++i) {
 		const val = begin + (end - begin) * Math.random()
 		if (
 			'undefined' === typeof prev_value ||
 			10 * Math.abs(val - prev_value) > Math.abs(end - begin)
-		)
+		) {
 			return val
+		}
 	}
 	console.error(
 		'Warning:  did not generate inside uniform range after 10 tries.',

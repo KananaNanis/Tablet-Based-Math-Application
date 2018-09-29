@@ -193,10 +193,12 @@ function block_opacity(state = Map({}), action) {
         [action.id]: new_opacity
       }
       */
-			const new_opacity = state.has(action.id)
-				? state.get(action.id).set(action.index, action.opacity)
-				: List([])
-			return state.set(action.id, new_opacity)
+			return state.set(
+				action.id,
+				state.has(action.id)
+					? state.get(action.id).set(action.index, action.opacity)
+					: List([]),
+			)
 		case AT.TOWER_CREATE:
 		case AT.TOWER_DELETE:
 			return obj_add_remove_property(state, action.id, null)
@@ -293,9 +295,8 @@ function prop(state = Map({}), action) {
 function path(state = Map({}), action) {
 	switch (action.type) {
 		case AT.SET_PATH:
-			const res = state.set(action.key, action.value)
 			//console.log('reducer SET_PATH key', action.key, 'value', action.value, 'res', res.toJS())
-			return res
+			return state.set(action.key, action.value)
 		default:
 			return state
 	}
@@ -358,7 +359,7 @@ const initialState = fromJS({
 })
 
 function suujiApp(state, action) {
-	if (AT.RESET_ALL == action.type) return initialState
+	if (AT.RESET_ALL === action.type) return initialState
 	return state ? suujiAppInner(state, action) : initialState
 	//return suujiAppInner(state, action)
 }

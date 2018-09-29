@@ -1,6 +1,6 @@
-import {List, toJS, fromJS} from 'immutable'
+import {List, fromJS} from 'immutable'
 import {doAction, config_tree, global_constant} from '../App'
-import {query_path, query_prop, query_test} from './query_store'
+import {query_path, query_prop} from './query_store'
 import {tower_name2height} from './query_tower'
 import {
 	global_screen_width,
@@ -13,7 +13,7 @@ const deep_clone = obj => JSON.parse(JSON.stringify(obj))
 
 const attach_properties = (to, from) => {
 	for (const key in from) {
-		if ('misc' == key && to.hasOwnProperty(key)) {
+		if ('misc' === key && to.hasOwnProperty(key)) {
 			attach_properties(to.misc, from.misc)
 		} else to[key] = deep_clone(from[key])
 	}
@@ -27,7 +27,7 @@ export function get_config(path) {
 	// console.log('tree_loc', tree_loc)
 	// console.log('init res ', res)
 	//console.log('get_config path.size', path.size)
-	for (var i = 0; i < path.size; ++i) {
+	for (let i = 0; i < path.size; ++i) {
 		tree_loc = tree_loc[path.get(i)]
 		if (tree_loc) {
 			for (const category in tree_loc.params) {
@@ -35,19 +35,21 @@ export function get_config(path) {
 					res[category] = deep_clone(tree_loc.params[category])
 				} else {
 					if (
-						'create' == category ||
-						'modify' == category ||
-						'delay' == category
+						'create' === category ||
+						'modify' === category ||
+						'delay' === category
 					) {
 						// consider the ids one by one
 						for (const id in tree_loc.params[category]) {
-							const subtree = tree_loc.params[category][id]
-							if (subtree && 'remove' === subtree) {
-								delete res['create'][id]
-								delete res['modify'][id]
-							} else if (!res[category].hasOwnProperty(id))
-								res[category][id] = deep_clone(subtree)
-							else attach_properties(res[category][id], subtree)
+							if (tree_loc.params[category].hasOwnProperty(id)) {
+								const subtree = tree_loc.params[category][id]
+								if (subtree && 'remove' === subtree) {
+									delete res['create'][id]
+									delete res['modify'][id]
+								} else if (!res[category].hasOwnProperty(id)) {
+									res[category][id] = deep_clone(subtree)
+								} else attach_properties(res[category][id], subtree)
+							}
 						}
 					} else {
 						attach_properties(res[category], tree_loc.params[category])
@@ -62,7 +64,7 @@ export function get_config(path) {
 
 export function as_position(pos_info, width = 0, height = 0, extra_scale = 1) {
 	let res = [0, 0]
-	for (const i = 0; i < 2; ++i) {
+	for (let i = 0; i < 2; ++i) {
 		if ('number' === typeof pos_info[i]) res[i] = pos_info[i]
 		else if ('string' === typeof pos_info[i]) {
 			let val = pos_info[i]
@@ -72,31 +74,33 @@ export function as_position(pos_info, width = 0, height = 0, extra_scale = 1) {
 				position_modifier = words[0]
 				val = val.slice(words[0].length + 1)
 			}
-			if (val.endsWith('vw'))
-				val = (global_screen_width * +val.slice(0, -2)) / 100
-			else if (val.endsWith('vh'))
-				val = (global_workspace_height * +val.slice(0, -2)) / 100
+			if (val.endsWith('vw')) {
+				val = (global_screen_width * Number(val.slice(0, -2))) / 100
+			} else if (val.endsWith('vh')) {
+				val = (global_workspace_height * Number(val.slice(0, -2))) / 100
+			}
 
 			if (['left', 'bottom'].includes(position_modifier)) {
 				// ignore
-			} else if ('right' == position_modifier)
+			} else if ('right' === position_modifier) {
 				val = global_screen_width - extra_scale * width - val
-			else if ('top' == position_modifier)
+			} else if ('top' === position_modifier) {
 				val = global_workspace_height - extra_scale * height - val
-			else if ('left_from_right' == position_modifier)
+			} else if ('left_from_right' === position_modifier) {
 				val = global_screen_width - val
-			else if ('right_from_left' == position_modifier)
+			} else if ('right_from_left' === position_modifier) {
 				val = val - extra_scale * width
-			else if ('bottom_from_top' == position_modifier)
+			} else if ('bottom_from_top' === position_modifier) {
 				val = global_workspace_height - val
-			else if ('top_from_bottom' == position_modifier)
+			} else if ('top_from_bottom' === position_modifier) {
 				val = val - extra_scale * height
+			}
 
-			if ('center' == val) {
-				if (0 == i) val = (global_screen_width - width) / 2
+			if ('center' === val) {
+				if (0 === i) val = (global_screen_width - width) / 2
 				else val = (global_workspace_height - height) / 2
 			}
-			res[i] = +val
+			res[i] = Number(val)
 		}
 	}
 	//console.log('as_position pos_info', pos_info, 'res', res)
@@ -147,7 +151,7 @@ export function transition_to_next_config() {
 		doAction.addLogEntry(Date.now(), [new_path, 'next_config', 'start'])
 		doAction.setPath('config', new_path)
 		enter_exit_config(true)
-	} else if (query_path('goto') != null && query_prop('goto_iteration') > 1) {
+	} else if (query_path('goto') && query_prop('goto_iteration') > 1) {
 		// possibly jump directly to some other path
 		const iter = query_prop('goto_iteration')
 		const new_path = query_path('goto')
@@ -179,14 +183,14 @@ export function transition_to_next_config() {
 			window.setTimeout(function() {
 				enter_exit_config(
 					true,
-					(verbose = false),
-					(curr_config_iter = iter - 1),
+					false, // verbose
+					iter - 1,
 				)
 				doAction.setProp('config_iteration', iter - 1)
 				doAction.setProp('num_stars', curr_num_stars)
 			}, query_prop('blank_between_exercises'))
 		} else {
-			enter_exit_config(true, (verbose = false), (curr_config_iter = iter - 1))
+			enter_exit_config(true, false, iter - 1)
 			doAction.setProp('config_iteration', iter - 1)
 			doAction.setProp('num_stars', curr_num_stars)
 		}
@@ -221,7 +225,7 @@ export function first_config_path(starter) {
 	let tree_loc = config_tree
 	if (starter) {
 		// move down to the implied node, first!
-		for (const i = 0; i < starter.length; ++i) tree_loc = tree_loc[starter[i]]
+		for (let i = 0; i < starter.length; ++i) tree_loc = tree_loc[starter[i]]
 	}
 	while (
 		'object' === typeof tree_loc &&
@@ -236,7 +240,7 @@ export function first_config_path(starter) {
 			)
 			break
 		}
-		var k2 = Object.keys(tree_loc)[1]
+		const k2 = Object.keys(tree_loc)[1]
 		res.push(k2)
 		tree_loc = tree_loc[k2]
 	}
@@ -247,11 +251,11 @@ export function first_config_path(starter) {
 function path_marked_as_skip(path) {
 	if (!path) return false
 	let tree_loc = config_tree
-	for (const i = 0; i < path.size; ++i) {
+	for (let i = 0; i < path.size; ++i) {
 		tree_loc = tree_loc[path.get(i)]
 		if ('object' === typeof tree_loc && null !== tree_loc) {
 			const k0 = Object.keys(tree_loc)[0]
-			if ('skip_node_above' == k0) {
+			if ('skip_node_above' === k0) {
 				//console.log('path_marked_as_skip path', path.toJS(), 'res', true)
 				return true
 			}
@@ -265,11 +269,11 @@ export function next_config_path(path) {
 	let res = null
 	let tree_loc = config_tree
 	// find the lowest node at which the path does not take the last option
-	for (const i = 0; i < path.size; ++i) {
+	for (let i = 0; i < path.size; ++i) {
 		const k = Object.keys(tree_loc)
 		if (k.indexOf(path.get(i)) + 1 < k.length) {
 			res = []
-			for (const j = 0; j < i; ++j) res.push(path.get(j))
+			for (let j = 0; j < i; ++j) res.push(path.get(j))
 			const level_name = k[k.indexOf(path.get(i)) + 1]
 			// console.log('res', res, 'level_name', level_name)
 			res.push(level_name)

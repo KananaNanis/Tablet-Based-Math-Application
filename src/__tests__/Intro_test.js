@@ -1,3 +1,4 @@
+/* eslint-env jest */
 import {sum} from '../App'
 
 test('adds 1 + 2 to equal 3', () => {

@@ -1,6 +1,6 @@
 import React from 'react'
-import {View, Image, Text} from 'react-native'
-import {fromJS, toJS} from 'immutable'
+import {View, Image, Text, StyleSheet} from 'react-native'
+import {fromJS} from 'immutable'
 import {image_location} from '../App'
 import {query_tower_name} from '../providers/query_tower'
 
@@ -9,18 +9,18 @@ export function get_block_size_from_group(group) {
 }
 
 export function get_how_many_from_group(group) {
-	var n = Math.round(group / 10 ** get_block_size_from_group(group))
+	let n = Math.round(group / 10 ** get_block_size_from_group(group))
 	if (n > 5) n -= 5
 	return n
 }
 
 export function get_is_fiver_from_group(group) {
-	var n = Math.round(group / 10 ** get_block_size_from_group(group))
+	const n = Math.round(group / 10 ** get_block_size_from_group(group))
 	return n >= 5 ? 1 : 0
 }
 
 export function get_fiver_incomplete_from_group(group) {
-	var n = Math.round(group / 10 ** get_block_size_from_group(group))
+	const n = Math.round(group / 10 ** get_block_size_from_group(group))
 	return n > 5
 }
 
@@ -28,7 +28,7 @@ export function remove_block_from_name(name0) {
 	//console.log('remove_block_from_name', name0)
 	//let name = name0.slice()
 	let name = name0.toJS()
-	if (0 == name.length) return name
+	if (0 === name.length) return name
 	let group = name.pop()
 	let size = get_block_size_from_group(group)
 	let how_many = get_how_many_from_group(group)
@@ -46,7 +46,7 @@ export function name_is_in_standard_form(name0) {
 	let res = true
 	let name = name0.toJS()
 	let reason = ''
-	for (const i = 0; i < name.length; ++i) {
+	for (let i = 0; i < name.length; ++i) {
 		let group1 = name[i]
 		let how_many1 = get_how_many_from_group(group1)
 		let is_fiver1 = get_is_fiver_from_group(group1)
@@ -55,7 +55,7 @@ export function name_is_in_standard_form(name0) {
 			reason = 'more than 4'
 			break
 		}
-		if (0 == i) continue
+		if (0 === i) continue
 		//console.log('i is now', i)
 		let group0 = name[i - 1]
 		let size0 = get_block_size_from_group(group0)
@@ -65,7 +65,7 @@ export function name_is_in_standard_form(name0) {
 			reason = 'size increase'
 			break
 		}
-		if (size0 == size1) {
+		if (size0 === size1) {
 			let is_fiver0 = get_is_fiver_from_group(group0)
 			if (!is_fiver0 || is_fiver1) {
 				res = false
@@ -74,6 +74,7 @@ export function name_is_in_standard_form(name0) {
 			}
 		}
 	}
+	reason
 	//console.log('name_is_in_standard_form name', name, 'res', res, 'reason', reason)
 	return res
 }
@@ -85,13 +86,13 @@ export function is_standard_tower(tgt) {
 export function add_block_to_name(new_size, new_is_fiver, name0) {
 	let new_group = (new_is_fiver ? 5 : 1) * 10 ** new_size
 	//let name = name0.slice()
-	if (0 == name0.length) return [new_group]
+	if (0 === name0.length) return [new_group]
 	let name = name0.toJS()
 	let group = name[name.length - 1]
 	let size = get_block_size_from_group(group)
 	let how_many = get_how_many_from_group(group)
 	let is_fiver = get_is_fiver_from_group(group)
-	if (size != new_size || new_is_fiver != is_fiver || 5 == how_many) {
+	if (size !== new_size || new_is_fiver !== is_fiver || 5 === how_many) {
 		name.push(new_group)
 	} else {
 		// same size and is_fiver, with less than 5
@@ -121,15 +122,12 @@ const Block = ({
 		return (
 			<View
 				style={[
+					styles.block,
 					view_style,
 					radius_style,
 					{
 						width,
 						height,
-						backgroundColor: 'none',
-						borderWidth: 3,
-						borderStyle: 'dashed',
-						borderColor: 'black',
 					},
 				]}
 			/>
@@ -141,8 +139,8 @@ const Block = ({
 	} else if (img_name) {
 		img = (
 			<Image
-				style={[radius_style, {position: 'absolute', width, height}]}
 				source={image_location(img_name, just_grey)}
+				style={[styles.image_default, radius_style, {width, height}]}
 			/>
 		)
 	}
@@ -153,5 +151,19 @@ const Block = ({
 		</View>
 	)
 }
+
+const none = 'none'
+const black = 'black'
+const styles = StyleSheet.create({
+	image_default: {
+		position: 'absolute',
+	},
+	block: {
+		backgroundColor: none,
+		borderWidth: 3,
+		borderStyle: 'dashed',
+		borderColor: black,
+	},
+})
 
 export default Block

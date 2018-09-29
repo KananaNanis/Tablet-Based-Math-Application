@@ -1,11 +1,11 @@
 import React from 'react'
-import {Iterable, fromJS} from 'immutable'
+import {Iterable} from 'immutable'
 import {connect} from 'react-redux'
 import {add_offset} from '../components/render_geoms'
 //import { toJS } from './to_js'
 import Door from '../components/Door'
 
-const toJS_door = WrappedComponent => wrappedComponentProps => {
+const toJS_door = _ => wrappedComponentProps => {
 	const KEY = 0
 	const VALUE = 1
 

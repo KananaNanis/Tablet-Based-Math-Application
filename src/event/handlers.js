@@ -1,4 +1,3 @@
-import {toJS} from 'immutable'
 import {
 	query_event,
 	query_prop,
@@ -26,7 +25,7 @@ import {global_screen_width} from '../components/Workspace'
 import {is_standard_tower} from '../components/Block'
 
 export function handle_delete_button(state) {
-	if ('up' == state) {
+	if ('up' === state) {
 		const tgt = query_event('target')
 		if (query_tower_name(tgt).size > 0) doAction.towerRemoveBlock(tgt)
 		doAction.setButtonHighlight(null)
@@ -36,21 +35,15 @@ export function handle_delete_button(state) {
 }
 
 export function handle_next_button(state) {
-	if ('up' == state) transition_to_next_config()
+	if ('up' === state) transition_to_next_config()
 }
 
 export function handle_start_button(state) {
-	if ('up' == state) {
-		//transition_to_next_config()
+	if ('up' === state) {
 		//console.log('start!')
 		doAction.setProp('freeze_display', null)
 		doAction.setButtonDisplay('start', null)
-		enter_exit_config(
-			(enter = true),
-			(verbose = false),
-			(curr_config_iter = query_prop('config_iter')),
-			(use_delay = true),
-		)
+		enter_exit_config(true, false, query_prop('config_iter'), true)
 	}
 }
 
@@ -64,10 +57,10 @@ export function incorrect_button_response() {
 }
 
 export function handle_submit_button(state) {
-	if ('up' == state) {
+	if ('up' === state) {
 		doAction.setProp('freeze_display', true)
 		let delay = is_correct()
-		if ('incorrect' == delay) incorrect_button_response()
+		if ('incorrect' === delay) incorrect_button_response()
 		else {
 			doAction.setButtonHighlight(null)
 			if ('do_not_transition' === delay) {
@@ -91,8 +84,8 @@ export function handle_submit_button(state) {
 
 function option_is_correct(i) {
 	const i0 = query_prop('correct_option_index')
-	if (1) {
-		// log this attempt
+	const log_this_attempt = true
+	if (log_this_attempt) {
 		const cp = query_path('config').toJS()
 		console.log('cp', cp)
 		const curr_time = Date.now()
@@ -117,14 +110,14 @@ function option_is_correct(i) {
 	return i === i0
 }
 
-export function handle_options(state, x, y, touchID) {
+export function handle_options(state, x, y) {
 	let found_one = false
 	for (const i of [0, 1, 2, 3]) {
 		if (pointIsInRectangle([x, y], option_geometry(i))) {
 			//console.log('i', i)
 			found_one = true
 			doAction.setButtonHighlight('option_' + i)
-			if ('up' == state) {
+			if ('up' === state) {
 				if (option_is_correct(i)) {
 					global_sound['chirp1'].play()
 					const arg_1 = query_arg(1)
@@ -139,7 +132,8 @@ export function handle_options(state, x, y, touchID) {
 						doAction.setAnimInfo('door_2', null)
 						//doAction.addObjStyle('portal_1', 'opacity', null)
 						//doAction.addObjStyle('door_2', 'opacity', null)
-						if (1) {
+						const add_anim = true
+						if (add_anim) {
 							const arg_1 = query_arg(1)
 							const arg_2 = query_arg(2)
 							const result = 'option'
@@ -148,6 +142,7 @@ export function handle_options(state, x, y, touchID) {
 								arg_2,
 								result,
 							)
+							err
 							const curr_time = Date.now()
 							const delay = show_err_with_delay(
 								arg_1,
@@ -175,7 +170,7 @@ export function handle_options(state, x, y, touchID) {
 			}
 		}
 	}
-	if ('up' != state && !found_one) doAction.setButtonHighlight(null)
+	if ('up' !== state && !found_one) doAction.setButtonHighlight(null)
 }
 
 /*
@@ -191,11 +186,12 @@ function check_top_is_ok(size, is_fiver, how_many, new_size, new_is_fiver) {
 }
 */
 
-export function handle_create_tower_by_height(state, x, y, touchID) {
+export function handle_create_tower_by_height(state, x, y) {
 	const tgt = query_event('target')
 	if ('down' === state) {
-		if (x > 0.5 * global_screen_width)
+		if (x > 0.5 * global_screen_width) {
 			doAction.setProp('top_block_under_construction', 'empty')
+		}
 	}
 	const top = query_prop('top_block_under_construction')
 	if (top) {
@@ -207,9 +203,10 @@ export function handle_create_tower_by_height(state, x, y, touchID) {
 			// what should the top block be?
 			const scale_factor = query_prop('scale_factor')
 			let h10 = Math.round(10 * query_tower_height(tgt))
-			let [size, is_fiver, how_many] = query_top_block(tgt)
-			if ('empty' !== top)
+			let [size, is_fiver] = query_top_block(tgt)
+			if ('empty' !== top) {
 				h10 -= Math.round(10 * (is_fiver ? 5 : 1) * 10 ** size)
+			}
 			let decim = Math.round((10 * y) / scale_factor) - h10
 			let new_size,
 				new_is_fiver = false
@@ -231,14 +228,14 @@ export function handle_create_tower_by_height(state, x, y, touchID) {
 			if ('empty' === top) {
 				if (0 !== decim) changed = true
 			} else {
-				if (0 == decim) changed = true
+				if (0 === decim) changed = true
 				else {
-					if (size != new_size || is_fiver != new_is_fiver) changed = true
+					if (size !== new_size || is_fiver !== new_is_fiver) changed = true
 				}
 			}
 			if (changed) {
 				//console.log('changed', changed, 'h10', h10, 'size', size, 'is_fiver', is_fiver)
-				if (0 == decim) {
+				if (0 === decim) {
 					doAction.towerRemoveBlock(tgt)
 					doAction.setProp('top_block_under_construction', 'empty')
 					doAction.addObjMisc(tgt, 'top_just_outline', null)

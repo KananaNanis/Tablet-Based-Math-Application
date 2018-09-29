@@ -64,18 +64,20 @@ export function query_visible_buttons() {
 		if (
 			state.get('button_display').has(i) &&
 			state.getIn(['button_display', i]) !== 'false'
-		)
+		) {
 			res.push(i)
+		}
 	}
 	if (state.get('keypad_kind')) {
 		const i_end = get_button_geoms_for(state.get('keypad_kind')).length
-		for (const i = 0; i < i_end; ++i) {
-			const istr = i + ''
+		for (let i = 0; i < i_end; ++i) {
+			const istr = String(i)
 			if (
 				!(istr in state.get('button_display')) ||
 				state.getIn(['button_display', istr]) !== false
-			)
+			) {
 				res.push(i)
+			}
 		}
 	}
 	return res
@@ -130,14 +132,15 @@ export function query_obj_misc(id) {
 export function query_arg(n) {
 	const state = global_store.getState()
 	//console.log('state.event_handling', state.get('event_handling'))
-	if (1 == n) return state.getIn(['event_handling', 'arg_1'])
-	else if (2 == n) return state.getIn(['event_handling', 'arg_2'])
-	else if ('result' == n) return state.getIn(['event_handling', 'result'])
+	if (1 === n) return state.getIn(['event_handling', 'arg_1'])
+	else if (2 === n) return state.getIn(['event_handling', 'arg_2'])
+	else if ('result' === n) return state.getIn(['event_handling', 'result'])
 }
 
 export function query_event(key) {
-	if (!global_constant.event_handling_types.includes(key))
+	if (!global_constant.event_handling_types.includes(key)) {
 		console.error('Warning:  unrecognized event_handling key', key)
+	}
 	const state = global_store.getState()
 	return state.getIn(['event_handling', key])
 }
@@ -153,15 +156,17 @@ export function query_option_values() {
 }
 
 export function query_prop(key) {
-	if (!global_constant.prop_types.includes(key))
+	if (!global_constant.prop_types.includes(key)) {
 		console.error('Warning: unrecognized prop key', key)
+	}
 	const state = global_store.getState()
 	return state.getIn(['prop', key])
 }
 
 export function query_path(key) {
-	if (!global_constant.path_types.includes(key))
+	if (!global_constant.path_types.includes(key)) {
 		console.error('Warning:  unrecognized path key', key)
+	}
 	const state = global_store.getState()
 	return state.getIn(['path', key])
 }

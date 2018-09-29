@@ -62,13 +62,15 @@ class ErrBox extends React.Component {
 	}
 }
 
+const red = 'red'
+const orange = 'orange'
 const styles = StyleSheet.create({
 	err_box: {
 		position: 'absolute',
-		backgroundColor: 'red',
+		backgroundColor: red,
 	},
 	is_thin: {
-		backgroundColor: 'orange',
+		backgroundColor: orange,
 		opacity: 0.5,
 	},
 })

@@ -1,7 +1,6 @@
 import {connect} from 'react-redux'
 import Workspace from '../components/Workspace'
-import {consolidate_info_for_ids} from '../providers/query_store'
-import {toJS} from './to_js'
+//import {toJS} from './to_js'
 
 const mapStateToProps = (state, ownProps) => {
 	//console.log(ownProps)
@@ -33,14 +32,7 @@ const mapStateToProps = (state, ownProps) => {
 	}
 }
 
-const mapDispatchToProps = dispatch => {
-	return {}
-}
-
-const WorkspaceContainer = connect(
-	mapStateToProps,
-	mapDispatchToProps,
-)(Workspace)
+const WorkspaceContainer = connect(mapStateToProps)(Workspace)
 //(toJS(Workspace))
 
 export default WorkspaceContainer

@@ -21,6 +21,8 @@ const Placard = ({position, width, height, view_style, label, label_style}) => {
 	)
 }
 
+const blue = 'blue'
+const black = 'black'
 const styles = StyleSheet.create({
 	placard: {
 		position: 'absolute',
@@ -28,10 +30,10 @@ const styles = StyleSheet.create({
 		alignItems: 'center',
 		borderRadius: '30%',
 		borderWidth: 20,
-		borderColor: 'blue',
+		borderColor: blue,
 	},
 	text: {
-		color: 'black',
+		color: black,
 		fontSize: 50,
 	},
 })

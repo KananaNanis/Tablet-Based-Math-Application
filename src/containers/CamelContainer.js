@@ -20,13 +20,14 @@ export function num_stars(err) {
 export function get_recent_log_entries(log, descrip) {
 	log = log || query_log()
 	let log_entries = []
-	for (const i = log.size - 1; i >= 0; --i) {
+	for (let i = log.size - 1; i >= 0; --i) {
 		if (
-			'next_config' == log.getIn([i, 1, 1]) &&
-			'start' == log.getIn([i, 1, 2])
-		)
+			'next_config' === log.getIn([i, 1, 1]) &&
+			'start' === log.getIn([i, 1, 2])
+		) {
 			break
-		if (descrip == log.getIn([i, 1, 1])) log_entries.unshift(log.get(i).toJS())
+		}
+		if (descrip === log.getIn([i, 1, 1])) log_entries.unshift(log.get(i).toJS())
 	}
 	return log_entries
 }
@@ -38,7 +39,7 @@ const mapStateToProps = (state, ownProps) => {
 	const log_entries = get_recent_log_entries(state.get('log'), 'is_correct')
 	let err_total = 0
 	let err_list = []
-	for (const i = 0; i < log_entries.length; ++i) {
+	for (let i = 0; i < log_entries.length; ++i) {
 		const f3 = log_entries[i][1][3]
 		const f1 = log_entries[i][1][4]
 		const f2 = log_entries[i][1][5]
@@ -46,11 +47,11 @@ const mapStateToProps = (state, ownProps) => {
 		if (query_event('just_proportion')) err = Math.abs(f3 - f2)
 		else err = Math.abs(f3 - f1 * f2)
 		if (query_event('star_policy')) {
-			if (-1 == num_stars(err)) {
+			if (-1 === num_stars(err)) {
 				// too high... cap it
 				const thresh = global_constant.star_policy[query_event('star_policy')]
 				err = thresh[thresh.length - 1] / 100
-			} else if (3 == num_stars(err)) {
+			} else if (3 === num_stars(err)) {
 				// quite low... ignore it
 				err = 0
 			}
@@ -61,7 +62,7 @@ const mapStateToProps = (state, ownProps) => {
 	}
 	if (log_entries.length > 0) {
 		let average_error = err_total / log_entries.length
-		if ('average_error' == query_event('top_right_text')) {
+		if ('average_error' === query_event('top_right_text')) {
 			const average_error_string = (100 * average_error).toFixed(1) + '%'
 			doAction.setProp('top_right_text', average_error_string)
 		}
@@ -92,9 +93,9 @@ const mapStateToProps = (state, ownProps) => {
 	//console.log(log_entries[log_entries.length-1][1])
 	const err_box = state.get('err_box')
 	let err_box_updated = {}
-	const result = state.getIn(['event_handling', 'result'])
-	const result_name = state.getIn(['name', result])
-	//const already_correct = (result_name.size > 1) && (result_name.get(0) == result_name.get(1))
+	//const result = state.getIn(['event_handling', 'result'])
+	//const result_name = state.getIn(['name', result])
+	//const already_correct = (result_name.size > 1) && (result_name.get(0) === result_name.get(1))
 	const nearly_correct =
 		err_box && err_box.has('misc') && err_box.getIn(['misc', 'is_thin_height'])
 	// console.log('result', result, 'result_name', result_name, 'already_correct', already_correct)
@@ -122,13 +123,6 @@ const mapStateToProps = (state, ownProps) => {
 	}
 }
 
-const mapDispatchToProps = dispatch => {
-	return {}
-}
-
-const CamelContainer = connect(
-	mapStateToProps,
-	mapDispatchToProps,
-)(Camel)
+const CamelContainer = connect(mapStateToProps)(Camel)
 
 export default CamelContainer

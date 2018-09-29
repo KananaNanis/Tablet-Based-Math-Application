@@ -7,11 +7,7 @@ import ErrBox from './ErrBox'
 import CamelContainer from '../containers/CamelContainer'
 import OptionBackground from '../components/OptionBackground'
 import {global_constant, image_location} from '../App'
-import {
-	query_event_show_camel,
-	query_event,
-	query_option_values,
-} from '../providers/query_store'
+import {query_event, query_option_values} from '../providers/query_store'
 import {
 	render_nums,
 	render_tiles,
@@ -53,7 +49,6 @@ export function start_anim(
 }
 
 const Workspace = ({
-	scale_factor,
 	keypad_kind,
 	button_display,
 	button_highlight,
@@ -65,10 +60,6 @@ const Workspace = ({
 	door_ids,
 	portal_ids,
 	center_text,
-	all_nums,
-	all_tiles,
-	all_doors,
-	all_portals,
 	top_left_text,
 	top_right_text,
 	big_op,
@@ -84,7 +75,7 @@ const Workspace = ({
 	const doors = render_doors(door_ids)
 	const portals = render_portals(
 		portal_ids,
-		(skip = null),
+		null,
 		tower_ids,
 		tile_ids,
 		door_ids,
@@ -94,11 +85,11 @@ const Workspace = ({
 	let misc = [],
 		key = 0,
 		options = []
-	if (1) {
-		// add username
+	const add_username = true
+	if (add_username) {
 		++key
 		misc.push(
-			<Text style={styles.username} key={key}>
+			<Text key={key} style={styles.username}>
 				{global_constant.username}
 			</Text>,
 		)
@@ -110,20 +101,16 @@ const Workspace = ({
 		let option_inner = []
 		//console.log('nums actual', all_nums.size, 'nums rendered', nums.length)
 		//console.log('doors actual', door_ids.size, 'doors rendered', doors.length)
-		if (door_ids.size == doors.length + 1)
-			option_inner = render_doors(
-				door_ids,
-				(skip = null),
-				0,
-				false,
-				option_values,
-			)
-		if (tower_ids.size == nums.length + 1)
+		if (door_ids.size === doors.length + 1) {
+			option_inner = render_doors(door_ids, null, 0, false, option_values)
+		}
+		if (tower_ids.size === nums.length + 1) {
 			option_inner = render_nums(tower_ids, 0, false, option_values)
-		for (const i = 0; i < option_inner.length; ++i) {
+		}
+		for (let i = 0; i < option_inner.length; ++i) {
 			++key
 			options.push(
-				<OptionBackground i={i} button_highlight={button_highlight} key={i}>
+				<OptionBackground key={i} button_highlight={button_highlight} i={i}>
 					{option_inner[i]}
 				</OptionBackground>,
 			)
@@ -148,12 +135,12 @@ const Workspace = ({
 			++key
 			misc.push(
 				<ErrBox
-					position={err_box.get('position').toJS()}
-					width={err_box.get('width')}
-					height={err_box.get('height')}
-					style={style}
-					misc={err_misc}
 					key={key}
+					height={err_box.get('height')}
+					misc={err_misc}
+					position={err_box.get('position').toJS()}
+					style={style}
+					width={err_box.get('width')}
 				/>,
 			)
 		}
@@ -161,7 +148,7 @@ const Workspace = ({
 	if (center_text) {
 		++key
 		misc.push(
-			<Text style={styles.center_text} key={key}>
+			<Text key={key} style={styles.center_text}>
 				{center_text}
 			</Text>,
 		)
@@ -170,11 +157,11 @@ const Workspace = ({
 		++key
 		misc.push(
 			<Text
+				key={key}
 				style={[
 					styles.top_right_text,
 					{right: global_constant.top_right_text_offset},
 				]}
-				key={key}
 			>
 				{top_right_text}
 			</Text>,
@@ -182,8 +169,9 @@ const Workspace = ({
 	}
 	if (top_left_text) {
 		++key
+		const zero = 0
 		misc.push(
-			<Text style={[styles.top_left_text, {left: 0}]} key={key}>
+			<Text key={key} style={[styles.top_left_text, {left: zero}]}>
 				{top_left_text}
 			</Text>,
 		)
@@ -192,7 +180,7 @@ const Workspace = ({
 		//console.log(' big_op', big_op)
 		++key
 		misc.push(
-			<Text style={[styles.big_op]} key={key}>
+			<Text key={key} style={[styles.big_op]}>
 				{big_op}
 			</Text>,
 		)
@@ -211,22 +199,22 @@ const Workspace = ({
 		++key
 		misc.push(
 			<Keypad
-				kind={keypad_kind}
+				key={key}
 				button_display={button_display}
 				button_highlight={button_highlight}
 				freeze_display={freeze_display}
-				key={key}
+				kind={keypad_kind}
 			/>,
 		)
 	}
-	if ('in_between' == config_path.get(0)) {
+	if ('in_between' === config_path.get(0)) {
 		++key
 		misc.push(
 			<Placard
+				key={key}
+				height={global_constant.placard.height}
 				position={global_constant.placard.position}
 				width={global_constant.placard.width}
-				height={global_constant.placard.height}
-				key={key}
 			/>,
 		)
 	}
@@ -259,11 +247,13 @@ const Workspace = ({
 			//console.log('bg_style', bg_style)
 			misc.push(
 				<Button
+					key={key}
+					height={global_constant.special_button_geoms[special_button].height}
+					label={special_button}
+					label_style={styles.button_text_default}
 					position={
 						global_constant.special_button_geoms[special_button].position
 					}
-					width={global_constant.special_button_geoms[special_button].width}
-					height={global_constant.special_button_geoms[special_button].height}
 					view_style={[
 						styles.button_view_default,
 						button_view[special_button],
@@ -271,26 +261,23 @@ const Workspace = ({
 						//(special_button === button_highlight) ?
 						//  (freeze_display ? freeze_highlight_style : highlight_style) : {}
 					]}
-					label={special_button}
-					label_style={styles.button_text_default}
-					key={key}
+					width={global_constant.special_button_geoms[special_button].width}
 				/>,
 			)
 		}
 	}
-	for (const i = 0; i < num_stars; ++i) {
+	for (let i = 0; i < num_stars; ++i) {
 		++key
 		misc.push(
 			<Image
-				style={{
-					position: 'absolute',
-					right: 5 + 25 * i,
-					top: 5,
-					width: 20,
-					height: 20,
-				}}
-				source={image_location('star')}
 				key={key}
+				source={image_location('star')}
+				style={[
+					styles.image_default,
+					{
+						right: 5 + 25 * i,
+					},
+				]}
 			/>,
 		)
 		//source={require('img/star.png')}
@@ -313,6 +300,10 @@ const Workspace = ({
   */
 }
 
+const green = 'green'
+const blue = 'blue'
+const white = 'white'
+const grey = 'grey'
 const styles = StyleSheet.create({
 	workspace: {
 		//backgroundColor: 'blue',
@@ -325,15 +316,21 @@ const styles = StyleSheet.create({
 		alignItems: 'center',
 	},
 	button_view_default: {
-		backgroundColor: 'green',
+		backgroundColor: green,
 		borderWidth: 10,
-		borderColor: 'blue',
+		borderColor: blue,
 		borderRadius: 20,
 	},
 	button_text_default: {
 		fontSize: 40,
-		color: 'white',
+		color: white,
 		marginBottom: 10,
+	},
+	image_default: {
+		position: 'absolute',
+		top: 5,
+		width: 20,
+		height: 20,
 	},
 	username: {
 		position: 'absolute',
@@ -359,7 +356,7 @@ const styles = StyleSheet.create({
 		fontSize: 200,
 		left: 70,
 		bottom: 160,
-		color: 'grey',
+		color: grey,
 	},
 })
 

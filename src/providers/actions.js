@@ -1,5 +1,5 @@
 import * as AT from './actionTypes'
-import {List, fromJS} from 'immutable'
+import {fromJS} from 'immutable'
 import {global_constant} from '../App'
 
 export function towerCreate(id, name, position) {
@@ -111,8 +111,9 @@ export function clearEventHandling() {
 }
 
 export function setEventHandlingParam(key, val) {
-	if (!global_constant.event_handling_types.includes(key))
+	if (!global_constant.event_handling_types.includes(key)) {
 		console.error('Warning:  unrecognized event_handling key', key)
+	}
 	return {type: AT.SET_EVENT_HANDLING_PARAM, key, val}
 }
 
@@ -126,26 +127,29 @@ export function setOptionValues(values) {
 }
 
 export function setProp(key, value) {
-	if (!global_constant.prop_types.includes(key))
+	if (!global_constant.prop_types.includes(key)) {
 		console.error('Warning:  unrecognized prop key', key)
+	}
 	if (
 		null !== value &&
 		!global_constant.prop_value_types.includes(typeof value)
-	)
+	) {
 		console.error('Warning:  prop value has unrecognized type', value)
+	}
 	return {type: AT.SET_PROP, key, value}
 }
 
 export function setPath(key, value) {
-	if (!global_constant.path_types.includes(key))
+	if (!global_constant.path_types.includes(key)) {
 		console.error('Warning:  unrecognized path key', key)
+	}
 	return {type: AT.SET_PATH, key, value: fromJS(value)}
 }
 
 export function addLogEntry(time, info) {
 	console.log('addLogEntry', time, info)
-	if (1) {
-		// send this info to the server
+	const send_to_server = true
+	if (send_to_server) {
 		fetch(
 			// 'https://www.cs.stolaf.edu/suuji/ajax2.php',
 			'ajax2.php',

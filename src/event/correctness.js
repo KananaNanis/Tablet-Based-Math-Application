@@ -27,7 +27,6 @@ import {
 	get_door_or_tile_height,
 } from './extract'
 import {landmark_location} from '../components/Tile'
-import {incorrect_button_response} from './handlers'
 
 export function correct_next_button() {
 	const verbose = false
@@ -38,11 +37,11 @@ export function correct_next_button() {
 	const how = query_event('correctness')
 	const tgt = query_event('target')
 	const src = query_event('comparison_source')
-	if ('identical' == how) {
+	if ('identical' === how) {
 		correct = query_tower_name(src).toJS()
 		curr = query_tower_name(tgt).toJS()
 		expand = true
-	} else if ('same_height' == how) {
+	} else if ('same_height' === how) {
 		let height
 		if (src.startsWith('tile_')) {
 			const animal_name = query_name_of_tile(src)
@@ -69,7 +68,7 @@ export function correct_next_button() {
 		)
 		return false
 	}
-	for (var i = 0; i < curr.length; ++i) {
+	for (let i = 0; i < curr.length; ++i) {
 		if (!approx_equal(curr[i], correct[i])) {
 			console.log(
 				'Warning in correct_next_button:  i' +
@@ -110,13 +109,13 @@ export function show_err_with_delay(
 	const cp = query_path('config').toJS()
 	const arg_1_name = query_tower_name(arg_1)
 
-	if (3 == stars) {
+	if (3 === stars) {
 		// error is small, round to zero
 		if (query_event('just_proportion')) doAction.setName(result, [f3])
 		else doAction.setName(result, [f3, f3])
 		const correct = f1 * f2
 		doAction.setAnimInfo(result, {slide_target: correct, slide_duration: 200})
-		if (arg_1_name.size <= 1 || arg_1_name.get(0) != arg_1_name.get(1)) {
+		if (arg_1_name.size <= 1 || arg_1_name.get(0) !== arg_1_name.get(1)) {
 			doAction.setAnimInfo(arg_1, {slide_target: f1, slide_duration: 200})
 			window.setTimeout(function() {
 				show_thin_height(arg_1, arg_2, result)
@@ -134,14 +133,14 @@ export function show_err_with_delay(
 	let err_box_delay = 0
 	//console.log('skip_slide_down', query_prop('skip_slide_down'))
 	if (!query_prop('skip_slide_down')) {
-		if (arg_1_name.size <= 1 || arg_1_name.get(0) != arg_1_name.get(1)) {
+		if (arg_1_name.size <= 1 || arg_1_name.get(0) !== arg_1_name.get(1)) {
 			doAction.setAnimInfo(arg_1, {slide_target: f1, slide_duration: 500})
 			err_box_delay = 1500
 		}
 	}
 	window.setTimeout(function() {
 		doAction.addLogEntry(curr_time, [cp, 'is_correct', stars, f3, f1, f2])
-		if ('option' != result) {
+		if ('option' !== result) {
 			const [position, width, height] = get_err_box_location(
 				arg_1,
 				arg_2,
@@ -150,7 +149,7 @@ export function show_err_with_delay(
 			//console.log('setting err_box with position', position)
 			doAction.setErrBox({position, width, height, duration: 500, delay: 500})
 		}
-		if (-1 == stars) {
+		if (-1 === stars) {
 			// slide back
 			window.setTimeout(function() {
 				doAction.setAnimInfo(arg_1, {slide_target: 1, slide_duration: 500})
@@ -168,9 +167,9 @@ export function is_correct() {
 	const curr_time = Date.now() // when anwer was given
 	const cp = query_path('config').toJS()
 	let delay = 'incorrect'
-	if ('same_height' == how) {
+	if ('same_height' === how) {
 		const tgt_height = query_tower_height(tgt)
-		var eq = 'unchecked'
+		let eq = 'unchecked'
 		let src_height
 		if (src.startsWith('tile_')) {
 			const name = query_name_of_tile(src)
@@ -188,31 +187,32 @@ export function is_correct() {
 			doAction.addLogEntry(curr_time, [
 				cp,
 				'is_correct',
-				0 == delay,
+				0 === delay,
 				tgt_height,
 				src_height,
 			])
 		}
-	} else if ('identical' == how) {
+	} else if ('identical' === how) {
 		const name1 = query_tower_name(src).toJS()
 		const name2 = query_tower_name(tgt).toJS()
 		if (namesAreIdentical(name1, name2)) delay = 0
 		doAction.addLogEntry(curr_time, [
 			cp,
 			'is_correct',
-			0 == delay,
+			0 === delay,
 			name2,
 			name1,
 		])
-	} else if ('near_height' == how) {
+	} else if ('near_height' === how) {
 		const arg_1 = query_arg(1)
 		const arg_2 = query_arg(2)
 		const result = query_arg('result')
 		const {f1, f2, f3, err, stars} = describe_numerical(arg_1, arg_2, result)
+		err
 
 		if (!query_event('show_camel')) {
 			// just show the err_box
-			if (3 == stars) {
+			if (3 === stars) {
 				// close enough... don't show the box
 				/*
         doAction.setAnimInfo(arg_1, { slide_target: f1, slide_duration: 100 })
@@ -239,7 +239,7 @@ export function is_correct() {
 				window.setTimeout(function() {
 					doAction.setErrBox({})
 				}, 1000)
-				if (-1 == stars || 0 == stars) {
+				if (-1 === stars || 0 === stars) {
 					reduce_num_stars()
 					delay = 'do_not_transition'
 				} else delay = 1000
@@ -247,7 +247,6 @@ export function is_correct() {
 			return delay
 		}
 
-		const arg_1_name = query_tower_name(arg_1)
 		delay = show_err_with_delay(
 			arg_1,
 			arg_2,
@@ -258,19 +257,17 @@ export function is_correct() {
 			f2,
 			f3,
 		)
-		if (-1 == stars) delay = 'do_not_transition'
+		if (-1 === stars) delay = 'do_not_transition'
 		//delay = 'do_not_transition'
-	} else if ('near_discrete_height' == how) {
+	} else if ('near_discrete_height' === how) {
 		let correct_height
 		//const src_height = query_tower_height(src)
 		if (src) {
 			correct_height = query_tower_height(src)
 		} else {
 			const arg_1 = query_arg(1)
-			const name_1 = query_name_of_tile(arg_1)
 			const val_1 = get_door_or_tile_height(arg_1)
 			const arg_2 = query_arg(2)
-			const name_2 = query_name_of_tile(arg_2)
 			const val_2 = get_door_or_tile_height(arg_2)
 			//console.log('arg_1', arg_1, 'name_1', name_1, 'val_1', val_1)
 			correct_height = val_1 + val_2
@@ -294,7 +291,7 @@ export function is_correct() {
 		} else {
 			// still incorrect
 		}
-	} else if ('move_dot' == how) {
+	} else if ('move_dot' === how) {
 		const arg_1 = query_arg(1)
 		const landmark_index = query_obj_misc(arg_1).get('landmark_index')
 		const tile_tgt = 'tile_2'
@@ -315,7 +312,7 @@ export function is_correct() {
 		//console.log('extra_scale2', extra_scale2, 'loc0b', loc0b, 'd', d)
 		// decide whether we are too far from the correct location
 		let too_far = false
-		if ('move_handle_dot' == query_event('move')) {
+		if ('move_handle_dot' === query_event('move')) {
 			const delta_pixels = Math.abs(loc0b[1] - loc1[1])
 			const delta = delta_pixels / (extra_scale2 * scale_factor)
 			// console.log('delta_pixels', delta_pixels, 'delta', delta)
@@ -334,7 +331,7 @@ export function is_correct() {
 			doAction.addObjStyle(tile_tgt, 'opacity', 1)
 			doAction.addObjMisc(tile_tgt, 'landmark_index', landmark_index)
 			doAction.setAnimInfo(tile_tgt, {move_extra_dot: true})
-			if ('move_handle_dot' == query_event('move')) {
+			if ('move_handle_dot' === query_event('move')) {
 				// also move the handle into place
 				const y3 = loc0b[1] / scale_factor
 				const animal_value = global_constant.animals[name].height

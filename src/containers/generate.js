@@ -5,15 +5,15 @@ import {
 	from_uniform_range,
 	pick_animal_name,
 } from './gen_utile'
-import {query_prop} from '../providers/query_store'
 
 function find_gen_values_for_words(words, gen_vars) {
 	let res = words.slice()
-	for (const j = 0; j < res.length; ++j) {
+	for (let j = 0; j < res.length; ++j) {
 		if (gen_vars.hasOwnProperty(res[j])) res[j] = gen_vars[res[j]]
-		if (global_constant.animals.hasOwnProperty(res[j]))
+		if (global_constant.animals.hasOwnProperty(res[j])) {
 			res[j] = global_constant.animals[res[j]].height
-		if ('string' === typeof res[j]) res[j] = +res[j]
+		}
+		if ('string' === typeof res[j]) res[j] = Number(res[j])
 	}
 	return res
 }
@@ -23,14 +23,14 @@ function is_binary_op(s) {
 }
 
 function swap_in_array(arr, i, j) {
-	var tmp = arr[i]
+	let tmp = arr[i]
 	arr[i] = arr[j]
 	arr[j] = tmp
 }
 
 export function permute_array_elements(arr) {
-	for (var i = arr.length - 1; i > 0; --i) {
-		var j = Math.floor((i + 1) * Math.random())
+	for (let i = arr.length - 1; i > 0; --i) {
+		let j = Math.floor((i + 1) * Math.random())
 		// assert(j < arr.length);
 		swap_in_array(arr, i, j)
 	}
@@ -39,8 +39,9 @@ export function permute_array_elements(arr) {
 function generate_option_values(inst, option_delta, option_values) {
 	option_values.length = 0
 	let offset = Math.floor(4 * Math.random())
-	for (const i = 0; i < 4; ++i)
+	for (let i = 0; i < 4; ++i) {
 		option_values.push([inst + (i - offset) * option_delta])
+	}
 	permute_array_elements(option_values)
 	return option_values
 }
@@ -58,29 +59,31 @@ function apply_gen_instruction(
 	let verbose = false
 	//console.log('apply_gen_instruction id', id, 'inst', inst)
 	if (id.startsWith('option_')) {
-		if ('option_value_delta' == id) {
-			option_delta = +inst
+		if ('option_value_delta' === id) {
+			option_delta = Number(inst)
 			//console.log('option_delta', option_delta)
-		} else if ('option_value_seed' == id) {
+		} else if ('option_value_seed' === id) {
 			// actually generate options
-			if ('string' === typeof inst)
+			if ('string' === typeof inst) {
 				inst = find_gen_values_for_words([inst], gen_vars)[0]
+			}
 			correct_option_value[0] = inst
 			generate_option_values(inst, option_delta, option_values)
 			// console.log(' here, option_values', option_values, 'correct_option_value', correct_option_value)
-			for (const i = 0; i < 4; ++i)
+			for (let i = 0; i < 4; ++i) {
 				gen_vars['option_' + i] = option_values[i][0]
+			}
 		}
 	} else if (id.startsWith('restriction_')) {
 		if (inst) {
 			const words = inst.split(' ')
 			//console.log('in restriction, id', id, 'words', words)
-			if (3 == words.length && ('<' === words[1] || '>' === words[1])) {
+			if (3 === words.length && ('<' === words[1] || '>' === words[1])) {
 				//if (verbose) console.log(id, 'words', words)
 				let vals = find_gen_values_for_words([words[0], words[2]], gen_vars)
-				if ('option' == words[0]) {
+				if ('option' === words[0]) {
 					// this is actually a 4-fold restriction
-					for (const i = 0; i < 4; ++i) {
+					for (let i = 0; i < 4; ++i) {
 						let val = gen_vars['option_' + i]
 						if ('<' === words[1]) {
 							if (val >= vals[1]) ok = false
@@ -102,20 +105,20 @@ function apply_gen_instruction(
 			}
 		}
 	} else if (Array.isArray(inst)) {
-		if ('pick_from_list' == inst[0]) {
+		if ('pick_from_list' === inst[0]) {
 			gen_vars[id] = pick_from_list(inst[1], gen_vars[id])
-		} else if ('pick_from_range' == inst[0]) {
+		} else if ('pick_from_range' === inst[0]) {
 			gen_vars[id] = pick_from_range(
 				inst[1],
 				inst[2],
 				inst[3] ? inst[3] : 1,
 				gen_vars[id],
 			)
-		} else if ('uniform' == inst[0]) {
+		} else if ('uniform' === inst[0]) {
 			gen_vars[id] = from_uniform_range(inst[1], inst[2], gen_vars[id])
-		} else if ('pick_animal_name' == inst[0]) {
+		} else if ('pick_animal_name' === inst[0]) {
 			gen_vars[id] = pick_animal_name(gen_vars[id])
-		} else if ('fixed' == inst[0]) {
+		} else if ('fixed' === inst[0]) {
 			gen_vars[id] = inst[1]
 		} else {
 			console.error(
@@ -126,12 +129,12 @@ function apply_gen_instruction(
 		}
 	} else if ('string' === typeof inst) {
 		const words = inst.split(' ')
-		if (2 == words.length && 'height_from_animal' == words[0]) {
+		if (2 === words.length && 'height_from_animal' === words[0]) {
 			let animal_name = gen_vars[words[1]]
 			let h = global_constant.animals[animal_name].height
 			// console.log('animal_name', animal_name, 'h', h)
 			gen_vars[id] = h
-		} else if (3 == words.length && is_binary_op(words[1])) {
+		} else if (3 === words.length && is_binary_op(words[1])) {
 			let vals = find_gen_values_for_words([words[0], words[2]], gen_vars)
 			if ('+' === words[1]) {
 				gen_vars[id] = vals[0] + vals[1]
@@ -165,12 +168,14 @@ export function generate_with_restrictions(c, curr_exercise = 0) {
 		option = [],
 		all = []
 	for (const id in c) {
-		let words = 'string' == typeof c[id] ? c[id].split(' ') : null
-		if (id.startsWith('restriction_')) restrict.push(id)
-		else if (id.startsWith('option_')) option.push(id)
-		else if (words && 3 == words.length && is_binary_op(words[1]))
-			binary.push(id)
-		else all.push(id)
+		if (c.hasOwnProperty(id)) {
+			let words = 'string' === typeof c[id] ? c[id].split(' ') : null
+			if (id.startsWith('restriction_')) restrict.push(id)
+			else if (id.startsWith('option_')) option.push(id)
+			else if (words && 3 === words.length && is_binary_op(words[1])) {
+				binary.push(id)
+			} else all.push(id)
+		}
 	}
 	all = all.concat(binary)
 	all = all.concat(option)
@@ -191,13 +196,13 @@ export function generate_with_restrictions(c, curr_exercise = 0) {
 			const inst = c[id]
 			if (!Array.isArray(inst) && 'object' === typeof inst) {
 				// apply restrictions to the use of some instructions
-				for (var key in inst) {
+				for (let key in inst) {
 					if (key.startsWith('exercise')) {
 						// only this exercise!
-						const ex = +key.substr(8)
+						const ex = Number(key.substr(8))
 						// let curr = query_prop('config_iteration')
 						//if (!curr) curr = 0
-						if (ex == curr_exercise) {
+						if (ex === curr_exercise) {
 							ok =
 								ok &&
 								apply_gen_instruction(
@@ -207,8 +212,9 @@ export function generate_with_restrictions(c, curr_exercise = 0) {
 									option_values,
 									correct_option_value,
 								)
-							if (verbose)
+							if (verbose) {
 								console.log('ex', ex, 'curr', curr_exercise, 'inst', inst[key])
+							}
 						}
 					}
 				}
@@ -222,7 +228,7 @@ export function generate_with_restrictions(c, curr_exercise = 0) {
 						option_values,
 						correct_option_value,
 					)
-				if (verbose)
+				if (verbose) {
 					console.log(
 						'id',
 						id,
@@ -233,6 +239,7 @@ export function generate_with_restrictions(c, curr_exercise = 0) {
 						'option_values',
 						option_values,
 					)
+				}
 			}
 		}
 		if (verbose) console.log(gen_vars)
@@ -243,8 +250,8 @@ export function generate_with_restrictions(c, curr_exercise = 0) {
 		doAction.setOptionValues(option_values)
 		// console.log('correct_option_value', correct_option_value)
 		// console.log('option_values', option_values)
-		for (const i = 0; i < 4; ++i) {
-			if (correct_option_value[0] == option_values[i][0]) {
+		for (let i = 0; i < 4; ++i) {
+			if (correct_option_value[0] === option_values[i][0]) {
 				doAction.setProp('correct_option_index', i)
 				// console.log('correct_option_index', i)
 			}
