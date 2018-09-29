@@ -10,6 +10,7 @@
   "private": true,
   "devDependencies": {
     "babel-core": "^6.26.3",
+    "babel-eslint": "^10.0.1",
     "babel-jest": "^23.6.0",
     "babel-loader": "^7.1.5",
     "babel-plugin-expo-web": "^0.0.14",
@@ -18,8 +19,14 @@
     "babel-plugin-transform-imports": "^1.4.1",
     "babel-plugin-transform-runtime": "^6.23.0",
     "css-loader": "^1.0.0",
+    "eslint": "^5.6.1",
+    "eslint-config-prettier": "^3.1.0",
+    "eslint-plugin-babel": "^5.2.1",
+    "eslint-plugin-react": "^7.11.1",
+    "eslint-plugin-react-native": "^3.3.0",
     "file-loader": "^1.1.7",
     "jest-expo": "~28.0.0",
+    "prettier": "^1.14.3",
     "react-native-scripts": "latest",
     "react-test-renderer": "16.4.1",
     "style-loader": "^0.21.0",
@@ -33,10 +40,19 @@
     "ios": "react-native-scripts ios",
     "test": "jest",
     "web": "webpack-dev-server -d --config ./webpack.config.js  --inline --hot --colors --content-base public/ --history-api-fallback",
-    "build": "NODE_ENV=production webpack -p --config ./webpack.config.js"
+    "build": "NODE_ENV=production webpack -p --config ./webpack.config.js",
+    "prettier": "prettier --write 'src/**/*.{js,json}' '*.js'",
+    "lint": "eslint --report-unused-disable-directives --max-warnings=0 --cache src/ *.js"
   },
   "jest": {
     "preset": "jest-expo"
+  },
+  "prettier": {
+    "useTabs": true,
+    "singleQuote": true,
+    "trailingComma": "all",
+    "bracketSpacing": false,
+    "semi": false
   },
   "dependencies": {
     "expo": "^27.0.1",
