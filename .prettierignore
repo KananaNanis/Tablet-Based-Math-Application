@@ -1,1 +1,5 @@
 node_modules/
+public/
+public_stub/
+log/
+src/old/

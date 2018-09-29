@@ -31,7 +31,7 @@ globals:
 
 rules:
   array-callback-return: error
-  camelcase: warn
+  camelcase: off
   consistent-this: [error, self]
   curly: [warn, multi-line]
   default-case: error

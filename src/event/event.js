@@ -1,10 +1,6 @@
 import {Platform} from 'react-native'
-import {
-	global_is_mobile,
-	global_is_safari,
-	global_screen_width,
-} from '../myglobal'
-import {load_config_tree} from '../App'
+import {global_screen_width} from '../components/Workspace'
+import {load_config_tree, global_constant} from '../App'
 import {window2workspaceCoords} from '../components/Workspace'
 import {touch_dispatcher} from './dispatcher'
 
@@ -20,7 +16,7 @@ export var ignore_touches = false
 function myPreventDefault(synthetic_event) {
 	//if (isTeacherInfoLevel()) return;  // don't prevent on this special level!
 	//var evt = synthetic_event.nativeEvent
-	if (global_is_mobile && !global_is_safari) {
+	if (global_constant.is_mobile && !global_constant.is_safari) {
 		// check whether we cannot prevent it anyway
 		const type = synthetic_event.type.substr(5)
 		if ('start' === type || 'move' === type) {
