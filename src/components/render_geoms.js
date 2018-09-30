@@ -2,7 +2,7 @@ import React from 'react'
 import NumContainer from '../containers/NumContainer'
 import TileContainer from '../containers/TileContainer'
 import DoorContainer from '../containers/DoorContainer'
-import {query_obj_misc} from '../providers/query_store'
+import {query_obj_misc, query_name_of_door} from '../providers/query_store'
 import {height2tower_name} from '../providers/query_tower'
 
 export function add_offset(pos, offset_x = 0) {
@@ -23,9 +23,9 @@ export function render_nums(
 		if (option_values && is_option) {
 			// console.log('id', id, 'option', option_values ? option_values.toJS() : null)
 			for (let j = 0; j < 4; ++j) {
-				let name = option_values.get(nums.length).toJS()
+				let name = option_values.get(nums.length)
 				// this name is not canonical, yet
-				name = height2tower_name(name[0])
+				name = height2tower_name(name.get(0))
 				nums.push(
 					<NumContainer
 						key={tower_ids.get(i) + '_' + j}
@@ -83,7 +83,8 @@ export function render_doors(
 		if (option_values && is_option) {
 			// console.log('id', id, 'option', option_values ? option_values.toJS() : null)
 			for (let j = 0; j < 4; ++j) {
-				let name = option_values.get(doors.length).toJS()
+				let name = option_values.get(doors.length)
+			    // console.log('door option id', id, 'name', name)
 				doors.push(
 					<DoorContainer
 						key={id + '_' + j}
@@ -95,7 +96,7 @@ export function render_doors(
 				)
 			}
 		} else if (!option_values && !is_option) {
-			// console.log('id', id)
+			// console.log('door id', id, 'name', query_name_of_door(id))
 			doors.push(
 				<DoorContainer
 					key={id}
@@ -120,12 +121,13 @@ export function render_portals(
 ) {
 	//console.log('render_portals door_ids', door_ids)
 	let portals = []
-	for (let i = 0; i < door_ids.size; ++i) {
+	for (let i = 0; i < portal_ids.size; ++i) {
 		const id = portal_ids.get(i)
 		if (skip === id) continue
+		// console.log('portal id', id, 'name', query_name_of_door(id))
 		portals.push(
 			<DoorContainer
-				key={id}
+				key={i}
 				door_ids={door_ids}
 				id={id}
 				just_grey={just_grey}

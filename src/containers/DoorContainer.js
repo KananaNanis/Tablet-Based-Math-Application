@@ -35,13 +35,14 @@ const mapStateToProps = (state, ownProps) => {
 		offset_x = 0,
 		just_grey = false,
 	} = ownProps
-	if (!name) name = state.getIn(['name', id]).toJS()
+	if (!name) name = state.getIn(['name', id])
+  // console.log('name', name)
+	//if (name) name = name.toJS()
 
 	const verbose = false
 	if (verbose) {
 		let misc = state.getIn(['misc', id])
-		if (misc) misc = misc.toJS()
-		console.log('DoorContainer id', id, 'name', name, 'misc', misc)
+		console.log('DoorContainer id', id, 'name', name, 'misc', misc ? misc.toJS() : null)
 	}
 
 	return {

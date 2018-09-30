@@ -23,6 +23,7 @@ import {option_geometry} from '../components/OptionBackground'
 import {describe_numerical} from './extract'
 import {global_screen_width} from '../components/Workspace'
 import {is_standard_tower} from '../components/Block'
+import {do_batched_actions} from '../providers/reducers'
 
 export function handle_delete_button(state) {
 	if ('up' === state) {
@@ -41,9 +42,11 @@ export function handle_next_button(state) {
 export function handle_start_button(state) {
 	if ('up' === state) {
 		//console.log('start!')
-		doAction.setProp('freeze_display', null)
-		doAction.setButtonDisplay('start', null)
-		enter_exit_config(true, false, query_prop('config_iter'), true)
+		let action_list = []
+		action_list.push(Action.setProp('freeze_display', null))
+		action_list.push(Action.setButtonDisplay('start', null))
+		enter_exit_config(action_list, true, false, query_prop('config_iter'), true)
+		do_batched_actions(action_list)
 	}
 }
 

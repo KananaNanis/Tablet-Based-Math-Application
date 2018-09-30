@@ -19,6 +19,7 @@ import {as_position} from './providers/change_config'
 import {query_path} from './providers/query_store'
 import {get_keypad_width_height} from './components/Keypad'
 import {enter_exit_config} from './providers/enter_exit'
+import {do_batched_actions} from './providers/reducers';
 
 export let doAction = {}
 export let global_sound = {}
@@ -150,7 +151,10 @@ export async function load_config_tree(appObj) {
 		//get_config(path)
 
 		const verbose = false
-		enter_exit_config(true, verbose)
+		let action_list = []
+		enter_exit_config(action_list, true, verbose)
+		do_batched_actions(action_list)
+
 		// here is a place to try code that should run just once,
 		//   after the config has been loaded
 

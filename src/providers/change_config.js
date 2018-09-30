@@ -1,5 +1,5 @@
 import {List, fromJS} from 'immutable'
-import {doAction, config_tree, global_constant} from '../App'
+import {config_tree, global_constant} from '../App'
 import {query_path, query_prop} from './query_store'
 import {tower_name2height} from './query_tower'
 import {
@@ -8,6 +8,8 @@ import {
 } from '../components/Workspace'
 import {get_block_size_from_group} from '../components/Block'
 import {enter_exit_config} from './enter_exit'
+import * as Actions from './actions';
+import { do_batched_actions } from './reducers';
 
 const deep_clone = obj => JSON.parse(JSON.stringify(obj))
 
@@ -133,91 +135,100 @@ export function height_pixels_from_name(name, scale_factor) {
 	}
 }
 
-export function transition_to_next_config() {
+export function transition_to_next_config(action_list) {
+	let do_actions_immediately = false
+	if (!action_list) {
+		action_list = []
+		do_actions_immediately = true
+	}
 	const curr_num_stars = query_prop('num_stars')
-	doAction.clearEventHandling()
+	action_list.push(Actions.clearEventHandling())
 	if ('in_between' === query_path('config').get(0)) {
 		// special case
-		enter_exit_config(false)
+		enter_exit_config(action_list, false)
 		const prev_path = query_path('prev_config')
 		const repeat_level = query_prop('repeat_level')
 		let new_path
 		if (repeat_level && repeat_level > 0) {
-			doAction.setProp('repeat_level', repeat_level - 1)
+			action_list.push(Actions.setProp('repeat_level', repeat_level - 1))
 			console.log('new repeat_level', query_prop('repeat_level'))
 			new_path = prev_path
 		} else new_path = next_config_path(prev_path)
 		console.log('transition_to_next_config', new_path.toJS())
-		doAction.addLogEntry(Date.now(), [new_path, 'next_config', 'start'])
-		doAction.setPath('config', new_path)
-		enter_exit_config(true)
+		action_list.push(Actions.addLogEntry(Date.now(), [new_path, 'next_config', 'start']))
+		action_list.push(Actions.setPath('config', new_path))
+		enter_exit_config(action_list, true)
 	} else if (query_path('goto') && query_prop('goto_iteration') > 1) {
 		// possibly jump directly to some other path
 		const iter = query_prop('goto_iteration')
 		const new_path = query_path('goto')
-		doAction.addLogEntry(Date.now(), [
+		action_list.push(Actions.addLogEntry(Date.now(), [
 			query_path('config').toJS(),
 			'next_config',
 			iter,
-		])
-		enter_exit_config(false)
+		]))
+		enter_exit_config(action_list, false)
 		//console.log('HACK  remove this next line')
-		//doAction.setErrBox(null)
-		doAction.setPath('prev_config', query_path('config'))
+		//action_list.push(Actions.setErrBox(null))
+		action_list.push(Actions.setPath('prev_config', query_path('config')))
 		console.log('new_path ', new_path.toJS())
-		doAction.setPath('config', new_path)
-		enter_exit_config(true)
-		doAction.setProp('goto_iteration', iter - 1)
-		doAction.setProp('num_stars', curr_num_stars)
+		action_list.push(Actions.setPath('config', new_path))
+		enter_exit_config(action_list, true)
+		action_list.push(Actions.setProp('goto_iteration', iter - 1))
+		action_list.push(Actions.setProp('num_stars', curr_num_stars))
 	} else if (query_prop('config_iteration') > 1) {
 		const iter = query_prop('config_iteration')
 		console.log('iter', iter)
-		doAction.addLogEntry(Date.now(), [
+		action_list.push(Actions.addLogEntry(Date.now(), [
 			query_path('config').toJS(),
 			'next_config',
 			iter,
-		])
-		enter_exit_config(false)
+		]))
+		enter_exit_config(action_list, false)
 		if (query_prop('blank_between_exercises')) {
 			//console.log('applying blank of ', query_prop('blank_between_exercises'))
 			window.setTimeout(function() {
 				enter_exit_config(
+					action_list,
 					true,
 					false, // verbose
 					iter - 1,
 				)
-				doAction.setProp('config_iteration', iter - 1)
-				doAction.setProp('num_stars', curr_num_stars)
+				action_list.push(Actions.setProp('config_iteration', iter - 1))
+				action_list.push(Actions.setProp('num_stars', curr_num_stars))
 			}, query_prop('blank_between_exercises'))
 		} else {
-			enter_exit_config(true, false, iter - 1)
-			doAction.setProp('config_iteration', iter - 1)
-			doAction.setProp('num_stars', curr_num_stars)
+			enter_exit_config(action_list, true, false, iter - 1)
+			action_list.push(Actions.setProp('config_iteration', iter - 1))
+			action_list.push(Actions.setProp('num_stars', curr_num_stars))
 		}
 		/*
-    doAction.setName('tile_1', pick_animal_name())
-    doAction.setName('tower_2', []);
+    action_list.push(Actions.setName('tile_1', pick_animal_name()))
+    action_list.push(Actions.setName('tower_2', []))
     update_keypad_button_visibility(null, null, null)
 
-    doAction.setName('tower_1',
-      tower_exercise_list[exercise_index])
+    action_list.push(Actions.setName('tower_1',
+      tower_exercise_list[exercise_index]))
     exercise_index = (exercise_index + 1) % tower_exercise_list.length;
-    doAction.setName('tower_2', []);
+    action_list.push(Actions.setName('tower_2', []))
     update_keypad_button_visibility(null, null, null)
     */
 	} else if (query_prop('skip_in_between')) {
-		enter_exit_config(false)
+		enter_exit_config(action_list, false)
 		const curr_path = query_path('config')
 		const new_path = next_config_path(curr_path)
-		doAction.setPath('prev_config', curr_path)
-		doAction.setPath('config', new_path)
-		enter_exit_config(true)
+		action_list.push(Actions.setPath('prev_config', curr_path))
+		action_list.push(Actions.setPath('config', new_path))
+		enter_exit_config(action_list, true)
 	} else {
-		enter_exit_config(false)
-		doAction.setPath('prev_config', query_path('config'))
-		doAction.setPath('config', ['in_between'])
-		enter_exit_config(true)
+		enter_exit_config(action_list, false)
+		action_list.push(Actions.setPath('prev_config', query_path('config')))
+		action_list.push(Actions.setPath('config', ['in_between']))
+		enter_exit_config(action_list, true)
 	}
+	if (do_actions_immediately) {
+		do_batched_actions(action_list)
+	} else return action_list
 }
 
 export function first_config_path(starter) {

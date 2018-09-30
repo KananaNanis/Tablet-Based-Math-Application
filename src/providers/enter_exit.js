@@ -1,4 +1,5 @@
 import {doAction, global_constant} from '../App'
+import * as Actions from '../providers/actions'
 import {
 	query_path,
 	query_prop,
@@ -42,15 +43,16 @@ function do_timed_action(id, key, val) {
 	}
 }
 
-export function remove_on_exit(lis) {
+export function remove_on_exit(action_list, lis) {
 	for (const what of lis) {
-		if ('button_submit' === what) doAction.setButtonDisplay('submit', null)
-		else if ('button_delete' === what) doAction.setButtonDisplay('delete', null)
-		else if ('err_box' === what) doAction.setErrBox(null)
+		if ('button_submit' === what) action_list.push(Actions.setButtonDisplay('submit', null))
+		else if ('button_delete' === what) action_list.push(Actions.setButtonDisplay('delete', null))
+		else if ('err_box' === what) action_list.push(Actions.setErrBox(null))
 	}
 }
 
 export function enter_exit_config(
+	action_list,
 	enter,
 	verbose,
 	curr_config_iter,
@@ -60,12 +62,12 @@ export function enter_exit_config(
 	const cp = query_path('config')
 	//console.log('cp', cp)
 	const config = enter && use_delay ? get_config(cp)['delay'] : get_config(cp)
-	if (!config) return
+	if (!config) return action_list
 	if (verbose) console.log('enter_exit_config enter', enter, 'config', config)
 	let curr_exercise = 0
 	if (enter) {
-		doAction.setProp('top_left_text', cp.toJS().join(' '))
-		doAction.setProp('freeze_display', false)
+		action_list.push(Actions.setProp('top_left_text', cp.toJS().join(' ')))
+		action_list.push(Actions.setProp('freeze_display', false))
 		if (
 			config.hasOwnProperty('misc') &&
 			config.misc.hasOwnProperty('config_iteration')
@@ -81,8 +83,8 @@ export function enter_exit_config(
 		}
 	} else {
 		if (query_option_values()) {
-			doAction.setOptionValues(null)
-			doAction.setProp('correct_option_index', null)
+			action_list.push(Actions.setOptionValues(null))
+			action_list.push(Actions.setProp('correct_option_index', null))
 		}
 	}
 	if (query_prop('problem_stage')) {
@@ -92,10 +94,10 @@ export function enter_exit_config(
 			if (config['misc']) {
 				const c = config['misc']
 				for (const key in c) {
-					if ('remove_on_exit' === key) remove_on_exit(c[key])
+					if ('remove_on_exit' === key) remove_on_exit(c[key], action_list)
 				}
 			}
-			return
+			return action_list
 		}
 	}
 	// let's handle the various parts of the config one at a time
@@ -108,19 +110,19 @@ export function enter_exit_config(
 		const c = config['create']
 		for (const id in c) {
 			if ('button_submit' === id) {
-				doAction.setButtonDisplay('submit', enter ? true : null)
+				action_list.push(Actions.setButtonDisplay('submit', enter ? true : null))
 			} else if ('button_delete' === id) {
-				doAction.setButtonDisplay('delete', enter ? true : null)
+				action_list.push(Actions.setButtonDisplay('delete', enter ? true : null))
 			} else if ('button_next' === id) {
-				doAction.setButtonDisplay('next', enter ? true : null)
+				action_list.push(Actions.setButtonDisplay('next', enter ? true : null))
 			} else if ('button_start' === id) {
-				doAction.setButtonDisplay('start', enter ? true : null)
+				action_list.push(Actions.setButtonDisplay('start', enter ? true : null))
 			} else if ('center_text' === id) {
-				doAction.setProp('center_text', enter ? c[id] : null)
+				action_list.push(Actions.setProp('center_text', enter ? c[id] : null))
 			} else if ('err_box' === id) {
-				doAction.setErrBox(enter ? {show: true} : null)
+				action_list.push(Actions.setErrBox(enter ? {show: true} : null))
 			} else if ('keypad_kind' === id) {
-				doAction.setKeypadKind(enter ? c[id] : null)
+				action_list.push(Actions.setKeypadKind(enter ? c[id] : null))
 				if ('buildTower' === c[id]) {
 					update_keypad_button_visibility(null, null, null)
 				}
@@ -163,7 +165,7 @@ export function enter_exit_config(
 							if ('number' === typeof name) name = height2tower_name(name)
 							const w = width_pixels_from_name(name, sc)
 							const h = height_pixels_from_name(name, sc)
-							doAction.towerCreate(
+							action_list.push(Actions.towerCreate(
 								id,
 								name,
 								as_position(
@@ -172,16 +174,16 @@ export function enter_exit_config(
 									h,
 									extra_scale,
 								),
-							)
+							))
 						} else {
 							//console.log('deleting', id)
-							doAction.towerDelete(id)
+							action_list.push(Actions.towerDelete(id))
 						}
 					} else if (id.startsWith('tile_')) {
 						if (enter) {
 							const w = width_pixels_from_name(name, sc)
 							const h = height_pixels_from_name(name, sc)
-							doAction.tileCreate(
+							action_list.push(Actions.tileCreate(
 								id,
 								name,
 								as_position(
@@ -190,25 +192,25 @@ export function enter_exit_config(
 									h,
 									extra_scale,
 								),
-							)
-						} else doAction.tileDelete(id)
+							))
+						} else action_list.push(Actions.tileDelete(id))
 					} else if (id.startsWith('door_')) {
 						if (enter) {
-							doAction.doorCreate(
+							action_list.push(Actions.doorCreate(
 								id,
 								name,
 								as_position(config['modify'][id]['position']),
-							)
-						} else doAction.doorDelete(id)
+							))
+						} else action_list.push(Actions.doorDelete(id))
 					} else if (id.startsWith('portal_')) {
 						if (enter) {
 							//console.log('reading a portal')
-							doAction.portalCreate(
+							action_list.push(Actions.portalCreate(
 								id,
 								name,
 								as_position(config['modify'][id]['position']),
-							)
-						} else doAction.portalDelete(id)
+							))
+						} else action_list.push(Actions.portalDelete(id))
 					}
 				}
 			}
@@ -246,14 +248,14 @@ export function enter_exit_config(
 						let props = c[id][key]
 						for (const key2 in props) {
 							if (props.hasOwnProperty(key2)) {
-								doAction.addObjStyle(id, key2, enter ? props[key2] : null)
+								action_list.push(Actions.addObjStyle(id, key2, enter ? props[key2] : null))
 							}
 						}
 					} else if ('tower_style' === key) {
 						let props = c[id][key]
 						for (const key2 in props) {
 							if (props.hasOwnProperty(key2)) {
-								doAction.towerAddStyle(id, key2, enter ? props[key2] : null)
+								action_list.push(Actions.towerAddStyle(id, key2, enter ? props[key2] : null))
 							}
 						}
 					} else if ('misc' === key) {
@@ -265,7 +267,7 @@ export function enter_exit_config(
 									val2 = gen_vars[val2]
 									//console.log('misc id', id, 'key2', key2, 'val2', val2)
 								}
-								doAction.addObjMisc(id, key2, val2)
+								action_list.push(Actions.addObjMisc(id, key2, val2))
 							}
 						}
 					} else if (id.startsWith('tower_') || id.startsWith('tile_')) {
@@ -275,10 +277,10 @@ export function enter_exit_config(
 								if ('string' === typeof val && val.endsWith('vw')) {
 									val = (global_screen_width * Number(val.slice(0, -2))) / 100
 								}
-								doAction.towerSetWidth(id, val)
-							} else doAction.towerSetWidth(id, null)
+								action_list.push(Actions.towerSetWidth(id, val))
+							} else action_list.push(Actions.towerSetWidth(id, null))
 						} else if ('overflow' === key) {
-							doAction.towerSetOverflow(id, enter ? c[id][key] : null)
+							action_list.push(Actions.towerSetOverflow(id, enter ? c[id][key] : null))
 						}
 					}
 				}
@@ -290,7 +292,7 @@ export function enter_exit_config(
 		for (const key in c) {
 			if (c.hasOwnProperty(key)) {
 				// console.log('event_handling key', key, 'val', c[key])
-				doAction.setEventHandlingParam(key, enter ? c[key] : null)
+				action_list.push(Actions.setEventHandlingParam(key, enter ? c[key] : null))
 			}
 		}
 	}
@@ -300,7 +302,7 @@ export function enter_exit_config(
 			if ('config_iteration' === key) {
 				let iter_val = c[key]
 				if (0 === iter_val || !enter) iter_val = null
-				doAction.setProp(key, iter_val)
+				action_list.push(Actions.setProp(key, iter_val))
 			} else if ('goto_config' === key) {
 				// this attribute is special:  it is not erased at the end!
 				if (enter) {
@@ -314,12 +316,12 @@ export function enter_exit_config(
 							'path',
 							c[key][1],
 						)
-						doAction.setProp('goto_iteration', c[key][0])
+						action_list.push(Actions.setProp('goto_iteration', c[key][0]))
 					} else {
 						console.log('skipping setting iteration, iter', iter)
 					}
 				}
-				doAction.setPath('goto', enter ? c[key][1] : null)
+				action_list.push(Actions.setPath('goto', enter ? c[key][1] : null))
 			} else if (
 				[
 					'num_stars',
@@ -332,13 +334,13 @@ export function enter_exit_config(
 					'hide_dot',
 				].includes(key)
 			) {
-				doAction.setProp(key, enter ? c[key] : null)
+				action_list.push(Actions.setProp(key, enter ? c[key] : null))
 			} else if ('blank_between_exercises' === key) {
-				doAction.setProp(key, !enter ? c[key] : null)
+				action_list.push(Actions.setProp(key, !enter ? c[key] : null))
 				//console.log('blank', query_prop('blank_between_exercises'))
 			} else if ('remove_on_exit' === key && !enter) {
 				//console.log('remove_on_exit', c[key])
-				remove_on_exit(c[key])
+				remove_on_exit(c[key], action_list)
 			}
 		}
 	}
@@ -355,7 +357,7 @@ export function enter_exit_config(
 			const loc = landmark_location(query_name_of_tile(arg_1), landmark_index)
 			// console.log('landmark_index', landmark_index, 'arg_1', arg_1)
 			// console.log('loc', loc, 'scale_factor', scale_factor)
-			doAction.setName('door_1', [loc[1] / (h * scale_factor)])
+			action_list.push(Actions.setName('door_1', [loc[1] / (h * scale_factor)]))
 		}
 	}
 	//query_test()

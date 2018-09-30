@@ -1,8 +1,10 @@
 // import { combineReducers } from 'redux'
 import {combineReducers} from 'redux-immutable'
 import {List, Map, fromJS} from 'immutable'
+import {batchActions} from 'redux-batched-actions'
 
 import * as AT from './actionTypes'
+import {global_store} from '../index'
 import {add_block_to_name, remove_block_from_name} from '../components/Block'
 
 // the following reducers control the various overall chunks of the store
@@ -357,6 +359,11 @@ const initialState = fromJS({
   ]
   */
 })
+
+export function do_batched_actions(action_list) {
+	//console.log('do_batched_actions action_list', action_list)
+	global_store.dispatch(batchActions(action_list))
+}
 
 function suujiApp(state, action) {
 	if (AT.RESET_ALL === action.type) return initialState

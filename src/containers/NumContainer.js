@@ -34,8 +34,7 @@ const mapStateToProps = (state, ownProps) => {
 	const verbose = false
 	if (verbose) {
 		let misc = state.getIn(['misc', id])
-		if (misc) misc = misc.toJS()
-		console.log('NumContainer id', id, 'name', name, 'misc', misc)
+		console.log('NumContainer id', id, 'name', name, 'misc', misc ? misc.toJS() : null)
 	}
 
 	return {
