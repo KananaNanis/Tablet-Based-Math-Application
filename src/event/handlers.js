@@ -24,6 +24,7 @@ import {describe_numerical} from './extract'
 import {global_screen_width} from '../components/Workspace'
 import {is_standard_tower} from '../components/Block'
 import {do_batched_actions} from '../providers/reducers'
+import * as Actions from '../providers/actions'
 
 export function handle_delete_button(state) {
 	if ('up' === state) {
@@ -43,8 +44,8 @@ export function handle_start_button(state) {
 	if ('up' === state) {
 		//console.log('start!')
 		let action_list = []
-		action_list.push(Action.setProp('freeze_display', null))
-		action_list.push(Action.setButtonDisplay('start', null))
+		action_list.push(Actions.setProp('freeze_display', null))
+		action_list.push(Actions.setButtonDisplay('start', null))
 		enter_exit_config(action_list, true, false, query_prop('config_iter'), true)
 		do_batched_actions(action_list)
 	}

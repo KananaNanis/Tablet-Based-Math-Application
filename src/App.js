@@ -19,7 +19,7 @@ import {as_position} from './providers/change_config'
 import {query_path} from './providers/query_store'
 import {get_keypad_width_height} from './components/Keypad'
 import {enter_exit_config} from './providers/enter_exit'
-import {do_batched_actions} from './providers/reducers';
+import {do_batched_actions} from './providers/reducers'
 
 export let doAction = {}
 export let global_sound = {}

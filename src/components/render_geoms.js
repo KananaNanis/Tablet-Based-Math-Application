@@ -2,7 +2,7 @@ import React from 'react'
 import NumContainer from '../containers/NumContainer'
 import TileContainer from '../containers/TileContainer'
 import DoorContainer from '../containers/DoorContainer'
-import {query_obj_misc, query_name_of_door} from '../providers/query_store'
+import {query_obj_misc} from '../providers/query_store'
 import {height2tower_name} from '../providers/query_tower'
 
 export function add_offset(pos, offset_x = 0) {
@@ -84,7 +84,7 @@ export function render_doors(
 			// console.log('id', id, 'option', option_values ? option_values.toJS() : null)
 			for (let j = 0; j < 4; ++j) {
 				let name = option_values.get(doors.length)
-			    // console.log('door option id', id, 'name', name)
+				// console.log('door option id', id, 'name', name)
 				doors.push(
 					<DoorContainer
 						key={id + '_' + j}

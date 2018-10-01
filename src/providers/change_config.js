@@ -8,8 +8,8 @@ import {
 } from '../components/Workspace'
 import {get_block_size_from_group} from '../components/Block'
 import {enter_exit_config} from './enter_exit'
-import * as Actions from './actions';
-import { do_batched_actions } from './reducers';
+import * as Actions from './actions'
+import {do_batched_actions} from './reducers'
 
 const deep_clone = obj => JSON.parse(JSON.stringify(obj))
 
@@ -155,18 +155,22 @@ export function transition_to_next_config(action_list) {
 			new_path = prev_path
 		} else new_path = next_config_path(prev_path)
 		console.log('transition_to_next_config', new_path.toJS())
-		action_list.push(Actions.addLogEntry(Date.now(), [new_path, 'next_config', 'start']))
+		action_list.push(
+			Actions.addLogEntry(Date.now(), [new_path, 'next_config', 'start']),
+		)
 		action_list.push(Actions.setPath('config', new_path))
 		enter_exit_config(action_list, true)
 	} else if (query_path('goto') && query_prop('goto_iteration') > 1) {
 		// possibly jump directly to some other path
 		const iter = query_prop('goto_iteration')
 		const new_path = query_path('goto')
-		action_list.push(Actions.addLogEntry(Date.now(), [
-			query_path('config').toJS(),
-			'next_config',
-			iter,
-		]))
+		action_list.push(
+			Actions.addLogEntry(Date.now(), [
+				query_path('config').toJS(),
+				'next_config',
+				iter,
+			]),
+		)
 		enter_exit_config(action_list, false)
 		//console.log('HACK  remove this next line')
 		//action_list.push(Actions.setErrBox(null))
@@ -179,11 +183,13 @@ export function transition_to_next_config(action_list) {
 	} else if (query_prop('config_iteration') > 1) {
 		const iter = query_prop('config_iteration')
 		console.log('iter', iter)
-		action_list.push(Actions.addLogEntry(Date.now(), [
-			query_path('config').toJS(),
-			'next_config',
-			iter,
-		]))
+		action_list.push(
+			Actions.addLogEntry(Date.now(), [
+				query_path('config').toJS(),
+				'next_config',
+				iter,
+			]),
+		)
 		enter_exit_config(action_list, false)
 		if (query_prop('blank_between_exercises')) {
 			//console.log('applying blank of ', query_prop('blank_between_exercises'))
