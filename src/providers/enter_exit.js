@@ -45,11 +45,11 @@ function do_timed_action(id, key, val) {
 
 export function remove_on_exit(action_list, lis) {
 	for (const what of lis) {
-		if ('button_submit' === what)
+		if ('button_submit' === what) {
 			action_list.push(Actions.setButtonDisplay('submit', null))
-		else if ('button_delete' === what)
+		} else if ('button_delete' === what) {
 			action_list.push(Actions.setButtonDisplay('delete', null))
-		else if ('err_box' === what) action_list.push(Actions.setErrBox(null))
+		} else if ('err_box' === what) action_list.push(Actions.setErrBox(null))
 	}
 }
 
