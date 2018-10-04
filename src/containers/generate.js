@@ -120,6 +120,7 @@ function apply_gen_instruction(
 			gen_vars[id] = pick_animal_name(gen_vars[id])
 		} else if ('fixed' === inst[0]) {
 			gen_vars[id] = inst[1]
+			//console.log(' fixed id', id, 'to', gen_vars[id])
 		} else {
 			console.error(
 				'Warning:  unrecognized generate array instruction.',
@@ -134,6 +135,22 @@ function apply_gen_instruction(
 			let h = global_constant.animals[animal_name].height
 			// console.log('animal_name', animal_name, 'h', h)
 			gen_vars[id] = h
+		} else if (2 === words.length && 'as_animal_name' === words[0]) {
+			let val = gen_vars[words[1]],
+				minD = 'unset',
+				animal_name
+			for (const n in global_constant.animals) {
+				if (global_constant.animals.hasOwnProperty(n)) {
+					const d = Math.abs(val - global_constant.animals[n].height)
+					if ('unset' === minD || d < minD) {
+						minD = d
+						animal_name = n
+					}
+				}
+			}
+			//let h = global_constant.animals[animal_name].height
+			//console.log('val', val, 'animal_name', animal_name, 'h', h)
+			gen_vars[id] = animal_name
 		} else if (3 === words.length && is_binary_op(words[1])) {
 			let vals = find_gen_values_for_words([words[0], words[2]], gen_vars)
 			if ('+' === words[1]) {
@@ -168,6 +185,7 @@ export function generate_with_restrictions(c, curr_exercise = 0) {
 		option = [],
 		all = []
 	for (const id in c) {
+		// console.log('  id', id)
 		if (c.hasOwnProperty(id)) {
 			let words = 'string' === typeof c[id] ? c[id].split(' ') : null
 			if (id.startsWith('restriction_')) restrict.push(id)

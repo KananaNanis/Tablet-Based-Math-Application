@@ -64,7 +64,7 @@ function perhaps_reveal_button() {
 export function touch_dispatcher(state, x, y, touchID) {
 	//console.log('touch_dispatcher state ' + state + ' x ' + x + ' y ' + y + ' touchID ' + touchID)
 	const visible = query_visible_buttons()
-	// console.log('visible', visible)
+	//if('down' === state) console.log('visible', visible)
 	if (query_prop('freeze_display')) {
 		// perhaps allow start or submit?
 		if (!visible.includes('start')) {

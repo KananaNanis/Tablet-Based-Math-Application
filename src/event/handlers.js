@@ -46,7 +46,15 @@ export function handle_start_button(state) {
 		let action_list = []
 		action_list.push(Actions.setProp('freeze_display', null))
 		action_list.push(Actions.setButtonDisplay('start', null))
-		enter_exit_config(action_list, true, false, query_prop('config_iter'), true)
+		const cp = query_path('config')
+		enter_exit_config(
+			action_list,
+			cp,
+			true,
+			false,
+			query_prop('config_iter'),
+			true,
+		)
 		do_batched_actions(action_list)
 	}
 }

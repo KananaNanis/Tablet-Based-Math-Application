@@ -181,7 +181,7 @@ export function is_correct() {
 			src_height = query_name_of_door(src).get(0)
 			eq = approx_equal(src_height, tgt_height)
 		}
-		console.log('src_height', src_height, 'tgt_height', tgt_height, 'eq', eq)
+		// console.log('src_height', src_height, 'tgt_height', tgt_height, 'eq', eq)
 		if (eq !== 'unchecked') {
 			if (eq) delay = 0
 			doAction.addLogEntry(curr_time, [

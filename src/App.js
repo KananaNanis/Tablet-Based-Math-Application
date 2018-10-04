@@ -101,6 +101,8 @@ export async function load_config_tree(appObj) {
 					navigator.userAgent &&
 					!navigator.userAgent.match('CriOS')
 			}
+			//console.log('is_mobile', global_constant.is_mobile)
+			//console.log('is_safari', global_constant.is_safari)
 		}
 		let response = await fetch('assets/config.yaml', {
 			credentials: 'same-origin',
@@ -152,7 +154,7 @@ export async function load_config_tree(appObj) {
 
 		const verbose = false
 		let action_list = []
-		enter_exit_config(action_list, true, verbose)
+		enter_exit_config(action_list, path, true, verbose)
 		do_batched_actions(action_list)
 
 		// here is a place to try code that should run just once,

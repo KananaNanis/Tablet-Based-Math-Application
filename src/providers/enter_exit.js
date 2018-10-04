@@ -20,6 +20,7 @@ import {
 } from './change_config'
 import {update_keypad_button_visibility} from '../event/utils'
 import {landmark_location} from '../components/Tile'
+import {List, fromJS} from 'immutable'
 
 function do_timed_action(id, key, val) {
 	// handle the following:
@@ -43,25 +44,28 @@ function do_timed_action(id, key, val) {
 	}
 }
 
-export function remove_on_exit(action_list, lis) {
+export function remove_on_exit(lis, action_list) {
+	// console.log('remove_on_exit lis', lis)
 	for (const what of lis) {
-		if ('button_submit' === what)
+		if ('button_submit' === what) {
 			action_list.push(Actions.setButtonDisplay('submit', null))
-		else if ('button_delete' === what)
+		} else if ('button_delete' === what) {
 			action_list.push(Actions.setButtonDisplay('delete', null))
-		else if ('err_box' === what) action_list.push(Actions.setErrBox(null))
+		} else if ('err_box' === what) action_list.push(Actions.setErrBox(null))
 	}
 }
 
 export function enter_exit_config(
 	action_list,
+	cp,
 	enter,
 	verbose,
 	curr_config_iter,
 	use_delay = false,
 ) {
 	let keep_names = false
-	const cp = query_path('config')
+	if (!cp) cp = query_path('config')
+	else if (!List.isList(cp)) cp = fromJS(cp)
 	//console.log('cp', cp)
 	const config = enter && use_delay ? get_config(cp)['delay'] : get_config(cp)
 	if (!config) return action_list

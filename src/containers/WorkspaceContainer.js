@@ -2,10 +2,12 @@ import {connect} from 'react-redux'
 import Workspace from '../components/Workspace'
 //import {toJS} from './to_js'
 
+//function toJS(val) { return ('undefined' === typeof val) ? val : val.toJS() }
+
 const mapStateToProps = (state, ownProps) => {
 	//console.log(ownProps)
 	//console.log('mapStateToProps tower_ids', state.tower_ids, 'tile_ids', state.tile_ids)
-	//console.log('mapStateToProps door_ids', state.door_ids, 'name', state.name)
+	//console.log('mapStateToProps door_ids', toJS(state.get('door_ids')), 'name', toJS(state.get('name')))
 	//console.log('mapStateToProps style', state.get('style'))
 	//console.log('mapStateToProps misc', state.get('misc'))
 	//console.log('mapStateToProps button_display', state.get('button_display').toJS())
