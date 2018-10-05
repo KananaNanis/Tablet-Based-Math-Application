@@ -136,6 +136,8 @@ export function height_pixels_from_name(name, scale_factor) {
 }
 
 export function transition_to_next_config(action_list) {
+	const verbose = false
+	if (verbose) console.log('transition_to_next_config ')
 	let do_actions_immediately = false
 	if (!action_list) {
 		action_list = []
@@ -143,9 +145,11 @@ export function transition_to_next_config(action_list) {
 	}
 	const curr_num_stars = query_prop('num_stars')
 	action_list.push(Actions.clearEventHandling())
+	let cp = query_path('config')
 	if ('in_between' === query_path('config').get(0)) {
+		if (verbose) console.log('  in_between')
 		// special case
-		enter_exit_config(action_list, false)
+		enter_exit_config(action_list, cp, false)
 		const prev_path = query_path('prev_config')
 		const repeat_level = query_prop('repeat_level')
 		let new_path
@@ -159,8 +163,9 @@ export function transition_to_next_config(action_list) {
 			Actions.addLogEntry(Date.now(), [new_path, 'next_config', 'start']),
 		)
 		action_list.push(Actions.setPath('config', new_path))
-		enter_exit_config(action_list, true)
+		enter_exit_config(action_list, new_path, true)
 	} else if (query_path('goto') && query_prop('goto_iteration') > 1) {
+		if (verbose) console.log('  goto')
 		// possibly jump directly to some other path
 		const iter = query_prop('goto_iteration')
 		const new_path = query_path('goto')
@@ -171,18 +176,18 @@ export function transition_to_next_config(action_list) {
 				iter,
 			]),
 		)
-		enter_exit_config(action_list, false)
+		enter_exit_config(action_list, cp, false)
 		//console.log('HACK  remove this next line')
 		//action_list.push(Actions.setErrBox(null))
 		action_list.push(Actions.setPath('prev_config', query_path('config')))
 		console.log('new_path ', new_path.toJS())
 		action_list.push(Actions.setPath('config', new_path))
-		enter_exit_config(action_list, true)
+		enter_exit_config(action_list, new_path, true)
 		action_list.push(Actions.setProp('goto_iteration', iter - 1))
 		action_list.push(Actions.setProp('num_stars', curr_num_stars))
 	} else if (query_prop('config_iteration') > 1) {
 		const iter = query_prop('config_iteration')
-		console.log('iter', iter)
+		//console.log('iter', iter)
 		action_list.push(
 			Actions.addLogEntry(Date.now(), [
 				query_path('config').toJS(),
@@ -190,12 +195,13 @@ export function transition_to_next_config(action_list) {
 				iter,
 			]),
 		)
-		enter_exit_config(action_list, false)
+		enter_exit_config(action_list, cp, false)
 		if (query_prop('blank_between_exercises')) {
 			//console.log('applying blank of ', query_prop('blank_between_exercises'))
 			window.setTimeout(function() {
 				enter_exit_config(
 					action_list,
+					cp,
 					true,
 					false, // verbose
 					iter - 1,
@@ -204,7 +210,7 @@ export function transition_to_next_config(action_list) {
 				action_list.push(Actions.setProp('num_stars', curr_num_stars))
 			}, query_prop('blank_between_exercises'))
 		} else {
-			enter_exit_config(action_list, true, false, iter - 1)
+			enter_exit_config(action_list, cp, true, false, iter - 1)
 			action_list.push(Actions.setProp('config_iteration', iter - 1))
 			action_list.push(Actions.setProp('num_stars', curr_num_stars))
 		}
@@ -220,21 +226,35 @@ export function transition_to_next_config(action_list) {
     update_keypad_button_visibility(null, null, null)
     */
 	} else if (query_prop('skip_in_between')) {
-		enter_exit_config(action_list, false)
+		if (verbose) console.log('  skip_in_between')
+		enter_exit_config(action_list, cp, false)
 		const curr_path = query_path('config')
 		const new_path = next_config_path(curr_path)
 		action_list.push(Actions.setPath('prev_config', curr_path))
 		action_list.push(Actions.setPath('config', new_path))
-		enter_exit_config(action_list, true)
+		enter_exit_config(action_list, new_path, true)
 	} else {
-		enter_exit_config(action_list, false)
+		if (verbose) console.log('  switching to in_between')
+		enter_exit_config(action_list, cp, false)
 		action_list.push(Actions.setPath('prev_config', query_path('config')))
 		action_list.push(Actions.setPath('config', ['in_between']))
-		enter_exit_config(action_list, true)
+		enter_exit_config(action_list, ['in_between'], true)
 	}
 	if (do_actions_immediately) {
+		//console.log('do_actions_immediately action_list', action_list)
 		do_batched_actions(action_list)
 	} else return action_list
+}
+
+export function print_all_paths() {
+	let path = fromJS(first_config_path()),
+		s = ''
+	console.log('print_all_paths:')
+	for (let i = 1; path && i < 10000; ++i) {
+		s += i + '\t' + path.toJS().join(' ') + '\n'
+		path = next_config_path(path)
+	}
+	console.log(s)
 }
 
 export function first_config_path(starter) {

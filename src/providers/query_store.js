@@ -71,15 +71,17 @@ export function query_visible_buttons() {
 	if (state.get('keypad_kind')) {
 		const i_end = get_button_geoms_for(state.get('keypad_kind')).length
 		for (let i = 0; i < i_end; ++i) {
-			const istr = String(i)
+			//const istr = String(i)
+			//console.log('i', i, 'istr', istr, '  has', state.get('button_display').has(i), 'val', state.getIn(['button_display', i]))
 			if (
-				!(istr in state.get('button_display')) ||
-				state.getIn(['button_display', istr]) !== false
+				state.get('button_display').has(i) &&
+				state.getIn(['button_display', i]) !== false
 			) {
 				res.push(i)
 			}
 		}
 	}
+	// console.log('query_visible_buttons res', res, 'button_display', state.get('button_display').toJS())
 	return res
 }
 

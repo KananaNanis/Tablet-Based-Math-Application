@@ -15,7 +15,7 @@ import {global_store} from './index.js'
 import Sound from './assets/sound'
 import * as Actions from './providers/actions'
 import PrintFigure from './components/PrintFigure'
-import {as_position} from './providers/change_config'
+import {as_position, print_all_paths} from './providers/change_config'
 import {query_path} from './providers/query_store'
 import {get_keypad_width_height} from './components/Keypad'
 import {enter_exit_config} from './providers/enter_exit'
@@ -101,6 +101,8 @@ export async function load_config_tree(appObj) {
 					navigator.userAgent &&
 					!navigator.userAgent.match('CriOS')
 			}
+			//console.log('is_mobile', global_constant.is_mobile)
+			//console.log('is_safari', global_constant.is_safari)
 		}
 		let response = await fetch('assets/config.yaml', {
 			credentials: 'same-origin',
@@ -111,6 +113,8 @@ export async function load_config_tree(appObj) {
 		prev_response_text = response_text
 		//console.log(response_text);
 		config_tree = yaml.safeLoad(response_text)
+		const print_paths = false
+		if (print_paths) print_all_paths(config_tree)
 		//console.log('config_tree', config_tree);
 
 		// create the bound action creators!
@@ -152,7 +156,7 @@ export async function load_config_tree(appObj) {
 
 		const verbose = false
 		let action_list = []
-		enter_exit_config(action_list, true, verbose)
+		enter_exit_config(action_list, path, true, verbose)
 		do_batched_actions(action_list)
 
 		// here is a place to try code that should run just once,

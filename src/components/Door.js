@@ -261,6 +261,27 @@ class Door extends React.Component {
 				/>,
 			)
 		}
+		let tickmarks = []
+		if (misc && 'undefined' !== typeof misc.tickmarks) {
+			const twidth = (global_constant.door.handle_fraction * height) / 8
+			for (const tval of misc.tickmarks) {
+				tickmarks.push(
+					<View
+						key={'tm' + tval}
+						style={[
+							styles.tickmark,
+							{
+								bottom: tval * scale_factor * extra_scale - thickness / 4,
+								left: -(thickness + twidth),
+								width: twidth,
+								borderTopWidth: thickness / 2,
+								borderTopColor: frame_color,
+							},
+						]}
+					/>,
+				)
+			}
+		}
 		if (is_portal) {
 			// this is a portal, so we need to add all the other geometry,
 			//   twice!
@@ -350,10 +371,16 @@ class Door extends React.Component {
 						{doors}
 					</Animated.View>
 					{handles}
+					{tickmarks}
 				</Animated.View>
 			)
 		} else {
-			return <Animated.View style={door_style}>{handles}</Animated.View>
+			return (
+				<Animated.View style={door_style}>
+					{handles}
+					{tickmarks}
+				</Animated.View>
+			)
 		}
 	}
 }
@@ -377,6 +404,10 @@ const styles = StyleSheet.create({
 		transformOrigin: 'bottom left',
 	},
 	handle: {
+		position: 'absolute',
+		height: 0,
+	},
+	tickmark: {
 		position: 'absolute',
 		height: 0,
 	},
