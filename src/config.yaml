@@ -438,7 +438,9 @@ estimate_names:
         door_9: [10.0]  # as a reference
       modify:
         tile_1: { position: [right 40vw, 0] }
-        door_9: { position: [right 39vw, 0] }
+        door_9: 
+          position: [right 39vw, 0]
+          misc: {tickmarks: [.5, 1.5]}
       event_handling: 
         comparison_source: tile_1
         # correctness: identical
