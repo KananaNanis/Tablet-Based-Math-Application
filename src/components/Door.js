@@ -1,11 +1,11 @@
 import React from 'react'
-import { Map, fromJS } from 'immutable'
-import { StyleSheet, View, Animated } from 'react-native'
-import { as_greyscale } from './Tower'
-import { start_anim } from './Workspace'
-import { render_nums, render_tiles, render_doors } from './render_geoms'
-import { global_constant, doAction } from '../App'
-import { apply_bounds } from '../event/utils'
+import {Map, fromJS} from 'immutable'
+import {StyleSheet, View, Animated} from 'react-native'
+import {as_greyscale} from './Tower'
+import {start_anim} from './Workspace'
+import {render_nums, render_tiles, render_doors} from './render_geoms'
+import {global_constant, doAction} from '../App'
+import {apply_bounds} from '../event/utils'
 
 export function start_anim_loop(anim_var, delay = 0) {
 	//console.log('start_anim_loop delay', delay)
@@ -42,11 +42,11 @@ class Door extends React.Component {
 	}
 
 	componentDidUpdate() {
-		const { id } = this.props
+		const {id} = this.props
 		//if ('portal_1' == id) tlog('Door', id, 'componentDidUpate')
-		let { anim_info } = this.props
+		let {anim_info} = this.props
 		const clear_anim_info = f => {
-			let { anim_info } = this.props
+			let {anim_info} = this.props
 			//console.log('clear_anim_info', anim_info)
 			if (f.finished && anim_info) {
 				doAction.setAnimInfo(id, null)
@@ -136,11 +136,11 @@ class Door extends React.Component {
 			},
 		]
 		if (misc && 'undefined' !== typeof misc.is_option) {
-			door_style.push({ position: null })
+			door_style.push({position: null})
 		}
 		if (anim_info && anim_info.hasOwnProperty('fade_duration')) {
 			start_anim(this.state.fadeAnim, 0, anim_info.fade_duration)
-			door_style.push({ opacity: this.state.fadeAnim })
+			door_style.push({opacity: this.state.fadeAnim})
 		}
 		if (
 			misc &&
@@ -177,7 +177,7 @@ class Door extends React.Component {
 			},
 		]
 		if (misc && 'undefined' !== typeof misc.handle_opacity) {
-			handle_style.push({ opacity: misc.handle_opacity })
+			handle_style.push({opacity: misc.handle_opacity})
 		}
 		if (misc && 'undefined' !== typeof misc.handle_blink) {
 			handle_style.push({
@@ -238,10 +238,10 @@ class Door extends React.Component {
 			})
 		}
 		if (misc && misc.handle_color && !just_grey) {
-			handle_style.push({ borderTopColor: misc.handle_color })
+			handle_style.push({borderTopColor: misc.handle_color})
 		}
 		if (misc && 'undefined' !== typeof misc.stealth_mode) {
-			handle_style.push({ borderTopColor: 'transparent' })
+			handle_style.push({borderTopColor: 'transparent'})
 		}
 		//console.log('handle_style', handle_style)
 		let handles = [<Animated.View key={1} style={handle_style} />]
@@ -263,7 +263,7 @@ class Door extends React.Component {
 		}
 		let tickmarks = []
 		if (misc && 'undefined' !== typeof misc.tickmarks) {
-			const twidth = global_constant.door.handle_fraction * height / 8
+			const twidth = (global_constant.door.handle_fraction * height) / 8
 			for (const tval of misc.tickmarks) {
 				tickmarks.push(
 					<View
@@ -274,7 +274,7 @@ class Door extends React.Component {
 								bottom: tval * scale_factor * extra_scale - thickness / 4,
 								left: -(thickness + twidth),
 								width: twidth,
-								borderTopWidth: thickness/2,
+								borderTopWidth: thickness / 2,
 								borderTopColor: frame_color,
 							},
 						]}
@@ -298,7 +298,7 @@ class Door extends React.Component {
 					borderRightColor: 'transparent',
 				})
 			}
-			let { tower_ids, tile_ids, door_ids } = this.props
+			let {tower_ids, tile_ids, door_ids} = this.props
 			if (!Map.isMap(tower_ids)) tower_ids = fromJS(tower_ids)
 			if (!Map.isMap(tile_ids)) tile_ids = fromJS(tile_ids)
 			if (!Map.isMap(door_ids)) door_ids = fromJS(door_ids)
@@ -313,7 +313,7 @@ class Door extends React.Component {
 			const nums = render_nums(tower_ids, offset_x)
 			const tiles = render_tiles(tile_ids, offset_x)
 			const doors = render_doors(door_ids, id, offset_x)
-			const transform = [{ scale: bounded_name }]
+			const transform = [{scale: bounded_name}]
 			let inner_style = [
 				styles.inner,
 				{
@@ -375,7 +375,12 @@ class Door extends React.Component {
 				</Animated.View>
 			)
 		} else {
-			return <Animated.View style={door_style}>{handles}{tickmarks}</Animated.View>
+			return (
+				<Animated.View style={door_style}>
+					{handles}
+					{tickmarks}
+				</Animated.View>
+			)
 		}
 	}
 }
@@ -404,8 +409,8 @@ const styles = StyleSheet.create({
 	},
 	tickmark: {
 		position: 'absolute',
-		height: 0
-	}
+		height: 0,
+	},
 })
 
 export default Door

@@ -247,9 +247,10 @@ export function transition_to_next_config(action_list) {
 }
 
 export function print_all_paths() {
-	let path = fromJS(first_config_path()), s = ''
+	let path = fromJS(first_config_path()),
+		s = ''
 	console.log('print_all_paths:')
-	for (var i = 1; path && i < 10000; ++i) {
+	for (let i = 1; path && i < 10000; ++i) {
 		s += i + '\t' + path.toJS().join(' ') + '\n'
 		path = next_config_path(path)
 	}
