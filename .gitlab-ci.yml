@@ -10,10 +10,10 @@ run_prettier:
   stage: format
   script:
     - npm install -g prettier
-    - prettier --list-different 'src/**/*.{js,json}' '*.js'
+    - npm run prettier:diff
 
 run_lint:
   stage: format
   script:
     - npm install -g eslint babel-eslint eslint-config-prettier eslint-plugin-babel eslint-plugin-react eslint-plugin-react-native
-    - eslint --report-unused-disable-directives --max-warnings=0 --cache src/ *.js
+    - npm run lint
