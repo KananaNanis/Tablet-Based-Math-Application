@@ -76,18 +76,31 @@ function portal_ids(state = List([]), action) {
 	}
 }
 
+function five_frame_ids(state = List([]), action) {
+	switch (action.type) {
+		case AT.FIVE_FRAME_CREATE:
+			return array_add_remove_element(state, action.id, true, true)
+		case AT.FIVE_FRAME_DELETE:
+			return array_add_remove_element(state, action.id, false, true)
+		default:
+			return state
+	}
+}
+
 function name(state = Map({}), action) {
 	switch (action.type) {
 		case AT.TOWER_CREATE:
 		case AT.TILE_CREATE:
 		case AT.DOOR_CREATE:
 		case AT.PORTAL_CREATE:
+		case AT.FIVE_FRAME_CREATE:
 		case AT.SET_NAME:
 			return obj_add_remove_property(state, action.id, action.name)
 		case AT.TOWER_DELETE:
 		case AT.TILE_DELETE:
 		case AT.DOOR_DELETE:
 		case AT.PORTAL_DELETE:
+		case AT.FIVE_FRAME_DELETE:
 			return obj_add_remove_property(state, action.id, null)
 		case AT.TOWER_ADD_BLOCK:
 			return state.set(
@@ -107,12 +120,14 @@ function position(state = Map({}), action) {
 		case AT.TILE_CREATE:
 		case AT.DOOR_CREATE:
 		case AT.PORTAL_CREATE:
+		case AT.FIVE_FRAME_CREATE:
 		case AT.SET_POSITION:
 			return obj_add_remove_property(state, action.id, action.position)
 		case AT.TOWER_DELETE:
 		case AT.TILE_DELETE:
 		case AT.DOOR_DELETE:
 		case AT.PORTAL_DELETE:
+		case AT.FIVE_FRAME_DELETE:
 			return obj_add_remove_property(state, action.id, null)
 		default:
 			return state
@@ -129,10 +144,12 @@ function style(state = Map({}), action) {
 		case AT.TILE_CREATE:
 		case AT.DOOR_CREATE:
 		case AT.PORTAL_CREATE:
+		case AT.FIVE_FRAME_CREATE:
 		case AT.TOWER_DELETE:
 		case AT.TILE_DELETE:
 		case AT.DOOR_DELETE:
 		case AT.PORTAL_DELETE:
+		case AT.FIVE_FRAME_DELETE:
 			return obj_add_remove_property(state, action.id, null)
 		default:
 			return state
@@ -147,10 +164,12 @@ function anim_info(state = Map({}), action) {
 		case AT.TILE_CREATE:
 		case AT.DOOR_CREATE:
 		case AT.PORTAL_CREATE:
+		case AT.FIVE_FRAME_CREATE:
 		case AT.TOWER_DELETE:
 		case AT.TILE_DELETE:
 		case AT.DOOR_DELETE:
 		case AT.PORTAL_DELETE:
+		case AT.FIVE_FRAME_DELETE:
 			//console.log('removing anim_info for id', action.id)
 			return obj_add_remove_property(state, action.id, null)
 		default:
@@ -219,10 +238,12 @@ function misc(state = Map({}), action) {
 		case AT.TILE_CREATE:
 		case AT.DOOR_CREATE:
 		case AT.PORTAL_CREATE:
+		case AT.FIVE_FRAME_CREATE:
 		case AT.TOWER_DELETE:
 		case AT.TILE_DELETE:
 		case AT.DOOR_DELETE:
 		case AT.PORTAL_DELETE:
+		case AT.FIVE_FRAME_DELETE:
 			return obj_add_remove_property(state, action.id, null)
 		default:
 			return state
@@ -323,6 +344,7 @@ const suujiAppInner = combineReducers({
 	tile_ids,
 	door_ids,
 	portal_ids,
+	five_frame_ids,
 	name,
 	position,
 	style,
@@ -349,6 +371,7 @@ const initialState = fromJS({
 	tile_ids: [],
 	door_ids: [],
 	portal_ids: [],
+	five_frame_ids: [],
 	button_display: {},
 	/*
   log: [

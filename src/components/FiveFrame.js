@@ -1,5 +1,6 @@
 import React from 'react'
-import {StyleSheet, View} from 'react-native'
+import {StyleSheet, View, Text, Animated} from 'react-native'
+import {start_anim} from './Workspace'
 
 const squareSide = 220
 const borderWidth = 10
@@ -10,19 +11,38 @@ const FiveFrameSquare = ({empty, id}) => {
 	return <View style={[styles.oneSquare, vert]}>{inside}</View>
 }
 
-const FiveFrame = ({name, position, misc}) => {
-	const extra_scale =
-		misc && 'undefined' !== typeof misc.extra_scale ? misc.extra_scale : 1
-	extra_scale // use this where?
-
-	let pos_info = {left: position[0], bottom: position[1]}
-	let squares = []
-	for (let i = 0; i < 5; ++i) {
-		squares.push(
-			<FiveFrameSquare key={i} empty={i >= name} id={i} style={styles.dot} />,
-		)
+class FiveFrame extends React.Component {
+	state = {
+		fadeAnim: new Animated.Value(1),
 	}
-	return <View style={[styles.frame, pos_info]}>{squares}</View>
+
+	render() {
+		let {name, position, style, anim_info, misc} = this.props
+		const extra_scale =
+			misc && 'undefined' !== typeof misc.extra_scale ? misc.extra_scale : 1
+
+		let pos_info = {
+			left: position[0],
+			bottom: position[1],
+			transformOrigin: 'bottom left',
+			transform: [{scale: extra_scale}],
+		}
+		let style_text = [styles.text, pos_info, style]
+		let style_frame = [styles.frame, pos_info, style]
+		if (anim_info && anim_info.hasOwnProperty('fade_duration')) {
+			start_anim(this.state.fadeAnim, 0, anim_info.fade_duration)
+			style_text.push({opacity: this.state.fadeAnim})
+			style_frame.push({opacity: this.state.fadeAnim})
+		}
+		if (misc && 'undefined' !== typeof misc.just_text) {
+			return <Text style={style_text}>{name}</Text>
+		}
+		let squares = []
+		for (let i = 0; i < 5; ++i) {
+			squares.push(<FiveFrameSquare key={i} empty={i >= name} id={i} />)
+		}
+		return <Animated.View style={style_frame}>{squares}</Animated.View>
+	}
 }
 
 const black = 'black'
@@ -45,6 +65,10 @@ const styles = StyleSheet.create({
 		height: squareSide / 2,
 		backgroundColor: black,
 		borderRadius: '50%',
+	},
+	text: {
+		position: 'absolute',
+		fontSize: 400,
 	},
 })
 

@@ -16,7 +16,7 @@ import Sound from './assets/sound'
 import * as Actions from './providers/actions'
 import PrintFigure from './components/PrintFigure'
 import {as_position, print_all_paths} from './providers/change_config'
-import {query_path} from './providers/query_store'
+import {query_path, query_test} from './providers/query_store'
 import {get_keypad_width_height} from './components/Keypad'
 import {enter_exit_config} from './providers/enter_exit'
 import {do_batched_actions} from './providers/reducers'
@@ -158,6 +158,8 @@ export async function load_config_tree(appObj) {
 		let action_list = []
 		enter_exit_config(action_list, path, true, verbose)
 		do_batched_actions(action_list)
+		const show_starting_config = false
+		if (show_starting_config) query_test()
 
 		// here is a place to try code that should run just once,
 		//   after the config has been loaded

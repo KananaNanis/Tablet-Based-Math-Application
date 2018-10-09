@@ -85,12 +85,12 @@ export function query_visible_buttons() {
 	return res
 }
 
-export function query_name_of_tile(id) {
+export function query_name_of(id) {
 	const state = global_store.getState()
 	return state.getIn(['name', id])
 }
 
-export function query_position_of_tile(id) {
+export function query_position_of(id) {
 	const state = global_store.getState()
 	return state.getIn(['position', id])
 }
@@ -112,13 +112,6 @@ export function query_all_doors() {
 export function query_door(door_id, all_doors = null) {
 	if (!all_doors) all_doors = query_all_doors()
 	return all_doors.get(door_id)
-}
-
-export function query_name_of_door(id) {
-	const state = global_store.getState()
-	const res = state.getIn(['name', id])
-	//console.log('query_name_of_door id', id, 'res', res)
-	return res
 }
 
 export function query_obj_style(id) {

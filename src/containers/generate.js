@@ -1,10 +1,12 @@
-import {global_constant, doAction} from '../App'
+import {global_constant} from '../App'
+import * as Actions from '../providers/actions'
 import {
 	pick_from_list,
 	pick_from_range,
 	from_uniform_range,
 	pick_animal_name,
 } from './gen_utile'
+import {approx_equal} from '../event/utils'
 
 function find_gen_values_for_words(words, gen_vars) {
 	let res = words.slice()
@@ -37,12 +39,28 @@ export function permute_array_elements(arr) {
 }
 
 function generate_option_values(inst, option_delta, option_values) {
+	const verbose = false
 	option_values.length = 0
-	let offset = Math.floor(4 * Math.random())
-	for (let i = 0; i < 4; ++i) {
-		option_values.push([inst + (i - offset) * option_delta])
+	if ('number' !== typeof option_delta[0]) {
+		// use the delta as the actual values
+		for (let i = 0; i < option_delta[0].length; ++i) {
+			option_values.push(option_delta[0][i])
+		}
+	} else {
+		let offset = Math.floor(4 * Math.random())
+		for (let i = 0; i < 4; ++i) {
+			option_values.push([inst + (i - offset) * option_delta[0]])
+		}
+		permute_array_elements(option_values)
 	}
-	permute_array_elements(option_values)
+	if (verbose) {
+		console.log(
+			'generate_option_values option_delta',
+			option_delta[0],
+			'res',
+			option_values,
+		)
+	}
 	return option_values
 }
 
@@ -57,19 +75,20 @@ function apply_gen_instruction(
 ) {
 	let ok = true
 	let verbose = false
-	//console.log('apply_gen_instruction id', id, 'inst', inst)
+	// console.log('apply_gen_instruction id', id, 'inst', inst)
 	if (id.startsWith('option_')) {
 		if ('option_value_delta' === id) {
-			option_delta = Number(inst)
-			//console.log('option_delta', option_delta)
+			option_delta[0] = inst
+			// console.log('option_delta', option_delta[0])
 		} else if ('option_value_seed' === id) {
 			// actually generate options
 			if ('string' === typeof inst) {
 				inst = find_gen_values_for_words([inst], gen_vars)[0]
 			}
 			correct_option_value[0] = inst
+			console.log('initial correct value set to', inst)
 			generate_option_values(inst, option_delta, option_values)
-			// console.log(' here, option_values', option_values, 'correct_option_value', correct_option_value)
+			//console.log(' here, option_values', option_values, 'correct_option_value', correct_option_value)
 			for (let i = 0; i < 4; ++i) {
 				gen_vars['option_' + i] = option_values[i][0]
 			}
@@ -151,6 +170,16 @@ function apply_gen_instruction(
 			//let h = global_constant.animals[animal_name].height
 			//console.log('val', val, 'animal_name', animal_name, 'h', h)
 			gen_vars[id] = animal_name
+		} else if (3 === words.length && 'as_peg_name' === words[0]) {
+			let peg_type = gen_vars[words[1]],
+				peg_height = gen_vars[words[2]],
+				peg_name
+			let peg_num = Math.round(10 * peg_height)
+			if (peg_num < 1) peg_num = 1
+			if (peg_num > 5) peg_num = 5
+			peg_name = 'peg_' + peg_type + peg_num
+			// console.log('peg type', peg_type, 'peg_height', peg_height, 'peg_num', peg_num, 'peg_name', peg_name)
+			gen_vars[id] = peg_name
 		} else if (3 === words.length && is_binary_op(words[1])) {
 			let vals = find_gen_values_for_words([words[0], words[2]], gen_vars)
 			if ('+' === words[1]) {
@@ -176,7 +205,7 @@ function apply_gen_instruction(
 	return ok
 }
 
-export function generate_with_restrictions(c, curr_exercise = 0) {
+export function generate_with_restrictions(action_list, c, curr_exercise = 0) {
 	const verbose = false
 
 	// move restrictions to the end, and binary ops just before
@@ -203,8 +232,8 @@ export function generate_with_restrictions(c, curr_exercise = 0) {
 	// try to create a valid set of values, and then check restrictions
 	let i,
 		max_i = 100
-	// option_values and correct_option_value are effectively pass-by-reference
-	let option_delta = 0.1,
+	// option_delta, option_values, and correct_option_value are effectively pass-by-reference
+	let option_delta = [0.1],
 		option_values = [],
 		correct_option_value = []
 	for (i = 0; i < max_i; ++i) {
@@ -265,12 +294,12 @@ export function generate_with_restrictions(c, curr_exercise = 0) {
 	}
 	// console.log('option_values', option_values)
 	if (option_values.length > 0) {
-		doAction.setOptionValues(option_values)
+		action_list.push(Actions.setOptionValues(option_values))
 		// console.log('correct_option_value', correct_option_value)
 		// console.log('option_values', option_values)
-		for (let i = 0; i < 4; ++i) {
-			if (correct_option_value[0] === option_values[i][0]) {
-				doAction.setProp('correct_option_index', i)
+		for (let i = 0; i < option_values.length; ++i) {
+			if (approx_equal(correct_option_value[0], option_values[i][0])) {
+				action_list.push(Actions.setProp('correct_option_index', i))
 				// console.log('correct_option_index', i)
 			}
 		}

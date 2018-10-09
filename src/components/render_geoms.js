@@ -2,8 +2,15 @@ import React from 'react'
 import NumContainer from '../containers/NumContainer'
 import TileContainer from '../containers/TileContainer'
 import DoorContainer from '../containers/DoorContainer'
-import {query_obj_misc} from '../providers/query_store'
+import FiveFrameContainer from '../containers/FiveFrameContainer'
+import {
+	query_obj_misc,
+	//query_obj_style,
+	//query_position_of,
+	//query_name_of,
+} from '../providers/query_store'
 import {height2tower_name} from '../providers/query_tower'
+//import FiveFrame from './FiveFrame';
 
 export function add_offset(pos, offset_x = 0) {
 	return [pos.get(0) + offset_x, pos.get(1)]
@@ -22,7 +29,7 @@ export function render_nums(
 		let is_option = m ? m.get('is_option') : false
 		if (option_values && is_option) {
 			// console.log('id', id, 'option', option_values ? option_values.toJS() : null)
-			for (let j = 0; j < 4; ++j) {
+			for (let j = 0; j < option_values.size; ++j) {
 				let name = option_values.get(nums.length)
 				// this name is not canonical, yet
 				name = height2tower_name(name.get(0))
@@ -82,7 +89,7 @@ export function render_doors(
 		if (skip === id) continue
 		if (option_values && is_option) {
 			// console.log('id', id, 'option', option_values ? option_values.toJS() : null)
-			for (let j = 0; j < 4; ++j) {
+			for (let j = 0; j < option_values.size; ++j) {
 				let name = option_values.get(doors.length)
 				// console.log('door option id', id, 'name', name)
 				doors.push(
@@ -96,7 +103,7 @@ export function render_doors(
 				)
 			}
 		} else if (!option_values && !is_option) {
-			// console.log('door id', id, 'name', query_name_of_door(id))
+			// console.log('door id', id, 'name', query_name_of(id))
 			doors.push(
 				<DoorContainer
 					key={id}
@@ -124,7 +131,7 @@ export function render_portals(
 	for (let i = 0; i < portal_ids.size; ++i) {
 		const id = portal_ids.get(i)
 		if (skip === id) continue
-		// console.log('portal id', id, 'name', query_name_of_door(id))
+		// console.log('portal id', id, 'name', query_name_of(id))
 		portals.push(
 			<DoorContainer
 				key={i}
@@ -138,4 +145,47 @@ export function render_portals(
 		)
 	}
 	return portals
+}
+
+export function render_five_frames(five_frame_ids, option_values = null) {
+	let ffs = []
+	for (let i = 0; i < five_frame_ids.size; ++i) {
+		const id = five_frame_ids.get(i)
+		const m = query_obj_misc(id)
+		// console.log('id', id, 'm', m ? m.toJS() : null)
+		let is_option = m ? m.get('is_option') : false
+		//let pos = query_position_of(id)
+		//let style = query_obj_style(id)
+		if (option_values && is_option) {
+			// console.log('ff id', id, 'option_values', option_values ? option_values.toJS() : null)
+			for (let j = 0; j < option_values.size; ++j) {
+				let name = option_values.get(ffs.length).get(0)
+				//console.log('five_frame option id', id, 'name', name)
+				ffs.push(
+					<FiveFrameContainer
+						key={id + '_' + j}
+						id={id}
+						//style={style.toJS()}
+						//misc={m.toJS()}
+						name={name}
+						//position={[pos.get(0), pos.get(1)]}
+					/>,
+				)
+			}
+		} else if (!option_values && !is_option) {
+			// console.log('ff id', id, 'name', query_name_of(id))
+			//let name = query_name_of(id)
+			ffs.push(
+				<FiveFrameContainer
+					key={id}
+					id={id}
+					//style={style.toJS()}
+					//misc={m.toJS()}
+					//name={name}
+					//position={[pos.get(0), pos.get(1)]}
+				/>,
+			)
+		}
+	}
+	return ffs
 }
