@@ -6,11 +6,12 @@ import {
 	global_workspace_height,
 	start_anim,
 } from '../components/Workspace'
-import {query_prop} from '../providers/query_store'
+import {query_prop, query_option_values} from '../providers/query_store'
 import {start_anim_loop} from './Door'
 
 export function option_geometry(i) {
-	const width = (global_screen_width - global_constant.prompt_width) / 4
+	const n = query_option_values().size
+	const width = (global_screen_width - global_constant.prompt_width) / n
 	const height = global_workspace_height
 	const position = [global_constant.prompt_width + i * width, 0]
 	return {position, width, height}

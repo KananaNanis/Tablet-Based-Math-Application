@@ -31,12 +31,16 @@ params:
   # starting_config_path: ['add_height', 'door_target', 'actual_addition', 'level_1']
   # starting_config_path: ['measure_height', 'animal_height_subitize']
   # starting_config_path: ['measure_height', 'copy_tower_subitize']
-  starting_config_path: ['estimate_names', 'of_animals', 'level_1']
+  # starting_config_path: ['estimate_names', 'of_animals', 'level_1']
   # starting_config_path: ['estimate_names', 'of_doors', 'level_1']
   # starting_config_path: ['measure_height', 'to_handle', 'level_1']
   # starting_config_path: ['measure_height',  'animal_height', 'level_1']
   # starting_config_path: ['intro_diagrams', 'copy_tower', 'level_1']
   # starting_config_path: ['intro_names', 'copy_tower', 'level_1']
+  # starting_config_path: ['one_through_five', 'five_frame', 'level_1'] # Oct 8
+  # starting_config_path: ['one_through_five', 'five_frame', 'disappearing', 'level_4']
+  # starting_config_path: ['one_through_five', 'pegs', 'level_1'] # Oct 9
+  starting_config_path: ['one_through_five', 'pegs', 'disappearing', 'level_2']
 intro_diagrams:
   params:
     create:
@@ -338,6 +342,170 @@ intro_names:
           tower_1: remove
           tower_2: remove
           center_text:  That's all for today!
+one_through_five:
+  params:
+    generate: 
+      prompt_value: [pick_from_range, .1, .5, .1]
+      # prompt_value: [fixed, .3]
+      option_value_delta: 0.2
+      option_value_seed: prompt_value
+      restriction_3: option > 0
+      restriction_4: option < 1.9
+    create:
+      tower_2: []
+    modify:
+      tower_2: 
+        position: [0, 0]
+        tower_style: { opacity: 0 }
+        misc:
+          is_option: true
+    event_handling:
+      target: tower_2
+      correctness: identical
+    misc: 
+      config_iteration: 7
+      # config_iteration: 1
+      num_stars: 3
+  five_frame:
+    params:
+      generate: 
+        prompt_value: [pick_from_range, 1, 5.5, 1]
+        # prompt_value: [fixed, 3]
+        option_value_delta: [[1], [2], [3], [4], [5]]
+        restriction_4: option < 6
+      create:
+        tower_2: remove
+        five_frame_1: { name: prompt_value }
+        five_frame_2: { name: 1 }
+      modify:
+        five_frame_1: 
+          position: [5, 0]
+          misc:
+            extra_scale: .5
+        five_frame_2:
+          position: [0, 0]
+          misc:
+            is_option: true
+            just_text: true
+            extra_scale: .5
+      event_handling: 
+        target: five_frame_2
+        arg_1: five_frame_1
+        comparison_source: five_frame_1
+    level_1:
+    disappearing:
+      params:
+        create:
+          button_start:
+        modify:
+          five_frame_1:
+            style: { opacity: 0 }
+          five_frame_2:
+            style: { opacity: 0 }
+        misc:
+          freeze_display: true
+      level_2:
+        params:
+          delay:
+            modify:
+              five_frame_1:
+                style: { opacity: 1 }
+                fade_anim: { start: 1000, duration: 500 }
+              five_frame_2:
+                appear_after: 1500
+      level_3:
+        params:
+          delay:
+            modify:
+              five_frame_1:
+                style: { opacity: 1 }
+                fade_anim: { start: 250, duration: 250 }
+              five_frame_2:
+                appear_after: 500
+      level_4:
+        params:
+          delay:
+            modify:
+              five_frame_1:
+                style: { opacity: 1 }
+                fade_anim: { start: 100, duration: 150 }
+              five_frame_2:
+                appear_after: 250
+      all_done:
+        params:
+          create:
+            five_frame_1: remove
+            five_frame_2: remove
+            button_start: remove
+            center_text:  That's all for today!
+  pegs:
+    params:
+      generate: 
+        prompt_value: [pick_from_range, .1, .55, .1]
+        # prompt_value: [fixed, .3]
+        peg_type: [pick_from_list, ['a', 'b', 'c']]
+        peg_name: as_peg_name peg_type prompt_value
+        option_value_delta: [[.1], [.2], [.3], [.4], [.5]]
+        restriction_4: option < .6
+      create:
+        tile_1: { name: peg_name }
+        door_9: [10.0]  # as a reference
+      modify:
+        tile_1: 
+          position: [20, 0]
+          style: { borderTopWidth: 0 }
+        door_9: 
+          position: [10, 0]
+          misc: {tickmarks: [.5, 1.5]}
+      event_handling: 
+        arg_1: tile_1
+        comparison_source: tile_1
+    level_1:
+    disappearing:
+      params:
+        create:
+          button_start:
+        modify:
+          tile_1:
+            style: { opacity: 0 }
+          tile_2:
+            style: { opacity: 0 }
+        misc:
+          freeze_display: true
+      level_2:
+        params:
+          delay:
+            modify:
+              tile_1:
+                style: { opacity: 1 }
+                fade_anim: { start: 1000, duration: 500 }
+              tile_2:
+                appear_after: 1500
+      level_3:
+        params:
+          delay:
+            modify:
+              tile_1:
+                style: { opacity: 1 }
+                fade_anim: { start: 250, duration: 250 }
+              tile_2:
+                appear_after: 500
+      level_4:
+        params:
+          delay:
+            modify:
+              tile_1:
+                style: { opacity: 1 }
+                fade_anim: { start: 100, duration: 150 }
+              tile_2:
+                appear_after: 250
+      all_done:
+        params:
+          create:
+            tile_1: remove
+            tile_2: remove
+            button_start: remove
+            center_text:  That's all for today!
 estimate_tower_height:
   params:
     generate: 

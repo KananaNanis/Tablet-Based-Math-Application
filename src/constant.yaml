@@ -139,6 +139,22 @@ animals:
   rhino: {height: 1.7, pixel_width: 476, pixel_height: 430}
   dragon: {height: 1.8, pixel_width: 313, pixel_height: 523}
   giraffe: {height: 2.1, pixel_width: 413, pixel_height: 742}
+  peg: {height: 1.17, pixel_width: 716, pixel_height: 610}
+  peg_a1: {height: .1, pixel_width: 56, pixel_height:  50}
+  peg_a2: {height: .2, pixel_width: 56, pixel_height: 100}
+  peg_a3: {height: .3, pixel_width: 56, pixel_height: 150}
+  peg_a4: {height: .4, pixel_width: 56, pixel_height: 200}
+  peg_a5: {height: .5, pixel_width: 56, pixel_height: 250}
+  peg_b1: {height: .1, pixel_width: 127, pixel_height:  50}
+  peg_b2: {height: .2, pixel_width: 127, pixel_height: 100}
+  peg_b3: {height: .3, pixel_width: 127, pixel_height: 150}
+  peg_b4: {height: .4, pixel_width: 127, pixel_height: 200}
+  peg_b5: {height: .5, pixel_width: 127, pixel_height: 250}
+  peg_c1: {height: .1, pixel_width: 190, pixel_height:  50}
+  peg_c2: {height: .2, pixel_width: 190, pixel_height: 100}
+  peg_c3: {height: .3, pixel_width: 190, pixel_height: 150}
+  peg_c4: {height: .4, pixel_width: 190, pixel_height: 200}
+  peg_c5: {height: .5, pixel_width: 190, pixel_height: 250}
 camels:
   camel_scale: 0.2
   camel_offsets: [50, -10]

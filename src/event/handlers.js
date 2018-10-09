@@ -4,6 +4,7 @@ import {
 	query_arg,
 	query_option_values,
 	query_path,
+	query_name_of,
 } from '../providers/query_store'
 import {
 	query_top_block,
@@ -52,7 +53,7 @@ export function handle_start_button(state) {
 			cp,
 			true,
 			false,
-			query_prop('config_iter'),
+			query_prop('config_iteration'),
 			true,
 		)
 		do_batched_actions(action_list)
@@ -99,7 +100,7 @@ function option_is_correct(i) {
 	const log_this_attempt = true
 	if (log_this_attempt) {
 		const cp = query_path('config').toJS()
-		console.log('cp', cp)
+		//console.log('cp', cp)
 		const curr_time = Date.now()
 		const arg_1 = query_arg(1)
 		let info_about_prompt, info_about_response
@@ -124,7 +125,9 @@ function option_is_correct(i) {
 
 export function handle_options(state, x, y) {
 	let found_one = false
-	for (const i of [0, 1, 2, 3]) {
+	const n = query_option_values().size
+	//console.log('n', n)
+	for (let i = 0; i < n; ++i) {
 		if (pointIsInRectangle([x, y], option_geometry(i))) {
 			//console.log('i', i)
 			found_one = true
@@ -133,8 +136,15 @@ export function handle_options(state, x, y) {
 				if (option_is_correct(i)) {
 					global_sound['chirp1'].play()
 					const arg_1 = query_arg(1)
+					const name_1 = query_name_of(arg_1)
+					const is_peg = name_1.startsWith('peg_')
 					// console.log(arg_1)
-					if (arg_1 && arg_1.startsWith('tower_')) {
+					if (
+						arg_1 &&
+						(arg_1.startsWith('tower_')
+						|| arg_1.startsWith('five_frame_')
+						|| is_peg)
+					) {
 						window.setTimeout(function() {
 							doAction.setButtonHighlight(null)
 							transition_to_next_config()

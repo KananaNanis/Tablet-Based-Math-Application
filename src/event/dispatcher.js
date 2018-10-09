@@ -2,15 +2,14 @@ import {
 	query_keypad_kind,
 	query_visible_buttons,
 	query_prop,
-	query_name_of_door,
+	query_name_of,
 	query_door,
 	query_event,
 	query_arg,
 	query_has_anim_info,
 	query_obj_misc,
 	query_option_values,
-	query_position_of_tile,
-	query_name_of_tile,
+	query_position_of,
 } from '../providers/query_store'
 import {query_top_block, query_tower_height} from '../providers/query_tower'
 import {get_button_geoms_for} from '../components/Keypad'
@@ -71,9 +70,10 @@ export function touch_dispatcher(state, x, y, touchID) {
 			if ('down' === state || 'up' === state) console.log('frozen')
 			return
 		}
+	} else {
+		//console.log('option_values' + query_option_values())
+		if (query_option_values()) return handle_options(state, x, y, touchID)
 	}
-	//console.log('option_values' + query_option_values())
-	if (query_option_values()) return handle_options(state, x, y, touchID)
 	const kind = query_keypad_kind()
 	//const pos = getPositionInfoForKeypad(kind)
 	const pos = global_constant.keypad_info[kind]
@@ -149,7 +149,7 @@ export function touch_dispatcher(state, x, y, touchID) {
         if (d <= 0) d = .001
         //console.log('[x,y]', [x, y], 'pos_x', pos_x, 'd', d)
         if ('down' === state) {  // store scaling_delta
-          const f1 = query_name_of_door(arg_1).get(0)
+          const f1 = query_name_of(arg_1).get(0)
           scaling_delta = f1 / (d / scale_factor)
           //console.log('f1', f1, 'd', d, 'scaling_delta', scaling_delta)
         } else {
@@ -158,11 +158,11 @@ export function touch_dispatcher(state, x, y, touchID) {
       */
 		} else if ('move_dot' === move || 'move_handle_dot' === move) {
 			const tile_tgt = 'tile_2'
-			const pos = query_position_of_tile(tile_tgt)
+			const pos = query_position_of(tile_tgt)
 			let xp = x - pos.get(0)
 			let yp = y - pos.get(1)
 			// console.log('pos', pos.toJS(), 'xp', xp, 'yp', yp)
-			const animal_name = query_name_of_tile(tile_tgt)
+			const animal_name = query_name_of(tile_tgt)
 			let extra_scale = 1
 			if (query_obj_misc(tile_tgt).get('extra_scale')) {
 				extra_scale = Number(query_obj_misc(tile_tgt).get('extra_scale'))
@@ -211,7 +211,7 @@ export function touch_dispatcher(state, x, y, touchID) {
 				if (query_has_anim_info(arg_1)) doAction.setAnimInfo(arg_1, null)
 				if ('touch_image' === move) {
 					// store scaling_delta
-					const f1 = query_name_of_door(arg_1).get(0)
+					const f1 = query_name_of(arg_1).get(0)
 					scaling_delta = f1 / (di / scale_factor)
 					//console.log('scaling_delta ', scaling_delta)
 					if (is_blinking(arg_2)) {
@@ -233,7 +233,7 @@ export function touch_dispatcher(state, x, y, touchID) {
 					// check-- are we close enough to the handle to even start?
 					const d = dist_from_handle(x, y, tgt, scale_factor)
 					if (d < global_constant.door.min_dist_from_handle) {
-						let f1 = query_name_of_door(tgt).get(0)
+						let f1 = query_name_of(tgt).get(0)
 						f1 = apply_bounds(f1, 0, 1)
 						let extra_scale = 1
 						const m = query_obj_misc(tgt)
@@ -269,10 +269,10 @@ export function touch_dispatcher(state, x, y, touchID) {
 									slide_duration: 200,
 								})
 							} else {
-								//const correct = query_name_of_door(tgt).get(1)
-								const f1 = query_name_of_door(arg_1).get(0)
+								//const correct = query_name_of(tgt).get(1)
+								const f1 = query_name_of(arg_1).get(0)
 								const f2 = get_door_or_tile_height(arg_2)
-								const f3 = query_name_of_door(result).get(0)
+								const f3 = query_name_of(result).get(0)
 								let correct = f3 / f2
 								if (tgt !== arg_1) correct = f1 * f2
 								//console.log('f1', f1, 'correct', correct)
@@ -293,7 +293,7 @@ export function touch_dispatcher(state, x, y, touchID) {
 								doAction.addObjMisc(arg_2, 'blink', 0.5)
 							} else doAction.addObjMisc(tgt, 'handle_blink', 0)
 							doAction.setButtonDisplay('submit', null)
-							if (query_name_of_door(tgt).size > 1) {
+							if (query_name_of(tgt).size > 1) {
 								//console.log('hide result door')
 								doAction.addObjStyle(result, 'opacity', 0)
 							}

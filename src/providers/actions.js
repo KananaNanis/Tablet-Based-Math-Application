@@ -33,6 +33,15 @@ export function portalCreate(id, name, position) {
 	}
 }
 
+export function fiveFrameCreate(id, name, position) {
+	return {
+		type: AT.FIVE_FRAME_CREATE,
+		id,
+		name: fromJS(name),
+		position: fromJS(position),
+	}
+}
+
 export function towerDelete(id) {
 	return {type: AT.TOWER_DELETE, id}
 }
@@ -47,6 +56,10 @@ export function doorDelete(id) {
 
 export function portalDelete(id) {
 	return {type: AT.PORTAL_DELETE, id}
+}
+
+export function fiveFrameDelete(id) {
+	return {type: AT.FIVE_FRAME_DELETE, id}
 }
 
 export function setName(id, name) {

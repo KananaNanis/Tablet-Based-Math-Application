@@ -6,7 +6,8 @@ import {
 	query_option_values,
 	query_event,
 	query_arg,
-	query_name_of_tile,
+	query_name_of,
+	//query_test,
 } from './query_store'
 import {height2tower_name} from './query_tower'
 // import { update_keypad_button_visibility } from '../event/dispatcher'
@@ -110,7 +111,11 @@ export function enter_exit_config(
 	let sc = global_constant.scale_factor_from_yaml // may not be available
 	const gen_vars =
 		enter && config['generate']
-			? generate_with_restrictions(config['generate'], curr_exercise)
+			? generate_with_restrictions(
+					action_list,
+					config['generate'],
+					curr_exercise,
+			  )
 			: {}
 	if (config['create']) {
 		const c = config['create']
@@ -140,7 +145,8 @@ export function enter_exit_config(
 				id.startsWith('tower_') ||
 				id.startsWith('tile_') ||
 				id.startsWith('door_') ||
-				id.startsWith('portal_')
+				id.startsWith('portal_') ||
+				id.startsWith('five_frame_')
 			) {
 				if (!keep_names) {
 					// assert: we have necessary info in the 'modify' area
@@ -229,6 +235,16 @@ export function enter_exit_config(
 								),
 							)
 						} else action_list.push(Actions.portalDelete(id))
+					} else if (id.startsWith('five_frame_')) {
+						if (enter) {
+							action_list.push(
+								Actions.fiveFrameCreate(
+									id,
+									name,
+									as_position(config['modify'][id]['position']),
+								),
+							)
+						} else action_list.push(Actions.fiveFrameDelete(id))
 					}
 				}
 			}
@@ -380,7 +396,7 @@ export function enter_exit_config(
 			const arg_1 = query_arg(1)
 			const h = gen_vars.tile_1_height
 			const scale_factor = query_prop('scale_factor')
-			const loc = landmark_location(query_name_of_tile(arg_1), landmark_index)
+			const loc = landmark_location(query_name_of(arg_1), landmark_index)
 			// console.log('landmark_index', landmark_index, 'arg_1', arg_1)
 			// console.log('loc', loc, 'scale_factor', scale_factor)
 			action_list.push(Actions.setName('door_1', [loc[1] / (h * scale_factor)]))

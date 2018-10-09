@@ -1,11 +1,10 @@
 import {
-	query_name_of_tile,
+	query_name_of,
 	query_prop,
-	query_name_of_door,
 	query_door,
 	query_event,
 	query_arg,
-	query_position_of_tile,
+	query_position_of,
 	query_obj_misc,
 	query_option_values,
 } from '../providers/query_store'
@@ -54,10 +53,10 @@ export function get_err_box_location(arg_1, arg_2, result, just_thin) {
 		pos2 = extract_handle_position(arg_2, query_door(arg_2))
 	} else if (arg_2.startsWith('tile_')) {
 		// want the top right corner of this tile
-		const animal_name = query_name_of_tile(arg_2)
+		const animal_name = query_name_of(arg_2)
 		const [aw, animal_height] = current_pixel_size_of_animal(animal_name)
 		animal_width = aw
-		const anim_pos = add_offset(query_position_of_tile(arg_2))
+		const anim_pos = add_offset(query_position_of(arg_2))
 		pos2 = [anim_pos[0] + animal_width, anim_pos[1] + animal_height]
 		console.log(
 			'animal_width',
@@ -129,9 +128,9 @@ export function handle_close_to_goal() {
 
 export function get_door_or_tile_height(id) {
 	let res = 0
-	if (id.startsWith('door_')) res = query_name_of_door(id).get(0)
+	if (id.startsWith('door_')) res = query_name_of(id).get(0)
 	else if (id.startsWith('tile_')) {
-		res = global_constant.animals[query_name_of_tile(id)].height
+		res = global_constant.animals[query_name_of(id)].height
 	}
 	return res
 }
@@ -150,7 +149,7 @@ function position_of_correct_option() {
 }
 
 export function describe_numerical(arg_1, arg_2, result, arg_1_index) {
-	const arg_1_name = query_name_of_door(arg_1)
+	const arg_1_name = query_name_of(arg_1)
 	if ('undefined' === typeof arg_1_index) {
 		arg_1_index = arg_1_name.size > 1 ? 1 : 0
 	}
@@ -160,7 +159,7 @@ export function describe_numerical(arg_1, arg_2, result, arg_1_index) {
 	const f2 = get_door_or_tile_height(arg_2)
 	if ('option' === result) f3 = value_of_correct_option()
 	else {
-		f3 = query_name_of_door(result).get(0)
+		f3 = query_name_of(result).get(0)
 		f3 = apply_bounds(f3, 0, 1)
 	}
 	let err

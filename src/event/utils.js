@@ -1,6 +1,6 @@
 import {
 	query_prop,
-	query_name_of_door,
+	query_name_of,
 	query_obj_misc,
 } from '../providers/query_store'
 import {doAction, global_constant} from '../App'
@@ -88,7 +88,7 @@ export function apply_bounds(val, lo, hi) {
 }
 
 export function set_primary_height(id, val) {
-	let name = query_name_of_door(id).toJS()
+	let name = query_name_of(id).toJS()
 	const m = query_obj_misc(id)
 	if (m && m.has('extra_scale')) {
 		name[0] = val / m.get('extra_scale')

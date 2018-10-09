@@ -1,11 +1,10 @@
 import {
-	query_name_of_tile,
+	query_name_of,
 	query_event,
 	query_arg,
 	query_path,
 	query_prop,
 	query_obj_misc,
-	query_name_of_door,
 } from '../providers/query_store'
 import {
 	query_tower_name,
@@ -44,9 +43,9 @@ export function correct_next_button() {
 	} else if ('same_height' === how) {
 		let height
 		if (src.startsWith('tile_')) {
-			const animal_name = query_name_of_tile(src)
+			const animal_name = query_name_of(src)
 			height = global_constant.animals[animal_name].height
-		} else height = query_name_of_door(src).get(0)
+		} else height = query_name_of(src).get(0)
 		correct = height2tower_name(height)
 		//console.log('animal_name', animal_name, 'correct', correct)
 		// console.log('height', height, 'correct', correct)
@@ -167,18 +166,19 @@ export function is_correct() {
 	const curr_time = Date.now() // when anwer was given
 	const cp = query_path('config').toJS()
 	let delay = 'incorrect'
+	//console.log('is_correct src', src, 'how', how)
 	if ('same_height' === how) {
 		const tgt_height = query_tower_height(tgt)
 		let eq = 'unchecked'
 		let src_height
 		if (src.startsWith('tile_')) {
-			const name = query_name_of_tile(src)
+			const name = query_name_of(src)
 			if (name) {
 				src_height = global_constant.animals[name].height
 				eq = approx_equal(src_height, tgt_height)
 			}
 		} else {
-			src_height = query_name_of_door(src).get(0)
+			src_height = query_name_of(src).get(0)
 			eq = approx_equal(src_height, tgt_height)
 		}
 		// console.log('src_height', src_height, 'tgt_height', tgt_height, 'eq', eq)
@@ -193,9 +193,18 @@ export function is_correct() {
 			])
 		}
 	} else if ('identical' === how) {
-		const name1 = query_tower_name(src).toJS()
-		const name2 = query_tower_name(tgt).toJS()
-		if (namesAreIdentical(name1, name2)) delay = 0
+		let name1, name2
+		// console.log('src', src, 'tgt', tgt)
+		if (src.startsWith('five_frame_')) {
+			name1 = query_name_of(src).toJS()
+			name2 = query_name_of(tgt).toJS()
+			// console.log('name1', name1, 'name2', name2)
+			if (name1 === name2) delay = 0
+		} else {
+			name1 = query_tower_name(src).toJS()
+			name2 = query_tower_name(tgt).toJS()
+			if (namesAreIdentical(name1, name2)) delay = 0
+		}
 		doAction.addLogEntry(curr_time, [
 			cp,
 			'is_correct',
@@ -273,12 +282,12 @@ export function is_correct() {
 			correct_height = val_1 + val_2
 			// console.log('correct_height', correct_height)
 		}
-		const tgt_height = query_name_of_door(tgt).get(0)
+		const tgt_height = query_name_of(tgt).get(0)
 		// console.log('correct_height', correct_height)
 		// console.log('tgt_height', tgt_height)
 		if (Math.abs(correct_height - tgt_height) < 0.1) {
 			// console.log('got it!')
-			const curr = query_name_of_door('door_3').get(0)
+			const curr = query_name_of('door_3').get(0)
 			doAction.setName('door_3', [curr, curr])
 			doAction.towerAddStyle('tower_1', 'opacity', null)
 			const scale_factor = query_prop('scale_factor')
@@ -297,7 +306,7 @@ export function is_correct() {
 		const tile_tgt = 'tile_2'
 		//console.log('arg_1', arg_1, 'landmark_index', landmark_index)
 		//  do we need to know how far it moves?  Yes!
-		const name = query_name_of_tile(arg_1)
+		const name = query_name_of(arg_1)
 		const loc0 = landmark_location(name, landmark_index)
 		const misc2 = query_obj_misc(tile_tgt)
 		const extra_scale2 =
@@ -336,7 +345,7 @@ export function is_correct() {
 				const y3 = loc0b[1] / scale_factor
 				const animal_value = global_constant.animals[name].height
 				const y3b = y3 / (animal_value * extra_scale2)
-				doAction.setName('door_2', [query_name_of_door('door_2').get(0), y3b])
+				doAction.setName('door_2', [query_name_of('door_2').get(0), y3b])
 				doAction.setAnimInfo('door_2', {
 					slide_target: y3,
 					slide_duration: 100 * d,

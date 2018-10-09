@@ -186,6 +186,7 @@ export function transition_to_next_config(action_list) {
 		action_list.push(Actions.setProp('goto_iteration', iter - 1))
 		action_list.push(Actions.setProp('num_stars', curr_num_stars))
 	} else if (query_prop('config_iteration') > 1) {
+		if (verbose) console.log('  next exercise')
 		const iter = query_prop('config_iteration')
 		//console.log('iter', iter)
 		action_list.push(
@@ -197,17 +198,21 @@ export function transition_to_next_config(action_list) {
 		)
 		enter_exit_config(action_list, cp, false)
 		if (query_prop('blank_between_exercises')) {
-			//console.log('applying blank of ', query_prop('blank_between_exercises'))
+			if (verbose) {
+				console.log('applying blank of ', query_prop('blank_between_exercises'))
+			}
 			window.setTimeout(function() {
+				let action_list2 = []
 				enter_exit_config(
-					action_list,
+					action_list2,
 					cp,
 					true,
 					false, // verbose
 					iter - 1,
 				)
-				action_list.push(Actions.setProp('config_iteration', iter - 1))
-				action_list.push(Actions.setProp('num_stars', curr_num_stars))
+				action_list2.push(Actions.setProp('config_iteration', iter - 1))
+				action_list2.push(Actions.setProp('num_stars', curr_num_stars))
+				do_batched_actions(action_list2)
 			}, query_prop('blank_between_exercises'))
 		} else {
 			enter_exit_config(action_list, cp, true, false, iter - 1)
@@ -240,6 +245,7 @@ export function transition_to_next_config(action_list) {
 		action_list.push(Actions.setPath('config', ['in_between']))
 		enter_exit_config(action_list, ['in_between'], true)
 	}
+	if (verbose) console.log(' action_list', action_list)
 	if (do_actions_immediately) {
 		//console.log('do_actions_immediately action_list', action_list)
 		do_batched_actions(action_list)

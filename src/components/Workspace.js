@@ -13,7 +13,9 @@ import {
 	render_tiles,
 	render_doors,
 	render_portals,
+	render_five_frames,
 } from './render_geoms'
+//import FiveFrame from './FiveFrame';
 
 export const global_screen_width = Dimensions.get('window').width
 export const global_screen_height = Dimensions.get('window').height
@@ -59,6 +61,7 @@ const Workspace = ({
 	tile_ids,
 	door_ids,
 	portal_ids,
+	five_frame_ids,
 	center_text,
 	top_left_text,
 	top_right_text,
@@ -70,6 +73,7 @@ const Workspace = ({
 	//console.log('Workspace all_portals', all_portals)
 	if ('undefined' === typeof config_path) return []
 	//console.log('Workspace config_path', config_path.toJS())
+	//console.log('Workspace five_frame_ids', five_frame_ids.toJS())
 	const nums = render_nums(tower_ids)
 	const tiles = render_tiles(tile_ids)
 	const doors = render_doors(door_ids)
@@ -80,8 +84,9 @@ const Workspace = ({
 		tile_ids,
 		door_ids,
 	)
+	const five_frames = render_five_frames(five_frame_ids)
 	//console.log('len', doors.length)
-	//console.log('option_values', option_values ? option_values.toJS() : null)
+	//console.log('Workspace option_values', option_values ? option_values.toJS() : null)
 	let misc = [],
 		key = 0,
 		options = []
@@ -96,7 +101,7 @@ const Workspace = ({
 	}
 	if (query_option_values()) {
 		// add options
-		//console.log('q', query_option_values())
+		//console.log('option_values', query_option_values().toJS())
 		// are the options doors or nums?
 		let option_inner = []
 		//console.log('nums actual', all_nums.size, 'nums rendered', nums.length)
@@ -106,6 +111,9 @@ const Workspace = ({
 		}
 		if (tower_ids.size === nums.length + 1) {
 			option_inner = render_nums(tower_ids, 0, false, option_values)
+		}
+		if (five_frame_ids.size === five_frames.length + 1) {
+			option_inner = render_five_frames(five_frame_ids, option_values)
 		}
 		for (let i = 0; i < option_inner.length; ++i) {
 			++key
@@ -290,6 +298,7 @@ const Workspace = ({
 			{tiles}
 			{doors}
 			{portals}
+			{five_frames}
 			{misc}
 		</View>
 	)
