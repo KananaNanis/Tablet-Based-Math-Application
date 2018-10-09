@@ -141,9 +141,9 @@ export function handle_options(state, x, y) {
 					// console.log(arg_1)
 					if (
 						arg_1 &&
-						(arg_1.startsWith('tower_')
-						|| arg_1.startsWith('five_frame_')
-						|| is_peg)
+						(arg_1.startsWith('tower_') ||
+							arg_1.startsWith('five_frame_') ||
+							is_peg)
 					) {
 						window.setTimeout(function() {
 							doAction.setButtonHighlight(null)

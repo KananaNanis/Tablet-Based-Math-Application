@@ -89,15 +89,32 @@ class Tile extends React.Component {
 		const img_name = is_peg ? 'peg' : name
 		const [width, height] = current_pixel_size_of_animal(name, extra_scale)
 		let [img_width, img_height] = [width, height]
-		let img_offset_x = 0, img_offset_y = 0
+		let img_offset_x = 0,
+			img_offset_y = 0
 		if (is_peg) {
-		  [img_width, img_height] = current_pixel_size_of_animal('peg', extra_scale)
+			;[img_width, img_height] = current_pixel_size_of_animal(
+				'peg',
+				extra_scale,
+			)
 			const max_offset_x = img_width - width
 			const max_offset_y = img_height - height
 			img_offset_x = -1 * Math.floor(max_offset_x * Math.random())
 			img_offset_y = -1 * Math.floor(max_offset_y * Math.random())
 		}
-		console.log('Tile name', name, 'position', position, 'width', width, 'height', height, 'img_name', img_name, 'img_width', img_width)
+		console.log(
+			'Tile name',
+			name,
+			'position',
+			position,
+			'width',
+			width,
+			'height',
+			height,
+			'img_name',
+			img_name,
+			'img_width',
+			img_width,
+		)
 		let pos_info = {bottom: position[1]}
 		pos_info.left = position[0]
 		let extra_dot = null,
@@ -206,13 +223,16 @@ class Tile extends React.Component {
 			>
 				<Animated.Image
 					source={image_location(img_name, just_grey)}
-					style={[styles.tileImage,
-					{width: img_width,
-					height: img_height,
-					opacity: image_opacity,
-					left: img_offset_x,
-					top: img_offset_y,
-					}]}
+					style={[
+						styles.tileImage,
+						{
+							width: img_width,
+							height: img_height,
+							opacity: image_opacity,
+							left: img_offset_x,
+							top: img_offset_y,
+						},
+					]}
 				/>
 				{extra_dot}
 				{landmark}
