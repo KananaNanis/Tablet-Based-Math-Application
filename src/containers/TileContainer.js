@@ -28,6 +28,7 @@ const mapStateToProps = (state, ownProps) => {
 	let {id, offset_x = 0, just_grey = false} = ownProps
 	return {
 		id,
+		key: state.getIn(['name', id]), // to force new instance
 		name: state.getIn(['name', id]),
 		position: add_offset(state.getIn(['position', id]), offset_x),
 		style: state.getIn(['style', id]),

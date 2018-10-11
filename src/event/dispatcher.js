@@ -178,7 +178,8 @@ export function touch_dispatcher(state, x, y, touchID) {
 			if ('move_dot' === move) {
 				doAction.addObjMisc(tile_tgt, 'extra_dot', [xp, yp])
 			} else {
-				doAction.addObjMisc(tgt, 'blink', null)
+				//doAction.addObjMisc(tgt, 'blink', null)
+				doAction.setAnimInfo(tgt, null)
 				doAction.addObjMisc(tgt, 'handle_opacity', null)
 				doAction.addObjStyle(tgt, 'opacity', 1)
 				doAction.setName('door_2', [yp / height])
@@ -215,7 +216,8 @@ export function touch_dispatcher(state, x, y, touchID) {
 					scaling_delta = f1 / (di / scale_factor)
 					//console.log('scaling_delta ', scaling_delta)
 					if (is_blinking(arg_2)) {
-						doAction.addObjMisc(arg_2, 'blink', null)
+						//doAction.addObjMisc(arg_2, 'blink', null)
+						doAction.setAnimInfo(arg_2, null)
 						//doAction.addObjMisc(tgt, 'opacity', 1)
 					}
 				} else if (handle_is_hidden(tgt)) {
@@ -223,7 +225,8 @@ export function touch_dispatcher(state, x, y, touchID) {
 					const d = dist_from_door(x, y, tgt, scale_factor)
 					if (d < global_constant.door.min_dist_from_door) {
 						doAction.addObjStyle(tgt, 'opacity', 1)
-						doAction.addObjMisc(tgt, 'blink', null)
+						//doAction.addObjMisc(tgt, 'blink', null)
+						doAction.setAnimInfo(tgt, null)
 						doAction.addObjMisc(tgt, 'handle_opacity', 1)
 						perhaps_reveal_button()
 						y_delta = 0
@@ -241,7 +244,7 @@ export function touch_dispatcher(state, x, y, touchID) {
 						y_delta = f1 * extra_scale - y1
 						//console.log('is blinking', handle_is_blinking(tgt))
 						if (handle_is_blinking(tgt)) {
-							doAction.addObjMisc(tgt, 'handle_blink', null)
+							doAction.setAnimInfo(tgt, null)
 							doAction.addObjMisc(tgt, 'handle_opacity', 1)
 						}
 					} else y_delta = null
@@ -290,8 +293,9 @@ export function touch_dispatcher(state, x, y, touchID) {
 							// encourage a new attempt
 							// doAction.addObjMisc(tgt, 'handle_opacity', null)
 							if ('touch_image' === move) {
-								doAction.addObjMisc(arg_2, 'blink', 0.5)
-							} else doAction.addObjMisc(tgt, 'handle_blink', 0)
+								//doAction.addObjMisc(arg_2, 'blink', 0.5)
+								doAction.setAnimInfo(arg_2, {blink: 0.5})
+							} else doAction.setAnimInfo(tgt, {handle_blink: 0})
 							doAction.setButtonDisplay('submit', null)
 							if (query_name_of(tgt).size > 1) {
 								//console.log('hide result door')

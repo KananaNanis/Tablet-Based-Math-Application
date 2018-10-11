@@ -1,6 +1,6 @@
 import React from 'react'
 import {StyleSheet, Animated} from 'react-native'
-import {start_anim} from './Workspace'
+import {start_anim} from '../event/animation'
 
 class ErrBox extends React.Component {
 	state = {

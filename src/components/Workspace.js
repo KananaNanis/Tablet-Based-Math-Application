@@ -1,5 +1,5 @@
 import React from 'react'
-import {View, Image, Text, Animated, StyleSheet, Dimensions} from 'react-native'
+import {View, Image, Text, StyleSheet, Dimensions} from 'react-native'
 import Keypad from './Keypad'
 import Button from './Button'
 import Placard from './Placard'
@@ -27,28 +27,6 @@ export const window2workspaceCoords = pos0 => [
 	pos0[0],
 	global_workspace_height - pos0[1],
 ]
-
-export function start_anim(
-	anim_var,
-	toValue,
-	duration,
-	delay = 0,
-	ending_function,
-) {
-	//console.log('start_anim toValue', toValue, 'duration', duration)
-	/*
-  function onEnd(x) {
-    console.log('onEnd x', x)
-    anim_var.setValue(0)
-  }
-  */
-	//anim_var.setValue(0)
-	Animated.timing(anim_var, {
-		toValue,
-		duration,
-		delay,
-	}).start(ending_function)
-}
 
 const Workspace = ({
 	keypad_kind,

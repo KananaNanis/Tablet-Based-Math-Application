@@ -1,6 +1,6 @@
 import React from 'react'
 import {StyleSheet, View, Text, Animated} from 'react-native'
-import {start_anim} from './Workspace'
+import * as Anim from '../event/animation'
 
 const squareSide = 220
 const borderWidth = 10
@@ -13,13 +13,35 @@ const FiveFrameSquare = ({empty, id}) => {
 
 class FiveFrame extends React.Component {
 	state = {
-		fadeAnim: new Animated.Value(1),
+		time_value: new Animated.Value(0),
+	}
+
+	componentDidMount() {
+		Anim.init_anim(this.props.anim_info, this.state.time_value)
+	}
+
+	componentDidUpdate(prev_props) {
+		// console.log('componentDidUpdate prev_props', prev_props, 'props', this.props)
+		Anim.update_anim(
+			this.props.anim_info,
+			this.state.time_value,
+			prev_props.anim_info,
+		)
 	}
 
 	render() {
 		let {name, position, style, anim_info, misc} = this.props
 		const extra_scale =
 			misc && 'undefined' !== typeof misc.extra_scale ? misc.extra_scale : 1
+
+		let animated_style = {}
+		if (Anim.has_timer(anim_info)) {
+			Anim.interpolate_anim_attr(
+				anim_info,
+				this.state.time_value,
+				animated_style,
+			)
+		}
 
 		let pos_info = {
 			left: position[0],
@@ -29,19 +51,18 @@ class FiveFrame extends React.Component {
 		}
 		let style_text = [styles.text, pos_info, style]
 		let style_frame = [styles.frame, pos_info, style]
-		if (anim_info && anim_info.hasOwnProperty('fade_duration')) {
-			start_anim(this.state.fadeAnim, 0, anim_info.fade_duration)
-			style_text.push({opacity: this.state.fadeAnim})
-			style_frame.push({opacity: this.state.fadeAnim})
-		}
 		if (misc && 'undefined' !== typeof misc.just_text) {
-			return <Text style={style_text}>{name}</Text>
+			return <Text style={[style_text, animated_style]}>{name}</Text>
 		}
 		let squares = []
 		for (let i = 0; i < 5; ++i) {
 			squares.push(<FiveFrameSquare key={i} empty={i >= name} id={i} />)
 		}
-		return <Animated.View style={style_frame}>{squares}</Animated.View>
+		return (
+			<Animated.View style={[style_frame, animated_style]}>
+				{squares}
+			</Animated.View>
+		)
 	}
 }
 
