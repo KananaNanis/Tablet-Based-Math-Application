@@ -36,7 +36,11 @@ class FiveFrame extends React.Component {
 
 		let animated_style = {}
 		if (Anim.has_timer(anim_info)) {
-			Anim.interpolate_anim_attr(anim_info, this.state.time_value, animated_style)
+			Anim.interpolate_anim_attr(
+				anim_info,
+				this.state.time_value,
+				animated_style,
+			)
 		}
 
 		let pos_info = {
@@ -54,7 +58,11 @@ class FiveFrame extends React.Component {
 		for (let i = 0; i < 5; ++i) {
 			squares.push(<FiveFrameSquare key={i} empty={i >= name} id={i} />)
 		}
-		return <Animated.View style={[style_frame, animated_style]}>{squares}</Animated.View>
+		return (
+			<Animated.View style={[style_frame, animated_style]}>
+				{squares}
+			</Animated.View>
+		)
 	}
 }
 

@@ -34,12 +34,16 @@ class OptionBackground extends React.Component {
 	}
 
 	render() {
-		let {i, button_highlight, style, misc, anim_info} = this.props
+		let {i, button_highlight, style, anim_info} = this.props
 		//console.log('button_highlight', button_highlight)
 
 		let animated_style = {}
 		if (Anim.has_timer(anim_info)) {
-			Anim.interpolate_anim_attr(anim_info, this.state.time_value, animated_style)
+			Anim.interpolate_anim_attr(
+				anim_info,
+				this.state.time_value,
+				animated_style,
+			)
 		}
 
 		let extra_style = {}

@@ -4,7 +4,12 @@ import {Animated} from 'react-native'
 
 const verbose = false
 
-export function interpolate_anim_attr(anim_info, time_value, animated_style, secondary_style) {
+export function interpolate_anim_attr(
+	anim_info,
+	time_value,
+	animated_style,
+	secondary_style,
+) {
 	if (anim_info.bottom) {
 		animated_style.bottom = time_value.interpolate({
 			inputRange: [0, 1],
@@ -18,14 +23,14 @@ export function interpolate_anim_attr(anim_info, time_value, animated_style, sec
 		})
 	}
 	if ('undefined' !== typeof anim_info.blink) {
-	  //console.log('blink', anim_info.blink)
+		//console.log('blink', anim_info.blink)
 		animated_style.opacity = time_value.interpolate({
 			inputRange: [0, 1],
 			outputRange: [anim_info.blink, 1],
 		})
 	}
 	if ('undefined' !== typeof anim_info.handle_blink) {
-	  //console.log('blink', anim_info.blink)
+		//console.log('blink', anim_info.blink)
 		secondary_style.opacity = time_value.interpolate({
 			inputRange: [0, 1],
 			outputRange: [anim_info.handle_blink, 1],
@@ -36,10 +41,12 @@ export function interpolate_anim_attr(anim_info, time_value, animated_style, sec
 export function start_timer(anim_info, time_value, skip_reset = false) {
 	if (verbose) console.log('start_timer anim_info', anim_info)
 	if (!skip_reset) time_value.setValue(0)
-	if ('undefined' !== typeof anim_info.blink
-		|| 'undefined' !== typeof anim_info.handle_blink) {
+	if (
+		'undefined' !== typeof anim_info.blink ||
+		'undefined' !== typeof anim_info.handle_blink
+	) {
 		const blink_duration = anim_info.duration ? anim_info.duration : 500
-	  //console.log('blink_duration', blink_duration)
+		//console.log('blink_duration', blink_duration)
 		start_anim_loop(time_value, blink_duration, anim_info.delay)
 	} else if (anim_info.loop) {
 		start_anim_loop(time_value, anim_info.duration, anim_info.delay)
@@ -54,20 +61,34 @@ export function start_timer(anim_info, time_value, skip_reset = false) {
 
 export function has_timer(anim_info) {
 	//console.log('blink', anim_info.blink)
-	return anim_info && (anim_info.duration
-		|| 'undefined' !== typeof anim_info.blink
-		|| 'undefined' !== typeof anim_info.handle_blink
+	return (
+		anim_info &&
+		(anim_info.duration ||
+			'undefined' !== typeof anim_info.blink ||
+			'undefined' !== typeof anim_info.handle_blink)
 		// || 'undefined' !== typeof anim_info.move_extra_dot  // for Tile
-		)
+	)
 }
 
 export function init_anim(anim_info, time_value) {
 	if (has_timer(anim_info)) start_timer(anim_info, time_value)
 }
 
-export function update_anim(anim_info, time_value, prev_anim_info, skip_reset = false) {
+export function update_anim(
+	anim_info,
+	time_value,
+	prev_anim_info,
+	skip_reset = false,
+) {
 	const had_timer = prev_anim_info && prev_anim_info.duration
-	if (verbose) console.log('update_anim had_timer', had_timer, 'has_timer', has_timer(anim_info))
+	if (verbose) {
+		console.log(
+			'update_anim had_timer',
+			had_timer,
+			'has_timer',
+			has_timer(anim_info),
+		)
+	}
 	if (!had_timer && has_timer(anim_info)) {
 		start_timer(anim_info, time_value, skip_reset)
 	}

@@ -251,11 +251,7 @@ export function enter_exit_config(
 				// console.log('  modify id', id)
 				for (const key in c[id]) {
 					// console.log('   key', key)
-					if (
-						['appear_after', 'zoom_anim', 'unzoom_anim'].includes(
-							key,
-						)
-					) {
+					if (['appear_after', 'zoom_anim', 'unzoom_anim'].includes(key)) {
 						if (enter) {
 							const val = c[id][key]
 							let new_val = val

@@ -84,9 +84,15 @@ class Door extends React.Component {
 		//if (!name) name = [.1]
 		//console.log('Door  id', id, 'style', style, 'anim_info', anim_info, 'misc', misc)
 
-		let animated_style = {}, handle_animated_style = {}
+		let animated_style = {},
+			handle_animated_style = {}
 		if (Anim.has_timer(anim_info)) {
-			Anim.interpolate_anim_attr(anim_info, this.state.time_value, animated_style, handle_animated_style)
+			Anim.interpolate_anim_attr(
+				anim_info,
+				this.state.time_value,
+				animated_style,
+				handle_animated_style,
+			)
 		}
 
 		const is_portal = id.startsWith('portal_')

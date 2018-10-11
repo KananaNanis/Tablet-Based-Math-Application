@@ -217,7 +217,7 @@ export function touch_dispatcher(state, x, y, touchID) {
 					//console.log('scaling_delta ', scaling_delta)
 					if (is_blinking(arg_2)) {
 						//doAction.addObjMisc(arg_2, 'blink', null)
-				    doAction.setAnimInfo(arg_2, null)
+						doAction.setAnimInfo(arg_2, null)
 						//doAction.addObjMisc(tgt, 'opacity', 1)
 					}
 				} else if (handle_is_hidden(tgt)) {
@@ -226,7 +226,7 @@ export function touch_dispatcher(state, x, y, touchID) {
 					if (d < global_constant.door.min_dist_from_door) {
 						doAction.addObjStyle(tgt, 'opacity', 1)
 						//doAction.addObjMisc(tgt, 'blink', null)
-				    doAction.setAnimInfo(tgt, null)
+						doAction.setAnimInfo(tgt, null)
 						doAction.addObjMisc(tgt, 'handle_opacity', 1)
 						perhaps_reveal_button()
 						y_delta = 0
@@ -294,8 +294,8 @@ export function touch_dispatcher(state, x, y, touchID) {
 							// doAction.addObjMisc(tgt, 'handle_opacity', null)
 							if ('touch_image' === move) {
 								//doAction.addObjMisc(arg_2, 'blink', 0.5)
-								doAction.setAnimInfo(arg_2, {'blink': 0.5})
-							} else doAction.setAnimInfo(tgt, {'handle_blink': 0})
+								doAction.setAnimInfo(arg_2, {blink: 0.5})
+							} else doAction.setAnimInfo(tgt, {handle_blink: 0})
 							doAction.setButtonDisplay('submit', null)
 							if (query_name_of(tgt).size > 1) {
 								//console.log('hide result door')

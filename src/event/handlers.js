@@ -142,7 +142,7 @@ export function handle_options(state, x, y) {
 					if (
 						arg_1 &&
 						(arg_1.startsWith('tower_') ||
-						  arg_1.startsWith('door_') ||
+							arg_1.startsWith('door_') ||
 							arg_1.startsWith('five_frame_') ||
 							is_peg)
 					) {

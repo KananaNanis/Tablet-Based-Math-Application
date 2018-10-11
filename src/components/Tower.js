@@ -227,7 +227,11 @@ class Tower extends React.Component {
 		//console.log('id', id, 'name', name)
 		let animated_style = {}
 		if (Anim.has_timer(anim_info)) {
-			Anim.interpolate_anim_attr(anim_info, this.state.time_value, animated_style)
+			Anim.interpolate_anim_attr(
+				anim_info,
+				this.state.time_value,
+				animated_style,
+			)
 		}
 
 		const block_info = query_tower_blocks(id, {name, position, block_opacity})
