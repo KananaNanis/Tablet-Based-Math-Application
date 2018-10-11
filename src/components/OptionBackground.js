@@ -4,10 +4,9 @@ import {global_constant} from '../App'
 import {
 	global_screen_width,
 	global_workspace_height,
-	start_anim,
 } from '../components/Workspace'
 import {query_prop, query_option_values} from '../providers/query_store'
-import {start_anim_loop} from './Door'
+import * as Anim from '../event/animation'
 
 export function option_geometry(i) {
 	const n = query_option_values().size
@@ -19,18 +18,30 @@ export function option_geometry(i) {
 
 class OptionBackground extends React.Component {
 	state = {
-		fadeAnim: new Animated.Value(1), // Initial value for opacity: 1
-		loopAnim: new Animated.Value(0),
+		time_value: new Animated.Value(0),
 	}
 
-	componentDidUpdate() {
-		let {misc} = this.props
-		if (!misc || !misc.hasOwnProperty('blink')) this.state.loopAnim.setValue(0)
+	componentDidMount() {
+		Anim.init_anim(this.props.anim_info, this.state.time_value)
+	}
+
+	componentDidUpdate(prev_props) {
+		Anim.update_anim(
+			this.props.anim_info,
+			this.state.time_value,
+			prev_props.anim_info,
+		)
 	}
 
 	render() {
 		let {i, button_highlight, style, misc, anim_info} = this.props
 		//console.log('button_highlight', button_highlight)
+
+		let animated_style = {}
+		if (Anim.has_timer(anim_info)) {
+			Anim.interpolate_anim_attr(anim_info, this.state.time_value, animated_style)
+		}
+
 		let extra_style = {}
 		if ('option_' + i === button_highlight) {
 			extra_style.backgroundColor = query_prop('freeze_display')
@@ -39,17 +50,6 @@ class OptionBackground extends React.Component {
 		} else if (button_highlight && button_highlight.startsWith('option_')) {
 			extra_style.backgroundColor = '#777'
 			extra_style.opacity = 0.1
-		}
-		if (anim_info && anim_info.hasOwnProperty('fade_duration')) {
-			start_anim(this.state.fadeAnim, 0, anim_info.fade_duration)
-			extra_style.opacity = this.state.fadeAnim
-		}
-		if (misc && 'undefined' !== typeof misc.blink) {
-			start_anim_loop(this.state.loopAnim)
-			extra_style.opacity = this.state.loopAnim.interpolate({
-				inputRange: [0, 1],
-				outputRange: [misc.blink.target, 1],
-			})
 		}
 		const {position, width, height} = option_geometry(i)
 		//console.log('OptionBackground i', i, 'position', position, 'width', width, 'height', height)
@@ -67,6 +67,7 @@ class OptionBackground extends React.Component {
 						width: width,
 						height: height,
 					},
+					animated_style,
 				]}
 			>
 				{this.props.children}

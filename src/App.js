@@ -165,6 +165,14 @@ export async function load_config_tree(appObj) {
 		//   after the config has been loaded
 
 		//doAction.addObjStyle('door_3', 'opacity', .5)
+		/*
+		window.setTimeout(function() {
+		  doAction.setAnimInfo('tile_1', null)
+		  window.setTimeout(function() {
+		    doAction.setAnimInfo('tile_1', {duration: 1000, bottom: [0, 200]})
+			}, 1000)
+		}, 2000)
+		*/
 
 		const printPDF = false // for creating worksheets
 		if (printPDF) {

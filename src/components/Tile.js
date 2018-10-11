@@ -1,10 +1,9 @@
 import React from 'react'
-import {StyleSheet, View, Animated} from 'react-native'
-import {global_constant, image_location} from '../App'
-import {start_anim} from './Workspace'
-import {start_anim_loop} from './Door'
-import {dist2D} from '../event/utils'
-import {query_prop} from '../providers/query_store'
+import { StyleSheet, View, Animated } from 'react-native'
+import { global_constant, image_location } from '../App'
+import { dist2D } from '../event/utils'
+import { query_prop } from '../providers/query_store'
+import * as Anim from '../event/animation'
 
 export function current_pixel_size_of_animal(name, extra_scale = 1) {
 	const height =
@@ -41,20 +40,76 @@ export function with_diameter_offset2(loc, diameter, extra_scale) {
 	]
 }
 
+function compute_dot_locs(name, misc) {
+	if (!misc || 'undefined' === typeof misc.landmark_index) return [null, null]
+	const loc = landmark_location(name, Number(misc.landmark_index))
+	const diameter = global_constant.animal_landmarks.extra_dot_diameter
+	const extra_scale =
+		misc && 'undefined' !== typeof misc.extra_scale ? misc.extra_scale : 1
+	const locB = with_diameter_offset(loc, diameter, extra_scale)
+	const has_dot = misc && 'undefined' !== typeof misc.extra_dot
+	const loc2B = !has_dot ? null : with_diameter_offset2(
+		misc.extra_dot,
+		diameter,
+		extra_scale,
+	)
+	return [locB, loc2B]
+}
+
+function init_dot_anim(props, time_value) {
+	const [locB, loc2B] = compute_dot_locs(props.name, props.misc)
+	const d = dist2D(locB, loc2B)
+	const duration = 100 * d
+	//console.log('d', d)
+	//console.log('duration ', duration)
+	Anim.start_anim(time_value, 1, duration)
+}
+
 class Tile extends React.Component {
 	state = {
-		fadeAnim: new Animated.Value(1), // Initial value for opacity: 1
-		loopAnim: new Animated.Value(0),
-		dotAnim: new Animated.Value(0),
+		time_value: new Animated.Value(0),
+		peg_offset: this.compute_peg_offset(),
 	}
 
-	componentDidUpdate() {
-		let {misc} = this.props
-		if (!misc || !misc.hasOwnProperty('blink')) this.state.loopAnim.setValue(0)
+	componentDidMount() {
+		Anim.init_anim(this.props.anim_info, this.state.time_value)
+		if (this.props.anim_info && this.props.anim_info.move_extra_dot) init_dot_anim(this.props, this.state.time_value)
+	}
+
+	componentDidUpdate(prev_props) {
+		Anim.update_anim(
+			this.props.anim_info,
+			this.state.time_value,
+			prev_props.anim_info,
+		)
+		if (this.props.anim_info && this.props.anim_info.move_extra_dot) {
+			const had_timer = prev_props.anim_info && prev_props.anim_info.duration
+			if (!had_timer && Anim.has_timer(this.props.anim_info)) {
+				init_dot_anim(this.props, this.state.time_value)
+			}
+		}
+	}
+
+	compute_peg_offset() {
+		// determine a random offset in the wood texture, that will
+		//   stay the same as long as the name stays the same
+		if (!this.props.name.startsWith('peg')) return [0, 0]
+		const { name, misc } = this.props
+		const extra_scale =
+			misc && 'undefined' !== typeof misc.extra_scale ? misc.extra_scale : 1
+		const [width, height] = current_pixel_size_of_animal(name, extra_scale)
+		let [img_width, img_height] = current_pixel_size_of_animal(
+			'peg',
+			extra_scale,
+		)
+		const max_offset_x = img_width - width
+		const max_offset_y = img_height - height
+		return [-1 * Math.floor(max_offset_x * Math.random()),
+		-1 * Math.floor(max_offset_y * Math.random())]
 	}
 
 	render() {
-		let {name, position, style, anim_info, misc, just_grey} = this.props
+		let { name, position, style, anim_info, misc, just_grey } = this.props
 		//just_grey = true
 		//console.log('Tile  name', name)
 		const extra_scale =
@@ -63,28 +118,14 @@ class Tile extends React.Component {
 		const useAllBorders = false // use true when printing
 		const useNoBorders = true
 
+		let animated_style = {}
+		if (Anim.has_timer(anim_info) && !just_grey) {
+			Anim.interpolate_anim_attr(anim_info, this.state.time_value, animated_style)
+		}
+
 		let extra_style = {}
 		let image_opacity = 1
-		if (just_grey) extra_style = {opacity: 0.1}
-		if (anim_info && anim_info.hasOwnProperty('fade_duration')) {
-			start_anim(this.state.fadeAnim, 0, anim_info.fade_duration)
-			//extra_style = { 'opacity': this.state.fadeAnim }
-			image_opacity = this.state.fadeAnim
-		}
-		if (
-			misc &&
-			'undefined' !== typeof misc.blink &&
-			!just_grey &&
-			'undefined' !== typeof misc.blink.target
-		) {
-			start_anim_loop(this.state.loopAnim)
-			extra_style = {
-				opacity: this.state.loopAnim.interpolate({
-					inputRange: [0, 1],
-					outputRange: [misc.blink.target, 1],
-				}),
-			}
-		}
+		if (just_grey) extra_style = { opacity: 0.1 }
 		const is_peg = name.startsWith('peg_')
 		const img_name = is_peg ? 'peg' : name
 		const [width, height] = current_pixel_size_of_animal(name, extra_scale)
@@ -96,47 +137,35 @@ class Tile extends React.Component {
 				'peg',
 				extra_scale,
 			)
-			const max_offset_x = img_width - width
-			const max_offset_y = img_height - height
-			img_offset_x = -1 * Math.floor(max_offset_x * Math.random())
-			img_offset_y = -1 * Math.floor(max_offset_y * Math.random())
+			img_offset_x = this.state.peg_offset[0]
+			img_offset_y = this.state.peg_offset[1]
 		}
-		console.log(
-			'Tile name',
-			name,
-			'position',
-			position,
-			'width',
-			width,
-			'height',
-			height,
-			'img_name',
-			img_name,
-			'img_width',
-			img_width,
-		)
-		let pos_info = {bottom: position[1]}
+		//console.log('Tile name', name, 'position', position, 'width', width,
+		//	'height', height, 'img_name', img_name, 'img_width', img_width)
+		console.log('Tile name', name, 'anim_info', anim_info)
+		let pos_info = { bottom: position[1] }
 		pos_info.left = position[0]
 		let extra_dot = null,
 			landmark = null
 		if (!query_prop('hide_dot')) {
 			//console.log('Tile name', name, ' style', style)
 			const has_dot = misc && 'undefined' !== typeof misc.extra_dot
-			let locB
+			let [locB, loc2B] = compute_dot_locs(name, misc)
+			//let locB
 			const diameter = global_constant.animal_landmarks.extra_dot_diameter
 			if (
 				global_constant.animal_landmarks[name] &&
 				misc &&
 				'undefined' !== typeof misc.landmark_index
 			) {
-				const loc = landmark_location(name, Number(misc.landmark_index))
-				locB = with_diameter_offset(loc, diameter, extra_scale)
+				//const loc = landmark_location(name, Number(misc.landmark_index))
+				//locB = with_diameter_offset(loc, diameter, extra_scale)
 				const half = 0.5
 				landmark = (
 					<View
 						style={[
 							styles.extra_dot,
-							has_dot ? {opacity: half} : {},
+							has_dot ? { opacity: half } : {},
 							{
 								width: extra_scale * diameter,
 								height: extra_scale * diameter,
@@ -148,11 +177,13 @@ class Tile extends React.Component {
 				)
 			}
 			if (has_dot) {
+				/*
 				const loc2B = with_diameter_offset2(
 					misc.extra_dot,
 					diameter,
 					extra_scale,
 				)
+				*/
 				let dot_style = {}
 				if (
 					landmark &&
@@ -160,17 +191,13 @@ class Tile extends React.Component {
 					anim_info.hasOwnProperty('move_extra_dot')
 				) {
 					// compute where and how far to move
-					const d = dist2D(locB, loc2B)
-					const duration = 100 * d
-					//console.log('d', d)
-					//console.log('duration ', duration)
-					start_anim(this.state.dotAnim, 1, duration)
+					//init_dot_anim(this.props, this.state.dotAnim)
 					dot_style = {
-						left: this.state.dotAnim.interpolate({
+						left: this.state.time_value.interpolate({
 							inputRange: [0, 1],
 							outputRange: [loc2B[0], locB[0]],
 						}),
-						bottom: this.state.dotAnim.interpolate({
+						bottom: this.state.time_value.interpolate({
 							inputRange: [0, 1],
 							outputRange: [loc2B[1], locB[1]],
 						}),
@@ -219,6 +246,7 @@ class Tile extends React.Component {
 						width: width,
 						height: height + 1,
 					},
+					animated_style,
 				]}
 			>
 				<Animated.Image

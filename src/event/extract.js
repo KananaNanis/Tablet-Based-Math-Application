@@ -7,6 +7,7 @@ import {
 	query_position_of,
 	query_obj_misc,
 	query_option_values,
+	query_obj_anim_info,
 } from '../providers/query_store'
 import {global_constant, doAction} from '../App'
 import {fromJS} from 'immutable'
@@ -195,13 +196,13 @@ export function dist_from_door(x, y, tgt, scale_factor) {
 }
 
 export function is_blinking(id) {
-	const misc = query_obj_misc(id)
-	return misc && misc.has('blink')
+	const info = query_obj_anim_info(id)
+	return info && info.has('blink')
 }
 
 export function handle_is_blinking(id) {
-	const misc = query_obj_misc(id)
-	return misc && misc.has('handle_blink')
+	const info = query_obj_anim_info(id)
+	return info && info.has('handle_blink')
 }
 
 export function handle_is_hidden(id) {

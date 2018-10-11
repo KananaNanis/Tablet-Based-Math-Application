@@ -26,7 +26,6 @@ import {List, fromJS} from 'immutable'
 function do_timed_action(id, key, val) {
 	// handle the following:
 	// appear_after: 2000,
-	// start_fade: 2500, end_fade: 3000
 	if ('zoom_anim' === key) {
 		//console.log('SETTING ZOOM')
 		let anim_info = {...val, zoom: true}
@@ -34,13 +33,8 @@ function do_timed_action(id, key, val) {
 	} else {
 		let delay = val
 		if ('appear_after' === key) doAction.addObjStyle(id, 'opacity', 0)
-		if ('fade_anim' === key) delay = val.start
 		window.setTimeout(function() {
 			if ('appear_after' === key) doAction.addObjStyle(id, 'opacity', 1.0)
-			else if ('fade_anim' === key) {
-				//console.log('starting fade animation for id', id)
-				doAction.setAnimInfo(id, {fade_duration: val.duration})
-			}
 		}, delay)
 	}
 }
@@ -258,7 +252,7 @@ export function enter_exit_config(
 				for (const key in c[id]) {
 					// console.log('   key', key)
 					if (
-						['appear_after', 'fade_anim', 'zoom_anim', 'unzoom_anim'].includes(
+						['appear_after', 'zoom_anim', 'unzoom_anim'].includes(
 							key,
 						)
 					) {
@@ -287,6 +281,9 @@ export function enter_exit_config(
 								)
 							}
 						}
+					} else if ('anim_info' === key) {
+						const info = c[id][key]
+						action_list.push(Actions.setAnimInfo(id, info))
 					} else if ('tower_style' === key) {
 						let props = c[id][key]
 						for (const key2 in props) {

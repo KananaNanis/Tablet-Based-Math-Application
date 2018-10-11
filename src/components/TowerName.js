@@ -4,18 +4,32 @@ import {global_fiver_shadow} from './Num'
 import {query_whole_tower} from '../providers/query_tower'
 import {global_constant} from '../App'
 import {as_greyscale} from './Tower'
-import {start_anim} from './Workspace'
+import * as Anim from '../event/animation'
 
 class TowerName extends React.Component {
 	state = {
-		fadeAnim: new Animated.Value(1), // Initial value for opacity: 1
+		time_value: new Animated.Value(0),
+	}
+
+	componentDidMount() {
+		Anim.init_anim(this.props.anim_info, this.state.time_value)
+	}
+
+	componentDidUpdate(prev_props) {
+		Anim.update_anim(
+			this.props.anim_info,
+			this.state.time_value,
+			prev_props.anim_info,
+		)
 	}
 
 	render() {
 		let {id, name, position, anim_info, just_grey = false} = this.props
-		if (anim_info && anim_info.hasOwnProperty('fade_duration')) {
-			start_anim(this.state.fadeAnim, 0, anim_info.fade_duration)
+		let animated_style = {}
+		if (Anim.has_timer(anim_info)) {
+			Anim.interpolate_anim_attr(anim_info, this.state.time_value, animated_style)
 		}
+
 		// expand the name into individual texts
 		const name_info = query_whole_tower(id, {name, position})
 		/*
@@ -61,7 +75,7 @@ class TowerName extends React.Component {
 		//console.log(height)
 		return (
 			<Animated.View
-				style={[styles.tower_name, {opacity: this.state.fadeAnim}, {height}]}
+				style={[styles.tower_name, {height}, animated_style]}
 			>
 				{name_elements}
 			</Animated.View>

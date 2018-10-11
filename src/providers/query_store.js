@@ -119,6 +119,11 @@ export function query_obj_style(id) {
 	return state.getIn(['style', id])
 }
 
+export function query_obj_anim_info(id) {
+	const state = global_store.getState()
+	return state.getIn(['anim_info', id])
+}
+
 export function query_obj_misc(id) {
 	const state = global_store.getState()
 	return state.getIn(['misc', id])

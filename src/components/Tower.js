@@ -2,9 +2,10 @@ import React from 'react'
 import Block from './Block'
 import {StyleSheet, Animated} from 'react-native'
 import {query_tower_blocks} from '../providers/query_tower'
-import {global_workspace_height, start_anim} from './Workspace'
+import {global_workspace_height} from './Workspace'
 import {global_fiver_shadow} from './Num'
 import {global_constant} from '../App'
+import * as Anim from '../event/animation'
 
 function colorNameToHex(color) {
 	const colors = {
@@ -197,7 +198,19 @@ export function as_greyscale(color) {
 
 class Tower extends React.Component {
 	state = {
-		fadeAnim: new Animated.Value(1), // Initial value for opacity: 1
+		time_value: new Animated.Value(0),
+	}
+
+	componentDidMount() {
+		Anim.init_anim(this.props.anim_info, this.state.time_value)
+	}
+
+	componentDidUpdate(prev_props) {
+		Anim.update_anim(
+			this.props.anim_info,
+			this.state.time_value,
+			prev_props.anim_info,
+		)
 	}
 
 	render() {
@@ -212,8 +225,9 @@ class Tower extends React.Component {
 			just_grey = false,
 		} = this.props
 		//console.log('id', id, 'name', name)
-		if (anim_info && anim_info.hasOwnProperty('fade_duration')) {
-			start_anim(this.state.fadeAnim, 0, anim_info.fade_duration)
+		let animated_style = {}
+		if (Anim.has_timer(anim_info)) {
+			Anim.interpolate_anim_attr(anim_info, this.state.time_value, animated_style)
 		}
 
 		const block_info = query_tower_blocks(id, {name, position, block_opacity})
@@ -358,8 +372,8 @@ class Tower extends React.Component {
 				style={[
 					styles.tower,
 					{height: global_workspace_height},
-					{opacity: this.state.fadeAnim},
 					style,
+					animated_style,
 				]}
 			>
 				{blocks}

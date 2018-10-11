@@ -2,46 +2,23 @@ import React from 'react'
 import {Map, fromJS} from 'immutable'
 import {StyleSheet, View, Animated} from 'react-native'
 import {as_greyscale} from './Tower'
-import {start_anim} from './Workspace'
 import {render_nums, render_tiles, render_doors} from './render_geoms'
 import {global_constant, doAction} from '../App'
 import {apply_bounds} from '../event/utils'
-
-export function start_anim_loop(anim_var, delay = 0) {
-	//console.log('start_anim_loop delay', delay)
-	Animated.sequence([
-		Animated.delay(delay),
-		Animated.loop(
-			Animated.sequence([
-				Animated.timing(anim_var, {
-					toValue: 1,
-					duration: 500,
-				}),
-				Animated.timing(anim_var, {
-					toValue: 0,
-					duration: 500,
-				}),
-			]),
-		),
-	]).start()
-}
+import * as Anim from '../event/animation'
 
 class Door extends React.Component {
 	state = {
-		fadeAnim: new Animated.Value(1), // Initial value for opacity: 1
 		slideAnim: new Animated.Value(0),
-		loopAnim: new Animated.Value(0),
-		//has_listener: false
-		/*
-    handlePosAnim: new Animated.Value(
-      this.props.scale_factor * (this.props.name[0]
-        - global_constant.door.thickness_fraction / 2.)
-    ),
-    scaleAnim: new Animated.Value(this.props.name[0]),
-    */
+
+		time_value: new Animated.Value(0),
 	}
 
-	componentDidUpdate() {
+	componentDidMount() {
+		Anim.init_anim(this.props.anim_info, this.state.time_value)
+	}
+
+	componentDidUpdate(prev_props) {
 		const {id} = this.props
 		//if ('portal_1' == id) tlog('Door', id, 'componentDidUpate')
 		let {anim_info} = this.props
@@ -72,7 +49,7 @@ class Door extends React.Component {
 			//if ('door_2' == id) tlog('  STARTING ANIMATION')
 			//Animated.timing(this.state.slideAnim).stop()
 			//this.state.slideAnim.setValue(0)
-			start_anim(this.state.slideAnim, 1, anim_info.slide_duration)
+			Anim.start_anim(this.state.slideAnim, 1, anim_info.slide_duration)
 			// really doesn't like this:
 			//set_primary_height(id, anim_info.target)
 		}
@@ -85,6 +62,11 @@ class Door extends React.Component {
       })
     }
     */
+		Anim.update_anim(
+			this.props.anim_info,
+			this.state.time_value,
+			prev_props.anim_info,
+		)
 	}
 
 	render() {
@@ -101,6 +83,11 @@ class Door extends React.Component {
 		//console.log('Door  id', id, 'name', name)
 		//if (!name) name = [.1]
 		//console.log('Door  id', id, 'style', style, 'anim_info', anim_info, 'misc', misc)
+
+		let animated_style = {}, handle_animated_style = {}
+		if (Anim.has_timer(anim_info)) {
+			Anim.interpolate_anim_attr(anim_info, this.state.time_value, animated_style, handle_animated_style)
+		}
 
 		const is_portal = id.startsWith('portal_')
 		const extra_scale =
@@ -138,30 +125,6 @@ class Door extends React.Component {
 		if (misc && 'undefined' !== typeof misc.is_option) {
 			door_style.push({position: null})
 		}
-		if (anim_info && anim_info.hasOwnProperty('fade_duration')) {
-			start_anim(this.state.fadeAnim, 0, anim_info.fade_duration)
-			door_style.push({opacity: this.state.fadeAnim})
-		}
-		if (
-			misc &&
-			('undefined' !== typeof misc.blink ||
-				'undefined' !== typeof misc.handle_blink)
-		) {
-			let delay
-			if ('undefined' !== typeof misc.blink && misc.blink.delay) {
-				delay = misc.blink.delay
-			}
-			//console.log('id', id, 'blink', misc.blink)
-			start_anim_loop(this.state.loopAnim, delay)
-		}
-		if (misc && 'undefined' !== typeof misc.blink) {
-			door_style.push({
-				opacity: this.state.loopAnim.interpolate({
-					inputRange: [0, 1],
-					outputRange: [misc.blink.target, 1],
-				}),
-			})
-		}
 		let bounded_name = apply_bounds(name[0], 0, 2)
 		if (is_portal && name[0] < global_constant.door.portal_min_value) {
 			name[0] = global_constant.door.portal_min_value
@@ -175,17 +138,10 @@ class Door extends React.Component {
 				borderTopWidth: thickness,
 				borderTopColor: frame_color,
 			},
+			handle_animated_style,
 		]
 		if (misc && 'undefined' !== typeof misc.handle_opacity) {
 			handle_style.push({opacity: misc.handle_opacity})
-		}
-		if (misc && 'undefined' !== typeof misc.handle_blink) {
-			handle_style.push({
-				opacity: this.state.loopAnim.interpolate({
-					inputRange: [0, 1],
-					outputRange: [misc.handle_blink, 1],
-				}),
-			})
 		}
 		//if ('door_p1' == id) anim_info = { slide_duration: 2000 }
 		if (anim_info && anim_info.hasOwnProperty('slide_duration')) {
@@ -214,7 +170,7 @@ class Door extends React.Component {
 						outputRange: [start_bot, end_bot],
 					}),
 				})
-				start_anim(this.state.slideAnim, 2, anim_info.slide_duration)
+				Anim.start_anim(this.state.slideAnim, 2, anim_info.slide_duration)
 			} else {
 				handle_style.push({
 					bottom: this.state.slideAnim.interpolate({
@@ -361,7 +317,7 @@ class Door extends React.Component {
 				})
 			}
 			return (
-				<Animated.View style={door_style}>
+				<Animated.View style={[door_style, animated_style]}>
 					{nums_grey}
 					{tiles_grey}
 					{doors_grey}
@@ -376,7 +332,7 @@ class Door extends React.Component {
 			)
 		} else {
 			return (
-				<Animated.View style={door_style}>
+				<Animated.View style={[door_style, animated_style]}>
 					{handles}
 					{tickmarks}
 				</Animated.View>

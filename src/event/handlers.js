@@ -137,11 +137,12 @@ export function handle_options(state, x, y) {
 					global_sound['chirp1'].play()
 					const arg_1 = query_arg(1)
 					const name_1 = query_name_of(arg_1)
-					const is_peg = name_1.startsWith('peg_')
+					const is_peg = arg_1.startsWith('tile_') && name_1.startsWith('peg_')
 					// console.log(arg_1)
 					if (
 						arg_1 &&
 						(arg_1.startsWith('tower_') ||
+						  arg_1.startsWith('door_') ||
 							arg_1.startsWith('five_frame_') ||
 							is_peg)
 					) {
