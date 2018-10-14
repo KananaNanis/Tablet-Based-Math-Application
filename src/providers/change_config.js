@@ -1,6 +1,6 @@
 import {List, fromJS} from 'immutable'
 import {config_tree, global_constant} from '../App'
-import {query_path, query_prop} from './query_store'
+import {with_suffix, query_path, query_prop} from './query_store'
 import {tower_name2height} from './query_tower'
 import {
 	global_screen_width,
@@ -157,10 +157,22 @@ export function transition_to_next_config(action_list) {
 			action_list.push(Actions.setProp('repeat_level', repeat_level - 1))
 			console.log('new repeat_level', query_prop('repeat_level'))
 			new_path = prev_path
+		} else if (query_path('jmp')) {
+			const jmp = query_path('jmp')
+			// console.log('jmp', jmp)
+			if ('string' === typeof jmp) {
+				const jmp2 = global_constant[jmp][global_constant.username]
+				// console.log('jmp2')
+				new_path = fromJS(jmp2)
+			} else new_path = jmp
+			action_list.push(Actions.setPath('jmp', null))
 		} else new_path = next_config_path(prev_path)
 		console.log('transition_to_next_config', new_path.toJS())
 		action_list.push(
-			Actions.addLogEntry(Date.now(), [new_path, 'next_config', 'start']),
+			Actions.addLogEntry(
+				Date.now(),
+				with_suffix([new_path, 'next_config', 'start']),
+			),
 		)
 		action_list.push(Actions.setPath('config', new_path))
 		enter_exit_config(action_list, new_path, true)
@@ -171,7 +183,7 @@ export function transition_to_next_config(action_list) {
 		const new_path = query_path('goto')
 		action_list.push(
 			Actions.addLogEntry(Date.now(), [
-				query_path('config').toJS(),
+				with_suffix(query_path('config').toJS()),
 				'next_config',
 				iter,
 			]),
@@ -191,7 +203,7 @@ export function transition_to_next_config(action_list) {
 		//console.log('iter', iter)
 		action_list.push(
 			Actions.addLogEntry(Date.now(), [
-				query_path('config').toJS(),
+				with_suffix(query_path('config').toJS()),
 				'next_config',
 				iter,
 			]),

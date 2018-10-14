@@ -36,6 +36,8 @@ class OptionBackground extends React.Component {
 	render() {
 		let {i, button_highlight, style, anim_info} = this.props
 		//console.log('button_highlight', button_highlight)
+		//if (style && style.size > 0) style = style.toJS()  // should use HOC!
+		// console.log('OptionBackground style', style)
 
 		let animated_style = {}
 		if (Anim.has_timer(anim_info)) {
@@ -48,12 +50,19 @@ class OptionBackground extends React.Component {
 
 		let extra_style = {}
 		if ('option_' + i === button_highlight) {
-			extra_style.backgroundColor = query_prop('freeze_display')
-				? 'red'
+			const correct = query_prop('answer_is_correct')
+			const frozen = query_prop('freeze_display')
+			extra_style.backgroundColor = frozen
+				? correct
+					? '#9f9'
+					: 'red'
 				: 'white'
+			// console.log('answer_is_correct', query_prop('answer_is_correct'))
 		} else if (button_highlight && button_highlight.startsWith('option_')) {
-			extra_style.backgroundColor = '#777'
+			extra_style.backgroundColor = i % 2 ? '#111' : '#555'
 			extra_style.opacity = 0.1
+		} else if (i % 2) {
+			extra_style.backgroundColor = '#e8e8e8'
 		}
 		const {position, width, height} = option_geometry(i)
 		//console.log('OptionBackground i', i, 'position', position, 'width', width, 'height', height)
@@ -64,9 +73,9 @@ class OptionBackground extends React.Component {
 			<Animated.View
 				style={[
 					styles.bg,
-					style,
 					pos_info,
 					extra_style,
+					style,
 					{
 						width: width,
 						height: height,

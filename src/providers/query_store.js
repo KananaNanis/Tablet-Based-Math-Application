@@ -176,6 +176,15 @@ export function query_log() {
 	return state.get('log')
 }
 
+export function with_suffix(path) {
+	if (query_path('suffix_path')) {
+		const suffix = query_path('suffix_path')
+		//console.log('path', path, 'suffix', suffix)
+		const plain_suffix = suffix ? suffix.toJS() : suffix
+		return [...path, ...plain_suffix]
+	} else return path
+}
+
 export function query_test() {
 	let state = global_store.getState()
 	console.log('state', state.toJS())

@@ -148,7 +148,7 @@ class Tile extends React.Component {
 		}
 		//console.log('Tile name', name, 'position', position, 'width', width,
 		//	'height', height, 'img_name', img_name, 'img_width', img_width)
-		console.log('Tile name', name, 'anim_info', anim_info)
+		//console.log('Tile name', name, 'anim_info', anim_info)
 		let pos_info = {bottom: position[1]}
 		pos_info.left = position[0]
 		let extra_dot = null,

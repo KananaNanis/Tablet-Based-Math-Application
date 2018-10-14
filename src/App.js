@@ -135,8 +135,21 @@ export async function load_config_tree(appObj) {
 			console.error('config_tree not defined!')
 			return
 		}
-		let path = config_tree.params.starting_config_path
-		if (
+		// global_constant.username = 'm31'
+		let atPCCS = true
+		if (global_constant.username.startsWith('m')) {
+			const n0 = global_constant.username.charAt(1)
+			const n1 = global_constant.username.charAt(2)
+			const n = 10 * Number(n0) + Number(n1)
+			if (n >= 30) atPCCS = false
+			// console.log(' n', n, 'atPCCS', atPCCS)
+		}
+		let path = atPCCS
+			? global_constant.starting_config_path_PCCS
+			: global_constant.starting_config_path_Dom
+		if (global_constant.debug_mode) {
+			path = global_constant.debug_path
+		} else if (
 			global_constant &&
 			global_constant.starting_level_for &&
 			global_constant.starting_level_for.hasOwnProperty(

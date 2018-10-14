@@ -14,8 +14,9 @@ import {
 	render_doors,
 	render_portals,
 	render_five_frames,
+	render_bars,
 } from './render_geoms'
-//import FiveFrame from './FiveFrame';
+//import FiveFrame from './FiveFrame'
 
 export const global_screen_width = Dimensions.get('window').width
 export const global_screen_height = Dimensions.get('window').height
@@ -40,6 +41,7 @@ const Workspace = ({
 	door_ids,
 	portal_ids,
 	five_frame_ids,
+	bar_ids,
 	center_text,
 	top_left_text,
 	top_right_text,
@@ -52,6 +54,7 @@ const Workspace = ({
 	if ('undefined' === typeof config_path) return []
 	//console.log('Workspace config_path', config_path.toJS())
 	//console.log('Workspace five_frame_ids', five_frame_ids.toJS())
+	//console.log('Workspace bar_ids', bar_ids.toJS())
 	const nums = render_nums(tower_ids)
 	const tiles = render_tiles(tile_ids)
 	const doors = render_doors(door_ids)
@@ -63,6 +66,7 @@ const Workspace = ({
 		door_ids,
 	)
 	const five_frames = render_five_frames(five_frame_ids)
+	const bars = render_bars(bar_ids)
 	//console.log('len', doors.length)
 	//console.log('Workspace option_values', option_values ? option_values.toJS() : null)
 	let misc = [],
@@ -92,6 +96,9 @@ const Workspace = ({
 		}
 		if (five_frame_ids.size === five_frames.length + 1) {
 			option_inner = render_five_frames(five_frame_ids, option_values)
+		}
+		if (bar_ids.size === bars.length + 1) {
+			option_inner = render_bars(bar_ids, option_values)
 		}
 		for (let i = 0; i < option_inner.length; ++i) {
 			++key
@@ -272,6 +279,7 @@ const Workspace = ({
 	return (
 		<View style={styles.workspace}>
 			{nums}
+			{bars}
 			{options}
 			{tiles}
 			{doors}

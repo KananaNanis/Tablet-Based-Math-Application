@@ -32,6 +32,7 @@ const mapStateToProps = (state, ownProps) => {
 		door_ids: state.get('door_ids'),
 		portal_ids: state.get('portal_ids'),
 		five_frame_ids: state.get('five_frame_ids'),
+		bar_ids: state.get('bar_ids'),
 	}
 }
 

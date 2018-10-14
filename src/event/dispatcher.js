@@ -60,6 +60,8 @@ function perhaps_reveal_button() {
 	}
 }
 
+let y_delta, scaling_delta
+
 export function touch_dispatcher(state, x, y, touchID) {
 	//console.log('touch_dispatcher state ' + state + ' x ' + x + ' y ' + y + ' touchID ' + touchID)
 	const visible = query_visible_buttons()
@@ -130,9 +132,11 @@ export function touch_dispatcher(state, x, y, touchID) {
 	if ('down' === state) {
 		perhaps_reveal_button()
 	}
+	// console.log('move', query_event('move'))
+	// console.log('target', query_event('target'))
 	if (query_event('create_tower_by_height')) {
 		handle_create_tower_by_height(state, x, y, touchID)
-	} else if (!query_event('target') && !query_event('move')) {
+	} else if (query_event('target') && query_event('move')) {
 		const tgt = query_event('target')
 		const scale_factor = query_prop('scale_factor')
 		const move = query_event('move')
@@ -141,7 +145,7 @@ export function touch_dispatcher(state, x, y, touchID) {
 			//  old position was just the height above the ground
 			set_primary_height(tgt, y / scale_factor)
 			/*
-      } else if (false && 'touch_image' === move) {
+      else if (false && 'touch_image' === move) {
         // what is the x position of the portal?
         const arg_1 = query_arg(1)
         let pos_x = extract_handle_position(arg_1, query_door(arg_1))[0]
@@ -155,6 +159,7 @@ export function touch_dispatcher(state, x, y, touchID) {
         } else {
           set_primary_height(tgt, scaling_delta * d / scale_factor)
         }
+     }
       */
 		} else if ('move_dot' === move || 'move_handle_dot' === move) {
 			const tile_tgt = 'tile_2'
@@ -207,9 +212,15 @@ export function touch_dispatcher(state, x, y, touchID) {
 				if (di <= 0) di = 0.001
 				//console.log('di ', di)
 			}
-			let y_delta, scaling_delta
 			if ('down' === state) {
+				y_delta = null
+				scaling_delta = null
 				if (query_has_anim_info(arg_1)) doAction.setAnimInfo(arg_1, null)
+				const src = query_event('comparison_source')
+				if (src && is_blinking(src)) {
+					doAction.setAnimInfo(src, null)
+					doAction.addObjStyle(src, 'opacity', 1)
+				}
 				if ('touch_image' === move) {
 					// store scaling_delta
 					const f1 = query_name_of(arg_1).get(0)
@@ -234,7 +245,9 @@ export function touch_dispatcher(state, x, y, touchID) {
 					}
 				} else {
 					// check-- are we close enough to the handle to even start?
-					const d = dist_from_handle(x, y, tgt, scale_factor)
+					let d = dist_from_handle(x, y, tgt, scale_factor)
+					if ('half_height' === query_event('correctness')) d = 0
+					// console.log(' d', d)
 					if (d < global_constant.door.min_dist_from_handle) {
 						let f1 = query_name_of(tgt).get(0)
 						f1 = apply_bounds(f1, 0, 1)
@@ -247,11 +260,12 @@ export function touch_dispatcher(state, x, y, touchID) {
 							doAction.setAnimInfo(tgt, null)
 							doAction.addObjMisc(tgt, 'handle_opacity', 1)
 						}
-					} else y_delta = null
+						// console.log('f1', f1, 'd', d, 'scaling_delta', scaling_delta)
+					}
 				}
-				//console.log('f1', f1, 'd', d, 'scaling_delta', scaling_delta)
 			} else {
 				if (query_has_anim_info(tgt)) doAction.setAnimInfo(tgt, null)
+				// console.log('tgt', tgt, 'y_delta', y_delta, 'y1', y1)
 				if ('touch_image' === move) {
 					const h = (scaling_delta * di) / scale_factor
 					//console.log('h', h)

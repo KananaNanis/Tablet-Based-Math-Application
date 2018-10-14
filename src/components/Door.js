@@ -105,6 +105,14 @@ class Door extends React.Component {
 			: 0
 		let thickness = height * global_constant.door.thickness_fraction
 		if (thickness < 1) thickness = 1
+		let frame_thickness = thickness
+		let handle_thickness = thickness
+		if (misc && 'undefined' !== typeof misc.frame_thickness) {
+			frame_thickness = misc.frame_thickness
+		}
+		if (misc && 'undefined' !== typeof misc.handle_thickness) {
+			handle_thickness = misc.handle_thickness
+		}
 		//console.log('Door name', name, 'position', position, 'scale_factor', scale_factor, 'height', height)
 		//console.log('Door name', name, ' style', style)
 		//console.log('Door name', name, 'thickness', thickness)
@@ -123,11 +131,15 @@ class Door extends React.Component {
 				height,
 				left: position[0],
 				bottom: position[1],
-				borderLeftWidth: thickness,
-				borderLeftColor: frame_color,
 				backgroundColor: portal_bg_color,
 			},
 		]
+		if (frame_thickness > 0) {
+			door_style.push({
+				borderLeftWidth: frame_thickness,
+				borderLeftColor: frame_color,
+			})
+		}
 		if (misc && 'undefined' !== typeof misc.is_option) {
 			door_style.push({position: null})
 		}
@@ -135,13 +147,18 @@ class Door extends React.Component {
 		if (is_portal && name[0] < global_constant.door.portal_min_value) {
 			name[0] = global_constant.door.portal_min_value
 		}
-		const handle_bot = bounded_name * scale_factor * extra_scale - thickness / 2
+		const handle_bot =
+			bounded_name * scale_factor * extra_scale - handle_thickness / 2
+		let handle_width = global_constant.door.handle_fraction * height
+		if (misc && 'undefined' !== typeof misc.handle_width) {
+			handle_width = misc.handle_width
+		}
 		let handle_style = [
 			styles.handle,
 			{
-				width: global_constant.door.handle_fraction * height,
+				width: handle_width,
 				bottom: handle_bot,
-				borderTopWidth: thickness,
+				borderTopWidth: handle_thickness,
 				borderTopColor: frame_color,
 			},
 			handle_animated_style,
@@ -153,19 +170,19 @@ class Door extends React.Component {
 		if (anim_info && anim_info.hasOwnProperty('slide_duration')) {
 			/*
       start_anim(this.state.handlePosAnim, scale_factor * name[1]
-        - thickness / 2., anim_info.slide_duration);
+        - handle_thickness / 2., anim_info.slide_duration);
       handle_style.push({ 'bottom': this.state.handlePosAnim })
       */
 			let start_bot = handle_bot
 			let flip = anim_info.hasOwnProperty('flip')
 			if (anim_info.hasOwnProperty('slide_source')) {
-				start_bot = scale_factor * anim_info.slide_source - thickness / 2
+				start_bot = scale_factor * anim_info.slide_source - handle_thickness / 2
 			}
 			let end_bot
 			if (anim_info.hasOwnProperty('slide_target')) {
-				end_bot = scale_factor * anim_info.slide_target - thickness / 2
+				end_bot = scale_factor * anim_info.slide_target - handle_thickness / 2
 			} else if (name.length > 1) {
-				end_bot = scale_factor * name[1] - thickness / 2
+				end_bot = scale_factor * name[1] - handle_thickness / 2
 			} else end_bot = handle_bot
 			// tlog('starting slide from', start_bot, 'to', end_bot)
 			//this.state.slideAnim.setValue(0)
@@ -189,8 +206,8 @@ class Door extends React.Component {
 			}
 		}
 		if (anim_info && anim_info.hasOwnProperty('zoom')) {
-			const start_bot = scale_factor * anim_info.source - thickness / 2
-			const end_bot = scale_factor * anim_info.target - thickness / 2
+			const start_bot = scale_factor * anim_info.source - handle_thickness / 2
+			const end_bot = scale_factor * anim_info.target - handle_thickness / 2
 			//tlog('starting zoom from', start_bot, 'to', end_bot)
 			handle_style.push({
 				bottom: this.state.slideAnim.interpolate({
@@ -217,7 +234,8 @@ class Door extends React.Component {
 						handle_style,
 						{
 							opacity: second_handle_opacity,
-							bottom: name[1] * scale_factor * extra_scale - thickness / 2,
+							bottom:
+								name[1] * scale_factor * extra_scale - handle_thickness / 2,
 						},
 					]}
 				/>,
@@ -233,10 +251,11 @@ class Door extends React.Component {
 						style={[
 							styles.tickmark,
 							{
-								bottom: tval * scale_factor * extra_scale - thickness / 4,
-								left: -(thickness + twidth),
+								bottom:
+									tval * scale_factor * extra_scale - handle_thickness / 4,
+								left: -(frame_thickness + twidth),
 								width: twidth,
-								borderTopWidth: thickness / 2,
+								borderTopWidth: handle_thickness / 2,
 								borderTopColor: frame_color,
 							},
 						]}
@@ -265,7 +284,7 @@ class Door extends React.Component {
 			if (!Map.isMap(tile_ids)) tile_ids = fromJS(tile_ids)
 			if (!Map.isMap(door_ids)) door_ids = fromJS(door_ids)
 			//console.log('id', id, 'door_ids', door_ids)
-			let offset_x = -1 * (position[0] + thickness)
+			let offset_x = -1 * (position[0] + frame_thickness)
 			let nums_grey, tiles_grey, doors_grey
 			if (!misc || 'undefined' === typeof misc.stealth_mode) {
 				nums_grey = render_nums(tower_ids, offset_x, true)
@@ -351,13 +370,13 @@ const lightgrey = 'lightgrey'
 const styles = StyleSheet.create({
 	door: {
 		position: 'absolute',
+	},
+	portal: {
+		overflow: 'hidden',
 		borderRightWidth: 1,
 		borderRightColor: lightgrey,
 		borderTopWidth: 1,
 		borderTopColor: lightgrey,
-	},
-	portal: {
-		overflow: 'hidden',
 	},
 	inner: {
 		position: 'absolute',

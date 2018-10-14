@@ -5,6 +5,7 @@ import {
 	query_path,
 	query_prop,
 	query_obj_misc,
+	with_suffix,
 } from '../providers/query_store'
 import {
 	query_tower_name,
@@ -125,7 +126,14 @@ export function show_err_with_delay(
 			show_thin_height(arg_1, arg_2, result)
 			delay = 1000
 		}
-		doAction.addLogEntry(curr_time, [cp, 'is_correct', stars, f3, f1, f2])
+		doAction.addLogEntry(curr_time, [
+			with_suffix(cp),
+			'is_correct',
+			stars,
+			f3,
+			f1,
+			f2,
+		])
 		return delay
 	}
 
@@ -138,7 +146,14 @@ export function show_err_with_delay(
 		}
 	}
 	window.setTimeout(function() {
-		doAction.addLogEntry(curr_time, [cp, 'is_correct', stars, f3, f1, f2])
+		doAction.addLogEntry(curr_time, [
+			with_suffix(cp),
+			'is_correct',
+			stars,
+			f3,
+			f1,
+			f2,
+		])
 		if ('option' !== result) {
 			const [position, width, height] = get_err_box_location(
 				arg_1,
@@ -185,7 +200,7 @@ export function is_correct() {
 		if (eq !== 'unchecked') {
 			if (eq) delay = 0
 			doAction.addLogEntry(curr_time, [
-				cp,
+				with_suffix(cp),
 				'is_correct',
 				0 === delay,
 				tgt_height,
@@ -206,7 +221,7 @@ export function is_correct() {
 			if (namesAreIdentical(name1, name2)) delay = 0
 		}
 		doAction.addLogEntry(curr_time, [
-			cp,
+			with_suffix(cp),
 			'is_correct',
 			0 === delay,
 			name2,
@@ -268,10 +283,12 @@ export function is_correct() {
 		)
 		if (-1 === stars) delay = 'do_not_transition'
 		//delay = 'do_not_transition'
-	} else if ('near_discrete_height' === how) {
+	} else if ('near_discrete_height' === how || 'half_height' === how) {
 		let correct_height
 		//const src_height = query_tower_height(src)
-		if (src) {
+		if ('half_height' === how) {
+			correct_height = 0.5 * query_name_of(src)
+		} else if (src) {
 			correct_height = query_tower_height(src)
 		} else {
 			const arg_1 = query_arg(1)
@@ -285,7 +302,7 @@ export function is_correct() {
 		const tgt_height = query_name_of(tgt).get(0)
 		// console.log('correct_height', correct_height)
 		// console.log('tgt_height', tgt_height)
-		if (Math.abs(correct_height - tgt_height) < 0.1) {
+		if (Math.abs(correct_height - tgt_height) < 0.05) {
 			// console.log('got it!')
 			const curr = query_name_of('door_3').get(0)
 			doAction.setName('door_3', [curr, curr])
@@ -297,8 +314,20 @@ export function is_correct() {
 				slide_duration: duration,
 			})
 			delay = duration + 1000
+			if ('half_height' === how) {
+				doAction.addObjStyle('bar_1', 'backgroundColor', 'lightgreen')
+				window.setTimeout(function() {
+					doAction.addObjStyle('bar_1', 'backgroundColor', null)
+				}, delay)
+			}
 		} else {
 			// still incorrect
+			if ('half_height' === how) {
+				doAction.addObjStyle('bar_1', 'backgroundColor', 'red')
+				window.setTimeout(function() {
+					doAction.addObjStyle('bar_1', 'backgroundColor', null)
+				}, global_constant.incorrect_freeze_time)
+			}
 		}
 	} else if ('move_dot' === how) {
 		const arg_1 = query_arg(1)
