@@ -2,50 +2,98 @@
 params:
   modify:
     expr_1: {left: 5, arg_spacing: 20, res_spacing: 30}
-    # button_submit: { position: [5, top 5] }  // in constants file
-    # button_start: { position: [right 5, top 5] }
-  # starting_config_path: ['all_done']
-  # starting_config_path: ['in_between']
-  # starting_config_path: ['two_animals', 'just_dot']
-  # starting_config_path: ['two_animals', 'with_handle', 'with_dot','level_4']
-  # starting_config_path: ['two_animals', 'with_handle', 'just_doors','level_1']
-  # starting_config_path: ['proportion', 'option', 'pure_copy', 'level_2']
-  # starting_config_path: ['proportion', 'pure_copy', 'level_2']
-  # starting_config_path: ['proportion', 'option', 'zoom_down', 'level_1']
-  # starting_config_path: ['proportion', 'zoom_down', 'level_1']
-  # starting_config_path:  ['proportion', 'option', 'bounce', 'level_3']
-  # starting_config_path: ['proportion', 'bounce', 'level_3']
-  # starting_config_path: ['proportion', 'option', 'no_bounce', 'level_4']
-  # starting_config_path: ['proportion', 'no_bounce', 'level_4']
-  # starting_config_path: ['multiply_height', 'animal_target', 'touch_image']
-  # starting_config_path: ['multiply_height', 'animal_target', 'move_handle']
-  # starting_config_path: ['multiply_height', 'door_target', 'move_portal_handle_to_match']
-  # starting_config_path: ['multiply_height', 'door_target', 'move_portal_handle_to_shadow']
-  # starting_config_path: ['multiply_height', 'door_target',
-  #  'move_portal_handle_to_shadow', 'levels_with_stages', 'level_2a']
-  # starting_config_path: ['multiply_height', 'door_target',
-  #   'move_portal_handle_to_shadow', 'levels_with_stages', 'level_3a']
-  # starting_config_path: ['multiply_height', 'door_target', 'actual_multiplication', 'level_1']
-  # starting_config_path: ['estimate_tower_height', 'level_1']
-  # starting_config_path: ['animal_sum', 'level_1']
-  # starting_config_path: ['add_height', 'door_target', 'actual_addition', 'level_1']
-  # starting_config_path: ['measure_height', 'animal_height_subitize']
-  # starting_config_path: ['measure_height', 'copy_tower_subitize']
-  # starting_config_path: ['estimate_names', 'of_animals', 'level_1']
-  # starting_config_path: ['estimate_names', 'of_doors', 'level_1']
-  # starting_config_path: ['measure_height', 'to_handle', 'level_1']
-  # starting_config_path: ['measure_height',  'animal_height', 'level_1']
-  # starting_config_path: ['intro_diagrams', 'copy_tower', 'level_1']
-  # starting_config_path: ['intro_names', 'copy_tower', 'level_1']
-  starting_config_path: ['one_through_five', 'five_frame', 'level_1'] # Oct 8
-  # starting_config_path: ['one_through_five', 'five_frame', 'disappearing', 'level_4']
-  # starting_config_path: ['one_through_five', 'pegs', 'level_1'] # Oct 11
-  # starting_config_path: ['one_through_five', 'pegs', 'disappearing', 'level_4']
-  # starting_config_path: ['one_through_five', 'doors', 'level_1']
-  # starting_config_path: ['estimate_names_1_to_5', 'of_doors', 'level_1']
-  # starting_config_path: ['six_through_nine', 'doors', 'level_1']
-  # starting_config_path: ['eleven_through_fourteen', 'doors', 'level_1']
-  # starting_config_path: ['estimate_names_11_to_14', 'of_doors', 'level_1']
+pure_five_frame:
+  params:
+    generate: 
+      prompt_value: [pick_from_range, 1, 5.5, 1]
+      option_value_delta: [[1], [2], [3], [4], [5]]
+      option_value_seed: prompt_value
+      restriction_3: option > 0
+      restriction_4: option < 6
+    create:
+      five_frame_1: { name: prompt_value }
+      five_frame_2: { name: 1 }
+      door_9: [10.0]  # as a reference
+    modify:
+      five_frame_1: 
+        position: [20, 0]
+        # this only works once, since it is looking for changes!
+        # anim_info: { opacity: [1, 0], duration: 1000 }
+        misc:
+          extra_scale: .245
+      five_frame_2:
+        position: [0, 0]
+        misc:
+          is_option: true
+          just_text: true
+          extra_scale: .5
+      door_9: 
+        position: [10, 0]
+        misc: {tickmarks: [.5, 1.5]}
+    event_handling:
+      correctness: identical
+      target: five_frame_2
+      arg_1: five_frame_1
+      comparison_source: five_frame_1
+    misc: 
+      config_iteration: 5
+      num_stars: 3
+  level_1:
+  disappearing:
+    params:
+      create:
+        button_start:
+      modify:
+        five_frame_1:
+          anim_info: null
+          style: { opacity: 0 }
+        five_frame_2:
+          style: { opacity: 0 }
+      misc:
+        freeze_display: true
+    level_2:
+      params:
+        delay:
+          modify:
+            five_frame_1:
+              style: { opacity: 1 }
+              anim_info:
+                opacity: [1, 0]
+                delay: 1000
+                duration: 500
+            five_frame_2:
+              appear_after: 1500
+    level_3:
+      params:
+        delay:
+          modify:
+            five_frame_1:
+              style: { opacity: 1 }
+              anim_info:
+                opacity: [1, 0]
+                delay: 250
+                duration: 250
+            five_frame_2:
+              appear_after: 500
+    level_4:
+      params:
+        misc:
+          jmp: ['intro_names', 'copy_tower', 'level_1']
+        delay:
+          modify:
+            five_frame_1:
+              style: { opacity: 1 }
+              anim_info: { opacity: [1, 0], delay: 0, duration: 250 }
+            five_frame_2:
+              appear_after: 250
+    all_done:
+      skip_node_above:
+      params:
+        create:
+          five_frame_1: remove
+          five_frame_2: remove
+          button_start: remove
+          center_text:  That's all for today!
 intro_diagrams:
   params:
     create:
@@ -89,6 +137,8 @@ intro_diagrams:
           option_value_seed: tower_1_name
           restriction_3: option > 0
           restriction_4: option < 1.9
+        create:
+          tower_2: [1.1]
         modify:
           tower_2:
             position: [0, 0]
@@ -164,6 +214,7 @@ intro_diagrams:
                 is_option: true
                 as_diagram: true
     all_done:
+      skip_node_above:
       params:
         create:
           tower_1: remove
@@ -177,7 +228,10 @@ intro_names:
       button_submit:
     event_handling: { target: tower_2 }
     modify:
-      tower_2: { position: [65vw, 0] }
+      tower_2: 
+        position: [65vw, 0]
+        misc:
+          tower_name_style: { left: 5 }
     misc: 
       config_iteration: 4
       # config_iteration: 1
@@ -221,6 +275,13 @@ intro_names:
               is_option: true
         event_handling:
           arg_1: tower_1
+    all_done1:
+      skip_node_above:
+      params:
+        create:
+          tower_1: remove
+          tower_2: remove
+          center_text:  That's all for today!
     level_2:
       params:
         # generate: { tower_1_name: [fixed, 1.6] }
@@ -268,6 +329,8 @@ intro_names:
             tower_style: {opacity: null}
             misc: 
               hide_tower_name: true
+          tower_2: 
+            position: [right 100, 0]
         event_handling:
           touch_reveals_button: [submit, delete]
         misc:
@@ -347,6 +410,46 @@ intro_names:
           tower_1: remove
           tower_2: remove
           center_text:  That's all for today!
+halves:
+  params:
+    generate: 
+      # bar_1_name: [fixed, .5]
+      bar_1_name: [uniform, .2, 1.1]
+    create:
+      door_3: [.5]
+      bar_1: { name: bar_1_name }
+    modify:
+      door_3: 
+        position: [35vw, 0]
+        style:
+        misc:
+          frame_thickness: 0
+          handle_thickness: 1
+          handle_width: 300
+          handle_opacity: 0
+          handle_color: orange
+      bar_1: 
+        position: [40vw, 0]
+        anim_info: { blink: .5 }
+        style:
+          borderRadius: 25
+          width: 250
+    event_handling: 
+      move: move_handle
+      comparison_source: bar_1
+      target: door_3
+      correctness: half_height
+      touch_reveals_button: submit
+    misc:
+      config_iteration: 4
+      # config_iteration: 1
+      num_stars: 3
+      remove_on_exit: [button_submit]
+  level_1:
+    params:
+      misc:
+        # jmp: [halves, level_5]
+        jmp: jmp_label_1
 one_through_five:
   params:
     generate: 
@@ -363,6 +466,7 @@ one_through_five:
         tower_style: { opacity: 0 }
         misc:
           is_option: true
+          tower_name_style: { left: 5 }
     event_handling:
       target: tower_2
       correctness: identical
@@ -371,94 +475,6 @@ one_through_five:
       # config_iteration: 2
       # config_iteration: 1
       num_stars: 3
-  five_frame:
-    params:
-      generate: 
-        prompt_value: [pick_from_range, 1, 5.5, 1]
-        # prompt_value: [fixed, 3]
-        option_value_delta: [[1], [2], [3], [4], [5]]
-        restriction_4: option < 6
-      create:
-        tower_2: remove
-        five_frame_1: { name: prompt_value }
-        five_frame_2: { name: 1 }
-        door_9: [10.0]  # as a reference
-      modify:
-        five_frame_1: 
-          position: [20, 0]
-          # this only works once, since it is looking for changes!
-          # anim_info: { opacity: [1, 0], duration: 1000 }
-          misc:
-            extra_scale: .245
-        five_frame_2:
-          position: [0, 0]
-          misc:
-            is_option: true
-            just_text: true
-            extra_scale: .5
-        door_9: 
-          position: [10, 0]
-          misc: {tickmarks: [.5, 1.5]}
-      event_handling: 
-        target: five_frame_2
-        arg_1: five_frame_1
-        comparison_source: five_frame_1
-      misc:
-        config_iteration: 5
-    level_1:
-    disappearing:
-      params:
-        create:
-          button_start:
-        modify:
-          five_frame_1:
-            anim_info: null
-            style: { opacity: 0 }
-          five_frame_2:
-            style: { opacity: 0 }
-        misc:
-          freeze_display: true
-      level_2:
-        params:
-          delay:
-            modify:
-              five_frame_1:
-                style: { opacity: 1 }
-                anim_info:
-                  opacity: [1, 0]
-                  delay: 1000
-                  duration: 500
-              five_frame_2:
-                appear_after: 1500
-      level_3:
-        params:
-          delay:
-            modify:
-              five_frame_1:
-                style: { opacity: 1 }
-                anim_info:
-                  opacity: [1, 0]
-                  delay: 250
-                  duration: 250
-              five_frame_2:
-                appear_after: 500
-      level_4:
-        params:
-          delay:
-            modify:
-              five_frame_1:
-                style: { opacity: 1 }
-                anim_info: { opacity: [1, 0], delay: 0, duration: 250 }
-              five_frame_2:
-                appear_after: 250
-      all_done:
-        skip_node_above:
-        params:
-          create:
-            five_frame_1: remove
-            five_frame_2: remove
-            button_start: remove
-            center_text:  That's all for today!
   pegs:
     params:
       generate: 
@@ -480,10 +496,10 @@ one_through_five:
       event_handling: 
         arg_1: tile_1
         comparison_source: tile_1
-    level_1:
+    pegs_with_five_frames:
       params:
         create:
-          five_frame_3: { name: prompt_value_10 }
+          five_frame_3: { name: 0 }
         modify:
           five_frame_3:
             position: [20, 0]
@@ -492,6 +508,75 @@ one_through_five:
               extra_scale: .245
         misc:
           config_iteration: 5
+      level_1:
+      disappearing:
+        params:
+          create:
+            button_start:
+          modify:
+            five_frame_3:
+              style: { opacity: 0 }
+            tile_1:
+              style: { opacity: 0 }
+            tower_2:
+              style: { opacity: 0 }
+          misc:
+            freeze_display: true
+        level_2:
+          params:
+            delay:
+              modify:
+                tile_1:
+                  style: { opacity: 1 }
+                five_frame_3:
+                  style: { opacity: 0.1 }
+                  anim_info:
+                    opacity: [0.1, 0]
+                    delay: 1000
+                    duration: 1500
+                tower_2:
+                  style: { opacity: 1 }
+        level_3:
+          params:
+            delay:
+              modify:
+                tile_1:
+                  style: { opacity: 1 }
+                five_frame_3:
+                  style: { opacity: 0.1 }
+                  anim_info:
+                    opacity: [0.1, 0]
+                    delay: 1000
+                    duration: 500
+                tower_2:
+                  style: { opacity: 1 }
+        level_4:
+          params:
+            delay:
+              modify:
+                tile_1:
+                  style: { opacity: 1 }
+                five_frame_3:
+                  style: { opacity: 0.1 }
+                  anim_info:
+                    opacity: [0.1, 0]
+                    delay: 500
+                    duration: 250
+                tower_2:
+                  style: { opacity: 1 }
+        level_5:
+          params:
+            delay:
+              modify:
+                tile_1:
+                  style: { opacity: 1 }
+                five_frame_3:
+                  style: { opacity: 0.1 }
+                  anim_info:
+                    opacity: [0.1, 0]
+                    duration: 250
+                tower_2:
+                  style: { opacity: 1 }
     level_2:
     disappearing:
       params:
@@ -685,6 +770,7 @@ six_through_nine:
         tower_style: { opacity: 0 }
         misc:
           is_option: true
+          tower_name_style: { left: 5 }
     event_handling:
       target: tower_2
       correctness: identical
@@ -693,6 +779,26 @@ six_through_nine:
       # config_iteration: 2
       # config_iteration: 1
       num_stars: 3
+  intro:
+    params:
+      create:
+        tower_2: remove
+        tower_1: { name: prompt_value }
+        door_2: [0]
+      modify:
+        tower_1:
+          position: [10, 0]
+          tower_style: { opacity: 0 }
+        door_2:
+          position: [0, 0]
+          misc:
+            tickmarks: [.5, 1.5]
+            is_option: true
+      event_handling:
+        arg_1: tower_1
+        target: door_2
+      misc: 
+        config_iteration: 5
   doors:
     params:
       create:
@@ -751,10 +857,22 @@ six_through_nine:
                 anim_info:
                   opacity: [1, 0]
                   delay: 1000
+                  duration: 1500
+              tower_2:
+                appear_after: 2500
+      level_5:
+        params:
+          delay:
+            modify:
+              door_1:
+                style: { opacity: 1 }
+                anim_info:
+                  opacity: [1, 0]
+                  delay: 1000
                   duration: 500
               tower_2:
                 appear_after: 1500
-      level_5:
+      level_6:
         params:
           delay:
             modify:
@@ -766,7 +884,7 @@ six_through_nine:
                   duration: 250
               tower_2:
                 appear_after: 500
-      level_6:
+      level_7:
         params:
           delay:
             modify:
@@ -832,6 +950,7 @@ eleven_through_fourteen:
         tower_style: { opacity: 0 }
         misc:
           is_option: true
+          tower_name_style: { left: 5 }
     event_handling:
       target: tower_2
       correctness: identical
@@ -840,6 +959,26 @@ eleven_through_fourteen:
       # config_iteration: 2
       # config_iteration: 1
       num_stars: 3
+  intro:
+    params:
+      create:
+        tower_2: remove
+        tower_1: { name: prompt_value }
+        door_2: [0]
+      modify:
+        tower_1:
+          position: [10, 0]
+          tower_style: { opacity: 0 }
+        door_2:
+          position: [0, 0]
+          misc:
+            tickmarks: [.5, 1.5]
+            is_option: true
+      event_handling:
+        arg_1: tower_1
+        target: door_2
+      misc: 
+        config_iteration: 5
   doors:
     params:
       create:
@@ -963,6 +1102,8 @@ estimate_names_11_to_14:
         modify:
           tower_2: 
             tower_style: {opacity: 0}
+        misc:
+          jmp: ['estimate_names', 'of_doors', 'level_1']
     all_done:
       params:
         create:
@@ -1059,7 +1200,7 @@ estimate_names:
         position: [65vw, 0]
         tower_style: {opacity: 0}
     misc: 
-      config_iteration: 4
+      config_iteration: 7
       # config_iteration: 1
       num_stars: 3
       remove_on_exit: [button_submit, button_delete]
@@ -1133,7 +1274,8 @@ estimate_names:
         door_1: { name: [door_1_name] }
       modify:
         door_1: 
-          position: [5, 0]
+          position: [10, 0]
+          misc: {tickmarks: [.5, 1.5]}
       event_handling: 
         comparison_source: door_1
         # correctness: identical
@@ -1173,6 +1315,18 @@ estimate_names:
       params:
         generate: 
           door_1_name: [pick_from_list, [1.5, 1.4, 1.3, 1.2]]
+    all_values:
+      params:
+        generate: 
+          door_1_name: [pick_from_range, .1, 1.8, .1]
+      level_8:
+      level_9:
+      level_10:
+        params:
+          misc:
+            jmp_no_suffix: [one_through_five, doors, level_1]
+            # skip_suffix_for_this_level: true
+            suffix_path: [suffix1]
   all_done:
     params:
       create:
@@ -1189,7 +1343,7 @@ measure_height:
       touch_reveals_button: [submit, delete]
     misc: 
       remove_on_exit: [button_submit, button_delete]
-      config_iteration: 4
+      config_iteration: 7
       # config_iteration: 1
       num_stars: 3
   animal_height:
@@ -1201,7 +1355,7 @@ measure_height:
         tile_1: { position: [right 40vw, 0] }
       event_handling: 
         comparison_source: tile_1
-        correctness: same_height
+        correctness: approx_height
     level_1:
       params:
         event_handling:
@@ -1219,6 +1373,9 @@ measure_height:
       params:
         create:
           keypad_kind: 'buildTower'
+        modify:
+          tower_2:
+            tower_style: { opacity: 0 }
   to_handle:
     params:
       generate: { door_1_name: [pick_from_range, .1, 1.8, .1] }
@@ -1244,6 +1401,9 @@ measure_height:
       params:
         create:
           keypad_kind: 'buildTower'
+        modify:
+          tower_2:
+            tower_style: { opacity: 0 }
   copy_tower_subitize:
     params:
       generate: { tower_1_name: [pick_from_range, .1, 1.8, .1] }
@@ -1255,12 +1415,51 @@ measure_height:
           position: [5, 0]
           width: 60vw
           overflow: 'hidden'
-          appear_after: 2000
-          anim_info:
-            opacity: [1, 0]
-            delay: 2500
-            duration: 500
+          misc:
+            hide_tower_name: true
+        tower_2:
+          tower_style: { opacity: 0 }
       event_handling: { comparison_source: tower_1, correctness: identical }
+    level_1:
+    disappearing:
+      params:
+        create:
+          button_start:
+        modify:
+          tower_1: 
+            style: { opacity: 0 }  
+        misc:
+          freeze_display: true
+      level_2:
+        params:
+          delay:
+            modify:
+              tower_1:
+                style: { opacity: 1 }
+                anim_info:
+                  opacity: [1, 0]
+                  delay: 1000
+                  duration: 500
+      level_3:
+        params:
+          delay:
+            modify:
+              tower_1:
+                style: { opacity: 1 }
+                anim_info:
+                  opacity: [1, 0]
+                  delay: 250
+                  duration: 250
+      level_4:
+        params:
+          delay:
+            modify:
+              tower_1:
+                style: { opacity: 1 }
+                anim_info:
+                  opacity: [1, 0]
+                  delay: 100
+                  duration: 150
   animal_height_subitize:
     params:
       generate: { tile_1_name: [pick_animal_name] }
@@ -1275,13 +1474,16 @@ measure_height:
           # appear_after: 2000
           style: { borderTopWidth: 0, opacity: 0 }
           # style: { borderTopWidth: 0 }
+        tower_2:
+          tower_style: { opacity: 0 }
       event_handling: 
         comparison_source: tile_1
-        correctness: same_height
+        correctness: approx_height
         touch_reveals_button: submit
       misc:
         remove_on_exit: [button_submit]
         freeze_display: true
+        jmp: [measure_height,  animal_height, level_1] 
       delay:
         modify:
           tile_1:
@@ -1995,6 +2197,11 @@ all_done:
 # multi_size_multiplication:
 # decimal_to_shrink:
 # multi_digit_multiplication:
+suffix1:
+  params:
+    modify:
+      door_1: 
+        misc: {tickmarks: null}
 in_between:
   params:
     create:

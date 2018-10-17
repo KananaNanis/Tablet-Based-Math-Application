@@ -68,6 +68,7 @@ export function name_is_in_standard_form(name0) {
 		if (size0 === size1) {
 			let is_fiver0 = get_is_fiver_from_group(group0)
 			if (!is_fiver0 || is_fiver1) {
+				//console.log('group01', group0, group1, 'is_fiver01', is_fiver0, is_fiver1)
 				res = false
 				reason = 'fiverness'
 				break
@@ -92,6 +93,7 @@ export function add_block_to_name(new_size, new_is_fiver, name0) {
 	let size = get_block_size_from_group(group)
 	let how_many = get_how_many_from_group(group)
 	let is_fiver = get_is_fiver_from_group(group)
+	// console.log('size', size, new_size, 'is_fiver', is_fiver, new_is_fiver, 'how_many', how_many)
 	if (size !== new_size || new_is_fiver !== is_fiver || 5 === how_many) {
 		name.push(new_group)
 	} else {
@@ -144,16 +146,24 @@ const Block = ({
 			/>
 		)
 	}
+	let txt = null
+	if ('|' === text_content) {
+		txt = <View style={styles.vert_bar} />
+	} else {
+		txt = <Text style={text_style}>{text_content}</Text>
+	}
+
 	return (
 		<View style={[view_style, radius_style, {width, height}]}>
 			{img}
-			<Text style={text_style}>{text_content}</Text>
+			{txt}
 		</View>
 	)
 }
 
 const none = 'none'
 const black = 'black'
+const blue = 'blue'
 const styles = StyleSheet.create({
 	image_default: {
 		position: 'absolute',
@@ -163,6 +173,14 @@ const styles = StyleSheet.create({
 		borderWidth: 3,
 		borderStyle: 'dashed',
 		borderColor: black,
+	},
+	vert_bar: {
+		position: 'absolute',
+		left: 30,
+		bottom: 0,
+		backgroundColor: blue,
+		width: 10,
+		height: 520,
 	},
 })
 

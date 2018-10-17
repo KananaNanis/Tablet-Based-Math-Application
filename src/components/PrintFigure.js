@@ -52,7 +52,7 @@ function init_page_dimensions(
 }
 
 const PrintFigure = () => {
-	const scale_down_for_laptop = true
+	const scale_down_for_laptop = false
 	const rotate_whole_page = false
 	let use11x17 = true
 	let landscape = false
@@ -161,7 +161,7 @@ const PrintFigure = () => {
 		for (let i = 0; i < 6; ++i) {
 			content.push(<FiveFrame key={i} name={5} position={[5 + i * 245, 5]} />)
 		}
-	} else if (skip) {
+	} else if (keep) {
 		// print worksheets for learning to draw tower diagrams
 		use11x17 = false
 		landscape = true
@@ -170,12 +170,12 @@ const PrintFigure = () => {
 		if (page1) {
 			content.push(
 				<Text key="name" style={styles.draw_diagram_page1}>
-					9/20/2018 Name: _________________
+					10/15/2018 Name: _____________________________
 				</Text>,
 			)
 		}
 		const vals = page1 ? [0.6, 1.1, 0.4] : [0.8, 1.6, 1.9]
-		const opacity = [1, 0.05, 0]
+		const opacity = [1, 0.2, 0]
 		const scale_factor = query_prop('scale_factor')
 		for (let i = 0; i < 3; ++i) {
 			for (let j = 0; j < 3; ++j) {

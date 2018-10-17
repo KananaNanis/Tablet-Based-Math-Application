@@ -14,18 +14,27 @@ import {
 	render_doors,
 	render_portals,
 	render_five_frames,
+	render_bars,
 } from './render_geoms'
-//import FiveFrame from './FiveFrame';
+//import FiveFrame from './FiveFrame'
 
-export const global_screen_width = Dimensions.get('window').width
-export const global_screen_height = Dimensions.get('window').height
+export let global_screen_width = Dimensions.get('window').width
+export let global_screen_height = Dimensions.get('window').height
 export const global_grass_height = 50
-export const global_workspace_height =
-	global_screen_height - global_grass_height
+export let global_workspace_height = global_screen_height - global_grass_height
+
+export function update_screen_dimensions() {
+	if (1 !== global_constant.laptop_scaling_factor) {
+		global_screen_width = global_constant.tablet_width
+		global_screen_height = global_constant.tablet_height
+		global_workspace_height = global_screen_height - global_grass_height
+		// console.log('changing global_workspace_height to', global_workspace_height)
+	}
+}
 
 export const window2workspaceCoords = pos0 => [
-	pos0[0],
-	global_workspace_height - pos0[1],
+	pos0[0] / global_constant.laptop_scaling_factor,
+	global_workspace_height - pos0[1] / global_constant.laptop_scaling_factor,
 ]
 
 const Workspace = ({
@@ -40,6 +49,7 @@ const Workspace = ({
 	door_ids,
 	portal_ids,
 	five_frame_ids,
+	bar_ids,
 	center_text,
 	top_left_text,
 	top_right_text,
@@ -52,6 +62,7 @@ const Workspace = ({
 	if ('undefined' === typeof config_path) return []
 	//console.log('Workspace config_path', config_path.toJS())
 	//console.log('Workspace five_frame_ids', five_frame_ids.toJS())
+	//console.log('Workspace bar_ids', bar_ids.toJS())
 	const nums = render_nums(tower_ids)
 	const tiles = render_tiles(tile_ids)
 	const doors = render_doors(door_ids)
@@ -63,6 +74,7 @@ const Workspace = ({
 		door_ids,
 	)
 	const five_frames = render_five_frames(five_frame_ids)
+	const bars = render_bars(bar_ids)
 	//console.log('len', doors.length)
 	//console.log('Workspace option_values', option_values ? option_values.toJS() : null)
 	let misc = [],
@@ -72,7 +84,15 @@ const Workspace = ({
 	if (add_username) {
 		++key
 		misc.push(
-			<Text key={key} style={styles.username}>
+			<Text
+				key={key}
+				style={[
+					styles.username,
+					{
+						left: global_screen_width / 2,
+					},
+				]}
+			>
 				{global_constant.username}
 			</Text>,
 		)
@@ -92,6 +112,9 @@ const Workspace = ({
 		}
 		if (five_frame_ids.size === five_frames.length + 1) {
 			option_inner = render_five_frames(five_frame_ids, option_values)
+		}
+		if (bar_ids.size === bars.length + 1) {
+			option_inner = render_bars(bar_ids, option_values)
 		}
 		for (let i = 0; i < option_inner.length; ++i) {
 			++key
@@ -269,9 +292,19 @@ const Workspace = ({
 		//source={require('img/star.png')}
 	}
 	//console.log(doors.length)
+	//console.log('using global_workspace_height of', global_workspace_height)
 	return (
-		<View style={styles.workspace}>
+		<View
+			style={[
+				styles.workspace,
+				{
+					height: global_workspace_height,
+					width: global_screen_width,
+				},
+			]}
+		>
 			{nums}
+			{bars}
 			{options}
 			{tiles}
 			{doors}
@@ -294,8 +327,6 @@ const grey = 'grey'
 const styles = StyleSheet.create({
 	workspace: {
 		//backgroundColor: 'blue',
-		height: global_workspace_height,
-		width: global_screen_width,
 		position: 'absolute',
 		left: 0,
 		bottom: global_grass_height,
@@ -323,7 +354,6 @@ const styles = StyleSheet.create({
 		position: 'absolute',
 		fontSize: 20,
 		top: 0,
-		left: global_screen_width / 2,
 	},
 	center_text: {
 		fontSize: 30,

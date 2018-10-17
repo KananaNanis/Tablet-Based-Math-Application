@@ -24,7 +24,14 @@ class TowerName extends React.Component {
 	}
 
 	render() {
-		let {id, name, position, anim_info, just_grey = false} = this.props
+		let {
+			id,
+			name,
+			position,
+			anim_info,
+			tower_name_style,
+			just_grey = false,
+		} = this.props
 		let animated_style = {}
 		if (Anim.has_timer(anim_info)) {
 			Anim.interpolate_anim_attr(
@@ -78,7 +85,9 @@ class TowerName extends React.Component {
 		height += 5
 		//console.log(height)
 		return (
-			<Animated.View style={[styles.tower_name, {height}, animated_style]}>
+			<Animated.View
+				style={[styles.tower_name, {height}, tower_name_style, animated_style]}
+			>
 				{name_elements}
 			</Animated.View>
 		)

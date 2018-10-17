@@ -5,13 +5,14 @@ import {
 	query_option_values,
 	query_path,
 	query_name_of,
+	with_suffix,
 } from '../providers/query_store'
 import {
 	query_top_block,
 	query_tower_height,
 	query_tower_name,
 } from '../providers/query_tower'
-import {doAction, global_sound} from '../App'
+import {doAction, global_constant, global_sound} from '../App'
 import {transition_to_next_config} from '../providers/change_config'
 import {enter_exit_config} from '../providers/enter_exit'
 import {is_correct, show_err_with_delay} from './correctness'
@@ -44,11 +45,13 @@ export function handle_next_button(state) {
 export function handle_start_button(state) {
 	if ('up' === state) {
 		//console.log('start!')
-		let action_list = []
+		let action_list = [],
+			silent = false
 		action_list.push(Actions.setProp('freeze_display', null))
 		action_list.push(Actions.setButtonDisplay('start', null))
 		const cp = query_path('config')
 		enter_exit_config(
+			silent,
 			action_list,
 			cp,
 			true,
@@ -66,7 +69,7 @@ export function incorrect_button_response() {
 	window.setTimeout(function() {
 		doAction.setButtonHighlight(null)
 		doAction.setProp('freeze_display', false)
-	}, 3000)
+	}, global_constant.incorrect_freeze_time)
 }
 
 export function handle_submit_button(state) {
@@ -113,7 +116,7 @@ function option_is_correct(i) {
 			// assume it was one of the proportional exercises
 		}
 		doAction.addLogEntry(curr_time, [
-			cp,
+			with_suffix(cp),
 			'is_correct',
 			i === i0,
 			info_about_response,
@@ -124,20 +127,25 @@ function option_is_correct(i) {
 }
 
 export function handle_options(state, x, y) {
+	let action_list = []
 	let found_one = false
 	const n = query_option_values().size
 	//console.log('n', n)
 	for (let i = 0; i < n; ++i) {
+		//if ('down' === state) console.log(' checking i', i, 'x', x, 'y', y, 'geom', option_geometry(i))
 		if (pointIsInRectangle([x, y], option_geometry(i))) {
 			//console.log('i', i)
 			found_one = true
-			doAction.setButtonHighlight('option_' + i)
+			action_list.push(Actions.setButtonHighlight('option_' + i))
 			if ('up' === state) {
 				if (option_is_correct(i)) {
 					global_sound['chirp1'].play()
+					action_list.push(Actions.setProp('answer_is_correct', true))
+					action_list.push(Actions.setProp('freeze_display', true))
 					const arg_1 = query_arg(1)
 					const name_1 = query_name_of(arg_1)
-					const is_peg = arg_1.startsWith('tile_') && name_1.startsWith('peg_')
+					const is_peg =
+						arg_1 && arg_1.startsWith('tile_') && name_1.startsWith('peg_')
 					// console.log(arg_1)
 					if (
 						arg_1 &&
@@ -148,11 +156,12 @@ export function handle_options(state, x, y) {
 					) {
 						window.setTimeout(function() {
 							doAction.setButtonHighlight(null)
+							doAction.setProp('freeze_display', false)
 							transition_to_next_config()
 						}, 500)
 					} else {
-						doAction.setAnimInfo('portal_1', null)
-						doAction.setAnimInfo('door_2', null)
+						action_list.push(Actions.setAnimInfo('portal_1', null))
+						action_list.push(Actions.setAnimInfo('door_2', null))
 						//doAction.addObjStyle('portal_1', 'opacity', null)
 						//doAction.addObjStyle('door_2', 'opacity', null)
 						const add_anim = true
@@ -179,10 +188,11 @@ export function handle_options(state, x, y) {
 							)
 							window.setTimeout(function() {
 								doAction.setButtonHighlight(null)
+								doAction.setProp('freeze_display', false)
 								transition_to_next_config()
 							}, delay)
 						} else {
-							doAction.setButtonHighlight(null)
+							action_list.push(Actions.setButtonHighlight(null))
 							transition_to_next_config()
 						}
 					}
@@ -193,7 +203,10 @@ export function handle_options(state, x, y) {
 			}
 		}
 	}
-	if ('up' !== state && !found_one) doAction.setButtonHighlight(null)
+	if ('up' !== state && !found_one) {
+		action_list.push(Actions.setButtonHighlight(null))
+	}
+	do_batched_actions(action_list)
 }
 
 /*
@@ -232,14 +245,14 @@ export function handle_create_tower_by_height(state, x, y) {
 			}
 			let decim = Math.round((10 * y) / scale_factor) - h10
 			let new_size,
-				new_is_fiver = false
+				new_is_fiver = 0
 			if (decim >= 10) {
 				decim = 10
 				new_size = 0
 			} else if (decim >= 5) {
 				decim = 5
 				new_size = -1
-				new_is_fiver = true
+				new_is_fiver = 1
 			} else if (decim >= 1) {
 				decim = 1
 				new_size = -1

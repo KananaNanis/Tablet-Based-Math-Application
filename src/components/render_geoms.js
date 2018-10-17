@@ -3,6 +3,7 @@ import NumContainer from '../containers/NumContainer'
 import TileContainer from '../containers/TileContainer'
 import DoorContainer from '../containers/DoorContainer'
 import FiveFrameContainer from '../containers/FiveFrameContainer'
+import BarContainer from '../containers/BarContainer'
 import {
 	query_obj_misc,
 	//query_obj_style,
@@ -188,4 +189,47 @@ export function render_five_frames(five_frame_ids, option_values = null) {
 		}
 	}
 	return ffs
+}
+
+export function render_bars(bar_ids, option_values = null) {
+	let bars = []
+	for (let i = 0; i < bar_ids.size; ++i) {
+		const id = bar_ids.get(i)
+		const m = query_obj_misc(id)
+		// console.log('id', id, 'm', m ? m.toJS() : null)
+		let is_option = m ? m.get('is_option') : false
+		//let pos = query_position_of(id)
+		//let style = query_obj_style(id)
+		if (option_values && is_option) {
+			// console.log('ff id', id, 'option_values', option_values ? option_values.toJS() : null)
+			for (let j = 0; j < option_values.size; ++j) {
+				let name = option_values.get(bars.length).get(0)
+				//console.log('five_frame option id', id, 'name', name)
+				bars.push(
+					<BarContainer
+						key={id + '_' + j}
+						id={id}
+						//style={style.toJS()}
+						//misc={m.toJS()}
+						name={name}
+						//position={[pos.get(0), pos.get(1)]}
+					/>,
+				)
+			}
+		} else if (!option_values && !is_option) {
+			// console.log('ff id', id, 'name', query_name_of(id))
+			//let name = query_name_of(id)
+			bars.push(
+				<BarContainer
+					key={id}
+					id={id}
+					//style={style.toJS()}
+					//misc={m.toJS()}
+					//name={name}
+					//position={[pos.get(0), pos.get(1)]}
+				/>,
+			)
+		}
+	}
+	return bars
 }

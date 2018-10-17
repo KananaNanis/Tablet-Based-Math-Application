@@ -89,7 +89,7 @@ const styles = StyleSheet.create({
 	},
 	text: {
 		position: 'absolute',
-		fontSize: 400,
+		fontSize: 250,
 	},
 })
 

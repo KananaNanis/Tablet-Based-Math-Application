@@ -51,12 +51,14 @@ export function remove_on_exit(lis, action_list) {
 }
 
 export function enter_exit_config(
+	silent,
 	action_list,
 	cp,
 	enter,
 	verbose,
 	curr_config_iter,
 	use_delay = false,
+	use_suffix = false,
 ) {
 	let keep_names = false
 	if (!cp) cp = query_path('config')
@@ -67,8 +69,11 @@ export function enter_exit_config(
 	if (verbose) console.log('enter_exit_config enter', enter, 'config', config)
 	let curr_exercise = 0
 	if (enter) {
-		action_list.push(Actions.setProp('top_left_text', cp.toJS().join(' ')))
+		if (!use_suffix) {
+			action_list.push(Actions.setProp('top_left_text', cp.toJS().join(' ')))
+		}
 		action_list.push(Actions.setProp('freeze_display', false))
+		action_list.push(Actions.setProp('answer_is_correct', false))
 		if (
 			config.hasOwnProperty('misc') &&
 			config.misc.hasOwnProperty('config_iteration')
@@ -109,6 +114,7 @@ export function enter_exit_config(
 					action_list,
 					config['generate'],
 					curr_exercise,
+					silent,
 			  )
 			: {}
 	if (config['create']) {
@@ -140,14 +146,23 @@ export function enter_exit_config(
 				id.startsWith('tile_') ||
 				id.startsWith('door_') ||
 				id.startsWith('portal_') ||
-				id.startsWith('five_frame_')
+				id.startsWith('five_frame_') ||
+				id.startsWith('bar_')
 			) {
 				if (!keep_names) {
 					// assert: we have necessary info in the 'modify' area
 					let name = null
 					if (enter) {
 						name = c[id]
-						if ('object' === typeof name && name['name']) name = name['name']
+						const verbose2 = false
+						if (verbose2) console.log(' id', id, 'name0', name)
+						if (
+							'object' === typeof name &&
+							'undefined' !== typeof name['name']
+						) {
+							name = name['name']
+						}
+						if (verbose2) console.log(' id', id, 'name1', name)
 						if (Array.isArray(name)) {
 							for (let i = 0; i < name.length; ++i) {
 								if (gen_vars.hasOwnProperty(name[i])) {
@@ -156,6 +171,7 @@ export function enter_exit_config(
 							}
 						} else {
 							if (gen_vars.hasOwnProperty(name)) name = gen_vars[name]
+							if (verbose2) console.log(' id', id, 'name2', name)
 						}
 					}
 					let extra_scale = 1
@@ -239,6 +255,16 @@ export function enter_exit_config(
 								),
 							)
 						} else action_list.push(Actions.fiveFrameDelete(id))
+					} else if (id.startsWith('bar_')) {
+						if (enter) {
+							action_list.push(
+								Actions.barCreate(
+									id,
+									name,
+									as_position(config['modify'][id]['position']),
+								),
+							)
+						} else action_list.push(Actions.barDelete(id))
 					}
 				}
 			}
@@ -331,11 +357,15 @@ export function enter_exit_config(
 			}
 		}
 	}
+	let suffix_path,
+		skip_suffix_for_this_level = false
 	if (config['misc']) {
 		const c = config['misc']
 		for (const key in c) {
 			if ('config_iteration' === key) {
-				let iter_val = c[key]
+				let iter_val = global_constant.debug_mode
+					? global_constant.num_exercises_for_debugging
+					: c[key]
 				if (0 === iter_val || !enter) iter_val = null
 				action_list.push(Actions.setProp(key, iter_val))
 			} else if ('goto_config' === key) {
@@ -357,6 +387,33 @@ export function enter_exit_config(
 					}
 				}
 				action_list.push(Actions.setPath('goto', enter ? c[key][1] : null))
+			} else if ('jmp_no_suffix' === key) {
+				if (enter && !use_suffix) {
+					const has_suffix = suffix_path || query_path('suffix_path')
+					// const has_suffix = true
+					if (!has_suffix) {
+						console.log('setting jmp')
+						action_list.push(Actions.setPath('jmp', c[key]))
+					} else {
+						console.log('clearing jmp')
+						action_list.push(Actions.setPath('jmp', null))
+						suffix_path = null
+						action_list.push(Actions.setPath('suffix_path', null))
+					}
+				}
+			} else if ('jmp' === key) {
+				if (enter && !use_suffix) {
+					// don't unset this state here... wait for in-between
+					action_list.push(Actions.setPath(key, c[key]))
+				}
+			} else if ('skip_suffix_for_this_level' === key) {
+				if (c[key]) skip_suffix_for_this_level = true
+			} else if ('suffix_path' === key) {
+				if (enter && !c['jmp_no_suffix'] && !use_suffix) {
+					// don't unset this state here... wait for in-between
+					action_list.push(Actions.setPath(key, c[key]))
+					suffix_path = c[key]
+				}
 			} else if (
 				[
 					'num_stars',
@@ -366,6 +423,7 @@ export function enter_exit_config(
 					'big_op',
 					'problem_stage',
 					'freeze_display',
+					'answer_is_correct',
 					'hide_dot',
 				].includes(key)
 			) {
@@ -393,6 +451,33 @@ export function enter_exit_config(
 			// console.log('landmark_index', landmark_index, 'arg_1', arg_1)
 			// console.log('loc', loc, 'scale_factor', scale_factor)
 			action_list.push(Actions.setName('door_1', [loc[1] / (h * scale_factor)]))
+		}
+		if (
+			!use_suffix &&
+			!skip_suffix_for_this_level &&
+			(query_path('suffix_path') || suffix_path)
+		) {
+			let sp = query_path('suffix_path')
+			if (!sp) sp = suffix_path
+			// console.log(' suffix_path', sp)
+			// read a second config, for the suffix specifically
+			const use_suffix = true
+			enter_exit_config(
+				silent,
+				action_list,
+				sp,
+				enter,
+				verbose,
+				curr_config_iter,
+				use_delay,
+				use_suffix,
+			)
+			action_list.push(
+				Actions.setProp(
+					'top_left_text',
+					cp.toJS().join(' ') + '  ' + sp.join(' '),
+				),
+			)
 		}
 	}
 	//query_test()

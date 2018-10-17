@@ -42,6 +42,15 @@ export function fiveFrameCreate(id, name, position) {
 	}
 }
 
+export function barCreate(id, name, position) {
+	return {
+		type: AT.BAR_CREATE,
+		id,
+		name: fromJS(name),
+		position: fromJS(position),
+	}
+}
+
 export function towerDelete(id) {
 	return {type: AT.TOWER_DELETE, id}
 }
@@ -60,6 +69,10 @@ export function portalDelete(id) {
 
 export function fiveFrameDelete(id) {
 	return {type: AT.FIVE_FRAME_DELETE, id}
+}
+
+export function barDelete(id) {
+	return {type: AT.BAR_DELETE, id}
 }
 
 export function setName(id, name) {
@@ -161,7 +174,7 @@ export function setPath(key, value) {
 
 export function addLogEntry(time, info) {
 	console.log('addLogEntry', time, info)
-	const send_to_server = true
+	const send_to_server = !global_constant.skip_send_log
 	if (send_to_server) {
 		fetch(
 			// 'https://www.cs.stolaf.edu/suuji/ajax2.php',

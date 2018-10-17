@@ -29,6 +29,8 @@ const Num = ({
 	scale_factor,
 	just_grey = false,
 }) => {
+	let tower_name_style =
+		misc && misc.tower_name_style ? misc.tower_name_style : null
 	const tn =
 		misc && misc.hide_tower_name ? null : (
 			<TowerName
@@ -37,6 +39,7 @@ const Num = ({
 				just_grey={just_grey}
 				name={name}
 				position={position}
+				tower_name_style={tower_name_style}
 			/>
 		)
 	// misc = { top_just_outline: true }
