@@ -18,15 +18,23 @@ import {
 } from './render_geoms'
 //import FiveFrame from './FiveFrame'
 
-export const global_screen_width = Dimensions.get('window').width
-export const global_screen_height = Dimensions.get('window').height
+export let global_screen_width = Dimensions.get('window').width
+export let global_screen_height = Dimensions.get('window').height
 export const global_grass_height = 50
-export const global_workspace_height =
-	global_screen_height - global_grass_height
+export let global_workspace_height = global_screen_height - global_grass_height
+
+export function update_screen_dimensions() {
+	if (1 !== global_constant.laptop_scaling_factor) {
+		global_screen_width = global_constant.tablet_width
+		global_screen_height = global_constant.tablet_height
+		global_workspace_height = global_screen_height - global_grass_height
+		// console.log('changing global_workspace_height to', global_workspace_height)
+	}
+}
 
 export const window2workspaceCoords = pos0 => [
-	pos0[0],
-	global_workspace_height - pos0[1],
+	pos0[0] / global_constant.laptop_scaling_factor,
+	global_workspace_height - pos0[1] / global_constant.laptop_scaling_factor,
 ]
 
 const Workspace = ({
@@ -76,7 +84,15 @@ const Workspace = ({
 	if (add_username) {
 		++key
 		misc.push(
-			<Text key={key} style={styles.username}>
+			<Text
+				key={key}
+				style={[
+					styles.username,
+					{
+						left: global_screen_width / 2,
+					},
+				]}
+			>
 				{global_constant.username}
 			</Text>,
 		)
@@ -276,8 +292,17 @@ const Workspace = ({
 		//source={require('img/star.png')}
 	}
 	//console.log(doors.length)
+	//console.log('using global_workspace_height of', global_workspace_height)
 	return (
-		<View style={styles.workspace}>
+		<View
+			style={[
+				styles.workspace,
+				{
+					height: global_workspace_height,
+					width: global_screen_width,
+				},
+			]}
+		>
 			{nums}
 			{bars}
 			{options}
@@ -302,8 +327,6 @@ const grey = 'grey'
 const styles = StyleSheet.create({
 	workspace: {
 		//backgroundColor: 'blue',
-		height: global_workspace_height,
-		width: global_screen_width,
 		position: 'absolute',
 		left: 0,
 		bottom: global_grass_height,
@@ -331,7 +354,6 @@ const styles = StyleSheet.create({
 		position: 'absolute',
 		fontSize: 20,
 		top: 0,
-		left: global_screen_width / 2,
 	},
 	center_text: {
 		fontSize: 30,

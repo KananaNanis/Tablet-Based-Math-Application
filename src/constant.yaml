@@ -1,5 +1,5 @@
 # these constants should be fixed!
-debug_mode: true
+debug_mode: false
 num_exercises_for_debugging: 1
 # debug_path: [all_done]
 # debug_path: [in_between]
@@ -26,21 +26,24 @@ num_exercises_for_debugging: 1
 # debug_path: [estimate_tower_height, level_1]
 # debug_path: [animal_sum, level_1]
 # debug_path: [add_height, door_target, actual_addition, level_1]
+# debug_path: [measure_height, copy_tower_subitize, disappearing, level_2]
 # debug_path: [measure_height, animal_height_subitize]
-# debug_path: [measure_height, copy_tower_subitize]
 # debug_path: [estimate_names, of_animals, level_1]
 # debug_path: [estimate_names, of_doors, level_1]
-debug_path: [estimate_names, of_doors, all_values, level_10]
+# debug_path: [estimate_names, of_doors, all_values, level_10]
 # debug_path: [measure_height, to_handle, level_1]
-# debug_path: [measure_height,  animal_height, level_1]
+debug_path: [measure_height,  animal_height, level_1]
 # debug_path: [intro_diagrams, copy_tower, level_1]
 # debug_path: [intro_names, copy_tower, level_1]
+# debug_path: [intro_names, copy_tower, level_4]
 # debug_path: [one_through_five, pegs, pegs_with_five_frames, level_1]
 # debug_path: [one_through_five, pegs, pegs_with_five_frames, disappearing, level_2]
 # debug_path: [one_through_five, pegs, disappearing, level_2]
 # debug_path: [one_through_five, doors, level_1]
 # debug_path: [estimate_names_1_to_5, of_doors, level_1]
+# debug_path: [six_through_nine, intro]
 # debug_path: [six_through_nine, doors, level_1]
+# debug_path: [eleven_through_fourteen, intro]
 # debug_path: [eleven_through_fourteen, doors, level_1]
 # debug_path: [estimate_names_11_to_14, of_doors, level_1]
 # debug_path: [halves, level_1]
@@ -49,36 +52,27 @@ debug_path: [estimate_names, of_doors, all_values, level_10]
 # starting_config_path: [one_through_five, five_frame, level_1] # P Oct 8
 #starting_config_path_Dom: [intro_diagrams, copy_tower, level_1] # S Oct 12
 #starting_config_path_PCCS: [one_through_five, pegs, level_1] # P Oct 12
-starting_config_path_PCCS: [halves, level_1] # P Oct 15
-starting_config_path_Dom: [intro_diagrams, copy_tower, level_1] # S Oct 15
+# starting_config_path_Dom: [intro_diagrams, copy_tower, level_1] # S Oct 15
+starting_config_path_PCCS: [halves, level_1] # P Oct 15, 16
+# starting_config_path_Dom: [pure_five_frame, level_1] # S Oct 16
+starting_config_path_Dom: [measure_height,  animal_height, level_1] # S Oct 17
 
 starting_level_for:
-  # Anita:  [animal_sum, level_1]
-  # Jimmi:  [animal_sum, level_1]
-  # Frances:  [animal_sum, level_1]
-  # Kaia:  [animal_sum, level_1]
-  # Olaf: [measure_height, copy_tower, level_1]
-  # Ryota:  [measure_height, copy_tower, level_1]
-
-  # Anita: [proportion, option, pure_copy, level_1]
-  # Jimmi: [proportion, option, pure_copy, level_1]
-  # Frances: [proportion, option, pure_copy, level_1]
-  # Kaia: [proportion, option, pure_copy, level_1]
-  # Olaf: [proportion, pure_copy, level_1]
-  # Ryota: [proportion, pure_copy, level_1]
-jmp_label_1:
+  #jmp_label_1:
   Olaf: [one_through_five, doors, level_1]
-  m19: [one_through_five, pegs, pegs_with_five_frames, level_1]
-  m13: [one_through_five, doors, level_1]
-  m01: [one_through_five, doors, level_1]
+  m19: [one_through_five, pegs, level_2]
+  m17: [six_through_nine, intro]
+  m01: [six_through_nine, doors, level_3]
+  m13: [six_through_nine, doors, level_3]
+  m08: [six_through_nine, doors, disappearing, level_5]
+  m14: [estimate_names_6_to_9, of_doors, level_1]
+  m03: [eleven_through_fourteen, doors, disappearing, level_4]
+  m15: [estimate_names of_doors, level_1]
+
   m18: [one_through_five, doors, level_1]
   m05: [one_through_five, doors, level_1]
-  m17: [one_through_five, doors, level_1]
-  m14: [six_through_nine, doors, level_3]
+
   m02: [six_through_nine, doors, level_3]
-  m03: [six_through_nine, doors, level_3]
-  m15: [six_through_nine, doors, level_3]
-  m08: [six_through_nine, doors, level_3]
   m04: [eleven_through_fourteen, doors, level_1]
   m09: [eleven_through_fourteen, doors, level_3]
   m06: [eleven_through_fourteen, doors, level_3]
@@ -111,15 +105,15 @@ door:
   border_radius: 50
 special_button_geoms:
   submit: 
-    position: [25, top 25]
+    position: [40, top 15]
     width: 210
     height: 70
   restart: 
-    position: [25, top 100]
+    position: [40, top 90]
     width: 210
     height: 70
   delete: 
-    position: [25, top 100]
+    position: [40, top 90]
     width: 210
     height: 70
   next: 
@@ -231,6 +225,7 @@ animals:
   peg_c3: {height: .3, pixel_width: 190, pixel_height: 150}
   peg_c4: {height: .4, pixel_width: 190, pixel_height: 200}
   peg_c5: {height: .5, pixel_width: 190, pixel_height: 250}
+animal_scale_correction: 0.92
 camels:
   camel_scale: 0.2
   camel_offsets: [50, -10]
@@ -246,7 +241,7 @@ star_policy:
   loose: [3.0001, 6.0001, 10.0001, 20]
   moderate: [1.0001, 3.0001, 5.0001, 10]
   strict: [0.5001, 1.0001, 3.0001, 5]
-path_types: [config, prev_config, goto, jmp, suffix_path]
+path_types: [config, prev_config, goto, jmp, jmp_no_suffix, suffix_path]
 prop_types: [scale_factor, freeze_display, num_stars,
     config_iteration, goto_iteration, skip_submit, skip_in_between,
     center_text, top_left_text, top_right_text, problem_stage,
@@ -270,6 +265,9 @@ screen_pixels_per_cm: 52
 print_pixels_per_cm: 56.77
 print_size11x17: {width: 1471, height: 2333}
 print_size8p5x11: {width: 1112, height: 1471}
+tablet_width: 660
+tablet_height: 1000
+laptop_scaling_factor: 1
 animal_landmarks:
   extra_dot_diameter: 50
   sloth:

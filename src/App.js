@@ -9,6 +9,7 @@ import {
 	global_screen_width,
 	global_screen_height,
 	global_grass_height,
+	update_screen_dimensions,
 } from './components/Workspace'
 import {touchHandler} from './event/event'
 import {global_store} from './index.js'
@@ -70,6 +71,32 @@ export async function load_config_tree(appObj) {
 			}
 		}
 	}
+
+	function update_constant_animal_heights() {
+		const s = global_constant.animal_scale_correction
+		for (const anim in global_constant.animals) {
+			if (anim.startsWith('peg')) continue
+			if (global_constant.animals.hasOwnProperty(anim)) {
+				global_constant.animals[anim].height *= s
+			}
+		}
+	}
+
+	function create_bound_action_creators() {
+		const verboseActions = false
+		if (verboseActions) {
+			let doActionInner = bindActionCreators(Actions, global_store.dispatch)
+			for (const a in doActionInner) {
+				if (doActionInner.hasOwnProperty(a)) {
+					doAction[a] = function(...args) {
+						console.log(a, ...args)
+						return doActionInner[a](...args)
+					}
+				}
+			}
+		} else doAction = bindActionCreators(Actions, global_store.dispatch)
+	}
+
 	try {
 		if (!global_constant) {
 			// first load the constants
@@ -80,7 +107,17 @@ export async function load_config_tree(appObj) {
 			let const_text = await const_buffer.text()
 			const_text = convert_unicode(const_text)
 			global_constant = yaml.safeLoad(const_text)
+			if (global_constant.debug_mode) {
+				// rescale the screen
+				global_constant.laptop_scaling_factor =
+					global_screen_height / global_constant.tablet_height
+				update_screen_dimensions()
+				// turn off actually sending log messages
+				global_constant.skip_send_log = true
+			}
+			// console.log('laptop_scaling_factor', global_constant.laptop_scaling_factor)
 			update_constant_position_info()
+			update_constant_animal_heights()
 			global_constant.start_time = Date.now()
 			if (Platform.OS === 'web') {
 				// user_id is a value passed in from a PHP file, cannot declare it!
@@ -103,6 +140,11 @@ export async function load_config_tree(appObj) {
 			}
 			//console.log('is_mobile', global_constant.is_mobile)
 			//console.log('is_safari', global_constant.is_safari)
+			create_bound_action_creators()
+			doAction.addLogEntry(global_constant.start_time, [
+				[],
+				'loading_constants',
+			])
 		}
 		let response = await fetch('assets/config.yaml', {
 			credentials: 'same-origin',
@@ -113,23 +155,13 @@ export async function load_config_tree(appObj) {
 		prev_response_text = response_text
 		//console.log(response_text);
 		config_tree = yaml.safeLoad(response_text)
-		const print_paths = false
+
+		//if (!doAction) create_bound_action_creators()  // needed?
+		doAction.addLogEntry(Date.now(), [[], 'loading_config_tree'])
+
+		const print_paths = true
 		if (print_paths) print_all_paths(config_tree)
 		//console.log('config_tree', config_tree);
-
-		// create the bound action creators!
-		const verboseActions = false
-		if (verboseActions) {
-			let doActionInner = bindActionCreators(Actions, global_store.dispatch)
-			for (const a in doActionInner) {
-				if (doActionInner.hasOwnProperty(a)) {
-					doAction[a] = function(...args) {
-						console.log(a, ...args)
-						return doActionInner[a](...args)
-					}
-				}
-			}
-		} else doAction = bindActionCreators(Actions, global_store.dispatch)
 
 		if ('undefined' === typeof config_tree) {
 			console.error('config_tree not defined!')
@@ -149,6 +181,12 @@ export async function load_config_tree(appObj) {
 			: global_constant.starting_config_path_Dom
 		if (global_constant.debug_mode) {
 			path = global_constant.debug_path
+			const add_tablet_border = true
+			if (add_tablet_border) {
+				appObj.setState(_ => {
+					return {add_tablet_border: true}
+				})
+			}
 		} else if (
 			global_constant &&
 			global_constant.starting_level_for &&
@@ -168,8 +206,9 @@ export async function load_config_tree(appObj) {
 		//get_config(path)
 
 		const verbose = false
-		let action_list = []
-		enter_exit_config(action_list, path, true, verbose)
+		let action_list = [],
+			silent = false
+		enter_exit_config(silent, action_list, path, true, verbose)
 		do_batched_actions(action_list)
 		const show_starting_config = false
 		if (show_starting_config) query_test()
@@ -225,6 +264,22 @@ export default class App extends React.Component {
 		global_sound['chirp1'] = new Sound('assets/snd/chirp1.wav')
 	}
 	render() {
+		//console.log(global_screen_height)
+		let tablet_border
+		if (this.state.add_tablet_border) {
+			tablet_border = (
+				<View
+					style={[
+						styles.tablet_border,
+						{
+							width: global_constant.tablet_width,
+							height: global_constant.tablet_height,
+						},
+					]}
+				/>
+			)
+		}
+		// console.log('rendering root')
 		if (this.state.do_print) return <PrintFigure />
 		// top level view, sets up event listeners
 		return (
@@ -235,27 +290,47 @@ export default class App extends React.Component {
 				onResponderRelease={evt => touchHandler(evt)}
 				onResponderTerminationRequest={_ => false}
 				onStartShouldSetResponder={_ => true}
-				style={styles.root}
+				style={[
+					styles.root,
+					{
+						width: global_screen_width,
+						height: global_screen_height,
+						transform: [{scale: global_constant.laptop_scaling_factor}],
+					},
+				]}
 			>
-				<View style={styles.grass} />
+				<View
+					style={[
+						styles.grass,
+						{
+							width: global_screen_width,
+						},
+					]}
+				/>
 				<WorkspaceContainer />
+				{tablet_border}
 			</View>
 		)
 	}
 }
 
 const grassColor = 'lightgreen'
+const tabletBorderColor = 'purple'
 const styles = StyleSheet.create({
 	root: {
-		width: global_screen_width,
-		height: global_screen_height,
+		transformOrigin: 'top left',
 	},
 	grass: {
 		backgroundColor: grassColor,
 		height: global_grass_height,
-		width: global_screen_width,
 		position: 'absolute',
 		left: 0,
 		bottom: 0,
+	},
+	tablet_border: {
+		position: 'absolute',
+		// backgroundColor: tabletBorderColor,
+		borderColor: tabletBorderColor,
+		borderWidth: 1,
 	},
 })

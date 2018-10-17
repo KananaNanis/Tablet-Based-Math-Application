@@ -182,7 +182,7 @@ export function is_correct() {
 	const cp = query_path('config').toJS()
 	let delay = 'incorrect'
 	//console.log('is_correct src', src, 'how', how)
-	if ('same_height' === how) {
+	if ('same_height' === how || 'approx_height' === how) {
 		const tgt_height = query_tower_height(tgt)
 		let eq = 'unchecked'
 		let src_height
@@ -190,7 +190,9 @@ export function is_correct() {
 			const name = query_name_of(src)
 			if (name) {
 				src_height = global_constant.animals[name].height
-				eq = approx_equal(src_height, tgt_height)
+				if ('approx_height' === how) {
+					eq = approx_equal(src_height, tgt_height, 0.075)
+				} else eq = approx_equal(src_height, tgt_height)
 			}
 		} else {
 			src_height = query_name_of(src).get(0)

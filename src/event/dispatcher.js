@@ -83,9 +83,10 @@ export function touch_dispatcher(state, x, y, touchID) {
 	// console.log('button_geoms', button_geoms)
 	let found_one = false
 	const tgt = query_event('target')
-	//console.log('visible', visible)
+	//if ('down' === state ) console.log('visible', visible)
 	for (const i of visible) {
 		if (global_constant.special_button_geoms.hasOwnProperty(i)) {
+			//if ('down' === state ) console.log('checking i', i, 'x', x, 'y', y, 'geom', global_constant.special_button_geoms[i])
 			if (pointIsInRectangle([x, y], global_constant.special_button_geoms[i])) {
 				found_one = true
 				doAction.setButtonHighlight(i)

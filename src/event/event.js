@@ -3,6 +3,7 @@ import {global_screen_width} from '../components/Workspace'
 import {global_constant} from '../App'
 import {window2workspaceCoords} from '../components/Workspace'
 import {touch_dispatcher} from './dispatcher'
+import {doAction} from '../App'
 
 let mouseTouchID = 100
 let currentNumTouches = 0
@@ -53,6 +54,7 @@ export function touchHandler(synthetic_event) {
 			if (Platform.OS === 'web') {
 				// reload!
 				alert('reloading!')
+				doAction.addLogEntry(Date.now(), [[], 'reloading'])
 				window.location.reload(true)
 			} else {
 				console.warn('reloading not implemented yet')

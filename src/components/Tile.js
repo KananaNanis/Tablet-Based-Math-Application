@@ -118,7 +118,7 @@ class Tile extends React.Component {
 			misc && 'undefined' !== typeof misc.extra_scale ? misc.extra_scale : 1
 		//console.log('Tile  id', id, 'extra_scale', extra_scale)
 		const useAllBorders = false // use true when printing
-		const useNoBorders = true
+		const useNoBorders = false // need to allow this for some cases!
 
 		let animated_style = {}
 		if (Anim.has_timer(anim_info) && !just_grey) {
@@ -227,7 +227,7 @@ class Tile extends React.Component {
 			}
 		}
 		let border_info
-		if (useNoBorders) {
+		if (useNoBorders || is_peg) {
 			// do nothing
 		} else if (useAllBorders) {
 			border_info = {

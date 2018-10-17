@@ -77,6 +77,8 @@ pure_five_frame:
               appear_after: 500
     level_4:
       params:
+        misc:
+          jmp: ['intro_names', 'copy_tower', 'level_1']
         delay:
           modify:
             five_frame_1:
@@ -274,6 +276,7 @@ intro_names:
         event_handling:
           arg_1: tower_1
     all_done1:
+      skip_node_above:
       params:
         create:
           tower_1: remove
@@ -326,6 +329,8 @@ intro_names:
             tower_style: {opacity: null}
             misc: 
               hide_tower_name: true
+          tower_2: 
+            position: [right 100, 0]
         event_handling:
           touch_reveals_button: [submit, delete]
         misc:
@@ -774,6 +779,26 @@ six_through_nine:
       # config_iteration: 2
       # config_iteration: 1
       num_stars: 3
+  intro:
+    params:
+      create:
+        tower_2: remove
+        tower_1: { name: prompt_value }
+        door_2: [0]
+      modify:
+        tower_1:
+          position: [10, 0]
+          tower_style: { opacity: 0 }
+        door_2:
+          position: [0, 0]
+          misc:
+            tickmarks: [.5, 1.5]
+            is_option: true
+      event_handling:
+        arg_1: tower_1
+        target: door_2
+      misc: 
+        config_iteration: 5
   doors:
     params:
       create:
@@ -934,6 +959,26 @@ eleven_through_fourteen:
       # config_iteration: 2
       # config_iteration: 1
       num_stars: 3
+  intro:
+    params:
+      create:
+        tower_2: remove
+        tower_1: { name: prompt_value }
+        door_2: [0]
+      modify:
+        tower_1:
+          position: [10, 0]
+          tower_style: { opacity: 0 }
+        door_2:
+          position: [0, 0]
+          misc:
+            tickmarks: [.5, 1.5]
+            is_option: true
+      event_handling:
+        arg_1: tower_1
+        target: door_2
+      misc: 
+        config_iteration: 5
   doors:
     params:
       create:
@@ -1279,9 +1324,9 @@ estimate_names:
       level_10:
         params:
           misc:
+            jmp_no_suffix: [one_through_five, doors, level_1]
             # skip_suffix_for_this_level: true
             suffix_path: [suffix1]
-            jmp: [one_through_five, doors, level_1]
   all_done:
     params:
       create:
@@ -1298,7 +1343,7 @@ measure_height:
       touch_reveals_button: [submit, delete]
     misc: 
       remove_on_exit: [button_submit, button_delete]
-      config_iteration: 4
+      config_iteration: 7
       # config_iteration: 1
       num_stars: 3
   animal_height:
@@ -1310,7 +1355,7 @@ measure_height:
         tile_1: { position: [right 40vw, 0] }
       event_handling: 
         comparison_source: tile_1
-        correctness: same_height
+        correctness: approx_height
     level_1:
       params:
         event_handling:
@@ -1328,6 +1373,9 @@ measure_height:
       params:
         create:
           keypad_kind: 'buildTower'
+        modify:
+          tower_2:
+            tower_style: { opacity: 0 }
   to_handle:
     params:
       generate: { door_1_name: [pick_from_range, .1, 1.8, .1] }
@@ -1353,6 +1401,9 @@ measure_height:
       params:
         create:
           keypad_kind: 'buildTower'
+        modify:
+          tower_2:
+            tower_style: { opacity: 0 }
   copy_tower_subitize:
     params:
       generate: { tower_1_name: [pick_from_range, .1, 1.8, .1] }
@@ -1364,12 +1415,51 @@ measure_height:
           position: [5, 0]
           width: 60vw
           overflow: 'hidden'
-          appear_after: 2000
-          anim_info:
-            opacity: [1, 0]
-            delay: 2500
-            duration: 500
+          misc:
+            hide_tower_name: true
+        tower_2:
+          tower_style: { opacity: 0 }
       event_handling: { comparison_source: tower_1, correctness: identical }
+    level_1:
+    disappearing:
+      params:
+        create:
+          button_start:
+        modify:
+          tower_1: 
+            style: { opacity: 0 }  
+        misc:
+          freeze_display: true
+      level_2:
+        params:
+          delay:
+            modify:
+              tower_1:
+                style: { opacity: 1 }
+                anim_info:
+                  opacity: [1, 0]
+                  delay: 1000
+                  duration: 500
+      level_3:
+        params:
+          delay:
+            modify:
+              tower_1:
+                style: { opacity: 1 }
+                anim_info:
+                  opacity: [1, 0]
+                  delay: 250
+                  duration: 250
+      level_4:
+        params:
+          delay:
+            modify:
+              tower_1:
+                style: { opacity: 1 }
+                anim_info:
+                  opacity: [1, 0]
+                  delay: 100
+                  duration: 150
   animal_height_subitize:
     params:
       generate: { tile_1_name: [pick_animal_name] }
@@ -1384,13 +1474,16 @@ measure_height:
           # appear_after: 2000
           style: { borderTopWidth: 0, opacity: 0 }
           # style: { borderTopWidth: 0 }
+        tower_2:
+          tower_style: { opacity: 0 }
       event_handling: 
         comparison_source: tile_1
-        correctness: same_height
+        correctness: approx_height
         touch_reveals_button: submit
       misc:
         remove_on_exit: [button_submit]
         freeze_display: true
+        jmp: [measure_height,  animal_height, level_1] 
       delay:
         modify:
           tile_1:

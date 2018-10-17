@@ -72,6 +72,7 @@ function apply_gen_instruction(
 	option_delta,
 	option_values,
 	correct_option_value,
+	silent = false,
 ) {
 	let ok = true
 	let verbose = false
@@ -86,7 +87,7 @@ function apply_gen_instruction(
 				inst = find_gen_values_for_words([inst], gen_vars)[0]
 			}
 			correct_option_value[0] = inst
-			console.log('initial correct value set to', inst)
+			if (!silent) console.log('initial correct value set to', inst)
 			generate_option_values(inst, option_delta, option_values)
 			//console.log(' here, option_values', option_values, 'correct_option_value', correct_option_value)
 			for (let i = 0; i < 4; ++i) {
@@ -205,7 +206,12 @@ function apply_gen_instruction(
 	return ok
 }
 
-export function generate_with_restrictions(action_list, c, curr_exercise = 0) {
+export function generate_with_restrictions(
+	action_list,
+	c,
+	curr_exercise = 0,
+	silent = false,
+) {
 	const verbose = false
 
 	// move restrictions to the end, and binary ops just before
@@ -258,6 +264,7 @@ export function generate_with_restrictions(action_list, c, curr_exercise = 0) {
 									option_delta,
 									option_values,
 									correct_option_value,
+									silent,
 								)
 							if (verbose) {
 								console.log('ex', ex, 'curr', curr_exercise, 'inst', inst[key])
@@ -274,6 +281,7 @@ export function generate_with_restrictions(action_list, c, curr_exercise = 0) {
 						option_delta,
 						option_values,
 						correct_option_value,
+						silent,
 					)
 				if (verbose) {
 					console.log(

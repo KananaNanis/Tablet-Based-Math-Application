@@ -45,11 +45,13 @@ export function handle_next_button(state) {
 export function handle_start_button(state) {
 	if ('up' === state) {
 		//console.log('start!')
-		let action_list = []
+		let action_list = [],
+			silent = false
 		action_list.push(Actions.setProp('freeze_display', null))
 		action_list.push(Actions.setButtonDisplay('start', null))
 		const cp = query_path('config')
 		enter_exit_config(
+			silent,
 			action_list,
 			cp,
 			true,
@@ -130,6 +132,7 @@ export function handle_options(state, x, y) {
 	const n = query_option_values().size
 	//console.log('n', n)
 	for (let i = 0; i < n; ++i) {
+		//if ('down' === state) console.log(' checking i', i, 'x', x, 'y', y, 'geom', option_geometry(i))
 		if (pointIsInRectangle([x, y], option_geometry(i))) {
 			//console.log('i', i)
 			found_one = true
@@ -141,7 +144,8 @@ export function handle_options(state, x, y) {
 					action_list.push(Actions.setProp('freeze_display', true))
 					const arg_1 = query_arg(1)
 					const name_1 = query_name_of(arg_1)
-					const is_peg = arg_1.startsWith('tile_') && name_1.startsWith('peg_')
+					const is_peg =
+						arg_1 && arg_1.startsWith('tile_') && name_1.startsWith('peg_')
 					// console.log(arg_1)
 					if (
 						arg_1 &&

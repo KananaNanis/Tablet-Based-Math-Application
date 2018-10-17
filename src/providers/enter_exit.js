@@ -51,6 +51,7 @@ export function remove_on_exit(lis, action_list) {
 }
 
 export function enter_exit_config(
+	silent,
 	action_list,
 	cp,
 	enter,
@@ -113,6 +114,7 @@ export function enter_exit_config(
 					action_list,
 					config['generate'],
 					curr_exercise,
+					silent,
 			  )
 			: {}
 	if (config['create']) {
@@ -385,15 +387,29 @@ export function enter_exit_config(
 					}
 				}
 				action_list.push(Actions.setPath('goto', enter ? c[key][1] : null))
+			} else if ('jmp_no_suffix' === key) {
+				if (enter && !use_suffix) {
+					const has_suffix = suffix_path || query_path('suffix_path')
+					// const has_suffix = true
+					if (!has_suffix) {
+						console.log('setting jmp')
+						action_list.push(Actions.setPath('jmp', c[key]))
+					} else {
+						console.log('clearing jmp')
+						action_list.push(Actions.setPath('jmp', null))
+						suffix_path = null
+						action_list.push(Actions.setPath('suffix_path', null))
+					}
+				}
 			} else if ('jmp' === key) {
-				if (enter) {
+				if (enter && !use_suffix) {
 					// don't unset this state here... wait for in-between
 					action_list.push(Actions.setPath(key, c[key]))
 				}
 			} else if ('skip_suffix_for_this_level' === key) {
 				if (c[key]) skip_suffix_for_this_level = true
 			} else if ('suffix_path' === key) {
-				if (enter) {
+				if (enter && !c['jmp_no_suffix'] && !use_suffix) {
 					// don't unset this state here... wait for in-between
 					action_list.push(Actions.setPath(key, c[key]))
 					suffix_path = c[key]
@@ -447,6 +463,7 @@ export function enter_exit_config(
 			// read a second config, for the suffix specifically
 			const use_suffix = true
 			enter_exit_config(
+				silent,
 				action_list,
 				sp,
 				enter,

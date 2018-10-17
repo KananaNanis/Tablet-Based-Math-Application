@@ -174,7 +174,7 @@ export function setPath(key, value) {
 
 export function addLogEntry(time, info) {
 	console.log('addLogEntry', time, info)
-	const send_to_server = true
+	const send_to_server = !global_constant.skip_send_log
 	if (send_to_server) {
 		fetch(
 			// 'https://www.cs.stolaf.edu/suuji/ajax2.php',
