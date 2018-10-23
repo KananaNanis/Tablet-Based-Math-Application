@@ -1,7 +1,8 @@
 # these constants should be fixed!
 debug_mode: true
 num_exercises_for_debugging: 1
-debug_path: [identity_function, as_option, bars, level_1]
+debug_path: [animation_test]
+# debug_path: [identity_function, as_option, bars, level_1]
 # debug_path: [identity_function, as_drag, bars, level_1]
 # debug_path: [identity_function, as_option, doors, level_1]
 # debug_path: [identity_function, as_drag, doors, level_1]
@@ -313,6 +314,7 @@ event_handling_types: [target, comparison_source, correctness,
   event_move, top_right_text, show_camel, slide_portal,
   return_to_top, star_policy, touch_reveals_button,
   just_proportion, create_tower_by_height,
+  just_jump,
   move, arg_1, arg_2, result]
 position_modifiers: [left, right, top, bottom,
   left_from_right, right_from_left, top_from_bottom,
