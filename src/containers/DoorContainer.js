@@ -64,6 +64,7 @@ const mapStateToProps = (state, ownProps) => {
 		door_ids,
 		scale_factor: state.getIn(['prop', 'scale_factor']),
 		just_grey,
+		freeze_display: state.getIn(['prop', 'freeze_display']),
 	}
 }
 export default connect(mapStateToProps)(toJS_door(Door))

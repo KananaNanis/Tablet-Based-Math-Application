@@ -26,14 +26,17 @@ const toJS_bar = _ => wrappedComponentProps => {
 
 const mapStateToProps = (state, ownProps) => {
 	let {id, name} = ownProps
-	if (!name) name = state.getIn(['name', id])
+	if ('undefined' === typeof name) name = state.getIn(['name', id])
+	const position = state.getIn(['position', id])
+	// console.log(' props for Bar:  id', id, 'name', name, 'position', position)
 	return {
 		id,
 		name,
-		position: state.getIn(['position', id]),
+		position,
 		style: state.getIn(['style', id]),
 		anim_info: state.getIn(['anim_info', id]),
 		misc: state.getIn(['misc', id]),
+		freeze_display: state.getIn(['prop', 'freeze_display']),
 	}
 }
 export default connect(mapStateToProps)(toJS_bar(Bar))

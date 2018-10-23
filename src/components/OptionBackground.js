@@ -5,14 +5,28 @@ import {
 	global_screen_width,
 	global_workspace_height,
 } from '../components/Workspace'
-import {query_prop, query_option_values} from '../providers/query_store'
+import {
+	query_prop,
+	query_obj_misc,
+	query_option_values,
+} from '../providers/query_store'
 import * as Anim from '../event/animation'
 
-export function option_geometry(i) {
+export function option_geometry(i, option_obj) {
 	const n = query_option_values().size
-	const width = (global_screen_width - global_constant.prompt_width) / n
+	let width = (global_screen_width - global_constant.prompt_width) / n
+	let left_offset = global_constant.prompt_width
+	if (option_obj) {
+		const m = query_obj_misc(option_obj)
+		if (m) {
+			const w2 = m.get('option_width')
+			if ('undefined' !== typeof w2) width = w2
+			const l2 = m.get('option_offset')
+			if ('undefined' !== typeof l2) left_offset = l2
+		}
+	}
 	const height = global_workspace_height
-	const position = [global_constant.prompt_width + i * width, 0]
+	const position = [left_offset + i * width, 0]
 	return {position, width, height}
 }
 
@@ -34,7 +48,7 @@ class OptionBackground extends React.Component {
 	}
 
 	render() {
-		let {i, button_highlight, style, anim_info} = this.props
+		let {i, button_highlight, style, anim_info, option_obj} = this.props
 		//console.log('button_highlight', button_highlight)
 		//if (style && style.size > 0) style = style.toJS()  // should use HOC!
 		// console.log('OptionBackground style', style)
@@ -64,7 +78,7 @@ class OptionBackground extends React.Component {
 		} else if (i % 2) {
 			extra_style.backgroundColor = '#e8e8e8'
 		}
-		const {position, width, height} = option_geometry(i)
+		const {position, width, height} = option_geometry(i, option_obj)
 		//console.log('OptionBackground i', i, 'position', position, 'width', width, 'height', height)
 		let pos_info = {bottom: position[1]}
 		pos_info.left = position[0]

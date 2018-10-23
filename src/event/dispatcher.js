@@ -41,7 +41,7 @@ import {
 	dist_from_handle,
 	handle_is_blinking,
 	handle_close_to_goal,
-	get_door_or_tile_height,
+	get_height_of,
 } from './extract'
 import {
 	current_pixel_size_of_animal,
@@ -201,13 +201,20 @@ export function touch_dispatcher(state, x, y, touchID) {
 			if ('up' === state) {
 				//console.log('xp', xp, 'yp', yp)
 			}
-		} else if ('move_handle' === move || 'touch_image' === move) {
+		} else if (
+			'move_handle' === move ||
+			'touch_image' === move ||
+			'stretch_bar' === move
+		) {
 			let y1 = y / scale_factor,
 				pos_x,
 				di
 			const arg_1 = query_arg(1)
 			const arg_2 = query_arg(2)
-			if ('touch_image' === move) {
+			const tgt = query_event('target')
+			if ('stretch_bar' === move) {
+				pos_x = query_position_of(tgt).get(0)
+			} else if ('touch_image' === move) {
 				pos_x = extract_handle_position(arg_1, query_door(arg_1))[0]
 				di = dist2D([pos_x, 0], [x, y])
 				if (di <= 0) di = 0.001
@@ -218,9 +225,13 @@ export function touch_dispatcher(state, x, y, touchID) {
 				scaling_delta = null
 				if (query_has_anim_info(arg_1)) doAction.setAnimInfo(arg_1, null)
 				const src = query_event('comparison_source')
-				if (src && is_blinking(src)) {
-					doAction.setAnimInfo(src, null)
-					doAction.addObjStyle(src, 'opacity', 1)
+				let blinker = src
+				if ('stretch_bar' === move) {
+					blinker = tgt
+				}
+				if (blinker && is_blinking(blinker)) {
+					doAction.setAnimInfo(blinker, null)
+					doAction.addObjStyle(blinker, 'opacity', 1)
 				}
 				if ('touch_image' === move) {
 					// store scaling_delta
@@ -232,6 +243,11 @@ export function touch_dispatcher(state, x, y, touchID) {
 						doAction.setAnimInfo(arg_2, null)
 						//doAction.addObjMisc(tgt, 'opacity', 1)
 					}
+				} else if ('stretch_bar' === move) {
+					const d = y1 - query_name_of(tgt).get(0)
+					// console.log('pos_x', pos_x, 'd', d)
+					y_delta = Math.abs(d) < 0.2 ? -d : 0
+					set_primary_height(tgt, y1 + y_delta)
 				} else if (handle_is_hidden(tgt)) {
 					// check-- are we close enough to the door to start?
 					const d = dist_from_door(x, y, tgt, scale_factor)
@@ -289,7 +305,7 @@ export function touch_dispatcher(state, x, y, touchID) {
 							} else {
 								//const correct = query_name_of(tgt).get(1)
 								const f1 = query_name_of(arg_1).get(0)
-								const f2 = get_door_or_tile_height(arg_2)
+								const f2 = get_height_of(arg_2)
 								const f3 = query_name_of(result).get(0)
 								let correct = f3 / f2
 								if (tgt !== arg_1) correct = f1 * f2
