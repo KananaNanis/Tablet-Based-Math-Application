@@ -76,6 +76,16 @@ export function touch_dispatcher(state, x, y, touchID) {
 		//console.log('option_values' + query_option_values())
 		if (query_option_values()) return handle_options(state, x, y, touchID)
 	}
+	if (query_event('just_jump')) {
+		if ('down' === state) {
+			console.log('just_jump liftoff')
+			doAction.setAnimInfo('tile_1', {bottom: [0, 100], duration: 1000})
+		} else if ('up' === state) {
+			console.log('just_jump descend')
+			doAction.setAnimInfo('tile_1', {bottom: [100, 0], duration: 1000})
+		}
+		return
+	}
 	const kind = query_keypad_kind()
 	//const pos = getPositionInfoForKeypad(kind)
 	const pos = global_constant.keypad_info[kind]

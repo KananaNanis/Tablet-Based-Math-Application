@@ -2765,3 +2765,16 @@ in_between:
   params:
     create:
       button_next:
+animation_test:
+  params:
+    create:
+      tile_1: kitty
+    modify:
+      tile_1:
+        position: [10, 0]
+        anim_info:
+          left: [10, 400]
+          delay: 500
+          duration: 2000
+    event_handling: 
+      just_jump: true
