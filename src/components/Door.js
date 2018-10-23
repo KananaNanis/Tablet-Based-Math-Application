@@ -79,8 +79,9 @@ class Door extends React.Component {
 			scale_factor,
 			just_grey,
 			id,
+			freeze_display,
 		} = this.props
-		//console.log('Door  id', id, 'name', name)
+		// console.log('Door  id', id, 'name', name, 'position', position)
 		//if (!name) name = [.1]
 		//console.log('Door  id', id, 'style', style, 'anim_info', anim_info, 'misc', misc)
 
@@ -107,6 +108,9 @@ class Door extends React.Component {
 		if (thickness < 1) thickness = 1
 		let frame_thickness = thickness
 		let handle_thickness = thickness
+		if (misc && 'undefined' !== typeof misc.mutable) {
+			frame_thickness *= 1.5
+		}
 		if (misc && 'undefined' !== typeof misc.frame_thickness) {
 			frame_thickness = misc.frame_thickness
 		}
@@ -118,6 +122,15 @@ class Door extends React.Component {
 		//console.log('Door name', name, 'thickness', thickness)
 		let frame_color = global_constant.door.frame_color
 		let portal_bg_color = global_constant.door.portal_bg_color
+		if (misc && 'undefined' !== typeof misc.mutable) {
+			const col = freeze_display
+				? misc['is_correct']
+					? 'lightgreen'
+					: 'red'
+				: global_constant.door.color_of_mutable
+			frame_color = col
+			portal_bg_color = col
+		}
 		if (just_grey) {
 			//frame_color = as_greyscale(frame_color)
 			portal_bg_color = as_greyscale(portal_bg_color)

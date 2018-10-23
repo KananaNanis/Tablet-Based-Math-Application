@@ -7,7 +7,7 @@ import ErrBox from './ErrBox'
 import CamelContainer from '../containers/CamelContainer'
 import OptionBackground from '../components/OptionBackground'
 import {global_constant, image_location} from '../App'
-import {query_event, query_option_values} from '../providers/query_store'
+import {query_event, query_arg} from '../providers/query_store'
 import {
 	render_nums,
 	render_tiles,
@@ -17,6 +17,7 @@ import {
 	render_bars,
 } from './render_geoms'
 //import FiveFrame from './FiveFrame'
+import BarContainer from '../containers/BarContainer'
 
 export let global_screen_width = Dimensions.get('window').width
 export let global_screen_height = Dimensions.get('window').height
@@ -54,6 +55,8 @@ const Workspace = ({
 	top_left_text,
 	top_right_text,
 	big_op,
+	big_paren,
+	big_paren_style,
 	err_box,
 	option_values,
 }) => {
@@ -77,13 +80,14 @@ const Workspace = ({
 	const bars = render_bars(bar_ids)
 	//console.log('len', doors.length)
 	//console.log('Workspace option_values', option_values ? option_values.toJS() : null)
-	let misc = [],
+	let misc_above = [],
+		misc_below = [],
 		key = 0,
 		options = []
 	const add_username = true
 	if (add_username) {
 		++key
-		misc.push(
+		misc_below.push(
 			<Text
 				key={key}
 				style={[
@@ -97,7 +101,8 @@ const Workspace = ({
 			</Text>,
 		)
 	}
-	if (query_option_values()) {
+	let big_paren_content = null
+	if (option_values) {
 		// add options
 		//console.log('option_values', query_option_values().toJS())
 		// are the options doors or nums?
@@ -116,20 +121,32 @@ const Workspace = ({
 		if (bar_ids.size === bars.length + 1) {
 			option_inner = render_bars(bar_ids, option_values)
 		}
-		for (let i = 0; i < option_inner.length; ++i) {
+		const option_obj = option_inner[option_values.size]
+		for (let i = 0; i < option_values.size; ++i) {
 			++key
 			options.push(
-				<OptionBackground key={i} button_highlight={button_highlight} i={i}>
+				<OptionBackground
+					key={i}
+					button_highlight={button_highlight}
+					i={i}
+					option_obj={option_obj}
+				>
 					{option_inner[i]}
 				</OptionBackground>,
 			)
+		}
+		const is_arg1 = query_arg(1) === option_obj
+		const is_arg2 = query_arg(2) === option_obj
+		if (is_arg1 || is_arg2) {
+			big_paren_content = options
+			options = null
 		}
 	}
 	if (err_box) {
 		// console.log('err_box', err_box.toJS())
 		if (query_event('show_camel')) {
 			++key
-			misc.push(<CamelContainer key={key} />)
+			misc_above.push(<CamelContainer key={key} />)
 		}
 		if (
 			err_box.has('position') &&
@@ -142,7 +159,7 @@ const Workspace = ({
 			if (err_box.get('style')) style = err_box.get('style').toJS()
 			if (err_box.get('misc')) err_misc = err_box.get('misc').toJS()
 			++key
-			misc.push(
+			misc_above.push(
 				<ErrBox
 					key={key}
 					height={err_box.get('height')}
@@ -156,7 +173,7 @@ const Workspace = ({
 	}
 	if (center_text) {
 		++key
-		misc.push(
+		misc_below.push(
 			<Text key={key} style={styles.center_text}>
 				{center_text}
 			</Text>,
@@ -164,7 +181,7 @@ const Workspace = ({
 	}
 	if (top_right_text) {
 		++key
-		misc.push(
+		misc_below.push(
 			<Text
 				key={key}
 				style={[
@@ -179,19 +196,28 @@ const Workspace = ({
 	if (top_left_text) {
 		++key
 		const zero = 0
-		misc.push(
+		misc_below.push(
 			<Text key={key} style={[styles.top_left_text, {left: zero}]}>
 				{top_left_text}
 			</Text>,
 		)
 	}
-	if (big_op) {
-		//console.log(' big_op', big_op)
+	if (big_paren) {
+		// console.log('big_paren_style', big_paren_style)
 		++key
-		misc.push(
-			<Text key={key} style={[styles.big_op]}>
-				{big_op}
-			</Text>,
+		misc_below.push(
+			<View key={key} style={[styles.big_paren, big_paren_style.toJS()]}>
+				{big_paren_content}
+			</View>,
+		)
+	}
+	if (big_op) {
+		// console.log(' big_op', big_op, 'big_op_anim', big_op_anim)
+		++key
+		misc_below.push(
+			<BarContainer key={key} id="big_op" name={0}>
+				<Text style={[styles.big_op]}>{big_op}</Text>
+			</BarContainer>,
 		)
 	}
 	/*
@@ -206,7 +232,7 @@ const Workspace = ({
 	if (keypad_kind) {
 		//console.log('keypad_kind', keypad_kind)
 		++key
-		misc.push(
+		misc_above.push(
 			<Keypad
 				key={key}
 				button_display={button_display}
@@ -218,7 +244,7 @@ const Workspace = ({
 	}
 	if ('in_between' === config_path.get(0)) {
 		++key
-		misc.push(
+		misc_above.push(
 			<Placard
 				key={key}
 				height={global_constant.placard.height}
@@ -254,7 +280,7 @@ const Workspace = ({
 						: freeze_no_highlight_style
 			} else if (special_button === button_highlight) bg_style = highlight_style
 			//console.log('bg_style', bg_style)
-			misc.push(
+			misc_above.push(
 				<Button
 					key={key}
 					height={global_constant.special_button_geoms[special_button].height}
@@ -277,7 +303,7 @@ const Workspace = ({
 	}
 	for (let i = 0; i < num_stars; ++i) {
 		++key
-		misc.push(
+		misc_below.push(
 			<Image
 				key={key}
 				source={image_location('star')}
@@ -303,6 +329,7 @@ const Workspace = ({
 				},
 			]}
 		>
+			{misc_below}
 			{nums}
 			{bars}
 			{options}
@@ -310,7 +337,7 @@ const Workspace = ({
 			{doors}
 			{portals}
 			{five_frames}
-			{misc}
+			{misc_above}
 		</View>
 	)
 	/*
@@ -324,6 +351,7 @@ const green = 'green'
 const blue = 'blue'
 const white = 'white'
 const grey = 'grey'
+const paren_color_1 = '#eee'
 const styles = StyleSheet.create({
 	workspace: {
 		//backgroundColor: 'blue',
@@ -371,9 +399,22 @@ const styles = StyleSheet.create({
 	big_op: {
 		position: 'absolute',
 		fontSize: 200,
-		left: 70,
-		bottom: 160,
+		left: 0,
+		bottom: 0,
+		// left: 70,
+		// bottom: 160,
 		color: grey,
+	},
+	big_paren: {
+		position: 'absolute',
+		left: 5,
+		bottom: 0,
+		height: 930,
+		width: 300,
+		backgroundColor: paren_color_1,
+		borderTopLeftRadius: 100,
+		borderTopRightRadius: 100,
+		overflow: 'hidden',
 	},
 })
 

@@ -27,7 +27,13 @@ export function extract_handle_position(id, door_info, secondary_handle) {
 	} else {
 		let name = door_info.get('name')
 		val = name.get(secondary_handle ? 1 : 0)
-		val = apply_bounds(val, 0, 1)
+		const op = query_prop('big_op') === '+' ? '+' : '*'
+		let restrict_range = '+' !== op
+		const arg_2 = query_arg(2)
+		if (arg_2 && arg_2.startsWith('five_frame')) restrict_range = false
+		if (restrict_range) {
+			val = apply_bounds(val, 0, 1)
+		}
 		position = door_info.get('position')
 	}
 	const scale_factor = query_prop('scale_factor')
@@ -43,15 +49,40 @@ export function extract_handle_position(id, door_info, secondary_handle) {
 	return res
 }
 
+function extract_bar_position(id) {
+	const ll = query_position_of(id).toJS()
+	const val = query_name_of(id).get(0)
+	const scale_factor = query_prop('scale_factor')
+	const res = [ll[0], ll[1] + val * scale_factor]
+	console.log('extract_bar_position id', id, 'll', ll, 'val', val, 'res', res)
+	return res
+}
+
 export function get_err_box_location(arg_1, arg_2, result, just_thin) {
 	//console.log('get_err_box_location', arg_1, arg_2, result)
-	const d1 = query_door(arg_1)
-	let pos1 = extract_handle_position(arg_1, d1)
-	pos1[1] = 0
+	let pos1, d1_val
+	if (arg_1.startsWith('door_')) {
+		const d1 = query_door(arg_1)
+		pos1 = extract_handle_position(arg_1, d1)
+		pos1[1] = 0
+		const d1_name = d1.get('name')
+		d1_val = d1_name.get(d1_name.size > 1 ? 1 : 0)
+	} else if (arg_1.startsWith('bar_')) {
+		pos1 = extract_bar_position(arg_1)
+		d1_val = query_name_of(arg_1).get(0)
+	} else {
+		console.error('Warning: arg_1', arg_1, 'not handled.')
+	}
 	let pos2 = [0, 0],
 		animal_width
 	if (arg_2.startsWith('door_')) {
 		pos2 = extract_handle_position(arg_2, query_door(arg_2))
+	} else if (arg_2.startsWith('bar_')) {
+		pos2 = extract_bar_position(arg_2)
+		pos2[0] += global_constant.default_bar_width
+	} else if (arg_2.startsWith('five_frame_')) {
+		// half!
+		pos2 = pos1
 	} else if (arg_2.startsWith('tile_')) {
 		// want the top right corner of this tile
 		const animal_name = query_name_of(arg_2)
@@ -67,15 +98,38 @@ export function get_err_box_location(arg_1, arg_2, result, just_thin) {
 			'pos2',
 			pos2,
 		)
+	} else {
+		console.error('Warning: arg_2', arg_2, 'not handled.')
 	}
-	const d1_name = d1.get('name')
-	let d1_val = d1_name.get(d1_name.size > 1 ? 1 : 0)
-	let implied_pos = vec_sum(
-		// pos1 + val1 * (pos2 - pos1)
-		pos1,
-		vec_prod(d1_val, vec_sum(pos2, vec_prod(-1, pos1))),
-	)
-	const pos3 = extract_handle_position(result, query_door(result))
+	const op = query_prop('big_op') === '+' ? '+' : '*'
+	const scale_factor = query_prop('scale_factor')
+	let implied_pos
+	if ('+' === op) {
+		implied_pos = vec_sum(
+			// pos1 + pos2
+			[0, scale_factor * d1_val],
+			pos2,
+		)
+	} else if (arg_2.startsWith('five_frame_')) {
+		// half!
+		const w = global_constant.default_bar_width
+		implied_pos = [pos1[0] + w, 0.5 * d1_val * scale_factor]
+	} else {
+		implied_pos = vec_sum(
+			// pos1 + val1 * (pos2 - pos1)
+			pos1,
+			vec_prod(d1_val, vec_sum(pos2, vec_prod(-1, pos1))),
+		)
+	}
+	console.log('d1_val', d1_val, 'implied_pos', implied_pos)
+	let pos3
+	if (result.startsWith('door_')) {
+		pos3 = extract_handle_position(result, query_door(result))
+	} else if (result.startsWith('bar_')) {
+		pos3 = extract_bar_position(result)
+	} else {
+		console.error('Warning:  only doors and bars handled so far')
+	}
 	// let's place the err box
 	let position = [
 		Math.min(implied_pos[0], pos3[0]),
@@ -84,7 +138,6 @@ export function get_err_box_location(arg_1, arg_2, result, just_thin) {
 	const width = Math.abs(implied_pos[0] - pos3[0])
 	let height = Math.abs(implied_pos[1] - pos3[1])
 	if (just_thin) {
-		const scale_factor = query_prop('scale_factor')
 		let result2 = result
 		if ('option' === result) result2 = 'door_3'
 		const misc = query_obj_misc(result2).toJS()
@@ -119,6 +172,23 @@ export const show_thin_height = (arg_1, arg_2, result) => {
 	doAction.setErrBox({position, width, height, misc})
 }
 
+export const show_thin_height_2 = (arg_1, pos_3) => {
+	const val_1 = query_name_of(arg_1).get(0)
+	const pos_1 = query_position_of(arg_1).toJS()
+	// console.log('val_1', val_1, 'pos_1', pos_1)
+	// const val_3 = value_of_correct_option()
+	// console.log('val_3', val_3, 'pos_3', pos_3)
+	const scale_factor = query_prop('scale_factor')
+	const position = [
+		pos_1[0] + global_constant.default_bar_width,
+		-1 + val_1 * scale_factor,
+	]
+	let width = pos_3[0] - position[0]
+	let height = 2
+	const misc = {is_thin_height: true}
+	doAction.setErrBox({position, width, height, misc})
+}
+
 export function handle_close_to_goal() {
 	const arg_1 = query_arg(1)
 	const arg_2 = query_arg(2)
@@ -127,23 +197,30 @@ export function handle_close_to_goal() {
 	return 3 === stars
 }
 
-export function get_door_or_tile_height(id) {
+export function get_height_of(id) {
+	console.log('get_height_of', id)
 	let res = 0
 	if (id.startsWith('door_')) res = query_name_of(id).get(0)
 	else if (id.startsWith('tile_')) {
 		res = global_constant.animals[query_name_of(id)].height
+	} else if (id.startsWith('bar_')) {
+		res = query_name_of(id).get(0)
+	} else if (id.startsWith('five_frame_')) {
+		res = query_name_of(id)
+	} else {
+		console.error('Warning:  not implemented for', id)
 	}
 	return res
 }
 
-function value_of_correct_option() {
+export function value_of_correct_option() {
 	const i = query_prop('correct_option_index')
 	const option_values = query_option_values()
 	//console.log('i', i, 'option_values', option_values.toJS())
 	return option_values.getIn([i, 0])
 }
 
-function position_of_correct_option() {
+export function position_of_correct_option() {
 	const i = query_prop('correct_option_index')
 	let {position} = option_geometry(i)
 	return position
@@ -156,18 +233,41 @@ export function describe_numerical(arg_1, arg_2, result, arg_1_index) {
 	}
 	let f1 = arg_1_name.get(arg_1_index),
 		f3
-	f1 = apply_bounds(f1, 0, 1)
-	const f2 = get_door_or_tile_height(arg_2)
+	const f2 = get_height_of(arg_2)
 	if ('option' === result) f3 = value_of_correct_option()
 	else {
 		f3 = query_name_of(result).get(0)
+	}
+	const op = query_prop('big_op') === '+' ? '+' : '*'
+	let err,
+		res,
+		restrict_range = '+' !== op
+	if (arg_2.startsWith('five_frame')) restrict_range = false
+	if (restrict_range) {
+		f1 = apply_bounds(f1, 0, 1)
 		f3 = apply_bounds(f3, 0, 1)
 	}
-	let err
-	if (query_event('just_proportion')) err = Math.abs(f3 - f2)
-	else err = Math.abs(f3 - f1 * f2)
+	if ('+' === op) {
+		res = f1 + f2
+		err = Math.abs(f3 - res)
+	} else {
+		res = f1 * f2
+		if (query_event('just_proportion')) err = Math.abs(f3 - f2)
+		else err = Math.abs(f3 - res)
+	}
 	//console.log('f1', f1.toFixed(2), 'f2', f2.toFixed(2), 'f1 * f2', (f1 * f2).toFixed(2), 'f3', f3.toFixed(2))
-	console.log('f1', f1, 'f2', f2, 'f1 * f2', f1 * f2, 'f3', f3, 'err', err)
+	console.log(
+		'describe_numerical f1',
+		f1,
+		'f2',
+		f2,
+		'f1 ' + op + ' f2',
+		res,
+		'f3',
+		f3,
+		'err',
+		err,
+	)
 	if (!query_event('star_policy')) console.error('Warning: need star policy!')
 	const stars = num_stars(err)
 	return {f1, f2, f3, err, stars}

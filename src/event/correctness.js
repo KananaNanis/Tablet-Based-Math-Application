@@ -6,6 +6,8 @@ import {
 	query_prop,
 	query_obj_misc,
 	with_suffix,
+	query_position_of,
+	// query_obj_anim_info,
 } from '../providers/query_store'
 import {
 	query_tower_name,
@@ -25,6 +27,7 @@ import {
 	get_err_box_location,
 	show_thin_height,
 	get_door_or_tile_height,
+	show_thin_height_2,
 } from './extract'
 import {landmark_location} from '../components/Tile'
 
@@ -252,23 +255,95 @@ export function is_correct() {
           }, 1000)
         }, 200)
         */
-				show_thin_height(arg_1, arg_2, result)
+				doAction.addObjMisc(tgt, 'is_correct', true)
+				const op = query_prop('big_op') === '+' ? '+' : '*'
+				const is_half = arg_2.startsWith('five_frame_')
+				if ('+' === op || is_half) {
+					const curr = query_name_of(tgt).get(0)
+					const scale_factor = query_prop('scale_factor')
+					const duration = 10 * scale_factor * Math.abs(err)
+					let desired_val
+					if ('+' === op) {
+						if (result === tgt) desired_val = f1 + f2
+						else if (arg_1 === tgt) desired_val = f3 - f2
+						else if (arg_2 === tgt) desired_val = f3 - f1
+					} else {
+						if (result === tgt) desired_val = f1 * 0.5
+						else if (arg_1 === tgt) desired_val = f3 * 2
+					}
+					if (tgt.startsWith('door_')) {
+						doAction.setName(tgt, [curr, curr])
+						doAction.setAnimInfo(tgt, {
+							slide_target: desired_val,
+							slide_duration: duration,
+						})
+					} else {
+						doAction.setName(tgt, [desired_val])
+					}
+				} else {
+					show_thin_height(arg_1, arg_2, result)
+				}
 				delay = 1000
 			} else {
-				const [position, width, height] = get_err_box_location(
-					arg_1,
-					arg_2,
-					result,
-				)
-				console.log('setting err_box with  position', position)
-				doAction.setErrBox({position, width, height})
-				window.setTimeout(function() {
-					doAction.setErrBox({})
-				}, 1000)
 				if (-1 === stars || 0 === stars) {
-					reduce_num_stars()
-					delay = 'do_not_transition'
-				} else delay = 1000
+					// reduce_num_stars()
+					// delay = 'do_not_transition'
+					doAction.addObjMisc(tgt, 'is_correct', null)
+					delay = 'incorrect'
+				} else {
+					const [position, width, height] = get_err_box_location(
+						arg_1,
+						arg_2,
+						result,
+					)
+					console.log('setting err_box with  position', position)
+					const scale_factor = query_prop('scale_factor')
+					const hide_big_op = false
+					if (hide_big_op) {
+						doAction.setAnimInfo('big_op', {
+							opacity: [1, 0],
+							duration: 500,
+						})
+					}
+					/*
+					doAction.setAnimInfo(arg_1, {
+						left: [10, position[0] - 58],
+						duration: 500
+					})
+					*/
+					const is_half = arg_2.startsWith('five_frame')
+					if (!is_half) {
+						doAction.setAnimInfo(arg_2, {
+							bottom: [0, f1 * scale_factor],
+							duration: 500,
+						})
+					}
+					doAction.addObjMisc(tgt, 'is_correct', true)
+					window.setTimeout(function() {
+						doAction.setErrBox({position, width, height})
+						if (hide_big_op) {
+							doAction.addObjStyle('big_op', 'opacity', 0)
+							doAction.setAnimInfo('big_op', null)
+						}
+						window.setTimeout(function() {
+							doAction.setErrBox({})
+							//console.log('reset anim info', query_obj_anim_info(arg_2))
+							if (!is_half) {
+								window.setTimeout(function() {
+									doAction.setAnimInfo(arg_2, null)
+									// KLUDGE-- need to change the y position to non-zero!!
+									let tmp_pos = query_position_of(arg_2)
+									if (tmp_pos) {
+										tmp_pos = tmp_pos.toJS()
+										tmp_pos[1] = 1
+										doAction.setPosition(arg_2, tmp_pos)
+									}
+								}, 450)
+							}
+						}, 900)
+					}, 600)
+					delay = 2000
+				}
 			}
 			return delay
 		}
@@ -285,11 +360,17 @@ export function is_correct() {
 		)
 		if (-1 === stars) delay = 'do_not_transition'
 		//delay = 'do_not_transition'
-	} else if ('near_discrete_height' === how || 'half_height' === how) {
+	} else if (
+		'near_discrete_height' === how ||
+		'half_height' === how ||
+		'full_height' === how
+	) {
 		let correct_height
 		//const src_height = query_tower_height(src)
 		if ('half_height' === how) {
 			correct_height = 0.5 * query_name_of(src)
+		} else if ('full_height' === how) {
+			correct_height = query_name_of(src).get(0)
 		} else if (src) {
 			correct_height = query_tower_height(src)
 		} else {
@@ -302,19 +383,28 @@ export function is_correct() {
 			// console.log('correct_height', correct_height)
 		}
 		const tgt_height = query_name_of(tgt).get(0)
-		// console.log('correct_height', correct_height)
-		// console.log('tgt_height', tgt_height)
+		//console.log('correct_height', correct_height)
+		//console.log('tgt_height', tgt_height)
 		if (Math.abs(correct_height - tgt_height) < 0.05) {
 			// console.log('got it!')
-			const curr = query_name_of('door_3').get(0)
-			doAction.setName('door_3', [curr, curr])
-			doAction.towerAddStyle('tower_1', 'opacity', null)
-			const scale_factor = query_prop('scale_factor')
-			const duration = 10 * scale_factor * Math.abs(correct_height - tgt_height)
-			doAction.setAnimInfo('door_3', {
-				slide_target: correct_height,
-				slide_duration: duration,
-			})
+			doAction.addObjMisc(tgt, 'is_correct', true)
+			let duration
+			if ('full_height' === how) {
+				doAction.setName(tgt, [correct_height])
+				const pos_3 = query_position_of(tgt).toJS()
+				show_thin_height_2(src, pos_3)
+				duration = 0
+			} else {
+				const curr = query_name_of('door_3').get(0)
+				doAction.setName('door_3', [curr, curr])
+				doAction.towerAddStyle('tower_1', 'opacity', null)
+				const scale_factor = query_prop('scale_factor')
+				duration = 10 * scale_factor * Math.abs(correct_height - tgt_height)
+				doAction.setAnimInfo('door_3', {
+					slide_target: correct_height,
+					slide_duration: duration,
+				})
+			}
 			delay = duration + 1000
 			if ('half_height' === how) {
 				doAction.addObjStyle('bar_1', 'backgroundColor', 'lightgreen')
@@ -324,10 +414,11 @@ export function is_correct() {
 			}
 		} else {
 			// still incorrect
-			if ('half_height' === how) {
-				doAction.addObjStyle('bar_1', 'backgroundColor', 'red')
+			if ('half_height' === how || 'full_height' === how) {
+				const tgt = 'half_height' === how ? 'bar_1' : 'bar_3'
+				doAction.addObjStyle(tgt, 'backgroundColor', 'red')
 				window.setTimeout(function() {
-					doAction.addObjStyle('bar_1', 'backgroundColor', null)
+					doAction.addObjStyle(tgt, 'backgroundColor', null)
 				}, global_constant.incorrect_freeze_time)
 			}
 		}

@@ -10,17 +10,13 @@ export function interpolate_anim_attr(
 	animated_style,
 	secondary_style,
 ) {
-	if (anim_info.bottom) {
-		animated_style.bottom = time_value.interpolate({
-			inputRange: [0, 1],
-			outputRange: [anim_info.bottom[0], anim_info.bottom[1]],
-		})
-	}
-	if (anim_info.opacity) {
-		animated_style.opacity = time_value.interpolate({
-			inputRange: [0, 1],
-			outputRange: [anim_info.opacity[0], anim_info.opacity[1]],
-		})
+	for (const attr of ['left', 'right', 'top', 'bottom', 'opacity']) {
+		if (anim_info[attr]) {
+			animated_style[attr] = time_value.interpolate({
+				inputRange: [0, 1],
+				outputRange: [anim_info[attr][0], anim_info[attr][1]],
+			})
+		}
 	}
 	if ('undefined' !== typeof anim_info.blink) {
 		//console.log('blink', anim_info.blink)

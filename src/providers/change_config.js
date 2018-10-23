@@ -48,9 +48,15 @@ export function get_config(path) {
 								if (subtree && 'remove' === subtree) {
 									delete res['create'][id]
 									delete res['modify'][id]
-								} else if (!res[category].hasOwnProperty(id)) {
+								} else if (
+									!res[category].hasOwnProperty(id) ||
+									'create' === category
+								) {
 									res[category][id] = deep_clone(subtree)
-								} else attach_properties(res[category][id], subtree)
+								} else {
+									//console.log('for id', id, 'attaching', res[category][id], 'to', subtree)
+									attach_properties(res[category][id], subtree)
+								}
 							}
 						}
 					} else {

@@ -6,6 +6,8 @@ import {
 	query_path,
 	query_name_of,
 	with_suffix,
+	query_option_obj,
+	// query_position_of,
 } from '../providers/query_store'
 import {
 	query_top_block,
@@ -22,11 +24,16 @@ import {
 	update_keypad_button_visibility,
 } from './utils'
 import {option_geometry} from '../components/OptionBackground'
-import {describe_numerical} from './extract'
+import {
+	describe_numerical,
+	position_of_correct_option,
+	show_thin_height_2,
+} from './extract'
 import {global_screen_width} from '../components/Workspace'
 import {is_standard_tower} from '../components/Block'
 import {do_batched_actions} from '../providers/reducers'
 import * as Actions from '../providers/actions'
+// import { fromJS } from 'immutable';
 
 export function handle_delete_button(state) {
 	if ('up' === state) {
@@ -129,11 +136,12 @@ function option_is_correct(i) {
 export function handle_options(state, x, y) {
 	let action_list = []
 	let found_one = false
+	const option_obj = query_option_obj()
 	const n = query_option_values().size
 	//console.log('n', n)
 	for (let i = 0; i < n; ++i) {
 		//if ('down' === state) console.log(' checking i', i, 'x', x, 'y', y, 'geom', option_geometry(i))
-		if (pointIsInRectangle([x, y], option_geometry(i))) {
+		if (pointIsInRectangle([x, y], option_geometry(i, option_obj))) {
 			//console.log('i', i)
 			found_one = true
 			action_list.push(Actions.setButtonHighlight('option_' + i))
@@ -147,10 +155,25 @@ export function handle_options(state, x, y) {
 					const is_peg =
 						arg_1 && arg_1.startsWith('tile_') && name_1.startsWith('peg_')
 					// console.log(arg_1)
-					if (
+					const op = query_prop('curr_op')
+					// console.log('op', op)
+					if ('identity' === op) {
+						// show dotted line
+						const arg_1 = query_arg(1)
+						const pos_3 = position_of_correct_option()
+						show_thin_height_2(arg_1, pos_3)
+
+						window.setTimeout(function() {
+							doAction.setButtonHighlight(null)
+							doAction.setErrBox({})
+							doAction.setProp('freeze_display', false)
+							transition_to_next_config()
+						}, 500)
+					} else if (
 						arg_1 &&
 						(arg_1.startsWith('tower_') ||
 							arg_1.startsWith('door_') ||
+							arg_1.startsWith('bar_') ||
 							arg_1.startsWith('five_frame_') ||
 							is_peg)
 					) {

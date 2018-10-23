@@ -1,8 +1,38 @@
 # these constants should be fixed!
-debug_mode: false
+debug_mode: true
 num_exercises_for_debugging: 1
-# debug_path: [all_done]
-# debug_path: [in_between]
+debug_path: [identity_function, as_option, bars, level_1]
+# debug_path: [identity_function, as_drag, bars, level_1]
+# debug_path: [identity_function, as_option, doors, level_1]
+# debug_path: [identity_function, as_drag, doors, level_1]
+# debug_path: [intro_halves, level_1]
+# debug_path: [add_or_half, as_option, result_option, half, bars, level_1]
+# debug_path: [add_or_half, as_drag, result_option, half, bars, level_1]
+# debug_path: [add_or_half, as_option, result_option, half, doors, level_1]
+# debug_path: [add_or_half, as_drag, result_option, half, doors, level_1]
+# debug_path: [add_or_half, as_option, arg_1_option, half, bars, level_1]
+# debug_path: [add_or_half, as_drag, arg_1_option, half, bars, level_1]
+# debug_path: [add_or_half, as_option, arg_1_option, half, doors, level_1]
+# debug_path: [add_or_half, as_drag, arg_1_option, half, doors, level_1]
+
+# debug_path: [add_or_half, as_option, result_option, bars, level_1]
+# debug_path: [add_or_half, as_drag, result_option, bars, level_1]
+# debug_path: [add_or_half, as_option, result_option, doors, level_1]
+# debug_path: [add_or_half, as_drag, result_option, doors, level_1]
+# debug_path: [add_or_half, as_option, arg_2_option, bars, level_1]
+# debug_path: [add_or_half, as_drag, arg_2_option, bars, level_1]
+# debug_path: [add_or_half, as_option, arg_2_option, doors, level_1]
+# debug_path: [add_or_half, as_drag, arg_2_option, doors, level_1]
+# debug_path: [add_or_half, as_option, arg_1_option, bars, level_1]
+# debug_path: [add_or_half, as_drag, arg_1_option, bars, level_1]
+# debug_path: [add_or_half, as_option, arg_1_option, doors, level_1]
+# debug_path: [add_or_half, as_drag, arg_1_option, doors, level_1]
+# debug_path: [add_or_half, as_drag, arg_1_option, doors, all_done_adding]
+
+
+# debug_path: [add_height, bar_target, arg1_option, level_1]
+# debug_path: [add_height, bar_target, actual_addition, level_1]
+# debug_path: [add_height, door_target, actual_addition, level_1]
 # debug_path: [two_animals, just_dot]
 # debug_path: [two_animals, with_handle, with_dot,level_4]
 # debug_path: [two_animals, with_handle, just_doors,level_1]
@@ -25,14 +55,13 @@ num_exercises_for_debugging: 1
 # debug_path: [multiply_height, door_target, actual_multiplication, level_1]
 # debug_path: [estimate_tower_height, level_1]
 # debug_path: [animal_sum, level_1]
-# debug_path: [add_height, door_target, actual_addition, level_1]
 # debug_path: [measure_height, copy_tower_subitize, disappearing, level_2]
 # debug_path: [measure_height, animal_height_subitize]
 # debug_path: [estimate_names, of_animals, level_1]
 # debug_path: [estimate_names, of_doors, level_1]
 # debug_path: [estimate_names, of_doors, all_values, level_10]
 # debug_path: [measure_height, to_handle, level_1]
-debug_path: [measure_height,  animal_height, level_1]
+# debug_path: [measure_height,  animal_height, level_1]
 # debug_path: [intro_diagrams, copy_tower, level_1]
 # debug_path: [intro_names, copy_tower, level_1]
 # debug_path: [intro_names, copy_tower, level_4]
@@ -46,26 +75,56 @@ debug_path: [measure_height,  animal_height, level_1]
 # debug_path: [eleven_through_fourteen, intro]
 # debug_path: [eleven_through_fourteen, doors, level_1]
 # debug_path: [estimate_names_11_to_14, of_doors, level_1]
-# debug_path: [halves, level_1]
 # debug_path: [pure_five_frame, level_1]
 # debug_path: [pure_five_frame, disappearing, level_4]
+# debug_path: [all_done]
+# debug_path: [in_between]
 # starting_config_path: [one_through_five, five_frame, level_1] # P Oct 8
-#starting_config_path_Dom: [intro_diagrams, copy_tower, level_1] # S Oct 12
-#starting_config_path_PCCS: [one_through_five, pegs, level_1] # P Oct 12
-# starting_config_path_Dom: [intro_diagrams, copy_tower, level_1] # S Oct 15
-starting_config_path_PCCS: [halves, level_1] # P Oct 15, 16
-# starting_config_path_Dom: [pure_five_frame, level_1] # S Oct 16
-starting_config_path_Dom: [measure_height,  animal_height, level_1] # S Oct 17
+#starting_config_path_Dom: [intro_diagrams, copy_tower, level_1] # Oct 12
+#starting_config_path_PCCS: [one_through_five, pegs, level_1] # Oct 12
+# starting_config_path_Dom: [intro_diagrams, copy_tower, level_1] # Oct 15
+# starting_config_path_PCCS: [halves, level_1] # Oct 15, 16
+# starting_config_path_Dom: [pure_five_frame, level_1] # Oct 16
+#starting_config_path_Dom: [measure_height,  animal_height, level_1] # Oct 17
+starting_config_path_PCCS: [identity_function, as_option, bars, level_1] # Oct 22
+# starting_config_path_Dom: [identity_function, as_option, bars, level_1] # Oct 22
+starting_config_path_Dom: [add_or_half, as_option, result_option, half, bars, level_1] # Oct 23
 
-starting_level_for:
-  #jmp_label_1:
+starting_level_for:  # these levels are for continuous visual estimation
+  m01: [identity_function, as_option, doors, level_1]
+  m08: [identity_function, as_drag, doors, level_1]
+  m05: [add_or_half, as_option, result_option, half, bars, level_1]
+  m14: [add_or_half, as_option, result_option, half, bars, level_1]
+  m10: [add_or_half, as_drag, result_option, half, bars, level_1]
+  m19: [add_or_half, as_drag, result_option, half, bars, level_1]
+  m13: [add_or_half, as_option, result_option, half, doors, level_1]
+  m02: [add_or_half, as_option, result_option, half, doors, level_1]
+  m06: [add_or_half, as_drag, result_option, half, doors, level_1]
+  m03: [add_or_half, as_drag, result_option, half, doors, level_1]
+  m18: [add_or_half, as_drag, result_option, half, doors, level_1]
+  m12: [add_or_half, as_option, arg_1_option, half, bars, level_1]
+  m04: [add_or_half, as_option, arg_1_option, half, bars, level_1]
+  m17: [add_or_half, as_option, arg_1_option, half, bars, level_1]
+  m15: [add_or_half, as_option, arg_1_option, half, bars, level_1]
+  m20: [add_or_half, as_drag, arg_1_option, half, bars, level_1]
+  m07: [add_or_half, as_drag, arg_1_option, half, bars, level_1]
+  m11: [add_or_half, as_option, arg_1_option, half, doors, level_1]
+  m16: [add_or_half, as_option, result_option, bars, level_1]
+
+jmp_label_1:
+  # the following are the levels that have to do with estimating heights 1-18
   Olaf: [one_through_five, doors, level_1]
-  m19: [one_through_five, pegs, level_2]
+  # m19: [one_through_five, pegs, level_2]
+  m19: [estimate_names_1_to_5 of_doors, level_1]
+  # m14: [estimate_names_6_to_9, of_doors, level_1]
+  m14: [eleven_through_fourteen doors level_3]
+  # m13: [six_through_nine, doors, level_3]
+  # m08: [six_through_nine, doors, disappearing, level_5]
+  m13: [estimate_names of_doors level_5]
+  m08: [estimate_names of_doors level_5]
+
   m17: [six_through_nine, intro]
   m01: [six_through_nine, doors, level_3]
-  m13: [six_through_nine, doors, level_3]
-  m08: [six_through_nine, doors, disappearing, level_5]
-  m14: [estimate_names_6_to_9, of_doors, level_1]
   m03: [eleven_through_fourteen, doors, disappearing, level_4]
   m15: [estimate_names of_doors, level_1]
 
@@ -95,6 +154,7 @@ door:
   min_dist_from_handle: 200
   min_dist_from_door: 200
   thickness_fraction: 0.01
+  color_of_mutable: darkgreen
   frame_color: darkblue
   # frame_color_grey: '#d0d0d0'
   frame_color_grey: '#f5f5f5'
@@ -245,9 +305,9 @@ path_types: [config, prev_config, goto, jmp, jmp_no_suffix, suffix_path]
 prop_types: [scale_factor, freeze_display, num_stars,
     config_iteration, goto_iteration, skip_submit, skip_in_between,
     center_text, top_left_text, top_right_text, problem_stage,
-    blank_between_exercises, hide_dot, big_op,
+    blank_between_exercises, hide_dot, big_op, big_paren,
     repeat_level, skip_slide_down, correct_option_index,
-    answer_is_correct, top_block_under_construction]
+    answer_is_correct, top_block_under_construction, curr_op]
 prop_value_types: [number, string, boolean]
 event_handling_types: [target, comparison_source, correctness,
   event_move, top_right_text, show_camel, slide_portal,
@@ -257,6 +317,7 @@ event_handling_types: [target, comparison_source, correctness,
 position_modifiers: [left, right, top, bottom,
   left_from_right, right_from_left, top_from_bottom,
   bottom_from_top]
+default_bar_width: 75
 prompt_width: 300
 extra_dot_threshold: 0.2
 top_right_text_offset: 80

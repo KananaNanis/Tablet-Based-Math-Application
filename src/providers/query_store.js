@@ -156,6 +156,9 @@ export function query_option_values() {
 }
 
 export function query_prop(key) {
+	if (!global_constant.prop_types) {
+		console.error('Warning: no prop types?!')
+	}
 	if (!global_constant.prop_types.includes(key)) {
 		console.error('Warning: unrecognized prop key', key)
 	}
@@ -174,6 +177,24 @@ export function query_path(key) {
 export function query_log() {
 	const state = global_store.getState()
 	return state.get('log')
+}
+
+export function query_option_obj() {
+	const state = global_store.getState()
+	const m_all = state.get('misc')
+	let res = null
+	for (const id of m_all.keySeq()) {
+		// console.log('id', id)
+		const m = m_all.get(id)
+		if (m.get('is_option')) {
+			//console.log('got it:', id)
+			if (res) {
+				console.warn('Warning in query_option_obj:  duplicate option?', res, id)
+			}
+			res = id
+		}
+	}
+	return res
 }
 
 export function with_suffix(path) {

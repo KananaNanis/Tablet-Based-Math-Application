@@ -44,6 +44,8 @@ export function render_nums(
 					/>,
 				)
 			}
+			// store the name of the object that triggered the construction of options
+			nums.push(tower_ids.get(i))
 		} else if (!option_values && !is_option) {
 			nums.push(
 				<NumContainer
@@ -103,6 +105,8 @@ export function render_doors(
 					/>,
 				)
 			}
+			// store the name of the object that triggered the construction of options
+			doors.push(id)
 		} else if (!option_values && !is_option) {
 			// console.log('door id', id, 'name', query_name_of(id))
 			doors.push(
@@ -173,6 +177,7 @@ export function render_five_frames(five_frame_ids, option_values = null) {
 					/>,
 				)
 			}
+			ffs.push(id)
 		} else if (!option_values && !is_option) {
 			// console.log('ff id', id, 'name', query_name_of(id))
 			//let name = query_name_of(id)
@@ -216,6 +221,8 @@ export function render_bars(bar_ids, option_values = null) {
 					/>,
 				)
 			}
+			// console.log(' adding id', id, 'to end of bars')
+			bars.push(id)
 		} else if (!option_values && !is_option) {
 			// console.log('ff id', id, 'name', query_name_of(id))
 			//let name = query_name_of(id)

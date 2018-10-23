@@ -6,6 +6,7 @@ import {
 	from_uniform_range,
 	pick_animal_name,
 } from './gen_utile'
+//import {query_obj_misc, query_option_obj} from '../providers/query_store'
 import {approx_equal} from '../event/utils'
 
 function find_gen_values_for_words(words, gen_vars) {
@@ -38,7 +39,12 @@ export function permute_array_elements(arr) {
 	}
 }
 
-function generate_option_values(inst, option_delta, option_values) {
+function generate_option_values(
+	inst,
+	option_delta,
+	option_values,
+	skip_permute,
+) {
 	const verbose = false
 	option_values.length = 0
 	if ('number' !== typeof option_delta[0]) {
@@ -51,7 +57,7 @@ function generate_option_values(inst, option_delta, option_values) {
 		for (let i = 0; i < 4; ++i) {
 			option_values.push([inst + (i - offset) * option_delta[0]])
 		}
-		permute_array_elements(option_values)
+		if (!skip_permute) permute_array_elements(option_values)
 	}
 	if (verbose) {
 		console.log(
@@ -81,6 +87,8 @@ function apply_gen_instruction(
 		if ('option_value_delta' === id) {
 			option_delta[0] = inst
 			// console.log('option_delta', option_delta[0])
+		} else if ('option_skip_permute' === id) {
+			gen_vars['option_skip_permute'] = true
 		} else if ('option_value_seed' === id) {
 			// actually generate options
 			if ('string' === typeof inst) {
@@ -88,7 +96,9 @@ function apply_gen_instruction(
 			}
 			correct_option_value[0] = inst
 			if (!silent) console.log('initial correct value set to', inst)
-			generate_option_values(inst, option_delta, option_values)
+			const skip_permute = gen_vars['option_skip_permute']
+			//console.log('skip_permute', skip_permute)
+			generate_option_values(inst, option_delta, option_values, skip_permute)
 			//console.log(' here, option_values', option_values, 'correct_option_value', correct_option_value)
 			for (let i = 0; i < 4; ++i) {
 				gen_vars['option_' + i] = option_values[i][0]

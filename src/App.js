@@ -159,7 +159,7 @@ export async function load_config_tree(appObj) {
 		//if (!doAction) create_bound_action_creators()  // needed?
 		doAction.addLogEntry(Date.now(), [[], 'loading_config_tree'])
 
-		const print_paths = true
+		const print_paths = false
 		if (print_paths) print_all_paths(config_tree)
 		//console.log('config_tree', config_tree);
 

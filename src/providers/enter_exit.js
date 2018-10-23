@@ -117,154 +117,179 @@ export function enter_exit_config(
 					silent,
 			  )
 			: {}
+	let remap_id_table = {}
+	if (config['remap_ids']) {
+		remap_id_table = config['remap_ids']
+		console.log('remap_id_table', remap_id_table)
+	}
+	function remap_id(id0) {
+		if (remap_id_table[id0]) return remap_id_table[id0]
+		return id0
+	}
 	if (config['create']) {
 		const c = config['create']
-		for (const id in c) {
-			if ('button_submit' === id) {
-				action_list.push(
-					Actions.setButtonDisplay('submit', enter ? true : null),
-				)
-			} else if ('button_delete' === id) {
-				action_list.push(
-					Actions.setButtonDisplay('delete', enter ? true : null),
-				)
-			} else if ('button_next' === id) {
-				action_list.push(Actions.setButtonDisplay('next', enter ? true : null))
-			} else if ('button_start' === id) {
-				action_list.push(Actions.setButtonDisplay('start', enter ? true : null))
-			} else if ('center_text' === id) {
-				action_list.push(Actions.setProp('center_text', enter ? c[id] : null))
-			} else if ('err_box' === id) {
-				action_list.push(Actions.setErrBox(enter ? {show: true} : null))
-			} else if ('keypad_kind' === id) {
-				action_list.push(Actions.setKeypadKind(enter ? c[id] : null))
-				if ('buildTower' === c[id]) {
-					update_keypad_button_visibility(null, null, null)
-				}
-			} else if (
-				id.startsWith('tower_') ||
-				id.startsWith('tile_') ||
-				id.startsWith('door_') ||
-				id.startsWith('portal_') ||
-				id.startsWith('five_frame_') ||
-				id.startsWith('bar_')
-			) {
-				if (!keep_names) {
-					// assert: we have necessary info in the 'modify' area
-					let name = null
-					if (enter) {
-						name = c[id]
-						const verbose2 = false
-						if (verbose2) console.log(' id', id, 'name0', name)
-						if (
-							'object' === typeof name &&
-							'undefined' !== typeof name['name']
-						) {
-							name = name['name']
-						}
-						if (verbose2) console.log(' id', id, 'name1', name)
-						if (Array.isArray(name)) {
-							for (let i = 0; i < name.length; ++i) {
-								if (gen_vars.hasOwnProperty(name[i])) {
-									name[i] = gen_vars[name[i]]
-								}
+		for (const id0 in c) {
+			if (c.hasOwnProperty(id0)) {
+				const id = remap_id(id0)
+				if ('button_submit' === id) {
+					action_list.push(
+						Actions.setButtonDisplay('submit', enter ? true : null),
+					)
+				} else if ('button_delete' === id) {
+					action_list.push(
+						Actions.setButtonDisplay('delete', enter ? true : null),
+					)
+				} else if ('button_next' === id) {
+					action_list.push(
+						Actions.setButtonDisplay('next', enter ? true : null),
+					)
+				} else if ('button_start' === id) {
+					action_list.push(
+						Actions.setButtonDisplay('start', enter ? true : null),
+					)
+				} else if (['center_text', 'big_op', 'big_paren'].includes(id)) {
+					console.log('setting prop', id, 'to', c[id0])
+					action_list.push(Actions.setProp(id, enter ? c[id0] : null))
+				} else if ('err_box' === id) {
+					action_list.push(Actions.setErrBox(enter ? {show: true} : null))
+				} else if ('keypad_kind' === id) {
+					action_list.push(Actions.setKeypadKind(enter ? c[id0] : null))
+					if ('buildTower' === c[id0]) {
+						update_keypad_button_visibility(null, null, null)
+					}
+				} else if (
+					id.startsWith('tower_') ||
+					id.startsWith('tile_') ||
+					id.startsWith('door_') ||
+					id.startsWith('portal_') ||
+					id.startsWith('five_frame_') ||
+					id.startsWith('bar_')
+				) {
+					if (!keep_names) {
+						// assert: we have necessary info in the 'modify' area
+						let name = null
+						if (enter) {
+							name = c[id0]
+							const verbose2 = false
+							if (verbose2) console.log(' id', id, 'name0', name)
+							if (
+								'object' === typeof name &&
+								'undefined' !== typeof name['name']
+							) {
+								name = name['name']
 							}
-						} else {
-							if (gen_vars.hasOwnProperty(name)) name = gen_vars[name]
-							if (verbose2) console.log(' id', id, 'name2', name)
+							if (verbose2) console.log(' id', id, 'name1', name)
+							if (Array.isArray(name)) {
+								for (let i = 0; i < name.length; ++i) {
+									if (gen_vars.hasOwnProperty(name[i])) {
+										name[i] = gen_vars[name[i]]
+									}
+								}
+							} else {
+								if (gen_vars.hasOwnProperty(name)) name = gen_vars[name]
+								if (verbose2) console.log(' id', id, 'name2', name)
+							}
 						}
-					}
-					let extra_scale = 1
-					if (
-						config['modify'] &&
-						config['modify'][id] &&
-						config['modify'][id]['misc'] &&
-						config['modify'][id]['misc']['extra_scale']
-					) {
-						extra_scale = config['modify'][id]['misc']['extra_scale']
-						if (gen_vars.hasOwnProperty(extra_scale)) {
-							extra_scale = gen_vars[extra_scale]
-						} else extra_scale = Number(extra_scale)
-					}
-					if (id.startsWith('tower_')) {
-						if (enter) {
-							if ('number' === typeof name) name = height2tower_name(name)
-							const w = width_pixels_from_name(name, sc)
-							const h = height_pixels_from_name(name, sc)
-							action_list.push(
-								Actions.towerCreate(
-									id,
-									name,
-									as_position(
-										config['modify'][id]['position'],
-										w,
-										h,
-										extra_scale,
-									),
-								),
-							)
-						} else {
-							//console.log('deleting', id)
-							action_list.push(Actions.towerDelete(id))
+						let extra_scale = 1
+						if (
+							config['modify'] &&
+							config['modify'][id0] &&
+							config['modify'][id0]['misc'] &&
+							config['modify'][id0]['misc']['extra_scale']
+						) {
+							extra_scale = config['modify'][id0]['misc']['extra_scale']
+							if (gen_vars.hasOwnProperty(extra_scale)) {
+								extra_scale = gen_vars[extra_scale]
+							} else extra_scale = Number(extra_scale)
 						}
-					} else if (id.startsWith('tile_')) {
-						if (enter) {
-							const w = width_pixels_from_name(name, sc)
-							const h = height_pixels_from_name(name, sc)
-							action_list.push(
-								Actions.tileCreate(
-									id,
-									name,
-									as_position(
-										config['modify'][id]['position'],
-										w,
-										h,
-										extra_scale,
+						if (id.startsWith('tower_')) {
+							if (enter) {
+								if ('number' === typeof name) name = height2tower_name(name)
+								const w = width_pixels_from_name(name, sc)
+								const h = height_pixels_from_name(name, sc)
+								action_list.push(
+									Actions.towerCreate(
+										id,
+										name,
+										as_position(
+											config['modify'][id0]['position'],
+											w,
+											h,
+											extra_scale,
+										),
 									),
-								),
-							)
-						} else action_list.push(Actions.tileDelete(id))
-					} else if (id.startsWith('door_')) {
-						if (enter) {
-							action_list.push(
-								Actions.doorCreate(
+								)
+							} else {
+								//console.log('deleting', id)
+								action_list.push(Actions.towerDelete(id))
+							}
+						} else if (id.startsWith('tile_')) {
+							if (enter) {
+								const w = width_pixels_from_name(name, sc)
+								const h = height_pixels_from_name(name, sc)
+								action_list.push(
+									Actions.tileCreate(
+										id,
+										name,
+										as_position(
+											config['modify'][id0]['position'],
+											w,
+											h,
+											extra_scale,
+										),
+									),
+								)
+							} else action_list.push(Actions.tileDelete(id))
+						} else if (id.startsWith('door_')) {
+							if (enter) {
+								console.log(
+									'creating door',
 									id,
+									'name',
 									name,
-									as_position(config['modify'][id]['position']),
-								),
-							)
-						} else action_list.push(Actions.doorDelete(id))
-					} else if (id.startsWith('portal_')) {
-						if (enter) {
-							//console.log('reading a portal')
-							action_list.push(
-								Actions.portalCreate(
-									id,
-									name,
-									as_position(config['modify'][id]['position']),
-								),
-							)
-						} else action_list.push(Actions.portalDelete(id))
-					} else if (id.startsWith('five_frame_')) {
-						if (enter) {
-							action_list.push(
-								Actions.fiveFrameCreate(
-									id,
-									name,
-									as_position(config['modify'][id]['position']),
-								),
-							)
-						} else action_list.push(Actions.fiveFrameDelete(id))
-					} else if (id.startsWith('bar_')) {
-						if (enter) {
-							action_list.push(
-								Actions.barCreate(
-									id,
-									name,
-									as_position(config['modify'][id]['position']),
-								),
-							)
-						} else action_list.push(Actions.barDelete(id))
+									'position',
+									as_position(config['modify'][id0]['position']),
+								)
+								action_list.push(
+									Actions.doorCreate(
+										id,
+										name,
+										as_position(config['modify'][id0]['position']),
+									),
+								)
+							} else action_list.push(Actions.doorDelete(id))
+						} else if (id.startsWith('portal_')) {
+							if (enter) {
+								//console.log('reading a portal')
+								action_list.push(
+									Actions.portalCreate(
+										id,
+										name,
+										as_position(config['modify'][id0]['position']),
+									),
+								)
+							} else action_list.push(Actions.portalDelete(id))
+						} else if (id.startsWith('five_frame_')) {
+							if (enter) {
+								action_list.push(
+									Actions.fiveFrameCreate(
+										id,
+										name,
+										as_position(config['modify'][id0]['position']),
+									),
+								)
+							} else action_list.push(Actions.fiveFrameDelete(id))
+						} else if (id.startsWith('bar_')) {
+							if (enter) {
+								action_list.push(
+									Actions.barCreate(
+										id,
+										name,
+										as_position(config['modify'][id0]['position']),
+									),
+								)
+							} else action_list.push(Actions.barDelete(id))
+						}
 					}
 				}
 			}
@@ -272,14 +297,15 @@ export function enter_exit_config(
 	}
 	if (config['modify']) {
 		const c = config['modify']
-		for (const id in c) {
-			if (c.hasOwnProperty(id)) {
+		for (const id0 in c) {
+			if (c.hasOwnProperty(id0)) {
+				const id = remap_id(id0)
 				// console.log('  modify id', id)
-				for (const key in c[id]) {
+				for (const key in c[id0]) {
 					// console.log('   key', key)
 					if (['appear_after', 'zoom_anim', 'unzoom_anim'].includes(key)) {
 						if (enter) {
-							const val = c[id][key]
+							const val = c[id0][key]
 							let new_val = val
 							if (key.endsWith('_anim')) {
 								new_val = {}
@@ -294,8 +320,13 @@ export function enter_exit_config(
 							}
 							do_timed_action(id, key, new_val)
 						}
+					} else if ('position' === key) {
+						if (['big_op', 'big_paren'].includes(id)) {
+							const pos = as_position(c[id0][key])
+							action_list.push(Actions.setPosition(id, enter ? pos : null))
+						}
 					} else if ('style' === key) {
-						let props = c[id][key]
+						let props = c[id0][key]
 						for (const key2 in props) {
 							if (props.hasOwnProperty(key2)) {
 								action_list.push(
@@ -304,10 +335,10 @@ export function enter_exit_config(
 							}
 						}
 					} else if ('anim_info' === key) {
-						const info = c[id][key]
-						action_list.push(Actions.setAnimInfo(id, info))
+						const info = c[id0][key]
+						action_list.push(Actions.setAnimInfo(id, enter ? info : null))
 					} else if ('tower_style' === key) {
-						let props = c[id][key]
+						let props = c[id0][key]
 						for (const key2 in props) {
 							if (props.hasOwnProperty(key2)) {
 								action_list.push(
@@ -316,7 +347,7 @@ export function enter_exit_config(
 							}
 						}
 					} else if ('misc' === key) {
-						let props = c[id][key]
+						let props = c[id0][key]
 						for (const key2 in props) {
 							if (props.hasOwnProperty(key2)) {
 								let val2 = enter ? props[key2] : null
@@ -330,7 +361,7 @@ export function enter_exit_config(
 					} else if (id.startsWith('tower_') || id.startsWith('tile_')) {
 						if ('width' === key) {
 							if (enter) {
-								let val = c[id][key]
+								let val = c[id0][key]
 								if ('string' === typeof val && val.endsWith('vw')) {
 									val = (global_screen_width * Number(val.slice(0, -2))) / 100
 								}
@@ -338,7 +369,7 @@ export function enter_exit_config(
 							} else action_list.push(Actions.towerSetWidth(id, null))
 						} else if ('overflow' === key) {
 							action_list.push(
-								Actions.towerSetOverflow(id, enter ? c[id][key] : null),
+								Actions.towerSetOverflow(id, enter ? c[id0][key] : null),
 							)
 						}
 					}
@@ -351,9 +382,9 @@ export function enter_exit_config(
 		for (const key in c) {
 			if (c.hasOwnProperty(key)) {
 				// console.log('event_handling key', key, 'val', c[key])
-				action_list.push(
-					Actions.setEventHandlingParam(key, enter ? c[key] : null),
-				)
+				const val0 = c[key]
+				const val = remap_id(val0)
+				action_list.push(Actions.setEventHandlingParam(key, enter ? val : null))
 			}
 		}
 	}
@@ -361,79 +392,82 @@ export function enter_exit_config(
 		skip_suffix_for_this_level = false
 	if (config['misc']) {
 		const c = config['misc']
-		for (const key in c) {
-			if ('config_iteration' === key) {
-				let iter_val = global_constant.debug_mode
-					? global_constant.num_exercises_for_debugging
-					: c[key]
-				if (0 === iter_val || !enter) iter_val = null
-				action_list.push(Actions.setProp(key, iter_val))
-			} else if ('goto_config' === key) {
-				// this attribute is special:  it is not erased at the end!
-				if (enter) {
-					const iter = query_prop('goto_iteration')
-					if (!iter || !(iter > 0)) {
-						console.log(
-							'iter was',
-							iter,
-							'setting goto iteration',
-							c[key][0],
-							'path',
-							c[key][1],
-						)
-						action_list.push(Actions.setProp('goto_iteration', c[key][0]))
-					} else {
-						console.log('skipping setting iteration, iter', iter)
+		for (const key0 in c) {
+			if (c.hasOwnProperty(key0)) {
+				const key = remap_id(key0)
+				if ('config_iteration' === key) {
+					let iter_val = global_constant.debug_mode
+						? global_constant.num_exercises_for_debugging
+						: c[key0]
+					if (0 === iter_val || !enter) iter_val = null
+					action_list.push(Actions.setProp(key, iter_val))
+				} else if ('goto_config' === key) {
+					// this attribute is special:  it is not erased at the end!
+					if (enter) {
+						const iter = query_prop('goto_iteration')
+						if (!iter || !(iter > 0)) {
+							console.log(
+								'iter was',
+								iter,
+								'setting goto iteration',
+								c[key0][0],
+								'path',
+								c[key0][1],
+							)
+							action_list.push(Actions.setProp('goto_iteration', c[key0][0]))
+						} else {
+							console.log('skipping setting iteration, iter', iter)
+						}
 					}
-				}
-				action_list.push(Actions.setPath('goto', enter ? c[key][1] : null))
-			} else if ('jmp_no_suffix' === key) {
-				if (enter && !use_suffix) {
-					const has_suffix = suffix_path || query_path('suffix_path')
-					// const has_suffix = true
-					if (!has_suffix) {
-						console.log('setting jmp')
-						action_list.push(Actions.setPath('jmp', c[key]))
-					} else {
-						console.log('clearing jmp')
-						action_list.push(Actions.setPath('jmp', null))
-						suffix_path = null
-						action_list.push(Actions.setPath('suffix_path', null))
+					action_list.push(Actions.setPath('goto', enter ? c[key0][1] : null))
+				} else if ('jmp_no_suffix' === key) {
+					if (enter && !use_suffix) {
+						const has_suffix = suffix_path || query_path('suffix_path')
+						// const has_suffix = true
+						if (!has_suffix) {
+							console.log('setting jmp')
+							action_list.push(Actions.setPath('jmp', c[key0]))
+						} else {
+							console.log('clearing jmp')
+							action_list.push(Actions.setPath('jmp', null))
+							suffix_path = null
+							action_list.push(Actions.setPath('suffix_path', null))
+						}
 					}
+				} else if ('jmp' === key) {
+					if (enter && !use_suffix) {
+						// don't unset this state here... wait for in-between
+						action_list.push(Actions.setPath(key, c[key0]))
+					}
+				} else if ('skip_suffix_for_this_level' === key) {
+					if (c[key0]) skip_suffix_for_this_level = true
+				} else if ('suffix_path' === key) {
+					if (enter && !c['jmp_no_suffix'] && !use_suffix) {
+						// don't unset this state here... wait for in-between
+						action_list.push(Actions.setPath(key, c[key0]))
+						suffix_path = c[key0]
+					}
+				} else if (
+					[
+						'num_stars',
+						'skip_submit',
+						'skip_in_between',
+						'skip_slide_down',
+						'problem_stage',
+						'freeze_display',
+						'answer_is_correct',
+						'hide_dot',
+						'curr_op',
+					].includes(key)
+				) {
+					action_list.push(Actions.setProp(key, enter ? c[key0] : null))
+				} else if ('blank_between_exercises' === key) {
+					action_list.push(Actions.setProp(key, !enter ? c[key0] : null))
+					//console.log('blank', query_prop('blank_between_exercises'))
+				} else if ('remove_on_exit' === key && !enter) {
+					//console.log('remove_on_exit', c[key0])
+					remove_on_exit(c[key0], action_list)
 				}
-			} else if ('jmp' === key) {
-				if (enter && !use_suffix) {
-					// don't unset this state here... wait for in-between
-					action_list.push(Actions.setPath(key, c[key]))
-				}
-			} else if ('skip_suffix_for_this_level' === key) {
-				if (c[key]) skip_suffix_for_this_level = true
-			} else if ('suffix_path' === key) {
-				if (enter && !c['jmp_no_suffix'] && !use_suffix) {
-					// don't unset this state here... wait for in-between
-					action_list.push(Actions.setPath(key, c[key]))
-					suffix_path = c[key]
-				}
-			} else if (
-				[
-					'num_stars',
-					'skip_submit',
-					'skip_in_between',
-					'skip_slide_down',
-					'big_op',
-					'problem_stage',
-					'freeze_display',
-					'answer_is_correct',
-					'hide_dot',
-				].includes(key)
-			) {
-				action_list.push(Actions.setProp(key, enter ? c[key] : null))
-			} else if ('blank_between_exercises' === key) {
-				action_list.push(Actions.setProp(key, !enter ? c[key] : null))
-				//console.log('blank', query_prop('blank_between_exercises'))
-			} else if ('remove_on_exit' === key && !enter) {
-				//console.log('remove_on_exit', c[key])
-				remove_on_exit(c[key], action_list)
 			}
 		}
 	}

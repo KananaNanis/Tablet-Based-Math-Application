@@ -25,6 +25,8 @@ const mapStateToProps = (state, ownProps) => {
 		top_left_text: state.getIn(['prop', 'top_left_text']),
 		top_right_text: state.getIn(['prop', 'top_right_text']),
 		big_op: state.getIn(['prop', 'big_op']),
+		big_paren: state.getIn(['prop', 'big_paren']),
+		big_paren_style: state.getIn(['style', 'big_paren']),
 		err_box: state.get('err_box'),
 		option_values: state.get('option_values'),
 		tower_ids: state.get('tower_ids'),
