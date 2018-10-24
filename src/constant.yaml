@@ -1,5 +1,5 @@
 # these constants should be fixed!
-debug_mode: true
+debug_mode: false
 num_exercises_for_debugging: 1
 debug_path: [animation_test]
 # debug_path: [identity_function, as_option, bars, level_1]
@@ -89,28 +89,40 @@ debug_path: [animation_test]
 #starting_config_path_Dom: [measure_height,  animal_height, level_1] # Oct 17
 starting_config_path_PCCS: [identity_function, as_option, bars, level_1] # Oct 22
 # starting_config_path_Dom: [identity_function, as_option, bars, level_1] # Oct 22
-starting_config_path_Dom: [add_or_half, as_option, result_option, half, bars, level_1] # Oct 23
+# starting_config_path_Dom: [add_or_half, as_option, result_option, half, bars, level_1] # Oct 23
+starting_config_path_Dom: [add_or_half, as_option, result_option, bars, level_1] # Oct 24
 
 starting_level_for:  # these levels are for continuous visual estimation
-  m01: [identity_function, as_option, doors, level_1]
-  m08: [identity_function, as_drag, doors, level_1]
+  m19: [add_or_half, as_option, result_option, half, doors, level_1]
+  m08: [add_or_half, as_drag, result_option, half, doors, level_1]
+  m03: [identity_function, as_option, bars, level_1]
+  m14: [add_or_half, as_option, arg_1_option, half, bars, level_1]
+  m13: [add_or_half, as_option, arg_1_option, half, doors, level_1]
+  m01: [identity_function, as_drag, bars, level_1]
+  m15: [identity_function, as_drag, doors, level_1]
+  m17: [add_or_half, as_drag, result_option, bars, level_1]
+  m16: [add_or_half, as_drag, result_option, bars, level_1]
+  m11: [add_or_half, as_drag, result_option, doors, level_1]
+
+  #m01: [identity_function, as_option, doors, level_1]
+  #m08: [identity_function, as_drag, doors, level_1]
   m05: [add_or_half, as_option, result_option, half, bars, level_1]
-  m14: [add_or_half, as_option, result_option, half, bars, level_1]
+  #m14: [add_or_half, as_option, result_option, half, bars, level_1]
   m10: [add_or_half, as_drag, result_option, half, bars, level_1]
-  m19: [add_or_half, as_drag, result_option, half, bars, level_1]
-  m13: [add_or_half, as_option, result_option, half, doors, level_1]
+  #m19: [add_or_half, as_drag, result_option, half, bars, level_1]
+  #m13: [add_or_half, as_option, result_option, half, doors, level_1]
   m02: [add_or_half, as_option, result_option, half, doors, level_1]
   m06: [add_or_half, as_drag, result_option, half, doors, level_1]
-  m03: [add_or_half, as_drag, result_option, half, doors, level_1]
+  #m03: [add_or_half, as_drag, result_option, half, doors, level_1]
   m18: [add_or_half, as_drag, result_option, half, doors, level_1]
   m12: [add_or_half, as_option, arg_1_option, half, bars, level_1]
   m04: [add_or_half, as_option, arg_1_option, half, bars, level_1]
-  m17: [add_or_half, as_option, arg_1_option, half, bars, level_1]
-  m15: [add_or_half, as_option, arg_1_option, half, bars, level_1]
+  #m17: [add_or_half, as_option, arg_1_option, half, bars, level_1]
+  #m15: [add_or_half, as_option, arg_1_option, half, bars, level_1]
   m20: [add_or_half, as_drag, arg_1_option, half, bars, level_1]
   m07: [add_or_half, as_drag, arg_1_option, half, bars, level_1]
-  m11: [add_or_half, as_option, arg_1_option, half, doors, level_1]
-  m16: [add_or_half, as_option, result_option, bars, level_1]
+  #m11: [add_or_half, as_option, arg_1_option, half, doors, level_1]
+  #m16: [add_or_half, as_option, result_option, bars, level_1]
 
 jmp_label_1:
   # the following are the levels that have to do with estimating heights 1-18
