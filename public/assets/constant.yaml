@@ -1,5 +1,5 @@
 # these constants should be fixed!
-debug_mode: false
+debug_mode: true
 num_exercises_for_debugging: 1
 debug_path: [animation_test]
 # debug_path: [identity_function, as_option, bars, level_1]
