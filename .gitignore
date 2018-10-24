@@ -25,21 +25,13 @@ yarn-error.log*
 
 # I just added these, since they don't seem needed!
 .*.swp
-.babelrc
 .flowconfig
 .watchmanconfig
-LICENSE
-README.md
 README.md.orig
-package-lock.json
 index.js.orig
 public/
 public_stub/
 log/
-src/assets
-src/index.css
-src/index.js
-src/registerServiceWorker.js
 src/providers/testThis.js
 src/downloadGoogleDoc.py
 src/lessonOutline
