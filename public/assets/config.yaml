@@ -2774,8 +2774,7 @@ animation_test:
         position: [10, 0]
         anim_info:
           left: [10, 400]
-          bottom: [0, 500]
           delay: 500
-          duration: [500, 500, 400, 400, 300]
+          duration: 2000
     event_handling: 
       just_jump: true
