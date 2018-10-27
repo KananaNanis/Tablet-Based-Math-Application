@@ -193,6 +193,10 @@ export function addLogEntry(time, info) {
 	return {type: AT.ADD_LOG_ENTRY, time, info: fromJS(info)}
 }
 
+export function setTimerStarted(id, value) {
+	return {type: AT.SET_TIMER_STARTED, id, value}
+}
+
 export function resetAll() {
 	return {type: AT.RESET_ALL}
 }

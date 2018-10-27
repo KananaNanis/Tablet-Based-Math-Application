@@ -1,8 +1,8 @@
 import React from 'react'
-import {StyleSheet, View, Animated} from 'react-native'
-import {global_constant, image_location} from '../App'
-import {dist2D} from '../event/utils'
-import {query_prop} from '../providers/query_store'
+import { StyleSheet, View, Animated } from 'react-native'
+import { global_constant, image_location } from '../App'
+import { dist2D } from '../event/utils'
+import { query_prop } from '../providers/query_store'
 import * as Anim from '../event/animation'
 
 export function current_pixel_size_of_animal(name, extra_scale = 1) {
@@ -41,16 +41,19 @@ export function with_diameter_offset2(loc, diameter, extra_scale) {
 }
 
 function compute_dot_locs(name, misc) {
-	if (!misc || 'undefined' === typeof misc.landmark_index) return [null, null]
-	const loc = landmark_location(name, Number(misc.landmark_index))
-	const diameter = global_constant.animal_landmarks.extra_dot_diameter
+	let locB, loc2B
 	const extra_scale =
 		misc && 'undefined' !== typeof misc.extra_scale ? misc.extra_scale : 1
-	const locB = with_diameter_offset(loc, diameter, extra_scale)
-	const has_dot = misc && 'undefined' !== typeof misc.extra_dot
-	const loc2B = !has_dot
-		? null
-		: with_diameter_offset2(misc.extra_dot, diameter, extra_scale)
+	const diameter = global_constant.animal_landmarks.extra_dot_diameter
+	if (misc && 'undefined' !== typeof misc.landmark_index) {
+		//console.log('no landmark_index')
+		const loc = landmark_location(name, Number(misc.landmark_index))
+		locB = with_diameter_offset(loc, diameter, extra_scale)
+	}
+	if (misc && 'undefined' !== typeof misc.extra_dot) {
+		loc2B = with_diameter_offset2(misc.extra_dot, diameter, extra_scale)
+	}
+	// console.log('compute_dot_locs name', name, 'locB', locB, 'loc2B', loc2B)
 	return [locB, loc2B]
 }
 
@@ -94,7 +97,7 @@ class Tile extends React.Component {
 		// determine a random offset in the wood texture, that will
 		//   stay the same as long as the name stays the same
 		if (!this.props.name.startsWith('peg')) return [0, 0]
-		const {name, misc} = this.props
+		const { name, misc } = this.props
 		const extra_scale =
 			misc && 'undefined' !== typeof misc.extra_scale ? misc.extra_scale : 1
 		const [width, height] = current_pixel_size_of_animal(name, extra_scale)
@@ -111,7 +114,7 @@ class Tile extends React.Component {
 	}
 
 	render() {
-		let {name, position, style, anim_info, misc, just_grey} = this.props
+		let { id, name, position, style, anim_info, misc, just_grey } = this.props
 		//just_grey = true
 		//console.log('Tile  name', name)
 		const extra_scale =
@@ -131,7 +134,7 @@ class Tile extends React.Component {
 
 		let extra_style = {}
 		let image_opacity = 1
-		if (just_grey) extra_style = {opacity: 0.1}
+		if (just_grey) extra_style = { opacity: 0.1 }
 		const is_peg = name.startsWith('peg_')
 		const img_name = is_peg ? 'peg' : name
 		const [width, height] = current_pixel_size_of_animal(name, extra_scale)
@@ -149,11 +152,14 @@ class Tile extends React.Component {
 		//console.log('Tile name', name, 'position', position, 'width', width,
 		//	'height', height, 'img_name', img_name, 'img_width', img_width)
 		//console.log('Tile name', name, 'anim_info', anim_info)
-		let pos_info = {bottom: position[1]}
+		//console.log('Tile id', id, 'misc', misc)
+		let pos_info = { bottom: position[1] }
 		pos_info.left = position[0]
 		let extra_dot = null,
 			landmark = null
+		//console.log('  hide_dot', query_prop('hide_dot'))
 		if (!query_prop('hide_dot')) {
+			//console.log('  not hidden')
 			//console.log('Tile name', name, ' style', style)
 			const has_dot = misc && 'undefined' !== typeof misc.extra_dot
 			let [locB, loc2B] = compute_dot_locs(name, misc)
@@ -171,7 +177,7 @@ class Tile extends React.Component {
 					<View
 						style={[
 							styles.extra_dot,
-							has_dot ? {opacity: half} : {},
+							has_dot ? { opacity: half } : {},
 							{
 								width: extra_scale * diameter,
 								height: extra_scale * diameter,
@@ -209,6 +215,7 @@ class Tile extends React.Component {
 						}),
 					}
 				}
+				//console.log('  extra_dot id', id, 'misc', misc, 'loc2B', loc2B)
 				extra_dot = (
 					<Animated.View
 						style={[

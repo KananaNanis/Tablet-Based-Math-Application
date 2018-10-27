@@ -205,10 +205,8 @@ export async function load_config_tree(appObj) {
 		doAction.setProp('scale_factor', global_constant.scale_factor_from_yaml)
 		//get_config(path)
 
-		const verbose = false
-		let action_list = [],
-			silent = false
-		enter_exit_config(silent, action_list, path, true, verbose)
+		let enter = true, action_list = []
+		enter_exit_config(path, enter, action_list)
 		do_batched_actions(action_list)
 		const show_starting_config = false
 		if (show_starting_config) query_test()

@@ -150,6 +150,11 @@ export function query_has_anim_info(id) {
 	return state.get('anim_info').has(id)
 }
 
+export function query_timer_started(id) {
+	const state = global_store.getState()
+	return state.get('timer_started').has(id)
+}
+
 export function query_option_values() {
 	const state = global_store.getState()
 	return state.get('option_values')

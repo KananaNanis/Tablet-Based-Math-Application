@@ -155,7 +155,7 @@ export function transition_to_next_config(action_list, silent) {
 	if ('in_between' === query_path('config').get(0)) {
 		if (verbose) console.log('  in_between')
 		// special case
-		enter_exit_config(silent, action_list, cp, false)
+		enter_exit_config(cp, false, action_list, silent)
 		const prev_path = query_path('prev_config')
 		const repeat_level = query_prop('repeat_level')
 		let new_path
@@ -183,7 +183,7 @@ export function transition_to_next_config(action_list, silent) {
 			)
 		}
 		action_list.push(Actions.setPath('config', new_path))
-		enter_exit_config(silent, action_list, new_path, true)
+		enter_exit_config(new_path, true, action_list, silent)
 	} else if (query_path('goto') && query_prop('goto_iteration') > 1) {
 		if (verbose) console.log('  goto')
 		// possibly jump directly to some other path
@@ -196,13 +196,13 @@ export function transition_to_next_config(action_list, silent) {
 				iter,
 			]),
 		)
-		enter_exit_config(silent, action_list, cp, false)
+		enter_exit_config(cp, false, action_list, silent)
 		//console.log('HACK  remove this next line')
 		//action_list.push(Actions.setErrBox(null))
 		action_list.push(Actions.setPath('prev_config', query_path('config')))
 		console.log('new_path ', new_path.toJS())
 		action_list.push(Actions.setPath('config', new_path))
-		enter_exit_config(silent, action_list, new_path, true)
+		enter_exit_config(new_path, true, action_list, silent)
 		action_list.push(Actions.setProp('goto_iteration', iter - 1))
 		action_list.push(Actions.setProp('num_stars', curr_num_stars))
 	} else if (query_prop('config_iteration') > 1) {
@@ -216,7 +216,7 @@ export function transition_to_next_config(action_list, silent) {
 				iter,
 			]),
 		)
-		enter_exit_config(silent, action_list, cp, false)
+		enter_exit_config(cp, false, action_list, silent)
 		if (query_prop('blank_between_exercises')) {
 			if (verbose) {
 				console.log('applying blank of ', query_prop('blank_between_exercises'))
@@ -224,10 +224,10 @@ export function transition_to_next_config(action_list, silent) {
 			window.setTimeout(function() {
 				let action_list2 = []
 				enter_exit_config(
-					silent,
-					action_list2,
 					cp,
 					true,
+					action_list2,
+					silent,
 					false, // verbose
 					iter - 1,
 				)
@@ -236,7 +236,7 @@ export function transition_to_next_config(action_list, silent) {
 				do_batched_actions(action_list2)
 			}, query_prop('blank_between_exercises'))
 		} else {
-			enter_exit_config(silent, action_list, cp, true, false, iter - 1)
+			enter_exit_config(cp, true, action_list, silent, false, iter - 1)
 			action_list.push(Actions.setProp('config_iteration', iter - 1))
 			action_list.push(Actions.setProp('num_stars', curr_num_stars))
 		}
@@ -253,18 +253,18 @@ export function transition_to_next_config(action_list, silent) {
     */
 	} else if (query_prop('skip_in_between')) {
 		if (verbose) console.log('  skip_in_between')
-		enter_exit_config(silent, action_list, cp, false)
+		enter_exit_config(cp, false, action_list, silent)
 		const curr_path = query_path('config')
 		const new_path = next_config_path(curr_path)
 		action_list.push(Actions.setPath('prev_config', curr_path))
 		action_list.push(Actions.setPath('config', new_path))
-		enter_exit_config(silent, action_list, new_path, true)
+		enter_exit_config(new_path, true, action_list, silent)
 	} else {
 		if (verbose) console.log('  switching to in_between')
-		enter_exit_config(silent, action_list, cp, false)
+		enter_exit_config(cp, false, action_list, silent)
 		action_list.push(Actions.setPath('prev_config', query_path('config')))
 		action_list.push(Actions.setPath('config', ['in_between']))
-		enter_exit_config(silent, action_list, ['in_between'], true)
+		enter_exit_config(['in_between'], true, action_list, silent)
 	}
 	if (verbose) console.log(' action_list', action_list)
 	if (do_actions_immediately) {

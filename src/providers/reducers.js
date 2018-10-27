@@ -309,6 +309,22 @@ function event_handling(state = Map({}), action) {
 	}
 }
 
+function timer_started(state = Map({}), action) {
+	switch (action.type) {
+		case AT.SET_TIMER_STARTED:
+			return obj_add_remove_property(state, action.id, action.val)
+		case AT.TOWER_DELETE:
+		case AT.TILE_DELETE:
+		case AT.DOOR_DELETE:
+		case AT.PORTAL_DELETE:
+		case AT.FIVE_FRAME_DELETE:
+		case AT.BAR_DELETE:
+			return obj_add_remove_property(state, action.id, null)
+		default:
+			return state
+	}
+}
+
 function err_box(state = '', action) {
 	switch (action.type) {
 		case AT.SET_ERR_BOX:
@@ -380,6 +396,7 @@ const suujiAppInner = combineReducers({
 
 	// other
 	event_handling,
+	timer_started,
 	err_box,
 	option_values,
 	prop,

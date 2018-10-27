@@ -58,10 +58,10 @@ export function handle_start_button(state) {
 		action_list.push(Actions.setButtonDisplay('start', null))
 		const cp = query_path('config')
 		enter_exit_config(
-			silent,
-			action_list,
 			cp,
 			true,
+			action_list,
+			silent,
 			false,
 			query_prop('config_iteration'),
 			true,

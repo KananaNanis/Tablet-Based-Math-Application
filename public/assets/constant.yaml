@@ -30,7 +30,6 @@ debug_path: [animation_test]
 # debug_path: [add_or_half, as_drag, arg_1_option, doors, level_1]
 # debug_path: [add_or_half, as_drag, arg_1_option, doors, all_done_adding]
 
-
 # debug_path: [add_height, bar_target, arg1_option, level_1]
 # debug_path: [add_height, bar_target, actual_addition, level_1]
 # debug_path: [add_height, door_target, actual_addition, level_1]
@@ -41,7 +40,7 @@ debug_path: [animation_test]
 # debug_path: [proportion, pure_copy, level_2]
 # debug_path: [proportion, option, zoom_down, level_1]
 # debug_path: [proportion, zoom_down, level_1]
-# debug_path:  [proportion, option, bounce, level_3]
+# debug_path: [proportion, option, bounce, level_3]
 # debug_path: [proportion, bounce, level_3]
 # debug_path: [proportion, option, no_bounce, level_4]
 # debug_path: [proportion, no_bounce, level_4]
@@ -78,6 +77,15 @@ debug_path: [animation_test]
 # debug_path: [estimate_names_11_to_14, of_doors, level_1]
 # debug_path: [pure_five_frame, level_1]
 # debug_path: [pure_five_frame, disappearing, level_4]
+# debug_path: [round_2_est_option, 1_to_4, notches]
+# debug_path: [round_2_est_option, 1_to_4, no_notches]
+# debug_path: [round_2_est_button, 1_to_4]
+# debug_path: [round_2_est_option, 6_to_9, notches]
+# debug_path: [round_2_est_option, 6_to_9, no_notches]
+# debug_path: [round_2_est_button, 6_to_9]
+# debug_path: [round_2_est_option, 1_to_9, notches]
+# debug_path: [round_2_est_option, 1_to_9, no_notches]
+# debug_path: [round_2_est_button, 1_to_9]
 # debug_path: [all_done]
 # debug_path: [in_between]
 # starting_config_path: [one_through_five, five_frame, level_1] # P Oct 8
@@ -87,42 +95,36 @@ debug_path: [animation_test]
 # starting_config_path_PCCS: [halves, level_1] # Oct 15, 16
 # starting_config_path_Dom: [pure_five_frame, level_1] # Oct 16
 #starting_config_path_Dom: [measure_height,  animal_height, level_1] # Oct 17
-starting_config_path_PCCS: [identity_function, as_option, bars, level_1] # Oct 22
+#starting_config_path_PCCS: [identity_function, as_option, bars, level_1] # Oct 22
 # starting_config_path_Dom: [identity_function, as_option, bars, level_1] # Oct 22
 # starting_config_path_Dom: [add_or_half, as_option, result_option, half, bars, level_1] # Oct 23
-starting_config_path_Dom: [add_or_half, as_option, result_option, bars, level_1] # Oct 24
+# starting_config_path_Dom: [add_or_half, as_option, result_option, bars, level_1] # Oct 24
+starting_config_path_Dom: [round_2_est_option, 1_to_4, notches] # Oct 26
+starting_config_path_PCCS: [round_2_est_option, 1_to_4, notches] # Oct 26
 
 starting_level_for:  # these levels are for continuous visual estimation
-  m19: [add_or_half, as_option, result_option, half, doors, level_1]
-  m08: [add_or_half, as_drag, result_option, half, doors, level_1]
-  m03: [identity_function, as_option, bars, level_1]
-  m14: [add_or_half, as_option, arg_1_option, half, bars, level_1]
-  m13: [add_or_half, as_option, arg_1_option, half, doors, level_1]
-  m01: [identity_function, as_drag, bars, level_1]
-  m15: [identity_function, as_drag, doors, level_1]
-  m17: [add_or_half, as_drag, result_option, bars, level_1]
-  m16: [add_or_half, as_drag, result_option, bars, level_1]
-  m11: [add_or_half, as_drag, result_option, doors, level_1]
-
-  #m01: [identity_function, as_option, doors, level_1]
-  #m08: [identity_function, as_drag, doors, level_1]
-  m05: [add_or_half, as_option, result_option, half, bars, level_1]
-  #m14: [add_or_half, as_option, result_option, half, bars, level_1]
-  m10: [add_or_half, as_drag, result_option, half, bars, level_1]
-  #m19: [add_or_half, as_drag, result_option, half, bars, level_1]
-  #m13: [add_or_half, as_option, result_option, half, doors, level_1]
-  m02: [add_or_half, as_option, result_option, half, doors, level_1]
-  m06: [add_or_half, as_drag, result_option, half, doors, level_1]
-  #m03: [add_or_half, as_drag, result_option, half, doors, level_1]
-  m18: [add_or_half, as_drag, result_option, half, doors, level_1]
-  m12: [add_or_half, as_option, arg_1_option, half, bars, level_1]
+  Olaf: [two_animals, just_dot]
+  m01: [add_or_half, as_option, result_option, half, doors, level_1]
+  m02: [add_or_half, as_option, arg_1_option, half, doors, level_1]
+  m03: [add_or_half, as_option, result_option, half, doors, level_1]
   m04: [add_or_half, as_option, arg_1_option, half, bars, level_1]
-  #m17: [add_or_half, as_option, arg_1_option, half, bars, level_1]
-  #m15: [add_or_half, as_option, arg_1_option, half, bars, level_1]
-  m20: [add_or_half, as_drag, arg_1_option, half, bars, level_1]
+  m05: [add_or_half, as_drag, arg_1_option, half, bars, level_1]
+  m06: [add_or_half, as_option, result_option, bars, level_1]
   m07: [add_or_half, as_drag, arg_1_option, half, bars, level_1]
-  #m11: [add_or_half, as_option, arg_1_option, half, doors, level_1]
-  #m16: [add_or_half, as_option, result_option, bars, level_1]
+  m08: [add_or_half, as_drag, result_option, half, doors, level_1]
+  m09: [add_or_half, as_drag, arg_1_option, half, doors, level_1]
+  m10: [add_or_half, as_drag, result_option, half, bars, level_1]
+
+  m11: [add_or_half, as_option, arg_2_option, bars, level_1]
+  m12: [add_or_half, as_option, arg_1_option, half, bars, level_1]
+  m13: [add_or_half, as_drag, arg_1_option, half, doors, level_1]
+  m14: [add_or_half, as_option, arg_1_option, half, doors, level_1]
+  m15: [add_or_half, as_option, arg_1_option, half, bars, level_1]
+  m16: [add_or_half, as_drag, result_option, doors, level_1]
+  m17: [add_or_half, as_option, result_option, doors, level_1]
+  m18: [add_or_half, as_option, arg_1_option, half, bars, level_1]
+  m19: [add_or_half, as_drag, result_option, half, doors, level_1]
+  m20: [add_or_half, as_drag, arg_1_option, half, doors, level_1]
 
 jmp_label_1:
   # the following are the levels that have to do with estimating heights 1-18
@@ -298,7 +300,8 @@ animals:
   peg_c3: {height: .3, pixel_width: 190, pixel_height: 150}
   peg_c4: {height: .4, pixel_width: 190, pixel_height: 200}
   peg_c5: {height: .5, pixel_width: 190, pixel_height: 250}
-animal_scale_correction: 0.92
+# animal_scale_correction: 0.92  # for incorrect print
+animal_scale_correction: 1.0
 camels:
   camel_scale: 0.2
   camel_offsets: [50, -10]
@@ -326,7 +329,7 @@ event_handling_types: [target, comparison_source, correctness,
   event_move, top_right_text, show_camel, slide_portal,
   return_to_top, star_policy, touch_reveals_button,
   just_proportion, create_tower_by_height,
-  just_jump,
+  just_yaml_event, on_down, on_up,
   move, arg_1, arg_2, result]
 position_modifiers: [left, right, top, bottom,
   left_from_right, right_from_left, top_from_bottom,

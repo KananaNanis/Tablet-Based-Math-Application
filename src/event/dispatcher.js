@@ -11,11 +11,11 @@ import {
 	query_option_values,
 	query_position_of,
 } from '../providers/query_store'
-import {query_top_block, query_tower_height} from '../providers/query_tower'
-import {get_button_geoms_for} from '../components/Keypad'
-import {global_workspace_height} from '../components/Workspace'
-import {doAction, global_sound, global_constant} from '../App'
-import {transition_to_next_config} from '../providers/change_config'
+import { query_top_block, query_tower_height } from '../providers/query_tower'
+import { get_button_geoms_for } from '../components/Keypad'
+import { global_workspace_height } from '../components/Workspace'
+import { doAction, global_sound, global_constant } from '../App'
+import { transition_to_next_config } from '../providers/change_config'
 import {
 	pointIsInRectangle,
 	set_primary_height,
@@ -32,7 +32,7 @@ import {
 	handle_options,
 	handle_create_tower_by_height,
 } from './handlers'
-import {correct_next_button} from './correctness'
+import { correct_next_button } from './correctness'
 import {
 	extract_handle_position,
 	is_blinking,
@@ -48,6 +48,7 @@ import {
 	landmark_location,
 	with_diameter_offset,
 } from '../components/Tile'
+import { store_config_modify } from '../providers/enter_exit';
 
 function perhaps_reveal_button() {
 	const trb = query_event('touch_reveals_button')
@@ -76,13 +77,12 @@ export function touch_dispatcher(state, x, y, touchID) {
 		//console.log('option_values' + query_option_values())
 		if (query_option_values()) return handle_options(state, x, y, touchID)
 	}
-	if (query_event('just_jump')) {
-		if ('down' === state) {
-			console.log('just_jump liftoff')
-			doAction.setAnimInfo('tile_1', {bottom: [0, 100], duration: 1000})
-		} else if ('up' === state) {
-			console.log('just_jump descend')
-			doAction.setAnimInfo('tile_1', {bottom: [100, 0], duration: 1000})
+	if (query_event('just_yaml_event')) {
+		if ('down' === state && query_event('on_down')) {
+			store_config_modify(query_event('on_down').modify, true)
+		}
+		if ('up' === state && query_event('on_up')) {
+			store_config_modify(query_event('on_up').modify, true)
 		}
 		return
 	}
@@ -173,6 +173,7 @@ export function touch_dispatcher(state, x, y, touchID) {
      }
       */
 		} else if ('move_dot' === move || 'move_handle_dot' === move) {
+			// console.log('  move', move)
 			const tile_tgt = 'tile_2'
 			const pos = query_position_of(tile_tgt)
 			let xp = x - pos.get(0)
@@ -192,6 +193,7 @@ export function touch_dispatcher(state, x, y, touchID) {
 			yp = Math.max(0, yp)
 			yp = Math.min(height, yp)
 			if ('move_dot' === move) {
+				// console.log('  adding extra dot for', tile_tgt, 'at', xp, yp)
 				doAction.addObjMisc(tile_tgt, 'extra_dot', [xp, yp])
 			} else {
 				//doAction.addObjMisc(tgt, 'blink', null)
@@ -335,8 +337,8 @@ export function touch_dispatcher(state, x, y, touchID) {
 							// doAction.addObjMisc(tgt, 'handle_opacity', null)
 							if ('touch_image' === move) {
 								//doAction.addObjMisc(arg_2, 'blink', 0.5)
-								doAction.setAnimInfo(arg_2, {blink: 0.5})
-							} else doAction.setAnimInfo(tgt, {handle_blink: 0})
+								doAction.setAnimInfo(arg_2, { blink: 0.5 })
+							} else doAction.setAnimInfo(tgt, { handle_blink: 0 })
 							doAction.setButtonDisplay('submit', null)
 							if (query_name_of(tgt).size > 1) {
 								//console.log('hide result door')
