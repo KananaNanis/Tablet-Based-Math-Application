@@ -99,8 +99,20 @@ export function addObjMisc(id, key, value) {
 	return {type: AT.ADD_OBJ_MISC, id, key, value: fromJS(value)}
 }
 
-export function setAnimInfo(id, anim_info) {
-	return {type: AT.SET_ANIM_INFO, id, anim_info: fromJS(anim_info)}
+let anim_info_counter = 0
+export function addAnimInfo(id, anim_info) {
+	if ('object' === typeof anim_info && null !== anim_info) {
+		anim_info_counter++
+		anim_info.anim_info_counter = anim_info_counter
+	}
+	//return {type: AT.ADD_ANIM_INFO, id, anim_info: fromJS(anim_info)}
+	// not converting anim_info to immutable yet, to allow easier update:
+	return {type: AT.ADD_ANIM_INFO, id, anim_info}
+	//return {type: AT.ADD_ANIM_INFO, id, key, value: fromJS(value)}
+}
+
+export function clearAnimInfo(id) {
+	return {type: AT.CLEAR_ANIM_INFO, id}
 }
 
 export function towerSetWidth(id, width) {

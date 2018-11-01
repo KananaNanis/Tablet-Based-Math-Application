@@ -22,14 +22,15 @@ import {
 import {update_keypad_button_visibility} from '../event/utils'
 import {landmark_location} from '../components/Tile'
 import {List, fromJS} from 'immutable'
+import {do_batched_actions} from './reducers'
 
 function do_timed_action(id, key, val) {
 	// handle the following:
 	// appear_after: 2000,
 	if ('zoom_anim' === key) {
-		//console.log('SETTING ZOOM')
-		let anim_info = {...val, zoom: true}
-		doAction.setAnimInfo(id, anim_info)
+		console.error('zoom_anim needs to be re-implemented')
+		// let anim_info = { ...val, zoom: true }
+		// doAction.addAnimInfo(id, anim_info)
 	} else {
 		let delay = val
 		if ('appear_after' === key) doAction.addObjStyle(id, 'opacity', 0)
@@ -50,11 +51,125 @@ export function remove_on_exit(lis, action_list) {
 	}
 }
 
+function remap_id(id0, remap_id_table) {
+	if (remap_id_table[id0]) return remap_id_table[id0]
+	return id0
+}
+
+export function store_config_modify(
+	c,
+	enter,
+	action_list = false,
+	verbose = false,
+	gen_vars = {},
+	remap_id_table = {},
+) {
+	if (verbose) console.log('store_config_modify c', c)
+	let do_actions_immediately = false
+	if (!action_list) {
+		action_list = []
+		do_actions_immediately = true
+	}
+	for (const id0 in c) {
+		if (c.hasOwnProperty(id0)) {
+			const id = remap_id(id0, remap_id_table)
+			// console.log('  modify id', id)
+			for (const key in c[id0]) {
+				// console.log('   key', key)
+				if (['appear_after', 'zoom_anim', 'unzoom_anim'].includes(key)) {
+					if (enter) {
+						const val = c[id0][key]
+						let new_val = val
+						if (key.endsWith('_anim')) {
+							new_val = {}
+							for (const key2 in val) {
+								if (val.hasOwnProperty(key2)) {
+									let val2 = val[key2]
+									//console.log('val2', val2)
+									if (gen_vars.hasOwnProperty(val2)) val2 = gen_vars[val2]
+									new_val[key2] = val2
+								}
+							}
+						}
+						do_timed_action(id, key, new_val)
+					}
+				} else if ('position' === key) {
+					if (['big_op', 'big_paren'].includes(id)) {
+						const pos = as_position(c[id0][key])
+						action_list.push(Actions.setPosition(id, enter ? pos : null))
+					}
+				} else if ('style' === key) {
+					let props = c[id0][key]
+					for (const key2 in props) {
+						if (props.hasOwnProperty(key2)) {
+							action_list.push(
+								Actions.addObjStyle(id, key2, enter ? props[key2] : null),
+							)
+						}
+					}
+				} else if ('anim_info' === key) {
+					const info = c[id0][key]
+					action_list.push(Actions.addAnimInfo(id, enter ? info : null))
+					/*  figuring out what anim_info means is done in the reducer now
+					if (null === info) {
+						action_list.push(Actions.clearAnimInfo(id))
+					} else {
+						for (const key2 in info) {
+							if (info.hasOwnProperty(key2)) {
+								action_list.push(
+									Actions.addAnimInfo(id, key2, enter ? info[key2] : null),
+								)
+							}
+						}
+					}
+					*/
+				} else if ('tower_style' === key) {
+					let props = c[id0][key]
+					for (const key2 in props) {
+						if (props.hasOwnProperty(key2)) {
+							action_list.push(
+								Actions.towerAddStyle(id, key2, enter ? props[key2] : null),
+							)
+						}
+					}
+				} else if ('misc' === key) {
+					let props = c[id0][key]
+					for (const key2 in props) {
+						if (props.hasOwnProperty(key2)) {
+							let val2 = enter ? props[key2] : null
+							if (gen_vars.hasOwnProperty(val2)) {
+								val2 = gen_vars[val2]
+								//console.log('misc id', id, 'key2', key2, 'val2', val2)
+							}
+							action_list.push(Actions.addObjMisc(id, key2, val2))
+						}
+					}
+				} else if (id.startsWith('tower_') || id.startsWith('tile_')) {
+					if ('width' === key) {
+						if (enter) {
+							let val = c[id0][key]
+							if ('string' === typeof val && val.endsWith('vw')) {
+								val = (global_screen_width * Number(val.slice(0, -2))) / 100
+							}
+							action_list.push(Actions.towerSetWidth(id, val))
+						} else action_list.push(Actions.towerSetWidth(id, null))
+					} else if ('overflow' === key) {
+						action_list.push(
+							Actions.towerSetOverflow(id, enter ? c[id0][key] : null),
+						)
+					}
+				}
+			}
+		}
+	}
+	if (do_actions_immediately) do_batched_actions(action_list)
+}
+
 export function enter_exit_config(
-	silent,
-	action_list,
 	cp,
 	enter,
+	action_list,
+	silent,
 	verbose,
 	curr_config_iter,
 	use_delay = false,
@@ -122,15 +237,11 @@ export function enter_exit_config(
 		remap_id_table = config['remap_ids']
 		console.log('remap_id_table', remap_id_table)
 	}
-	function remap_id(id0) {
-		if (remap_id_table[id0]) return remap_id_table[id0]
-		return id0
-	}
 	if (config['create']) {
 		const c = config['create']
 		for (const id0 in c) {
 			if (c.hasOwnProperty(id0)) {
-				const id = remap_id(id0)
+				const id = remap_id(id0, remap_id_table)
 				if ('button_submit' === id) {
 					action_list.push(
 						Actions.setButtonDisplay('submit', enter ? true : null),
@@ -296,86 +407,14 @@ export function enter_exit_config(
 		}
 	}
 	if (config['modify']) {
-		const c = config['modify']
-		for (const id0 in c) {
-			if (c.hasOwnProperty(id0)) {
-				const id = remap_id(id0)
-				// console.log('  modify id', id)
-				for (const key in c[id0]) {
-					// console.log('   key', key)
-					if (['appear_after', 'zoom_anim', 'unzoom_anim'].includes(key)) {
-						if (enter) {
-							const val = c[id0][key]
-							let new_val = val
-							if (key.endsWith('_anim')) {
-								new_val = {}
-								for (const key2 in val) {
-									if (val.hasOwnProperty(key2)) {
-										let val2 = val[key2]
-										//console.log('val2', val2)
-										if (gen_vars.hasOwnProperty(val2)) val2 = gen_vars[val2]
-										new_val[key2] = val2
-									}
-								}
-							}
-							do_timed_action(id, key, new_val)
-						}
-					} else if ('position' === key) {
-						if (['big_op', 'big_paren'].includes(id)) {
-							const pos = as_position(c[id0][key])
-							action_list.push(Actions.setPosition(id, enter ? pos : null))
-						}
-					} else if ('style' === key) {
-						let props = c[id0][key]
-						for (const key2 in props) {
-							if (props.hasOwnProperty(key2)) {
-								action_list.push(
-									Actions.addObjStyle(id, key2, enter ? props[key2] : null),
-								)
-							}
-						}
-					} else if ('anim_info' === key) {
-						const info = c[id0][key]
-						action_list.push(Actions.setAnimInfo(id, enter ? info : null))
-					} else if ('tower_style' === key) {
-						let props = c[id0][key]
-						for (const key2 in props) {
-							if (props.hasOwnProperty(key2)) {
-								action_list.push(
-									Actions.towerAddStyle(id, key2, enter ? props[key2] : null),
-								)
-							}
-						}
-					} else if ('misc' === key) {
-						let props = c[id0][key]
-						for (const key2 in props) {
-							if (props.hasOwnProperty(key2)) {
-								let val2 = enter ? props[key2] : null
-								if (gen_vars.hasOwnProperty(val2)) {
-									val2 = gen_vars[val2]
-									//console.log('misc id', id, 'key2', key2, 'val2', val2)
-								}
-								action_list.push(Actions.addObjMisc(id, key2, val2))
-							}
-						}
-					} else if (id.startsWith('tower_') || id.startsWith('tile_')) {
-						if ('width' === key) {
-							if (enter) {
-								let val = c[id0][key]
-								if ('string' === typeof val && val.endsWith('vw')) {
-									val = (global_screen_width * Number(val.slice(0, -2))) / 100
-								}
-								action_list.push(Actions.towerSetWidth(id, val))
-							} else action_list.push(Actions.towerSetWidth(id, null))
-						} else if ('overflow' === key) {
-							action_list.push(
-								Actions.towerSetOverflow(id, enter ? c[id0][key] : null),
-							)
-						}
-					}
-				}
-			}
-		}
+		store_config_modify(
+			config['modify'],
+			enter,
+			action_list,
+			verbose,
+			gen_vars,
+			remap_id_table,
+		)
 	}
 	if (config['event_handling']) {
 		const c = config['event_handling']
@@ -383,7 +422,7 @@ export function enter_exit_config(
 			if (c.hasOwnProperty(key)) {
 				// console.log('event_handling key', key, 'val', c[key])
 				const val0 = c[key]
-				const val = remap_id(val0)
+				const val = remap_id(val0, remap_id_table)
 				action_list.push(Actions.setEventHandlingParam(key, enter ? val : null))
 			}
 		}
@@ -394,7 +433,7 @@ export function enter_exit_config(
 		const c = config['misc']
 		for (const key0 in c) {
 			if (c.hasOwnProperty(key0)) {
-				const key = remap_id(key0)
+				const key = remap_id(key0, remap_id_table)
 				if ('config_iteration' === key) {
 					let iter_val = global_constant.debug_mode
 						? global_constant.num_exercises_for_debugging
@@ -405,16 +444,19 @@ export function enter_exit_config(
 					// this attribute is special:  it is not erased at the end!
 					if (enter) {
 						const iter = query_prop('goto_iteration')
+						let goto_iter = global_constant.debug_mode
+							? global_constant.num_exercises_for_debugging
+							: c[key0][0]
 						if (!iter || !(iter > 0)) {
 							console.log(
 								'iter was',
 								iter,
 								'setting goto iteration',
-								c[key0][0],
+								goto_iter,
 								'path',
 								c[key0][1],
 							)
-							action_list.push(Actions.setProp('goto_iteration', c[key0][0]))
+							action_list.push(Actions.setProp('goto_iteration', goto_iter))
 						} else {
 							console.log('skipping setting iteration, iter', iter)
 						}
@@ -464,6 +506,11 @@ export function enter_exit_config(
 				} else if ('blank_between_exercises' === key) {
 					action_list.push(Actions.setProp(key, !enter ? c[key0] : null))
 					//console.log('blank', query_prop('blank_between_exercises'))
+				} else if ('new_scale_factor' === key) {
+					doAction.setProp(
+						'scale_factor',
+						enter ? c[key0] : global_constant.scale_factor_from_yaml,
+					)
 				} else if ('remove_on_exit' === key && !enter) {
 					//console.log('remove_on_exit', c[key0])
 					remove_on_exit(c[key0], action_list)
@@ -497,10 +544,10 @@ export function enter_exit_config(
 			// read a second config, for the suffix specifically
 			const use_suffix = true
 			enter_exit_config(
-				silent,
-				action_list,
 				sp,
 				enter,
+				action_list,
+				silent,
 				verbose,
 				curr_config_iter,
 				use_delay,

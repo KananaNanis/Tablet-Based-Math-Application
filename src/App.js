@@ -17,7 +17,7 @@ import Sound from './assets/sound'
 import * as Actions from './providers/actions'
 import PrintFigure from './components/PrintFigure'
 import {as_position, print_all_paths} from './providers/change_config'
-import {query_path, query_test} from './providers/query_store'
+import {query_path, query_test, query_prop} from './providers/query_store'
 import {get_keypad_width_height} from './components/Keypad'
 import {enter_exit_config} from './providers/enter_exit'
 import {do_batched_actions} from './providers/reducers'
@@ -205,26 +205,35 @@ export async function load_config_tree(appObj) {
 		doAction.setProp('scale_factor', global_constant.scale_factor_from_yaml)
 		//get_config(path)
 
-		const verbose = false
-		let action_list = [],
-			silent = false
-		enter_exit_config(silent, action_list, path, true, verbose)
+		let enter = true,
+			action_list = []
+		enter_exit_config(path, enter, action_list)
 		do_batched_actions(action_list)
-		const show_starting_config = false
-		if (show_starting_config) query_test()
+		if (query_prop('scale_factor') !== 520) {
+			appObj.setState(_ => {
+				return {add_scaling_border: true}
+			})
+		}
 
 		// here is a place to try code that should run just once,
 		//   after the config has been loaded
 
+		// console.log(height2tower_name(473.283))
+		//doAction.towerSetBlockOpacity('tower_1', 1, .5)
 		//doAction.addObjStyle('door_3', 'opacity', .5)
 		/*
 		window.setTimeout(function() {
-		  doAction.setAnimInfo('tile_1', null)
+		  //doAction.clearAnimInfo('tile_1')
 		  window.setTimeout(function() {
-		    doAction.setAnimInfo('tile_1', {duration: 1000, bottom: [0, 200]})
-			}, 1000)
-		}, 2000)
+		    doAction.addAnimInfo('tile_1', {duration: 500, bottom: [0, 200]})
+		  	window.setTimeout(function() {
+		    	doAction.addAnimInfo('tile_1', {duration: 200, bottom: [100, 400]})
+				}, 250)
+			}, 500)
+		}, 500)
 		*/
+		const show_starting_config = false
+		if (show_starting_config) query_test()
 
 		const printPDF = false // for creating worksheets
 		if (printPDF) {
@@ -265,7 +274,7 @@ export default class App extends React.Component {
 	}
 	render() {
 		//console.log(global_screen_height)
-		let tablet_border
+		let tablet_border, scaling_border
 		if (this.state.add_tablet_border) {
 			tablet_border = (
 				<View
@@ -274,6 +283,19 @@ export default class App extends React.Component {
 						{
 							width: global_constant.tablet_width,
 							height: global_constant.tablet_height,
+						},
+					]}
+				/>
+			)
+		}
+		if (this.state.add_scaling_border) {
+			scaling_border = (
+				<View
+					style={[
+						styles.scaling_border,
+						{
+							width: global_screen_width,
+							height: global_screen_height,
 						},
 					]}
 				/>
@@ -309,12 +331,14 @@ export default class App extends React.Component {
 				/>
 				<WorkspaceContainer />
 				{tablet_border}
+				{scaling_border}
 			</View>
 		)
 	}
 }
 
 const grassColor = 'lightgreen'
+const scalingBorderColor = '#43464b'
 const tabletBorderColor = 'purple'
 const styles = StyleSheet.create({
 	root: {
@@ -332,5 +356,10 @@ const styles = StyleSheet.create({
 		// backgroundColor: tabletBorderColor,
 		borderColor: tabletBorderColor,
 		borderWidth: 1,
+	},
+	scaling_border: {
+		position: 'absolute',
+		borderColor: scalingBorderColor,
+		borderWidth: 10,
 	},
 })

@@ -1,6 +1,7 @@
 import {
 	query_prop,
 	query_name_of,
+	query_position_of,
 	query_obj_misc,
 } from '../providers/query_store'
 import {doAction, global_constant} from '../App'
@@ -27,6 +28,65 @@ export function pointIsInRectangle(point, geom, offset = [0, 0]) {
 		geom.position[1] + offset[1] <= point[1] &&
 		point[1] <= geom.position[1] + offset[1] + geom.height
 	)
+}
+
+export function point_distance_to_rectangle(point, geom, offset = [0, 0]) {
+	let xdelta = 0,
+		ydelta = 0
+	if (point[0] < geom.position[0] + offset[0]) {
+		xdelta = geom.position[0] + offset[0] - point[0]
+	} else if (point[0] > geom.position[0] + offset[0] + geom.width) {
+		xdelta = point[0] - (geom.position[0] + offset[0] + geom.width)
+	}
+
+	if (point[1] < geom.position[1] + offset[1]) {
+		ydelta = geom.position[1] + offset[1] - point[1]
+	} else if (point[1] > geom.position[1] + offset[1] + geom.height) {
+		ydelta = point[1] - (geom.position[1] + offset[1] + geom.height)
+	}
+
+	let d = 0
+	if (xdelta === 0) d = ydelta
+	else {
+		if (ydelta === 0) d = xdelta
+		else {
+			d = Math.sqrt(xdelta * xdelta + ydelta * ydelta)
+		}
+	}
+	console.log(
+		'point_distance_to_rectangle point',
+		point,
+		'geom',
+		geom,
+		'xdelta',
+		xdelta,
+		'ydelta',
+		ydelta,
+		'd',
+		d,
+	)
+	return d
+}
+
+export function get_bbox(id) {
+	let width,
+		height,
+		position = query_position_of(id).toJS()
+	let name = query_name_of(id).toJS()
+	const scale_factor = query_prop('scale_factor')
+	if (id.startsWith('bar_')) {
+		height = name * scale_factor
+		width = global_constant.default_bar_width
+	} else {
+		console.error('Error in distance_to_prim:  unrecognized prim', id)
+		return 1e10
+	}
+	const bbox = {position, width, height}
+	return bbox
+}
+
+export function distance_to_prim(x, y, id) {
+	return point_distance_to_rectangle([x, y], get_bbox(id))
 }
 
 export function approx_equal(x, y, thresh = 1e-8) {

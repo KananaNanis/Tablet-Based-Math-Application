@@ -19,6 +19,46 @@ export function get_is_fiver_from_group(group) {
 	return n >= 5 ? 1 : 0
 }
 
+export function make_group_from(size, is_fiver) {
+	const group = (is_fiver ? 5 : 1) * 10 ** size
+	return group
+}
+
+export function condense_groups_of(name) {
+	let res = [],
+		num_skipped = 0
+	for (let i = 0; i < name.length; ++i) {
+		const size = get_block_size_from_group(name[i])
+		const is_fiver = get_is_fiver_from_group(name[i])
+		const how_many = get_how_many_from_group(name[i])
+		if (how_many !== 1 && how_many !== 5) {
+			console.error(
+				'Error in condense_groups_of:  does not handle values other than singletons and fivers!',
+			)
+		}
+		if (i + 1 < name.length) {
+			const next_size = get_block_size_from_group(name[i + 1])
+			//const next_is_fiver = get_is_fiver_from_group(name[i + 1])
+			if (!is_fiver && size === next_size) {
+				// condense these
+				++num_skipped
+				if (num_skipped === 4) {
+					// too many!
+					res.push(num_skipped * name[i])
+					num_skipped = 0
+				}
+			} else {
+				res.push((num_skipped + 1) * name[i])
+				num_skipped = 0
+			}
+		} else {
+			res.push((num_skipped + 1) * name[i])
+			num_skipped = 0
+		}
+	}
+	return res
+}
+
 export function get_fiver_incomplete_from_group(group) {
 	const n = Math.round(group / 10 ** get_block_size_from_group(group))
 	return n > 5
@@ -42,7 +82,7 @@ export function remove_block_from_name(name0) {
 	return fromJS(name)
 }
 
-export function name_is_in_standard_form(name0) {
+export function name_is_in_standard_form(name0, allow_non_standard) {
 	let res = true
 	let name = name0.toJS()
 	let reason = ''
@@ -51,9 +91,11 @@ export function name_is_in_standard_form(name0) {
 		let how_many1 = get_how_many_from_group(group1)
 		let is_fiver1 = get_is_fiver_from_group(group1)
 		if (!is_fiver1 && how_many1 > 4) {
-			res = false
-			reason = 'more than 4'
-			break
+			if (!allow_non_standard) {
+				res = false
+				reason = 'more than 4'
+				break
+			}
 		}
 		if (0 === i) continue
 		//console.log('i is now', i)
@@ -67,8 +109,13 @@ export function name_is_in_standard_form(name0) {
 		}
 		if (size0 === size1) {
 			let is_fiver0 = get_is_fiver_from_group(group0)
-			if (!is_fiver0 || is_fiver1) {
-				//console.log('group01', group0, group1, 'is_fiver01', is_fiver0, is_fiver1)
+			if (
+				allow_non_standard &&
+				((is_fiver0 && is_fiver1) || (!is_fiver0 && !is_fiver1))
+			) {
+				// allow this
+			} else if (!is_fiver0 || is_fiver1) {
+				// console.log('group01', group0, group1, 'is_fiver01', is_fiver0, is_fiver1)
 				res = false
 				reason = 'fiverness'
 				break
@@ -80,8 +127,8 @@ export function name_is_in_standard_form(name0) {
 	return res
 }
 
-export function is_standard_tower(tgt) {
-	return name_is_in_standard_form(query_tower_name(tgt))
+export function is_standard_tower(tgt, allow_non_standard) {
+	return name_is_in_standard_form(query_tower_name(tgt), allow_non_standard)
 }
 
 export function add_block_to_name(new_size, new_is_fiver, name0) {
@@ -119,7 +166,9 @@ const Block = ({
 	text_style,
 	text_content,
 	just_grey,
+	scale_factor,
 }) => {
+	// console.log('Block img_name', img_name, 'view_style', view_style, 'radius_style', radius_style, 'just_grey', just_grey)
 	if ('outline' === just_grey) {
 		return (
 			<View
@@ -148,7 +197,18 @@ const Block = ({
 	}
 	let txt = null
 	if ('|' === text_content) {
-		txt = <View style={styles.vert_bar} />
+		txt = (
+			<View
+				style={[
+					styles.vert_bar,
+					{
+						left: scale_factor / 17,
+						width: scale_factor / 52,
+						height: scale_factor * 0.98,
+					},
+				]}
+			/>
+		)
 	} else {
 		txt = <Text style={text_style}>{text_content}</Text>
 	}
@@ -176,11 +236,8 @@ const styles = StyleSheet.create({
 	},
 	vert_bar: {
 		position: 'absolute',
-		left: 30,
 		bottom: 0,
 		backgroundColor: blue,
-		width: 10,
-		height: 520,
 	},
 })
 

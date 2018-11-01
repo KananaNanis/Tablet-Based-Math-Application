@@ -11,7 +11,6 @@ import {
 	//query_name_of,
 } from '../providers/query_store'
 import {height2tower_name} from '../providers/query_tower'
-//import FiveFrame from './FiveFrame';
 
 export function add_offset(pos, offset_x = 0) {
 	return [pos.get(0) + offset_x, pos.get(1)]

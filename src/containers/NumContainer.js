@@ -41,6 +41,8 @@ const mapStateToProps = (state, ownProps) => {
 			name,
 			'misc',
 			misc ? misc.toJS() : null,
+			'block_opacity',
+			state.getIn(['block_opacity', id]),
 		)
 	}
 

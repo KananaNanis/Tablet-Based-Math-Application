@@ -11,11 +11,11 @@ class Door extends React.Component {
 	state = {
 		slideAnim: new Animated.Value(0),
 
-		time_value: new Animated.Value(0),
+		timer: Anim.new_timer(),
 	}
 
 	componentDidMount() {
-		Anim.init_anim(this.props.anim_info, this.state.time_value)
+		Anim.init_anim(this.props.id, this.props.anim_info, this.state.timer)
 	}
 
 	componentDidUpdate(prev_props) {
@@ -26,7 +26,7 @@ class Door extends React.Component {
 			let {anim_info} = this.props
 			//console.log('clear_anim_info', anim_info)
 			if (f.finished && anim_info) {
-				doAction.setAnimInfo(id, null)
+				doAction.clearAnimInfo(id)
 			}
 		}
 		if (anim_info && anim_info.hasOwnProperty('zoom')) {
@@ -63,8 +63,9 @@ class Door extends React.Component {
     }
     */
 		Anim.update_anim(
+			this.props.id,
 			this.props.anim_info,
-			this.state.time_value,
+			this.state.timer,
 			prev_props.anim_info,
 		)
 	}
@@ -87,10 +88,11 @@ class Door extends React.Component {
 
 		let animated_style = {},
 			handle_animated_style = {}
-		if (Anim.has_timer(anim_info)) {
+		if (anim_info) {
 			Anim.interpolate_anim_attr(
+				id,
 				anim_info,
-				this.state.time_value,
+				this.state.timer,
 				animated_style,
 				handle_animated_style,
 			)

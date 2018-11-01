@@ -7,7 +7,7 @@ import ErrBox from './ErrBox'
 import CamelContainer from '../containers/CamelContainer'
 import OptionBackground from '../components/OptionBackground'
 import {global_constant, image_location} from '../App'
-import {query_event, query_arg} from '../providers/query_store'
+import {query_event, query_arg, query_prop} from '../providers/query_store'
 import {
 	render_nums,
 	render_tiles,
@@ -66,6 +66,7 @@ const Workspace = ({
 	//console.log('Workspace config_path', config_path.toJS())
 	//console.log('Workspace five_frame_ids', five_frame_ids.toJS())
 	//console.log('Workspace bar_ids', bar_ids.toJS())
+	const is_scaled = 520 !== query_prop('scale_factor')
 	const nums = render_nums(tower_ids)
 	const tiles = render_tiles(tile_ids)
 	const doors = render_doors(door_ids)
@@ -87,12 +88,15 @@ const Workspace = ({
 	const add_username = true
 	if (add_username) {
 		++key
+		let top = 0
+		if (is_scaled) top += 10
 		misc_below.push(
 			<Text
 				key={key}
 				style={[
 					styles.username,
 					{
+						top,
 						left: global_screen_width / 2,
 					},
 				]}
@@ -181,12 +185,14 @@ const Workspace = ({
 	}
 	if (top_right_text) {
 		++key
+		let top = 0
+		if (is_scaled) top += 10
 		misc_below.push(
 			<Text
 				key={key}
 				style={[
 					styles.top_right_text,
-					{right: global_constant.top_right_text_offset},
+					{top, right: global_constant.top_right_text_offset},
 				]}
 			>
 				{top_right_text}
@@ -195,9 +201,14 @@ const Workspace = ({
 	}
 	if (top_left_text) {
 		++key
-		const zero = 0
+		let top = 0
+		let left = 0
+		if (is_scaled) {
+			top += 10
+			left += 10
+		}
 		misc_below.push(
-			<Text key={key} style={[styles.top_left_text, {left: zero}]}>
+			<Text key={key} style={[styles.top_left_text, {top, left}]}>
 				{top_left_text}
 			</Text>,
 		)
@@ -303,16 +314,17 @@ const Workspace = ({
 	}
 	for (let i = 0; i < num_stars; ++i) {
 		++key
+		let top = 0
+		let right = 5 + 25 * i
+		if (is_scaled) {
+			top += 10
+			right += 8
+		}
 		misc_below.push(
 			<Image
 				key={key}
 				source={image_location('star')}
-				style={[
-					styles.image_default,
-					{
-						right: 5 + 25 * i,
-					},
-				]}
+				style={[styles.image_default, {top, right}]}
 			/>,
 		)
 		//source={require('img/star.png')}

@@ -13,32 +13,33 @@ const FiveFrameSquare = ({empty, id}) => {
 
 class FiveFrame extends React.Component {
 	state = {
-		time_value: new Animated.Value(0),
+		timer: Anim.new_timer(),
 	}
 
 	componentDidMount() {
-		Anim.init_anim(this.props.anim_info, this.state.time_value)
+		Anim.init_anim(this.props.id, this.props.anim_info, this.state.timer)
 	}
 
 	componentDidUpdate(prev_props) {
-		// console.log('componentDidUpdate prev_props', prev_props, 'props', this.props)
 		Anim.update_anim(
+			this.props.id,
 			this.props.anim_info,
-			this.state.time_value,
+			this.state.timer,
 			prev_props.anim_info,
 		)
 	}
 
 	render() {
-		let {name, position, style, anim_info, misc} = this.props
+		let {id, name, position, style, anim_info, misc} = this.props
 		const extra_scale =
 			misc && 'undefined' !== typeof misc.extra_scale ? misc.extra_scale : 1
 
 		let animated_style = {}
-		if (Anim.has_timer(anim_info)) {
+		if (anim_info) {
 			Anim.interpolate_anim_attr(
+				id,
 				anim_info,
-				this.state.time_value,
+				this.state.timer,
 				animated_style,
 			)
 		}

@@ -30,6 +30,7 @@ import {
 	show_thin_height_2,
 } from './extract'
 import {landmark_location} from '../components/Tile'
+import {name_is_in_standard_form} from '../components/Block'
 
 export function correct_next_button() {
 	const verbose = false
@@ -117,9 +118,9 @@ export function show_err_with_delay(
 		if (query_event('just_proportion')) doAction.setName(result, [f3])
 		else doAction.setName(result, [f3, f3])
 		const correct = f1 * f2
-		doAction.setAnimInfo(result, {slide_target: correct, slide_duration: 200})
+		doAction.addAnimInfo(result, {slide_target: correct, slide_duration: 200})
 		if (arg_1_name.size <= 1 || arg_1_name.get(0) !== arg_1_name.get(1)) {
-			doAction.setAnimInfo(arg_1, {slide_target: f1, slide_duration: 200})
+			doAction.addAnimInfo(arg_1, {slide_target: f1, slide_duration: 200})
 			window.setTimeout(function() {
 				show_thin_height(arg_1, arg_2, result)
 			}, 400)
@@ -144,7 +145,7 @@ export function show_err_with_delay(
 	//console.log('skip_slide_down', query_prop('skip_slide_down'))
 	if (!query_prop('skip_slide_down')) {
 		if (arg_1_name.size <= 1 || arg_1_name.get(0) !== arg_1_name.get(1)) {
-			doAction.setAnimInfo(arg_1, {slide_target: f1, slide_duration: 500})
+			doAction.addAnimInfo(arg_1, {slide_target: f1, slide_duration: 500})
 			err_box_delay = 1500
 		}
 	}
@@ -169,7 +170,7 @@ export function show_err_with_delay(
 		if (-1 === stars) {
 			// slide back
 			window.setTimeout(function() {
-				doAction.setAnimInfo(arg_1, {slide_target: 1, slide_duration: 500})
+				doAction.addAnimInfo(arg_1, {slide_target: 1, slide_duration: 500})
 			}, 1500)
 		}
 	}, err_box_delay)
@@ -232,6 +233,16 @@ export function is_correct() {
 			name2,
 			name1,
 		])
+	} else if ('is_standardized' === how) {
+		let name1 = query_tower_name(tgt)
+		if (name_is_in_standard_form(name1)) delay = 0
+		doAction.addLogEntry(curr_time, [
+			with_suffix(cp),
+			'is_correct',
+			0 === delay,
+			name1.toJS(),
+			'standardized?',
+		])
 	} else if ('near_height' === how) {
 		const arg_1 = query_arg(1)
 		const arg_2 = query_arg(2)
@@ -244,11 +255,11 @@ export function is_correct() {
 			if (3 === stars) {
 				// close enough... don't show the box
 				/*
-        doAction.setAnimInfo(arg_1, { slide_target: f1, slide_duration: 100 })
+        doAction.addAnimInfo(arg_1, { slide_target: f1, slide_duration: 100 })
         window.setTimeout(function () {
-          doAction.setAnimInfo(arg_1, { slide_target: 1, slide_duration: 500 })
+          doAction.addAnimInfo(arg_1, { slide_target: 1, slide_duration: 500 })
           window.setTimeout(function () {
-            doAction.setAnimInfo(arg_1, { slide_target: f1, slide_duration: 500 })
+            doAction.addAnimInfo(arg_1, { slide_target: f1, slide_duration: 500 })
             window.setTimeout(function () {
               show_thin_height(arg_1, arg_2, result)
             }, 1000)
@@ -273,7 +284,7 @@ export function is_correct() {
 					}
 					if (tgt.startsWith('door_')) {
 						doAction.setName(tgt, [curr, curr])
-						doAction.setAnimInfo(tgt, {
+						doAction.addAnimInfo(tgt, {
 							slide_target: desired_val,
 							slide_duration: duration,
 						})
@@ -300,20 +311,20 @@ export function is_correct() {
 					const scale_factor = query_prop('scale_factor')
 					const hide_big_op = false
 					if (hide_big_op) {
-						doAction.setAnimInfo('big_op', {
+						doAction.addAnimInfo('big_op', {
 							opacity: [1, 0],
 							duration: 500,
 						})
 					}
 					/*
-					doAction.setAnimInfo(arg_1, {
+					doAction.addAnimInfo(arg_1, {
 						left: [10, position[0] - 58],
 						duration: 500
 					})
 					*/
 					const is_half = arg_2.startsWith('five_frame')
 					if (!is_half) {
-						doAction.setAnimInfo(arg_2, {
+						doAction.addAnimInfo(arg_2, {
 							bottom: [0, f1 * scale_factor],
 							duration: 500,
 						})
@@ -323,14 +334,14 @@ export function is_correct() {
 						doAction.setErrBox({position, width, height})
 						if (hide_big_op) {
 							doAction.addObjStyle('big_op', 'opacity', 0)
-							doAction.setAnimInfo('big_op', null)
+							doAction.clearAnimInfo('big_op')
 						}
 						window.setTimeout(function() {
 							doAction.setErrBox({})
 							//console.log('reset anim info', query_obj_anim_info(arg_2))
 							if (!is_half) {
 								window.setTimeout(function() {
-									doAction.setAnimInfo(arg_2, null)
+									doAction.clearAnimInfo(arg_2)
 									// KLUDGE-- need to change the y position to non-zero!!
 									let tmp_pos = query_position_of(arg_2)
 									if (tmp_pos) {
@@ -400,7 +411,7 @@ export function is_correct() {
 				doAction.towerAddStyle('tower_1', 'opacity', null)
 				const scale_factor = query_prop('scale_factor')
 				duration = 10 * scale_factor * Math.abs(correct_height - tgt_height)
-				doAction.setAnimInfo('door_3', {
+				doAction.addAnimInfo('door_3', {
 					slide_target: correct_height,
 					slide_duration: duration,
 				})
@@ -461,14 +472,14 @@ export function is_correct() {
 			doAction.addObjStyle('tile_1', 'opacity', 1)
 			doAction.addObjStyle(tile_tgt, 'opacity', 1)
 			doAction.addObjMisc(tile_tgt, 'landmark_index', landmark_index)
-			doAction.setAnimInfo(tile_tgt, {move_extra_dot: true})
+			doAction.addAnimInfo(tile_tgt, {move_extra_dot: true})
 			if ('move_handle_dot' === query_event('move')) {
 				// also move the handle into place
 				const y3 = loc0b[1] / scale_factor
 				const animal_value = global_constant.animals[name].height
 				const y3b = y3 / (animal_value * extra_scale2)
 				doAction.setName('door_2', [query_name_of('door_2').get(0), y3b])
-				doAction.setAnimInfo('door_2', {
+				doAction.addAnimInfo('door_2', {
 					slide_target: y3,
 					slide_duration: 100 * d,
 				})
