@@ -11,11 +11,11 @@ import {
 	query_option_values,
 	query_position_of,
 } from '../providers/query_store'
-import { query_top_block, query_tower_height } from '../providers/query_tower'
-import { get_button_geoms_for } from '../components/Keypad'
-import { global_workspace_height } from '../components/Workspace'
-import { doAction, global_sound, global_constant } from '../App'
-import { transition_to_next_config } from '../providers/change_config'
+import {query_top_block, query_tower_height} from '../providers/query_tower'
+import {get_button_geoms_for} from '../components/Keypad'
+import {global_workspace_height} from '../components/Workspace'
+import {doAction, global_sound, global_constant} from '../App'
+import {transition_to_next_config} from '../providers/change_config'
 import {
 	pointIsInRectangle,
 	set_primary_height,
@@ -34,7 +34,7 @@ import {
 	handle_swipe_tower,
 	handle_stack_arg_2,
 } from './handlers'
-import { correct_next_button } from './correctness'
+import {correct_next_button} from './correctness'
 import {
 	extract_handle_position,
 	is_blinking,
@@ -50,7 +50,7 @@ import {
 	landmark_location,
 	with_diameter_offset,
 } from '../components/Tile'
-import { store_config_modify } from '../providers/enter_exit';
+import {store_config_modify} from '../providers/enter_exit'
 
 function perhaps_reveal_button() {
 	const trb = query_event('touch_reveals_button')
@@ -77,7 +77,9 @@ export function touch_dispatcher(state, x, y, touchID) {
 		}
 	} else {
 		//console.log('option_values' + query_option_values())
-		if (query_option_values() && !query_event('stack_arg_2')) return handle_options(state, x, y, touchID)
+		if (query_option_values() && !query_event('stack_arg_2')) {
+			return handle_options(state, x, y, touchID)
+		}
 	}
 	if (query_event('just_yaml_event')) {
 		if ('down' === state && query_event('on_down')) {
@@ -343,8 +345,8 @@ export function touch_dispatcher(state, x, y, touchID) {
 							// doAction.addObjMisc(tgt, 'handle_opacity', null)
 							if ('touch_image' === move) {
 								//doAction.addObjMisc(arg_2, 'blink', 0.5)
-								doAction.addAnimInfo(arg_2, { blink: 0.5 })
-							} else doAction.addAnimInfo(tgt, { handle_blink: 0 })
+								doAction.addAnimInfo(arg_2, {blink: 0.5})
+							} else doAction.addAnimInfo(tgt, {handle_blink: 0})
 							doAction.setButtonDisplay('submit', null)
 							if (query_name_of(tgt).size > 1) {
 								//console.log('hide result door')

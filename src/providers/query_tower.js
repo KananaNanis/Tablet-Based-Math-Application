@@ -37,7 +37,7 @@ export function query_tower_blocks(num_id, tower = null, just_position) {
 	let was_fiver = 0
 	//const tower_name = tower.get('name')
 	const tower_name = tower.name
-  const block_opacity = tower.block_opacity ? tower.block_opacity : []
+	const block_opacity = tower.block_opacity ? tower.block_opacity : []
 	for (const group of tower_name) {
 		const size = get_block_size_from_group(group)
 		const how_many = get_how_many_from_group(group)
@@ -87,9 +87,9 @@ export function tower_name2height(name) {
 	if (!name) return null
 	let res = 0
 	for (const group of name) {
-		res += Math.round(10000*group)
+		res += Math.round(10000 * group)
 	}
-	return res/10000
+	return res / 10000
 }
 
 export function height2tower_name(height) {
@@ -105,7 +105,7 @@ export function height2tower_name(height) {
 	if (height < 0.0001) {
 		console.error('Error in height2tower_name:  height', height, '(too small)')
 	}
-  /*
+	/*
 		// original approach -- suspected of being buggy
 		for (let size = 3; size >= -3; --size) {
 			if (10 ** size < height + 0.000000001) {
@@ -121,9 +121,9 @@ export function height2tower_name(height) {
   */
 	let h = Math.round(10000 * height)
 	for (let size = 1; size <= 8; ++size) {
-		let n = h % (10 ** size)
+		let n = h % 10 ** size
 		h -= n
-		let how_many = n / (10 ** (size-1))
+		let how_many = n / 10 ** (size - 1)
 		let has_fiver = false
 		if (how_many > 4) {
 			has_fiver = true

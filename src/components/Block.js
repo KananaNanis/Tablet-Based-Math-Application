@@ -1,9 +1,8 @@
 import React from 'react'
-import { View, Image, Text, StyleSheet } from 'react-native'
-import { fromJS } from 'immutable'
-import { image_location } from '../App'
-import { query_tower_name } from '../providers/query_tower'
-import { query_prop } from '../providers/query_store';
+import {View, Image, Text, StyleSheet} from 'react-native'
+import {fromJS} from 'immutable'
+import {image_location} from '../App'
+import {query_tower_name} from '../providers/query_tower'
 
 export function get_block_size_from_group(group) {
 	return 0 + Math.ceil(-1 + 0.00001 + Math.log(group) / Math.log(10))
@@ -21,25 +20,30 @@ export function get_is_fiver_from_group(group) {
 }
 
 export function make_group_from(size, is_fiver) {
-	const group = (is_fiver ? 5 : 1) * (10 ** size)
+	const group = (is_fiver ? 5 : 1) * 10 ** size
 	return group
 }
 
 export function condense_groups_of(name) {
-	let res = [], prev_size, prev_is_fiver, num_skipped = 0
+	let res = [],
+		num_skipped = 0
 	for (let i = 0; i < name.length; ++i) {
 		const size = get_block_size_from_group(name[i])
 		const is_fiver = get_is_fiver_from_group(name[i])
 		const how_many = get_how_many_from_group(name[i])
 		if (how_many !== 1 && how_many !== 5) {
-			console.error('Error in condense_groups_of:  does not handle values other than singletons and fivers!')
+			console.error(
+				'Error in condense_groups_of:  does not handle values other than singletons and fivers!',
+			)
 		}
 		if (i + 1 < name.length) {
 			const next_size = get_block_size_from_group(name[i + 1])
-			const next_is_fiver = get_is_fiver_from_group(name[i + 1])
-			if (!is_fiver && size === next_size) {  // condense these
+			//const next_is_fiver = get_is_fiver_from_group(name[i + 1])
+			if (!is_fiver && size === next_size) {
+				// condense these
 				++num_skipped
-				if (num_skipped === 4) {  // too many!
+				if (num_skipped === 4) {
+					// too many!
 					res.push(num_skipped * name[i])
 					num_skipped = 0
 				}
@@ -51,8 +55,6 @@ export function condense_groups_of(name) {
 			res.push((num_skipped + 1) * name[i])
 			num_skipped = 0
 		}
-		// prev_size = size
-		// prev_is_fiver = is_fiver
 	}
 	return res
 }
@@ -107,8 +109,11 @@ export function name_is_in_standard_form(name0, allow_non_standard) {
 		}
 		if (size0 === size1) {
 			let is_fiver0 = get_is_fiver_from_group(group0)
-			if (allow_non_standard &&
-           ((is_fiver0 && is_fiver1) || (!is_fiver0 && !is_fiver1))) {  // allow this
+			if (
+				allow_non_standard &&
+				((is_fiver0 && is_fiver1) || (!is_fiver0 && !is_fiver1))
+			) {
+				// allow this
 			} else if (!is_fiver0 || is_fiver1) {
 				// console.log('group01', group0, group1, 'is_fiver01', is_fiver0, is_fiver1)
 				res = false
@@ -186,24 +191,30 @@ const Block = ({
 		img = (
 			<Image
 				source={image_location(img_name, just_grey)}
-				style={[styles.image_default, radius_style, { width, height }]}
+				style={[styles.image_default, radius_style, {width, height}]}
 			/>
 		)
 	}
 	let txt = null
 	if ('|' === text_content) {
-		txt = <View style={[styles.vert_bar,
-		{
-			left: scale_factor/17,
-			width: scale_factor/52,
-			height: scale_factor*.98,
-		}]} />
+		txt = (
+			<View
+				style={[
+					styles.vert_bar,
+					{
+						left: scale_factor / 17,
+						width: scale_factor / 52,
+						height: scale_factor * 0.98,
+					},
+				]}
+			/>
+		)
 	} else {
 		txt = <Text style={text_style}>{text_content}</Text>
 	}
 
 	return (
-		<View style={[view_style, radius_style, { width, height }]}>
+		<View style={[view_style, radius_style, {width, height}]}>
 			{img}
 			{txt}
 		</View>
@@ -218,7 +229,7 @@ const styles = StyleSheet.create({
 		position: 'absolute',
 	},
 	block: {
-		backgroundColor: blue,
+		backgroundColor: none,
 		borderWidth: 3,
 		borderStyle: 'dashed',
 		borderColor: black,

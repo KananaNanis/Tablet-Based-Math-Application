@@ -106,7 +106,7 @@ export function addAnimInfo(id, anim_info) {
 		anim_info.anim_info_counter = anim_info_counter
 	}
 	//return {type: AT.ADD_ANIM_INFO, id, anim_info: fromJS(anim_info)}
-  // not converting anim_info to immutable yet, to allow easier update:
+	// not converting anim_info to immutable yet, to allow easier update:
 	return {type: AT.ADD_ANIM_INFO, id, anim_info}
 	//return {type: AT.ADD_ANIM_INFO, id, key, value: fromJS(value)}
 }

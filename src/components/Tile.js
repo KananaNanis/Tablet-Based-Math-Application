@@ -1,8 +1,7 @@
 import React from 'react'
-import { StyleSheet, View, Animated } from 'react-native'
-import { global_constant, image_location } from '../App'
-import { dist2D } from '../event/utils'
-import { query_prop } from '../providers/query_store'
+import {StyleSheet, View, Animated} from 'react-native'
+import {global_constant, image_location} from '../App'
+import {query_prop} from '../providers/query_store'
 import * as Anim from '../event/animation'
 
 export function current_pixel_size_of_animal(name, extra_scale = 1) {
@@ -57,6 +56,7 @@ function compute_dot_locs(name, misc) {
 	return [locB, loc2B]
 }
 
+/*
 function init_dot_anim(props, time_value) {
 	const [locB, loc2B] = compute_dot_locs(props.name, props.misc)
 	const d = dist2D(locB, loc2B)
@@ -65,19 +65,27 @@ function init_dot_anim(props, time_value) {
 	//console.log('duration ', duration)
 	Anim.start_anim(time_value, 1, duration)
 }
+*/
 
 class Tile extends React.Component {
 	state = {
-		time_value: new Animated.Value(0),
+		//time_value: new Animated.Value(0),
 		timer: Anim.new_timer(),
 		peg_offset: this.compute_peg_offset(),
 	}
 
 	componentDidMount() {
-		Anim.init_anim(this.props.id, this.props.anim_info, this.state.timer, this.state.time_value)
+		Anim.init_anim(
+			this.props.id,
+			this.props.anim_info,
+			this.state.timer,
+			//this.state.time_value,
+		)
+		/*
 		if (this.props.anim_info && this.props.anim_info.move_extra_dot) {
 			init_dot_anim(this.props, this.state.time_value)
 		}
+		*/
 	}
 
 	componentDidUpdate(prev_props) {
@@ -85,22 +93,24 @@ class Tile extends React.Component {
 			this.props.id,
 			this.props.anim_info,
 			this.state.timer,
-			this.state.time_value,
+			//this.state.time_value,
 			prev_props.anim_info,
 		)
+		/*
 		if (this.props.anim_info && this.props.anim_info.move_extra_dot) {
 			const had_timer = prev_props.anim_info && prev_props.anim_info.duration
 			if (!had_timer && Anim.has_timer(this.props.anim_info)) {
 				init_dot_anim(this.props, this.state.time_value)
 			}
 		}
+		*/
 	}
 
 	compute_peg_offset() {
 		// determine a random offset in the wood texture, that will
 		//   stay the same as long as the name stays the same
 		if (!this.props.name.startsWith('peg')) return [0, 0]
-		const { name, misc } = this.props
+		const {name, misc} = this.props
 		const extra_scale =
 			misc && 'undefined' !== typeof misc.extra_scale ? misc.extra_scale : 1
 		const [width, height] = current_pixel_size_of_animal(name, extra_scale)
@@ -117,7 +127,7 @@ class Tile extends React.Component {
 	}
 
 	render() {
-		let { id, name, position, style, anim_info, misc, just_grey } = this.props
+		let {id, name, position, style, anim_info, misc, just_grey} = this.props
 		//just_grey = true
 		//console.log('Tile  name', name)
 		const extra_scale =
@@ -140,7 +150,7 @@ class Tile extends React.Component {
 		let extra_style = {}
 		let image_opacity =
 			misc && 'undefined' !== typeof misc.image_opacity ? misc.image_opacity : 1
-		if (just_grey) extra_style = { opacity: 0.1 }
+		if (just_grey) extra_style = {opacity: 0.1}
 		const is_peg = name.startsWith('peg_')
 		const img_name = is_peg ? 'peg' : name
 		const [width, height] = current_pixel_size_of_animal(name, extra_scale)
@@ -159,7 +169,7 @@ class Tile extends React.Component {
 		//	'height', height, 'img_name', img_name, 'img_width', img_width)
 		//console.log('Tile name', name, 'anim_info', anim_info)
 		//console.log('Tile id', id, 'misc', misc)
-		let pos_info = { bottom: position[1] }
+		let pos_info = {bottom: position[1]}
 		pos_info.left = position[0]
 		let extra_dot = null,
 			landmark = null
@@ -183,7 +193,7 @@ class Tile extends React.Component {
 					<View
 						style={[
 							styles.extra_dot,
-							has_dot ? { opacity: half } : {},
+							has_dot ? {opacity: half} : {},
 							{
 								width: extra_scale * diameter,
 								height: extra_scale * diameter,
@@ -203,6 +213,7 @@ class Tile extends React.Component {
 				)
 				*/
 				let dot_style = {}
+				/*
 				if (
 					landmark &&
 					anim_info &&
@@ -221,6 +232,7 @@ class Tile extends React.Component {
 						}),
 					}
 				}
+				*/
 				//console.log('  extra_dot id', id, 'misc', misc, 'loc2B', loc2B)
 				extra_dot = (
 					<Animated.View

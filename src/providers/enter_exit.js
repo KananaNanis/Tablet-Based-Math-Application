@@ -1,4 +1,4 @@
-import { doAction, global_constant } from '../App'
+import {doAction, global_constant} from '../App'
 import * as Actions from '../providers/actions'
 import {
 	query_path,
@@ -9,20 +9,20 @@ import {
 	query_name_of,
 	//query_test,
 } from './query_store'
-import { height2tower_name } from './query_tower'
+import {height2tower_name} from './query_tower'
 // import { update_keypad_button_visibility } from '../event/dispatcher'
-import { generate_with_restrictions } from '../containers/generate'
-import { global_screen_width } from '../components/Workspace'
+import {generate_with_restrictions} from '../containers/generate'
+import {global_screen_width} from '../components/Workspace'
 import {
 	get_config,
 	as_position,
 	width_pixels_from_name,
 	height_pixels_from_name,
 } from './change_config'
-import { update_keypad_button_visibility } from '../event/utils'
-import { landmark_location } from '../components/Tile'
-import { List, fromJS } from 'immutable'
-import { do_batched_actions } from './reducers';
+import {update_keypad_button_visibility} from '../event/utils'
+import {landmark_location} from '../components/Tile'
+import {List, fromJS} from 'immutable'
+import {do_batched_actions} from './reducers'
 
 function do_timed_action(id, key, val) {
 	// handle the following:
@@ -34,7 +34,7 @@ function do_timed_action(id, key, val) {
 	} else {
 		let delay = val
 		if ('appear_after' === key) doAction.addObjStyle(id, 'opacity', 0)
-		window.setTimeout(function () {
+		window.setTimeout(function() {
 			if ('appear_after' === key) doAction.addObjStyle(id, 'opacity', 1.0)
 		}, delay)
 	}
@@ -66,10 +66,10 @@ export function store_config_modify(
 ) {
 	if (verbose) console.log('store_config_modify c', c)
 	let do_actions_immediately = false
-  if (!action_list) {
-    action_list = []
-    do_actions_immediately = true
-  }
+	if (!action_list) {
+		action_list = []
+		do_actions_immediately = true
+	}
 	for (const id0 in c) {
 		if (c.hasOwnProperty(id0)) {
 			const id = remap_id(id0, remap_id_table)
@@ -226,11 +226,11 @@ export function enter_exit_config(
 	const gen_vars =
 		enter && config['generate']
 			? generate_with_restrictions(
-				action_list,
-				config['generate'],
-				curr_exercise,
-				silent,
-			)
+					action_list,
+					config['generate'],
+					curr_exercise,
+					silent,
+			  )
 			: {}
 	let remap_id_table = {}
 	if (config['remap_ids']) {
@@ -262,7 +262,7 @@ export function enter_exit_config(
 					console.log('setting prop', id, 'to', c[id0])
 					action_list.push(Actions.setProp(id, enter ? c[id0] : null))
 				} else if ('err_box' === id) {
-					action_list.push(Actions.setErrBox(enter ? { show: true } : null))
+					action_list.push(Actions.setErrBox(enter ? {show: true} : null))
 				} else if ('keypad_kind' === id) {
 					action_list.push(Actions.setKeypadKind(enter ? c[id0] : null))
 					if ('buildTower' === c[id0]) {
@@ -407,8 +407,14 @@ export function enter_exit_config(
 		}
 	}
 	if (config['modify']) {
-		store_config_modify(config['modify'], enter, action_list,
-			verbose, gen_vars, remap_id_table)
+		store_config_modify(
+			config['modify'],
+			enter,
+			action_list,
+			verbose,
+			gen_vars,
+			remap_id_table,
+		)
 	}
 	if (config['event_handling']) {
 		const c = config['event_handling']
@@ -501,7 +507,10 @@ export function enter_exit_config(
 					action_list.push(Actions.setProp(key, !enter ? c[key0] : null))
 					//console.log('blank', query_prop('blank_between_exercises'))
 				} else if ('new_scale_factor' === key) {
-					doAction.setProp('scale_factor', enter ? c[key0] : global_constant.scale_factor_from_yaml)
+					doAction.setProp(
+						'scale_factor',
+						enter ? c[key0] : global_constant.scale_factor_from_yaml,
+					)
 				} else if ('remove_on_exit' === key && !enter) {
 					//console.log('remove_on_exit', c[key0])
 					remove_on_exit(c[key0], action_list)

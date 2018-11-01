@@ -1,4 +1,4 @@
-import { global_constant } from '../App'
+import {global_constant} from '../App'
 import * as Actions from '../providers/actions'
 import {
 	pick_from_list,
@@ -7,8 +7,8 @@ import {
 	pick_animal_name,
 } from './gen_utile'
 //import {query_obj_misc, query_option_obj} from '../providers/query_store'
-import { approx_equal } from '../event/utils'
-import { tower_name2height, height2tower_name } from '../providers/query_tower';
+import {approx_equal} from '../event/utils'
+import {tower_name2height, height2tower_name} from '../providers/query_tower'
 
 function find_gen_values_for_words(words, gen_vars) {
 	let res = words.slice()
@@ -254,10 +254,12 @@ export function generate_with_restrictions(
 			let words = 'string' === typeof c[id] ? c[id].split(' ') : null
 			if (id.startsWith('restriction_')) restrict.push(id)
 			else if (id.startsWith('option_')) option.push(id)
-			else if (words &&
-				((1 === words.length) ||
+			else if (
+				words &&
+				(1 === words.length ||
 					(2 === words.length && 'standardize_name' === words[0]) ||
-					(3 === words.length && is_binary_op(words[1])))) {
+					(3 === words.length && is_binary_op(words[1])))
+			) {
 				// also allows identify function, special others!
 				binary.push(id)
 			} else all.push(id)

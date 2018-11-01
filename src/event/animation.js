@@ -1,12 +1,11 @@
-import { Animated } from 'react-native'
-import { doAction, global_constant } from '../App'
-import { query_position_of, query_obj_style } from '../providers/query_store';
-import { store_config_modify } from '../providers/enter_exit';
-import { get_config } from '../providers/change_config';
-import { fromJS, List } from 'immutable';
-//import {dist2D} from '../event/utils'
+import {Animated} from 'react-native'
+import {doAction, global_constant} from '../App'
+import {query_position_of, query_obj_style} from '../providers/query_store'
+import {store_config_modify} from '../providers/enter_exit'
+import {get_config} from '../providers/change_config'
+import {fromJS} from 'immutable'
 
-const verbose = true
+const verbose = false
 
 export function new_timer() {
 	let res = {}
@@ -18,7 +17,10 @@ export function new_timer() {
 
 function constructXformFor(id, attr, val) {
 	const old_style = query_obj_style(id)
-	let xform = (old_style && old_style.hasOwnProperty('transform')) ? old_style.transform : []
+	let xform =
+		old_style && old_style.hasOwnProperty('transform')
+			? old_style.transform
+			: []
 	let found_it = false
 	for (let i = 0; i < xform.length; ++i) {
 		if (xform[i].hasOwnProperty(attr)) {
@@ -27,7 +29,7 @@ function constructXformFor(id, attr, val) {
 		}
 	}
 	if (!found_it) {
-		xform.push({ [attr]: val })
+		xform.push({[attr]: val})
 	}
 	return xform
 }
@@ -39,10 +41,11 @@ export function interpolate_anim_attr(
 	animated_style,
 	secondary_style,
 ) {
-	// NOTE: check for whether we've started the timer?
 	for (const attr in anim_info) {
 		if (anim_info.hasOwnProperty(attr)) {
-			if (verbose) console.log('interpolate attr', attr, 'to', anim_info[attr].to)
+			if (verbose) {
+				console.log('interpolate attr', attr, 'to', anim_info[attr].to)
+			}
 			if (['rotate', 'scale'].includes(attr)) {
 				let t = timer[attr].interpolate({
 					inputRange: [0, 1],
@@ -60,12 +63,16 @@ export function interpolate_anim_attr(
 				if ('handle_blink' === attr) secondary_style[attr2] = t
 				else animated_style[attr2] = t
 			} else {
-				console.error('Warning in interpolate_anim_attr:  unrecognized anim_info attr', attr)
+				console.error(
+					'Warning in interpolate_anim_attr:  unrecognized anim_info attr',
+					attr,
+				)
 			}
 		}
 	}
 }
 
+/*
 function make_tower_empty() {
 	// this function is intended to be the starting point for a nicer animation
 	//   used in the midst of a tower swipe.  That animation is not working
@@ -75,7 +82,9 @@ function make_tower_empty() {
 	doAction.setName(tower, [])
 	doAction.clearAnimInfo(tower)
 }
+*/
 
+/*
 function start_timer_old(anim_info, time_value, skip_reset = false) {
 	console.error('start_timer_old is deprecated.')
 	if (verbose) console.log('start_timer anim_info', anim_info)
@@ -94,16 +103,23 @@ function start_timer_old(anim_info, time_value, skip_reset = false) {
 	} else if (anim_info.loop) {
 		start_anim_loop(time_value, anim_info.duration, anim_info.delay)
 	} else if (Array.isArray(anim_info.duration)) {
-		start_anim_bounce(time_value, anim_info.duration, anim_info.delay, ending_function)
+		start_anim_bounce(
+			time_value,
+			anim_info.duration,
+			anim_info.delay,
+			ending_function,
+		)
 	} else {
 		let params = { toValue: 1, duration: anim_info.duration }
 		if (anim_info.delay) params.delay = anim_info.delay
 		Animated.timing(time_value, params).start(ending_function)
 	}
 }
+*/
 
 function trigger_continuation(on_end) {
-	if (Array.isArray(on_end)) {  // this is a path to instructions
+	if (Array.isArray(on_end)) {
+		// this is a path to instructions
 		const w = get_config(fromJS(on_end))
 		console.log(w)
 		store_config_modify(w.modify, true)
@@ -124,7 +140,10 @@ function collapse_anim_info(id, attr, info) {
 		} else if ('bottom' === attr) {
 			doAction.setPosition(id, [old_pos[0], new_pos])
 		} else {
-			console.error('Warning in collapse_anim_info:  attr not completed implemented', attr)
+			console.error(
+				'Warning in collapse_anim_info:  attr not completed implemented',
+				attr,
+			)
 		}
 	} else if ('rotate' === attr) {
 		const xform = constructXformFor(id, attr, info.to)
@@ -132,41 +151,37 @@ function collapse_anim_info(id, attr, info) {
 	} else if (['blink', 'opacity'].includes(attr)) {
 		doAction.addObjStyle(id, 'opacity', info.to)
 	} else {
-		console.error('Warning in collapse_anim_info:  not implemented for attr', attr)
+		console.error(
+			'Warning in collapse_anim_info:  not implemented for attr',
+			attr,
+		)
 	}
-	doAction.addAnimInfo(id, { [attr]: null })
+	doAction.addAnimInfo(id, {[attr]: null})
 	// console.log('done with collapsing attr', attr)
 }
 
 function start_timer(id, attr, info, atimer, skip_reset = false) {
-	if (verbose) console.log('start_timer attr', attr, 'info', info, 'atimer', atimer)
-	if (!skip_reset) atimer.setValue(0)
-	function abc() {
-		console.log('ABC')
+	if (verbose) {
+		console.log('start_timer attr', attr, 'info', info, 'atimer', atimer)
 	}
+	if (!skip_reset) atimer.setValue(0)
 	function ending_function() {
 		let on_end = info.on_end
 		collapse_anim_info(id, attr, info)
 		if (on_end) trigger_continuation(on_end)
 	}
-	/*
-	if ('undefined' !== typeof info.empty_at_end) {
-		ending_function = make_tower_empty
-	}
-	*/
 	if (info.loop) {
 		start_anim_loop(atimer, info.duration, info.delay, ending_function)
 	} else if (Array.isArray(info.duration)) {
 		start_anim_bounce(atimer, info.duration, info.delay, ending_function)
 	} else {
-		let params = { toValue: 1, duration: info.duration }
+		let params = {toValue: 1, duration: info.duration}
 		if (info.delay) params.delay = info.delay
 		Animated.timing(atimer, params).start(ending_function)
 	}
 }
 
 export function has_timer(anim_info) {
-	//console.log('blink', anim_info.blink)
 	console.error('has_timer is deprecated.')
 	return (
 		anim_info &&
@@ -177,7 +192,7 @@ export function has_timer(anim_info) {
 	)
 }
 
-export function init_anim(id, anim_info, timer, time_value, skip_reset = false) {
+export function init_anim(id, anim_info, timer, skip_reset = false) {
 	for (const attr in anim_info) {
 		if (anim_info.hasOwnProperty(attr)) {
 			if (global_constant.anim_all_attributes.includes(attr)) {
@@ -185,7 +200,7 @@ export function init_anim(id, anim_info, timer, time_value, skip_reset = false) 
 			}
 		} else {
 			console.error('old anim property?', attr)
-			start_timer_old(anim_info, time_value, skip_reset)
+			//start_timer_old(anim_info, time_value, skip_reset)
 		}
 	}
 }
@@ -194,12 +209,12 @@ export function update_anim(
 	id,
 	anim_info,
 	timer,
-	time_value,
 	prev_anim_info,
 	skip_reset = false,
 ) {
-	time_value
-	let all_attr = [...new Set([...Object.keys(anim_info), ...Object.keys(prev_anim_info)])]
+	let all_attr = [
+		...new Set([...Object.keys(anim_info), ...Object.keys(prev_anim_info)]),
+	]
 	console.log('update_anim all_attr', all_attr)
 	for (const attr of all_attr) {
 		if (global_constant.anim_all_attributes.includes(attr)) {
@@ -210,10 +225,12 @@ export function update_anim(
 						Animated.timing(timer[attr]).stop()
 						start_timer(id, attr, anim_info[attr], timer[attr], skip_reset)
 					}
-				} else {  // only in current
+				} else {
+					// only in current
 					start_timer(id, attr, anim_info[attr], timer[attr], skip_reset)
 				}
-			} else {  // only in prev
+			} else {
+				// only in prev
 				Animated.timing(timer[attr]).stop()
 			}
 		} else {
@@ -245,8 +262,15 @@ export function update_anim(
 	*/
 }
 
-export function start_anim_loop(anim_var, duration, delay = 0, ending_function = null) {
-	//console.log('start_anim_loop delay', delay)
+export function start_anim_loop(
+	anim_var,
+	duration,
+	delay = 0,
+	ending_function = null,
+) {
+	if (verbose) {
+		console.log('start_anim_loop delay', delay)
+	}
 	Animated.sequence([
 		Animated.delay(delay),
 		Animated.loop(
@@ -264,7 +288,12 @@ export function start_anim_loop(anim_var, duration, delay = 0, ending_function =
 	]).start(ending_function)
 }
 
-export function start_anim_bounce(anim_var, durations, delay = 0, ending_function = null) {
+export function start_anim_bounce(
+	anim_var,
+	durations,
+	delay = 0,
+	ending_function = null,
+) {
 	let half = []
 	for (let i = 0; i < durations.length; ++i) {
 		const duration = durations[i]
@@ -288,13 +317,6 @@ export function start_anim(
 	ending_function = null,
 ) {
 	console.log('REMOVE start_anim toValue', toValue, 'duration', duration)
-	/*
-  function onEnd(x) {
-    console.log('onEnd x', x)
-    anim_var.setValue(0)
-  }
-  */
-	//anim_var.setValue(0)
 	Animated.timing(anim_var, {
 		toValue,
 		duration,

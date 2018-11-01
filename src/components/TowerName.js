@@ -8,17 +8,18 @@ import * as Anim from '../event/animation'
 
 class TowerName extends React.Component {
 	state = {
-		time_value: new Animated.Value(0),
+		timer: Anim.new_timer(),
 	}
 
 	componentDidMount() {
-		Anim.init_anim(this.props.anim_info, this.state.time_value)
+		Anim.init_anim(this.props.id, this.props.anim_info, this.state.timer)
 	}
 
 	componentDidUpdate(prev_props) {
 		Anim.update_anim(
+			this.props.id,
 			this.props.anim_info,
-			this.state.time_value,
+			this.state.timer,
 			prev_props.anim_info,
 		)
 	}
@@ -33,10 +34,11 @@ class TowerName extends React.Component {
 			just_grey = false,
 		} = this.props
 		let animated_style = {}
-		if (Anim.has_timer(anim_info)) {
+		if (anim_info) {
 			Anim.interpolate_anim_attr(
+				id,
 				anim_info,
-				this.state.time_value,
+				this.state.timer,
 				animated_style,
 			)
 		}

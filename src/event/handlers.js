@@ -16,10 +16,10 @@ import {
 	query_tower_blocks,
 	query_tower,
 } from '../providers/query_tower'
-import { doAction, global_constant, global_sound } from '../App'
-import { transition_to_next_config } from '../providers/change_config'
-import { enter_exit_config } from '../providers/enter_exit'
-import { is_correct, show_err_with_delay } from './correctness'
+import {doAction, global_constant, global_sound} from '../App'
+import {transition_to_next_config} from '../providers/change_config'
+import {enter_exit_config} from '../providers/enter_exit'
+import {is_correct, show_err_with_delay} from './correctness'
 import {
 	reduce_num_stars,
 	pointIsInRectangle,
@@ -29,15 +29,19 @@ import {
 	get_bbox,
 	dist2D,
 } from './utils'
-import { option_geometry } from '../components/OptionBackground'
+import {option_geometry} from '../components/OptionBackground'
 import {
 	describe_numerical,
 	position_of_correct_option,
 	show_thin_height_2,
 } from './extract'
 //import { global_screen_width } from '../components/Workspace'
-import { is_standard_tower, make_group_from, condense_groups_of } from '../components/Block'
-import { do_batched_actions } from '../providers/reducers'
+import {
+	is_standard_tower,
+	make_group_from,
+	condense_groups_of,
+} from '../components/Block'
+import {do_batched_actions} from '../providers/reducers'
 import * as Actions from '../providers/actions'
 // import { fromJS } from 'immutable';
 
@@ -79,7 +83,7 @@ export function handle_start_button(state) {
 export function incorrect_button_response() {
 	doAction.setProp('freeze_display', true)
 	reduce_num_stars()
-	window.setTimeout(function () {
+	window.setTimeout(function() {
 		doAction.setButtonHighlight(null)
 		doAction.setProp('freeze_display', false)
 	}, global_constant.incorrect_freeze_time)
@@ -100,7 +104,7 @@ export function handle_submit_button(state) {
 				global_sound['chirp1'].play()
 				doAction.setButtonDisplay('submit', null)
 				//console.log('animating now')
-				window.setTimeout(function () {
+				window.setTimeout(function() {
 					transition_to_next_config()
 				}, delay)
 			} else {
@@ -169,7 +173,7 @@ export function handle_options(state, x, y) {
 						const pos_3 = position_of_correct_option()
 						show_thin_height_2(arg_1, pos_3)
 
-						window.setTimeout(function () {
+						window.setTimeout(function() {
 							doAction.setButtonHighlight(null)
 							doAction.setErrBox({})
 							doAction.setProp('freeze_display', false)
@@ -183,7 +187,7 @@ export function handle_options(state, x, y) {
 							arg_1.startsWith('five_frame_') ||
 							is_peg)
 					) {
-						window.setTimeout(function () {
+						window.setTimeout(function() {
 							doAction.setButtonHighlight(null)
 							doAction.setProp('freeze_display', false)
 							transition_to_next_config()
@@ -198,7 +202,7 @@ export function handle_options(state, x, y) {
 							const arg_1 = query_arg(1)
 							const arg_2 = query_arg(2)
 							const result = 'option'
-							const { f1, f2, f3, err, stars } = describe_numerical(
+							const {f1, f2, f3, err, stars} = describe_numerical(
 								arg_1,
 								arg_2,
 								result,
@@ -215,7 +219,7 @@ export function handle_options(state, x, y) {
 								f2,
 								f3,
 							)
-							window.setTimeout(function () {
+							window.setTimeout(function() {
 								doAction.setButtonHighlight(null)
 								doAction.setProp('freeze_display', false)
 								transition_to_next_config()
@@ -310,7 +314,10 @@ export function handle_create_tower_by_height(state, x, y) {
 					if ('empty' !== top) doAction.towerRemoveBlock(tgt)
 					doAction.towerAddBlock(tgt, new_size, new_is_fiver)
 					doAction.setProp('top_block_under_construction', 'present')
-					const top_is_ok = is_standard_tower(tgt, query_event('allow_non_standard'))
+					const top_is_ok = is_standard_tower(
+						tgt,
+						query_event('allow_non_standard'),
+					)
 					//console.log('top_is_ok', top_is_ok)
 					//doAction.addObjMisc(tgt, 'top_just_outline', !top_is_ok)
 					doAction.addObjMisc(tgt, 'top_just_outline', top_is_ok ? null : 1)
@@ -369,15 +376,13 @@ function find_block_index_at_height(block_pos, y) {
 	//console.log('y', y, 'block_pos', block_pos)
 	let res = null
 	for (let i = 1; i < block_pos.length; ++i) {
-		if (block_pos[i - 1][1] <= y &&
-			y < block_pos[i][1]) {
+		if (block_pos[i - 1][1] <= y && y < block_pos[i][1]) {
 			res = i - 1
 		}
 	}
 	// also check the last one
 	const last_pos = block_pos[block_pos.length - 1]
-	if (last_pos[1] <= y &&
-		y < last_pos[1] + last_pos[3]) {
+	if (last_pos[1] <= y && y < last_pos[1] + last_pos[3]) {
 		res = block_pos.length - 1
 	}
 	return res
@@ -432,7 +437,9 @@ export function handle_swipe_tower(state, x, y) {
 						}
 					}
 				}
-				moving_merge_name = [make_group_from(is_fiver ? size + 1 : size, !is_fiver)]
+				moving_merge_name = [
+					make_group_from(is_fiver ? size + 1 : size, !is_fiver),
+				]
 
 				// can this block be split?
 				split_pos = null
@@ -449,7 +456,8 @@ export function handle_swipe_tower(state, x, y) {
 		}
 	} else {
 		if (null !== found_index) {
-			let merge = false, split = false
+			let merge = false,
+				split = false
 			if (x > starting_x + global_constant.margin_for_merge) {
 				split = true
 			} else if (x < starting_x - global_constant.margin_for_merge) {
@@ -464,9 +472,9 @@ export function handle_swipe_tower(state, x, y) {
 					let new_pos = merge ? merge_pos : split_pos
 					doAction.setPosition(moving, [new_pos[0] + 0, new_pos[1]])
 					if (merge) {
-						doAction.addAnimInfo(moving, { left: [150, 50], duration: 500 })
+						doAction.addAnimInfo(moving, {left: [150, 50], duration: 500})
 					} else {
-						doAction.addAnimInfo(moving, { left: [0, 50], duration: 500 })
+						doAction.addAnimInfo(moving, {left: [0, 50], duration: 500})
 					}
 					doAction.setName(moving, new_moving_name)
 					moving_was_merge = merge
@@ -478,9 +486,17 @@ export function handle_swipe_tower(state, x, y) {
 					if (try_anim) {
 						console.log('setting back to empty')
 						if (moving_was_merge) {
-							doAction.addAnimInfo(moving, { left: [50, 150], duration: 500, empty_at_end: true })
+							doAction.addAnimInfo(moving, {
+								left: [50, 150],
+								duration: 500,
+								empty_at_end: true,
+							})
 						} else {
-							doAction.addAnimInfo(moving, { left: [50, 0], duration: 500, empty_at_end: true })
+							doAction.addAnimInfo(moving, {
+								left: [50, 0],
+								duration: 500,
+								empty_at_end: true,
+							})
 						}
 					} else {
 						doAction.setName(moving, [])
@@ -510,7 +526,7 @@ export function handle_swipe_tower(state, x, y) {
 						doAction.clearAnimInfo(moving)
 						console.log('waiting')
 						//doAction.addAnimInfo(moving, { left: [50, 0], duration: 500, empty_at_end: true })
-						doAction.addAnimInfo(moving, { left: [50, 0], duration: 2000 })
+						doAction.addAnimInfo(moving, {left: [50, 0], duration: 2000})
 					} else doAction.setName(moving, [])
 					// possibly change the tower itself
 					if (merge) {
@@ -550,8 +566,10 @@ export function handle_stack_arg_2(state, x, y) {
 				// stack arg_2 precisely on arg_1
 				const arg_1 = query_arg(1)
 				const bbox1 = get_bbox(arg_1)
-				const final_pos = [bbox1.position[0] + 0.25 * bbox1.width,
-				bbox1.position[1] + bbox1.height]
+				const final_pos = [
+					bbox1.position[0] + 0.25 * bbox1.width,
+					bbox1.position[1] + bbox1.height,
+				]
 				let d = dist2D(new_pos, final_pos)
 				if (d < 100) {
 					// doAction.setPosition(arg_2, final_pos)

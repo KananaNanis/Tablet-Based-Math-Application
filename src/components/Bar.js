@@ -6,25 +6,27 @@ import * as Anim from '../event/animation'
 
 class Bar extends React.Component {
 	state = {
-		time_value: new Animated.Value(0),
+		timer: Anim.new_timer(),
 	}
 
 	componentDidMount() {
 		// console.log('Bar', this.props.id, 'componentDidMount anim_info', this.props.anim_info)
-		Anim.init_anim(this.props.anim_info, this.state.time_value)
+		Anim.init_anim(this.props.id, this.props.anim_info, this.state.timer)
 	}
 
 	componentDidUpdate(prev_props) {
 		// console.log('Bar', this.props.id, 'componentDidUpdate anim_info', this.props.anim_info, 'prev', prev_props.anim_info)
 		Anim.update_anim(
+			this.props.id,
 			this.props.anim_info,
-			this.state.time_value,
+			this.state.timer,
 			prev_props.anim_info,
 		)
 	}
 
 	render() {
 		let {
+			id,
 			name,
 			position,
 			style,
@@ -43,10 +45,11 @@ class Bar extends React.Component {
 		const scale_factor = query_prop('scale_factor')
 		const height = name * scale_factor
 		let animated_style = {}
-		if (Anim.has_timer(anim_info)) {
+		if (anim_info) {
 			Anim.interpolate_anim_attr(
+				id,
 				anim_info,
-				this.state.time_value,
+				this.state.timer,
 				animated_style,
 			)
 		}

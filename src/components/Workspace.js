@@ -1,13 +1,13 @@
 import React from 'react'
-import { View, Image, Text, StyleSheet, Dimensions } from 'react-native'
+import {View, Image, Text, StyleSheet, Dimensions} from 'react-native'
 import Keypad from './Keypad'
 import Button from './Button'
 import Placard from './Placard'
 import ErrBox from './ErrBox'
 import CamelContainer from '../containers/CamelContainer'
 import OptionBackground from '../components/OptionBackground'
-import { global_constant, image_location } from '../App'
-import { query_event, query_arg, query_prop } from '../providers/query_store'
+import {global_constant, image_location} from '../App'
+import {query_event, query_arg, query_prop} from '../providers/query_store'
 import {
 	render_nums,
 	render_tiles,
@@ -66,7 +66,7 @@ const Workspace = ({
 	//console.log('Workspace config_path', config_path.toJS())
 	//console.log('Workspace five_frame_ids', five_frame_ids.toJS())
 	//console.log('Workspace bar_ids', bar_ids.toJS())
-	const is_scaled = (520 !== query_prop('scale_factor'))
+	const is_scaled = 520 !== query_prop('scale_factor')
 	const nums = render_nums(tower_ids)
 	const tiles = render_tiles(tile_ids)
 	const doors = render_doors(door_ids)
@@ -192,7 +192,7 @@ const Workspace = ({
 				key={key}
 				style={[
 					styles.top_right_text,
-					{ top, right: global_constant.top_right_text_offset },
+					{top, right: global_constant.top_right_text_offset},
 				]}
 			>
 				{top_right_text}
@@ -208,7 +208,7 @@ const Workspace = ({
 			left += 10
 		}
 		misc_below.push(
-			<Text key={key} style={[styles.top_left_text, { top, left }]}>
+			<Text key={key} style={[styles.top_left_text, {top, left}]}>
 				{top_left_text}
 			</Text>,
 		)
@@ -265,8 +265,8 @@ const Workspace = ({
 		)
 	}
 	const button_view = {
-		submit: { borderColor: 'lime' },
-		start: { borderColor: 'forestgreen' },
+		submit: {borderColor: 'lime'},
+		start: {borderColor: 'forestgreen'},
 	}
 	const highlight_style = {
 		backgroundColor: 'lightgreen',
@@ -324,10 +324,7 @@ const Workspace = ({
 			<Image
 				key={key}
 				source={image_location('star')}
-				style={[
-					styles.image_default,
-					{ top, right },
-				]}
+				style={[styles.image_default, {top, right}]}
 			/>,
 		)
 		//source={require('img/star.png')}

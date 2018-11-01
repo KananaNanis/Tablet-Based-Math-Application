@@ -32,17 +32,18 @@ export function option_geometry(i, option_obj) {
 
 class OptionBackground extends React.Component {
 	state = {
-		time_value: new Animated.Value(0),
+		timer: Anim.new_timer(),
 	}
 
 	componentDidMount() {
-		Anim.init_anim(this.props.anim_info, this.state.time_value)
+		Anim.init_anim(this.props.id, this.props.anim_info, this.state.timer)
 	}
 
 	componentDidUpdate(prev_props) {
 		Anim.update_anim(
+			this.props.id,
 			this.props.anim_info,
-			this.state.time_value,
+			this.state.timer,
 			prev_props.anim_info,
 		)
 	}
@@ -54,10 +55,11 @@ class OptionBackground extends React.Component {
 		// console.log('OptionBackground style', style)
 
 		let animated_style = {}
-		if (Anim.has_timer(anim_info)) {
+		if (anim_info) {
 			Anim.interpolate_anim_attr(
+				'option' + i,
 				anim_info,
-				this.state.time_value,
+				this.state.timer,
 				animated_style,
 			)
 		}

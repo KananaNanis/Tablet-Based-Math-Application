@@ -6,7 +6,6 @@ import {global_workspace_height} from './Workspace'
 import {global_fiver_shadow} from './Num'
 import {global_constant} from '../App'
 import * as Anim from '../event/animation'
-import { query_prop } from '../providers/query_store';
 
 function colorNameToHex(color) {
 	const colors = {
@@ -199,17 +198,18 @@ export function as_greyscale(color) {
 
 class Tower extends React.Component {
 	state = {
-		time_value: new Animated.Value(0),
+		timer: Anim.new_timer(),
 	}
 
 	componentDidMount() {
-		Anim.init_anim(this.props.anim_info, this.state.time_value)
+		Anim.init_anim(this.props.id, this.props.anim_info, this.state.timer)
 	}
 
 	componentDidUpdate(prev_props) {
 		Anim.update_anim(
+			this.props.id,
 			this.props.anim_info,
-			this.state.time_value,
+			this.state.timer,
 			prev_props.anim_info,
 		)
 	}
@@ -224,15 +224,16 @@ class Tower extends React.Component {
 			misc = null,
 			block_opacity = [],
 			just_grey = false,
-			scale_factor
+			scale_factor,
 		} = this.props
 		// console.log('id', id, 'name', name, 'block_opacity', block_opacity)
 		// console.log('id', id, 'name', name, 'misc', misc)
 		let animated_style = {}
-		if (Anim.has_timer(anim_info)) {
+		if (anim_info) {
 			Anim.interpolate_anim_attr(
+				id,
 				anim_info,
-				this.state.time_value,
+				this.state.timer,
 				animated_style,
 			)
 		}
@@ -308,21 +309,24 @@ class Tower extends React.Component {
 			}
 			if ('undefined' !== typeof b.block_opacity) {
 				view_style.opacity = b.block_opacity
-			} else if ('undefined' !== typeof selected_block_index
-        && null !== selected_block_index) {
+			} else if (
+				'undefined' !== typeof selected_block_index &&
+				null !== selected_block_index
+			) {
 				let how_many = 1
-        if (misc && misc.num_selected_blocks) how_many = misc.num_selected_blocks
+				if (misc && misc.num_selected_blocks) {
+					how_many = misc.num_selected_blocks
+				}
 				// console.log('sel', selected_block_index, 'how_many', how_many)
-				if (i < selected_block_index ||
-            i >= selected_block_index + how_many) {
+				if (i < selected_block_index || i >= selected_block_index + how_many) {
 					view_style.opacity = 0.25
 				}
-      }
+			}
 
 			let text_content = global_constant.tower.size2symbol[size]
 			let color = global_constant.tower.size2color[size]
 			if (just_grey) color = as_greyscale(color)
-			const left = scale_factor/35 + (size >= 0 ? -0.19 * height : 0)
+			const left = scale_factor / 35 + (size >= 0 ? -0.19 * height : 0)
 			let textBottom = (0 === size ? 0.25 : -2 === size ? -1 : 0.1) * height
 			let fontSize = (is_tiny ? 0 : is_small ? 2 : 0.75) * height
 			let shadow_style = {}
@@ -352,10 +356,10 @@ class Tower extends React.Component {
 					let bCol = 'darkred'
 					if (just_grey) bCol = as_greyscale(bCol)
 					view_style.borderColor = bCol
-					view_style.borderWidth = scale_factor/52
+					view_style.borderWidth = scale_factor / 52
 					//view_style.width = 50
-					width = scale_factor/7
-					textBottom -= scale_factor/35
+					width = scale_factor / 7
+					textBottom -= scale_factor / 35
 				}
 			}
 			let text_style = {
@@ -373,7 +377,7 @@ class Tower extends React.Component {
 				text_style.bottom = 0
 			}
 			if (misc && misc.top_just_outline) {
-			  if (i + misc.top_just_outline >= block_info.length) {
+				if (i + misc.top_just_outline >= block_info.length) {
 					just_grey = 'outline'
 					view_style.backgroundColor = '#dbb'
 				}
@@ -385,11 +389,11 @@ class Tower extends React.Component {
 					img_name={img_name}
 					just_grey={just_grey}
 					radius_style={radius_style}
+					scale_factor={scale_factor}
 					text_content={text_content}
 					text_style={text_style}
 					view_style={view_style}
 					width={width}
-					scale_factor={scale_factor}
 				/>,
 			)
 		}

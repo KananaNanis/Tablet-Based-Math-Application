@@ -1,7 +1,7 @@
 /*global user_id*/
 import React from 'react'
-import { StyleSheet, View, Platform } from 'react-native'
-import { bindActionCreators } from 'redux'
+import {StyleSheet, View, Platform} from 'react-native'
+import {bindActionCreators} from 'redux'
 import yaml from 'js-yaml'
 
 import WorkspaceContainer from './containers/WorkspaceContainer'
@@ -11,16 +11,16 @@ import {
 	global_grass_height,
 	update_screen_dimensions,
 } from './components/Workspace'
-import { touchHandler } from './event/event'
-import { global_store } from './index.js'
+import {touchHandler} from './event/event'
+import {global_store} from './index.js'
 import Sound from './assets/sound'
 import * as Actions from './providers/actions'
 import PrintFigure from './components/PrintFigure'
-import { as_position, print_all_paths } from './providers/change_config'
-import { query_path, query_test, query_prop } from './providers/query_store'
-import { get_keypad_width_height } from './components/Keypad'
-import { enter_exit_config } from './providers/enter_exit'
-import { do_batched_actions } from './providers/reducers'
+import {as_position, print_all_paths} from './providers/change_config'
+import {query_path, query_test, query_prop} from './providers/query_store'
+import {get_keypad_width_height} from './components/Keypad'
+import {enter_exit_config} from './providers/enter_exit'
+import {do_batched_actions} from './providers/reducers'
 
 export let doAction = {}
 export let global_sound = {}
@@ -41,7 +41,7 @@ export let config_tree = {}
 export let global_constant = false
 export async function load_config_tree(appObj) {
 	function convert_unicode(input) {
-		return input.replace(/\\u(\w\w\w\w)/g, function (a, b) {
+		return input.replace(/\\u(\w\w\w\w)/g, function(a, b) {
 			const charcode = parseInt(b, 16)
 			return String.fromCharCode(charcode)
 		})
@@ -88,7 +88,7 @@ export async function load_config_tree(appObj) {
 			let doActionInner = bindActionCreators(Actions, global_store.dispatch)
 			for (const a in doActionInner) {
 				if (doActionInner.hasOwnProperty(a)) {
-					doAction[a] = function (...args) {
+					doAction[a] = function(...args) {
 						console.log(a, ...args)
 						return doActionInner[a](...args)
 					}
@@ -184,7 +184,7 @@ export async function load_config_tree(appObj) {
 			const add_tablet_border = true
 			if (add_tablet_border) {
 				appObj.setState(_ => {
-					return { add_tablet_border: true }
+					return {add_tablet_border: true}
 				})
 			}
 		} else if (
@@ -205,12 +205,13 @@ export async function load_config_tree(appObj) {
 		doAction.setProp('scale_factor', global_constant.scale_factor_from_yaml)
 		//get_config(path)
 
-		let enter = true, action_list = []
+		let enter = true,
+			action_list = []
 		enter_exit_config(path, enter, action_list)
 		do_batched_actions(action_list)
 		if (query_prop('scale_factor') !== 520) {
 			appObj.setState(_ => {
-				return { add_scaling_border: true }
+				return {add_scaling_border: true}
 			})
 		}
 
@@ -237,7 +238,7 @@ export async function load_config_tree(appObj) {
 		const printPDF = false // for creating worksheets
 		if (printPDF) {
 			appObj.setState(_ => {
-				return { do_print: true }
+				return {do_print: true}
 			})
 		}
 	} catch (error) {
@@ -249,7 +250,7 @@ export async function load_config_tree(appObj) {
 export default class App extends React.Component {
 	constructor(props) {
 		super(props)
-		this.state = { do_print: false }
+		this.state = {do_print: false}
 		const poll_to_see_if_config_tree_changed = true
 		if (poll_to_see_if_config_tree_changed) {
 			window.setInterval(load_config_tree, 3000, this)
@@ -316,7 +317,7 @@ export default class App extends React.Component {
 					{
 						width: global_screen_width,
 						height: global_screen_height,
-						transform: [{ scale: global_constant.laptop_scaling_factor }],
+						transform: [{scale: global_constant.laptop_scaling_factor}],
 					},
 				]}
 			>
