@@ -24,11 +24,11 @@ export function query_all_nums() {
 
 export function query_tower(num_id, all_nums = null) {
 	if (!all_nums) all_nums = query_all_nums()
-	return all_nums[num_id]
+	return all_nums.get(num_id)
 }
 
 export function query_tower_blocks(num_id, tower = null, just_position) {
-	if (!tower) tower = query_tower(num_id)
+	if (!tower) tower = query_tower(num_id).toJS()
 	const scale_factor = query_prop('scale_factor')
 	// expand the name into individual blocks
 	//console.log(tower.name)
@@ -37,6 +37,7 @@ export function query_tower_blocks(num_id, tower = null, just_position) {
 	let was_fiver = 0
 	//const tower_name = tower.get('name')
 	const tower_name = tower.name
+  const block_opacity = tower.block_opacity ? tower.block_opacity : []
 	for (const group of tower_name) {
 		const size = get_block_size_from_group(group)
 		const how_many = get_how_many_from_group(group)
@@ -65,7 +66,7 @@ export function query_tower_blocks(num_id, tower = null, just_position) {
 					height,
 					width,
 					is_fiver,
-					block_opacity: tower.block_opacity[blocks.length],
+					block_opacity: block_opacity[blocks.length],
 					bottom: floor,
 				})
 			}
@@ -86,9 +87,9 @@ export function tower_name2height(name) {
 	if (!name) return null
 	let res = 0
 	for (const group of name) {
-		res += group
+		res += Math.round(10000*group)
 	}
-	return res
+	return res/10000
 }
 
 export function height2tower_name(height) {
@@ -104,17 +105,34 @@ export function height2tower_name(height) {
 	if (height < 0.0001) {
 		console.error('Error in height2tower_name:  height', height, '(too small)')
 	}
-	for (let size = 3; size >= -3; --size) {
-		if (10 ** size < height + 0.000000001) {
-			let how_many = Math.floor((height + 0.000000001) / 10 ** size)
-			height -= how_many * 10 ** size
-			if (how_many > 4) {
-				res.push(5 * 10 ** size)
-				how_many -= 5
+  /*
+		// original approach -- suspected of being buggy
+		for (let size = 3; size >= -3; --size) {
+			if (10 ** size < height + 0.000000001) {
+				let how_many = Math.floor((height + 0.000000001) / 10 ** size)
+				height -= how_many * 10 ** size
+				if (how_many > 4) {
+					res.push(5 * 10 ** size)
+					how_many -= 5
+				}
+				if (how_many > 0) res.push(how_many * 10 ** size)
 			}
-			if (how_many > 0) res.push(how_many * 10 ** size)
 		}
+  */
+	let h = Math.round(10000 * height)
+	for (let size = 1; size <= 8; ++size) {
+		let n = h % (10 ** size)
+		h -= n
+		let how_many = n / (10 ** (size-1))
+		let has_fiver = false
+		if (how_many > 4) {
+			has_fiver = true
+			how_many -= 5
+		}
+		if (how_many > 0) res.push(how_many * 10 ** (size - 5))
+		if (has_fiver) res.push(5 * 10 ** (size - 5))
 	}
+	res.reverse()
 	return res
 }
 

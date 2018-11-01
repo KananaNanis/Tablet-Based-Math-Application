@@ -28,9 +28,9 @@ function do_timed_action(id, key, val) {
 	// handle the following:
 	// appear_after: 2000,
 	if ('zoom_anim' === key) {
-		//console.log('SETTING ZOOM')
-		let anim_info = { ...val, zoom: true }
-		doAction.setAnimInfo(id, anim_info)
+		console.error('zoom_anim needs to be re-implemented')
+		// let anim_info = { ...val, zoom: true }
+		// doAction.addAnimInfo(id, anim_info)
 	} else {
 		let delay = val
 		if ('appear_after' === key) doAction.addObjStyle(id, 'opacity', 0)
@@ -109,7 +109,20 @@ export function store_config_modify(
 					}
 				} else if ('anim_info' === key) {
 					const info = c[id0][key]
-					action_list.push(Actions.setAnimInfo(id, enter ? info : null))
+					action_list.push(Actions.addAnimInfo(id, enter ? info : null))
+					/*  figuring out what anim_info means is done in the reducer now
+					if (null === info) {
+						action_list.push(Actions.clearAnimInfo(id))
+					} else {
+						for (const key2 in info) {
+							if (info.hasOwnProperty(key2)) {
+								action_list.push(
+									Actions.addAnimInfo(id, key2, enter ? info[key2] : null),
+								)
+							}
+						}
+					}
+					*/
 				} else if ('tower_style' === key) {
 					let props = c[id0][key]
 					for (const key2 in props) {
@@ -425,16 +438,19 @@ export function enter_exit_config(
 					// this attribute is special:  it is not erased at the end!
 					if (enter) {
 						const iter = query_prop('goto_iteration')
+						let goto_iter = global_constant.debug_mode
+							? global_constant.num_exercises_for_debugging
+							: c[key0][0]
 						if (!iter || !(iter > 0)) {
 							console.log(
 								'iter was',
 								iter,
 								'setting goto iteration',
-								c[key0][0],
+								goto_iter,
 								'path',
 								c[key0][1],
 							)
-							action_list.push(Actions.setProp('goto_iteration', c[key0][0]))
+							action_list.push(Actions.setProp('goto_iteration', goto_iter))
 						} else {
 							console.log('skipping setting iteration, iter', iter)
 						}
@@ -484,6 +500,8 @@ export function enter_exit_config(
 				} else if ('blank_between_exercises' === key) {
 					action_list.push(Actions.setProp(key, !enter ? c[key0] : null))
 					//console.log('blank', query_prop('blank_between_exercises'))
+				} else if ('new_scale_factor' === key) {
+					doAction.setProp('scale_factor', enter ? c[key0] : global_constant.scale_factor_from_yaml)
 				} else if ('remove_on_exit' === key && !enter) {
 					//console.log('remove_on_exit', c[key0])
 					remove_on_exit(c[key0], action_list)

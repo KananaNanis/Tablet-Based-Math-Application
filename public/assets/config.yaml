@@ -61,7 +61,7 @@ identity_function:
         bar_3: { name: [1.8] }
       modify:
         bar_3:
-          anim_info: { blink: .5 }
+          anim_info: { blink: [.5, 1] }
       event_handling: 
         move: stretch_bar
         comparison_source: bar_1
@@ -108,7 +108,7 @@ intro_halves:
           handle_color: orange
       bar_1: 
         position: [40vw, 0]
-        anim_info: { blink: .5 }
+        anim_info: { blink: [.5, 1] }
         style:
           borderRadius: 25
           width: 250
@@ -158,6 +158,7 @@ add_or_half:
       top_right_text: average_error
       arg_1: bar_1
       arg_2: bar_2
+      result: bar_3
     misc: 
       config_iteration: 7
       num_stars: 3
@@ -196,6 +197,15 @@ add_or_half:
               is_option: true
               option_width: 95
               option_offset: 280
+      stack:
+        params:
+          modify:
+            bar_3:
+              style: {opacity: 0}
+          event_handling:
+            stack_arg_2: true
+        bars:
+          level_1:
       bars:
         level_1:
           params:
@@ -346,7 +356,7 @@ add_or_half:
         modify:
           bar_3: 
             style: {opacity: 1}
-            anim_info: { blink: 0 }
+            anim_info: { blink: [0, 1] }
             misc: 
               mutable: true
         event_handling: 
@@ -425,7 +435,7 @@ add_or_half:
         modify:
           bar_1: 
             style: {opacity: 1}
-            anim_info: { blink: 0 }
+            anim_info: { blink: [0, 1] }
             misc: 
               mutable: true
         event_handling: 
@@ -498,7 +508,7 @@ add_or_half:
         modify:
           bar_2: 
             style: {opacity: 1}
-            anim_info: { blink: 0 }
+            anim_info: { blink: [0, 1] }
             misc: 
               mutable: true
         event_handling: 
@@ -643,7 +653,7 @@ add_height:
         modify:
           door_3: 
             style: {opacity: 1}
-            anim_info: { blink: 0 }
+            anim_info: { blink: [0, 1] }
             misc: 
               handle_opacity: 0
               mutable: true
@@ -1695,7 +1705,7 @@ estimate_tower_height:
         tower_style: { opacity: 0 }
       door_3: 
         position: [right 80, 0]
-        anim_info: { blink: 0 }
+        anim_info: { blink: [0, 1] }
         misc:
           handle_opacity: 0
     event_handling: 
@@ -1920,8 +1930,31 @@ round_2_est_option:
     params:
       generate:
         prompt_value: [pick_from_range, .1, .45, .1]
+        # prompt_value: [fixed, .2]
         option_value_delta: [[.1], [.2], [.3], [.4]]
         option_value_seed: prompt_value
+    with_tower:
+      params:
+        generate:
+          int_prompt: 10 * prompt_value
+          from_five: 5 - int_prompt
+        create:
+          tower_1: { name: prompt_value }
+          # tower_1: [.4, .1]
+        modify:
+          tower_1:
+            position: [15, 0]
+            misc:
+              # top_just_outline: from_five
+              hide_tower_name: true
+      level_1:
+      level_2:
+        params:
+          modify:
+            tower_1:
+              anim_info:
+                opacity: [1, 0]
+                duration: 500
     notches:
     no_notches:
       params: 
@@ -1934,6 +1967,28 @@ round_2_est_option:
         prompt_value: [pick_from_range, .6, .95, .1]
         option_value_delta: [[.6], [.7], [.8], [.9]]
         option_value_seed: prompt_value
+    with_tower:
+      params:
+        generate:
+          int_prompt: 10 * prompt_value
+          from_ten: 10 - int_prompt
+        create:
+          tower_1: { name: prompt_value }
+          # tower_1: [.5, .4, .1]
+        modify:
+          tower_1:
+            position: [15, 0]
+            misc:
+              # top_just_outline: from_ten
+              hide_tower_name: true
+      level_1:
+      level_2:
+        params:
+          modify:
+            tower_1:
+              anim_info:
+                opacity: [1, 0]
+                duration: 500
     notches:
     no_notches:
       params: 
@@ -2224,7 +2279,7 @@ animal_sum:
       tile_2: { position: [right 200, 0] }
       door_3: 
         position: [right 80, 0]
-        anim_info: { blink: 0 }
+        anim_info: { blink: [0, 1] }
         misc:
           handle_opacity: 0
     event_handling: 
@@ -2241,9 +2296,29 @@ animal_sum:
   level_1:
   level_2:
   level_3:
+two_doors:  # for a figure
+  params:
+    create:
+      door_1: [.7]
+      door_2: [.6]
+      button_submit:
+    modify:
+      door_1:
+        position: [250, 0]
+        misc:
+          extra_scale: 1.3
+          handle_color: red
+      door_2:
+        position: [right 150, 0]
+        misc:
+          extra_scale: .5
+          handle_opacity: 0.25
+    misc:
+      num_stars: 3
 two_animals:
   params:
     generate: 
+      # some changes have been added for the sake of making a figure
       tile_1_name: [pick_from_list, [unicorn]]
       #tile_1_name: [pick_from_list, [unicorn, dragon, sloth]]
       # tile_1_name: { exercise0: [pick_from_list, [unicorn]] }
@@ -2260,13 +2335,17 @@ two_animals:
       button_start:
     modify:
       tile_1: 
-        position: [right_from_left 60vw, 0]
+        # position: [right_from_left 60vw, 0]
+        position: [right_from_left 89vw, 0]
         misc:
           landmark_index: landmark_index
       tile_2: 
-        position: [right 50, 0]
+        # position: [right 50, 0]
+        position: [right 0, 0]
         misc:
           # extra_dot: [100, 100]
+          image_opacity: 0  # added this!!
+          landmark_index: landmark_index  # added this!!
           extra_scale: tile_2_scale
     event_handling: 
       correctness: move_dot
@@ -2304,7 +2383,7 @@ two_animals:
       delay:
         modify:
           door_2:
-            anim_info: { blink: 0 }
+            anim_info: { blink: [0, 1] }
     with_dot:
       params:
       level_1:
@@ -2373,7 +2452,7 @@ proportion:
       door_3: 
         position: [320, 0]
         style: { opacity: 1 }
-        anim_info: { blink: 0 }
+        anim_info: { blink: [0, 1] }
         misc: 
           handle_opacity: 0
           handle_color: orange
@@ -2578,7 +2657,7 @@ proportion:
               time: [ {delay: 1000, duration: 1000} ]
           door_3:
             appear_after: 3000
-            anim_info: { blink: 0, delay: 3000 }
+            anim_info: { blink: [0, 1], delay: 3000 }
         misc: 
           skip_slide_down: true
     level_2:
@@ -2591,7 +2670,7 @@ proportion:
               time: [ {delay: 1000, duration: 500} ]
           door_3:
             appear_after: 2500
-            anim_info: { blink: 0, delay: 2500 }
+            anim_info: { blink: [0, 1], delay: 2500 }
   bounce:
     skip_node_above:
     params:
@@ -2606,7 +2685,7 @@ proportion:
               time: [ {delay: 1000, duration: 500}, {delay: 2000, duration: 250} ]
           door_3:
             appear_after: 4500
-            anim_info: { blink: 0, delay: 4500 }
+            anim_info: { blink: [0, 1], delay: 4500 }
     level_2:
       params:
         generate: { door_2_name: [pick_from_list, [.25, .5, .75]] }
@@ -2618,7 +2697,7 @@ proportion:
               time: [ {delay: 1000, duration: 250}, {delay: 1000, duration: 250} ]
           door_3:
             appear_after: 3500
-            anim_info: { blink: 0, delay: 3500 }
+            anim_info: { blink: [0, 1], delay: 3500 }
     level_3:
       params:
         modify:
@@ -2629,13 +2708,13 @@ proportion:
               time: [ {delay: 1000, duration: 250}, {delay: 500, duration: 500} ]
           door_3:
             appear_after: 3000
-            anim_info: { blink: 0, delay: 3000 }
+            anim_info: { blink: [0, 1], delay: 3000 }
   no_bounce:
     params:
       modify:
         door_3:
           appear_after: 1000
-          anim_info: { blink: 0, delay: 1000 }
+          anim_info: { blink: [0, 1], delay: 1000 }
     level_1:
       params:
         generate: { door_2_name: [fixed, .5] }
@@ -2656,7 +2735,7 @@ multiply_height:
       # tower_1: { name: [.5, .3] }
       # button_submit:
     modify:
-      portal_1: { position: [0, 0], anim_info: { handle_blink: 0 } }
+      portal_1: { position: [0, 0], anim_info: { handle_blink: [0, 1] } }
       door_3: { position: [320, 0], misc: {handle_color: orange} }
       # tower_1: { position: [50vw, 0] }
     event_handling: 
@@ -2688,7 +2767,7 @@ multiply_height:
         modify:
           portal_1: { position: [0, 0], anim_info: null }
           tile_2:
-            anim_info: { blink: .5 }
+            anim_info: { blink: [.5, 1] }
         event_handling: 
           move: touch_image
           star_policy: extraLoose 
@@ -2738,7 +2817,7 @@ multiply_height:
               portal_1: { anim_info: null }
               door_3: 
                 style: {opacity: 1}
-                anim_info: { blink: 0 }
+                anim_info: { blink: [0, 1] }
                 misc: 
                   handle_opacity: 0
             event_handling: 
@@ -2763,7 +2842,7 @@ multiply_height:
               portal_1: { anim_info: null }
               door_3: 
                 style: {opacity: 1}
-                anim_info: { blink: 0 }
+                anim_info: { blink: [0, 1] }
                 misc: 
                   handle_opacity: 0
             event_handling: 
@@ -2786,7 +2865,7 @@ multiply_height:
           portal_1: { anim_info: null }
           door_3: 
             style: {opacity: 1}
-            anim_info: { blink: 0 }
+            anim_info: { blink: [0, 1] }
             misc: 
               handle_opacity: 0
               handle_color: orange
@@ -2800,6 +2879,314 @@ multiply_height:
         params:
           generate: { door_2_name: [fixed, .5] }
       level_2:
+intro_diagrams_2:
+  params:
+    generate: { tower_1_name: [pick_from_range, .1, 3.8, .1] }
+    create:
+      tower_1: { name: tower_1_name }
+      tower_2: []
+    modify:
+      tower_1: 
+        position: [5, 0]
+        tower_style: {opacity: 0}
+      tower_2: 
+        position: [65vw, 0]
+        tower_style: {opacity: 0}
+        misc:
+          tower_name_style: { left: 5 }
+    event_handling: 
+      comparison_source: tower_1
+      target: tower_2
+      correctness: identical
+      touch_reveals_button: [submit, delete]
+    misc: 
+      new_scale_factor: 200
+      config_iteration: 7
+      num_stars: 3
+      remove_on_exit: [button_submit, button_delete]
+  level_1:
+    params:
+      create:
+        keypad_kind: 'buildTower'
+      modify:
+        tower_1:
+          width: 50vw
+          overflow: hidden
+          tower_style: {opacity: null}
+          misc:
+            hide_tower_name: true
+  level_2:
+    params:
+      modify:
+        tower_2:
+          tower_style: {opacity: null}
+          misc: 
+            hide_tower_name: true
+            as_diagram: true
+      event_handling:
+        create_tower_by_height: true
+tower_1_2:
+  params:
+    generate:
+      # mean_name_base: [pick_from_list, [[.5, .5], [1, .5, .5]]]
+      mean_name_base: [pick_from_list, [[.5,.5, .5,.5, .5,.5], [1, .5,.5, .5,.5], [2, .5,.5], [.5,.5, .5,.5], [1, .5,.5], [.5,.5]]]
+      extra_fiver: [pick_from_list, [0, .5]]
+      extra_delta: [pick_from_range, 0, .45, .1]
+      mean_name_f: mean_name_base ++ extra_fiver
+      mean_name: mean_name_f ++ extra_delta
+    create:
+      tower_1: { name: tower_1_name }
+      tower_2: { name: tower_2_name }
+      button_submit:
+      tower_moving: []
+    modify:
+      tower_1:
+        position: [5vw, 0]
+        width: 50vw
+        overflow: 'hidden'
+      tower_2:
+        position: [70vw, 0]
+        # misc:
+        #   selected_block_index: 1
+        #   num_selected_blocks: 2
+      tower_moving:
+        position: [0, 0]
+        width: 50vw
+        overflow: 'hidden'
+        # anim_info:
+        #   left: [0, -70]
+        #   duration: 1000
+        misc:
+          hide_tower_name: true
+    event_handling:
+      target: tower_2
+      comparison_source: tower_1
+      moving: tower_moving
+      correctness: identical
+      swipe_tower: true
+      minimum_split_size: -1
+    misc:
+      new_scale_factor: 200
+      config_iteration: 7
+      num_stars: 3
+  level_1:
+    params:
+      generate:
+        # tower_1_name: [fixed, [1, .5, .2]]
+        # tower_2_name: [fixed, [.5, .5, .5, .2]]
+        # tower_2_name: [fixed, [.5, .5, .5, .1, .05, .05]]
+        # tower_2_name: [fixed, [.5, .5, .5, .1, .05, .01, .01, .01, .01, .01]]
+        tower_1_name: standardize_name mean_name
+        tower_2_name: mean_name
+      event_handling:
+        minimum_split_size: 100
+  level_2:
+    params:
+      generate:
+        # tower_1_name: [fixed, [.5, .5, .5, .2]]
+        tower_1_name: mean_name
+        # tower_2_name: [fixed, [1, .5, .2]]
+        tower_2_name: standardize_name mean_name
+      event_handling:
+        no_split_fiver: true
+        minimum_split_size: -1
+  diagrams:
+    params:
+      modify:
+        tower_1:
+          misc: 
+            as_diagram: true
+        tower_2:
+          misc: 
+            as_diagram: true
+        tower_moving:
+          misc: 
+            as_diagram: true
+      event_handling:
+        no_split_fiver: true
+        minimum_split_size: -1
+    level_3:
+      params:
+        generate:
+          tower_1_name: standardize_name mean_name
+          tower_2_name: mean_name
+    level_4:
+      params:
+        generate:
+          tower_1_name: mean_name
+          tower_2_name: standardize_name mean_name
+group_ungroup_1:
+  params:
+    generate: # { tower_1_name: [pick_from_range, .1, 3.8, .1] }
+      mean_name_base: [pick_from_list, [[.5,.5, .5,.5, .5,.5], [1, .5,.5, .5,.5], [2, .5,.5], [.5,.5, .5,.5], [1, .5,.5], [.5,.5]]]
+      extra_fiver: [pick_from_list, [0, .5]]
+      extra_delta: [pick_from_range, 0, .45, .1]
+      mean_name_f: mean_name_base ++ extra_fiver
+      mean_name: mean_name_f ++ extra_delta
+      tower_1_name: mean_name
+      # tower_1_name: [fixed, [.5, .5]]
+    create:
+      tower_1: { name: tower_1_name }
+      tower_mid: []
+      tower_2: []
+      tower_moving: []
+    modify:
+      tower_1: 
+        position: [5, 0]
+        tower_style: {opacity: 0}
+      tower_mid:
+        position: [50vw, 0]
+        misc:
+          hide_tower_name: true
+      tower_2: 
+        position: [right 10vw, 0]
+        tower_style: {opacity: 0}
+        misc:
+          tower_name_style: { left: 5 }
+      tower_moving:
+        position: [0, 0]
+        misc:
+          hide_tower_name: true
+    event_handling: 
+      correctness: identical
+      touch_reveals_button: [submit, delete]
+    misc: 
+      new_scale_factor: 200
+      num_stars: 3
+      remove_on_exit: [button_submit, button_delete]
+      # config_iteration: 7
+      # when ready to tie the different stages together:
+      config_iteration: null
+      problem_stage: true
+      skip_in_between: true
+      # skip_submit: true
+  stage_1:
+    params:
+      event_handling:
+        create_tower_by_height: true
+        comparison_source: tower_1
+        target: tower_mid
+        allow_non_standard: true
+  stage_2:
+    params:
+      # generate:
+      #   tower_mid_name: [fixed, [.5, .5, .5, .2]]
+      # create:
+      #   tower_mid: {name: tower_mid_name}
+      event_handling:
+        target: tower_mid
+        moving: tower_moving
+        correctness: is_standardized
+        swipe_tower: true
+        minimum_split_size: -1
+        touch_reveals_button: [submit]
+  stage_3:
+    params:
+      create:
+        keypad_kind: 'buildTower'
+      event_handling:
+        comparison_source: tower_mid
+        target: tower_2
+        allow_non_standard: true
+      misc: 
+        # skip_submit: null
+        skip_in_between: null
+        problem_stage: null
+        goto_config: [7, [group_ungroup_1, stage_1]]
+        remove_on_exit: [button_submit, button_delete]
+group_ungroup_2:
+  params:
+    generate: # { tower_1_name: [pick_from_range, .1, 3.8, .1] }
+      mean_name_base: [pick_from_list, [[.5,.5, .5,.5, .5,.5], [1, .5,.5, .5,.5], [2, .5,.5], [.5,.5, .5,.5], [1, .5,.5], [.5,.5]]]
+      extra_fiver: [pick_from_list, [0, .5]]
+      extra_delta: [pick_from_range, 0, .45, .1]
+      mean_name_f: mean_name_base ++ extra_fiver
+      mean_name: mean_name_f ++ extra_delta
+      tower_1_name: mean_name
+      # tower_1_name: [fixed, [.5, .5]]
+    create:
+      tower_1: { name: tower_1_name }
+      tower_mid: []
+      tower_2: []
+      tower_moving: []
+    modify:
+      tower_1: 
+        position: [5, 0]
+        tower_style: {opacity: 0}
+      tower_mid:
+        position: [50vw, 0]
+        misc:
+          hide_tower_name: true
+          as_diagram: true
+      tower_2: 
+        position: [right 10vw, 0]
+        tower_style: {opacity: 0}
+        misc:
+          tower_name_style: { left: 5 }
+      tower_moving:
+        position: [0, 0]
+        misc:
+          hide_tower_name: true
+          as_diagram: true
+    event_handling: 
+      correctness: identical
+      touch_reveals_button: [submit, delete]
+    misc: 
+      new_scale_factor: 200
+      num_stars: 3
+      remove_on_exit: [button_submit, button_delete]
+      # config_iteration: 7
+      # when ready to tie the different stages together:
+      config_iteration: null
+      problem_stage: true
+      skip_in_between: true
+      # skip_submit: true
+  stage_1:
+    params:
+      event_handling:
+        create_tower_by_height: true
+        comparison_source: tower_1
+        target: tower_mid
+        allow_non_standard: true
+  stage_2:
+    params:
+      # generate:
+      #   tower_mid_name: [fixed, [.5, .5, .5, .2]]
+      # create:
+      #   tower_mid: {name: tower_mid_name}
+      event_handling:
+        target: tower_mid
+        moving: tower_moving
+        correctness: is_standardized
+        swipe_tower: true
+        minimum_split_size: -1
+        touch_reveals_button: [submit]
+  stage_3:
+    params:
+      create:
+        keypad_kind: 'buildTower'
+      event_handling:
+        comparison_source: tower_mid
+        target: tower_2
+        allow_non_standard: true
+      misc: 
+        # skip_submit: null
+        skip_in_between: null
+        problem_stage: null
+        goto_config: [7, [group_ungroup_2, stage_1]]
+        remove_on_exit: [button_submit, button_delete]
+  after:
+    params:
+      event_handling:
+        create_tower_by_height: true
+        comparison_source: tower_1
+        target: tower_mid
+        allow_non_standard: true
+      misc:
+        config_iteration: 1
+        skip_in_between: null
+        problem_stage: null
+        jmp: jmp_label_2
 # bar_addition:
 # - params:
 #   - generator: {random1: uniform, random2: uniform, sum_in_range: [.1,1]}
@@ -2853,6 +3240,22 @@ all_done:
   params:
     create:
       center_text:  That's all for today!
+rotate45:  # this is not a level;  it is an animation snippet
+  params:
+    modify:
+      tile_1:
+        anim_info:
+          rotate: [0deg, -45deg]
+          duration: 1000
+make_green:  # this is not a level;  it is an animation snippet
+  params:
+    modify:
+      tile_1:
+        style: {backgroundColor: green}
+        anim_info:
+          opacity: [1, .5]
+          duration: 1000
+          on_end: [rotate45]
 animation_test:
   params:
     create:
@@ -2862,8 +3265,9 @@ animation_test:
         position: [10, 0]
         anim_info:
           left: [10, 400]
-          delay: 500
+          # delay: 500
           duration: 2000
+          on_end: [make_green]
     event_handling: 
       just_yaml_event: true
       on_down:

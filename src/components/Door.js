@@ -26,7 +26,7 @@ class Door extends React.Component {
 			let {anim_info} = this.props
 			//console.log('clear_anim_info', anim_info)
 			if (f.finished && anim_info) {
-				doAction.setAnimInfo(id, null)
+				doAction.clearAnimInfo(id)
 			}
 		}
 		if (anim_info && anim_info.hasOwnProperty('zoom')) {

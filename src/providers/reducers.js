@@ -6,6 +6,7 @@ import {batchActions} from 'redux-batched-actions'
 import * as AT from './actionTypes'
 import {global_store} from '../index'
 import {add_block_to_name, remove_block_from_name} from '../components/Block'
+import {global_constant} from '../App'
 
 // the following reducers control the various overall chunks of the store
 
@@ -174,9 +175,49 @@ function style(state = Map({}), action) {
 }
 
 function anim_info(state = Map({}), action) {
+	if (AT.ADD_ANIM_INFO === action.type) {  // parse this one carefully
+		let new_anim_info = state.get(action.id) ? state.get(action.id) : Map({})
+		const delay = action.anim_info.hasOwnProperty('delay') ? action.anim_info['delay'] : null
+		const duration = action.anim_info.hasOwnProperty('duration') ? action.anim_info['duration'] : null
+		let on_end = action.anim_info.hasOwnProperty('on_end') ? action.anim_info['on_end'] : null
+		const isLoop = action.anim_info.hasOwnProperty('loop')
+		const id = action.anim_info.anim_info_counter
+		for (const key in action.anim_info) {
+			if (!['delay', 'duration', 'on_end', 'loop', 'anim_info_counter'].includes(key) && action.anim_info.hasOwnProperty(key)) {
+				const val = action.anim_info[key]
+				if (null === val) {  // special case
+					new_anim_info = obj_add_remove_property(new_anim_info, key, null)
+				}	else if (global_constant.anim_all_attributes.includes(key)) {
+					if (['blink', 'handle_blink'].includes(key)) {
+						let full_val = { id, from: val[0], to: val[1], loop: true }
+						full_val.duration = duration ? duration : 500
+						if (delay) full_val.delay = delay
+						if (on_end) {
+							full_val.on_end = on_end
+							on_end = null
+						}
+						new_anim_info = obj_add_remove_property(new_anim_info, key, fromJS(full_val))
+					} else if (duration) {
+						let full_val = { id, from: val[0], to: val[1] }
+						full_val.duration = duration
+						if (delay) full_val.delay = delay
+						if (on_end) {
+							full_val.on_end = on_end
+							on_end = null
+						}
+						new_anim_info = obj_add_remove_property(new_anim_info, key, fromJS(full_val))
+					} else {
+						console.error('Warning in reducer:  anim_info attr', key, 'not changed without duration.')
+					}
+				} else {
+					new_anim_info = obj_add_remove_property(new_anim_info, key, fromJS(val))
+				}
+    	}
+    }
+		return state.set(action.id, new_anim_info)
+  } 
 	switch (action.type) {
-		case AT.SET_ANIM_INFO:
-			return state.set(action.id, action.anim_info)
+		case AT.CLEAR_ANIM_INFO:
 		case AT.TOWER_CREATE:
 		case AT.TILE_CREATE:
 		case AT.DOOR_CREATE:
@@ -233,11 +274,22 @@ function block_opacity(state = Map({}), action) {
         [action.id]: new_opacity
       }
       */
+			/*
+      let new_opacity = state.has(action.id) ? state.get(action.id).toJS() : []
+      new_opacity[action.index] = action.opacity
+			return state.set(
+				action.id,
+				// state.has(action.id)
+				// 	? state.get(action.id).set(action.index, action.opacity)
+				// 	: List([]),
+				fromJS(new_opacity)
+			)
+			*/
 			return state.set(
 				action.id,
 				state.has(action.id)
 					? state.get(action.id).set(action.index, action.opacity)
-					: List([]),
+					: List().set(action.index, action.opacity)
 			)
 		case AT.TOWER_CREATE:
 		case AT.TOWER_DELETE:
@@ -304,22 +356,6 @@ function event_handling(state = Map({}), action) {
 			return Map({})
 		case AT.SET_EVENT_HANDLING_PARAM:
 			return obj_add_remove_property(state, action.key, action.val)
-		default:
-			return state
-	}
-}
-
-function timer_started(state = Map({}), action) {
-	switch (action.type) {
-		case AT.SET_TIMER_STARTED:
-			return obj_add_remove_property(state, action.id, action.val)
-		case AT.TOWER_DELETE:
-		case AT.TILE_DELETE:
-		case AT.DOOR_DELETE:
-		case AT.PORTAL_DELETE:
-		case AT.FIVE_FRAME_DELETE:
-		case AT.BAR_DELETE:
-			return obj_add_remove_property(state, action.id, null)
 		default:
 			return state
 	}
@@ -396,7 +432,6 @@ const suujiAppInner = combineReducers({
 
 	// other
 	event_handling,
-	timer_started,
 	err_box,
 	option_values,
 	prop,

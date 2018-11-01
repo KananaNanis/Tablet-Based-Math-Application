@@ -31,6 +31,8 @@ import {
 	incorrect_button_response,
 	handle_options,
 	handle_create_tower_by_height,
+	handle_swipe_tower,
+	handle_stack_arg_2,
 } from './handlers'
 import { correct_next_button } from './correctness'
 import {
@@ -75,7 +77,7 @@ export function touch_dispatcher(state, x, y, touchID) {
 		}
 	} else {
 		//console.log('option_values' + query_option_values())
-		if (query_option_values()) return handle_options(state, x, y, touchID)
+		if (query_option_values() && !query_event('stack_arg_2')) return handle_options(state, x, y, touchID)
 	}
 	if (query_event('just_yaml_event')) {
 		if ('down' === state && query_event('on_down')) {
@@ -147,6 +149,10 @@ export function touch_dispatcher(state, x, y, touchID) {
 	// console.log('target', query_event('target'))
 	if (query_event('create_tower_by_height')) {
 		handle_create_tower_by_height(state, x, y, touchID)
+	} else if (query_event('swipe_tower')) {
+		handle_swipe_tower(state, x, y, touchID)
+	} else if (query_event('stack_arg_2')) {
+		handle_stack_arg_2(state, x, y, touchID)
 	} else if (query_event('target') && query_event('move')) {
 		const tgt = query_event('target')
 		const scale_factor = query_prop('scale_factor')
@@ -197,7 +203,7 @@ export function touch_dispatcher(state, x, y, touchID) {
 				doAction.addObjMisc(tile_tgt, 'extra_dot', [xp, yp])
 			} else {
 				//doAction.addObjMisc(tgt, 'blink', null)
-				doAction.setAnimInfo(tgt, null)
+				doAction.clearAnimInfo(tgt)
 				doAction.addObjMisc(tgt, 'handle_opacity', null)
 				doAction.addObjStyle(tgt, 'opacity', 1)
 				doAction.setName('door_2', [yp / height])
@@ -235,14 +241,14 @@ export function touch_dispatcher(state, x, y, touchID) {
 			if ('down' === state) {
 				y_delta = null
 				scaling_delta = null
-				if (query_has_anim_info(arg_1)) doAction.setAnimInfo(arg_1, null)
+				if (query_has_anim_info(arg_1)) doAction.clearAnimInfo(arg_1)
 				const src = query_event('comparison_source')
 				let blinker = src
 				if ('stretch_bar' === move) {
 					blinker = tgt
 				}
 				if (blinker && is_blinking(blinker)) {
-					doAction.setAnimInfo(blinker, null)
+					doAction.clearAnimInfo(blinker)
 					doAction.addObjStyle(blinker, 'opacity', 1)
 				}
 				if ('touch_image' === move) {
@@ -252,7 +258,7 @@ export function touch_dispatcher(state, x, y, touchID) {
 					//console.log('scaling_delta ', scaling_delta)
 					if (is_blinking(arg_2)) {
 						//doAction.addObjMisc(arg_2, 'blink', null)
-						doAction.setAnimInfo(arg_2, null)
+						doAction.clearAnimInfo(arg_2)
 						//doAction.addObjMisc(tgt, 'opacity', 1)
 					}
 				} else if ('stretch_bar' === move) {
@@ -266,7 +272,7 @@ export function touch_dispatcher(state, x, y, touchID) {
 					if (d < global_constant.door.min_dist_from_door) {
 						doAction.addObjStyle(tgt, 'opacity', 1)
 						//doAction.addObjMisc(tgt, 'blink', null)
-						doAction.setAnimInfo(tgt, null)
+						doAction.clearAnimInfo(tgt)
 						doAction.addObjMisc(tgt, 'handle_opacity', 1)
 						perhaps_reveal_button()
 						y_delta = 0
@@ -286,14 +292,14 @@ export function touch_dispatcher(state, x, y, touchID) {
 						y_delta = f1 * extra_scale - y1
 						//console.log('is blinking', handle_is_blinking(tgt))
 						if (handle_is_blinking(tgt)) {
-							doAction.setAnimInfo(tgt, null)
+							doAction.clearAnimInfo(tgt)
 							doAction.addObjMisc(tgt, 'handle_opacity', 1)
 						}
 						// console.log('f1', f1, 'd', d, 'scaling_delta', scaling_delta)
 					}
 				}
 			} else {
-				if (query_has_anim_info(tgt)) doAction.setAnimInfo(tgt, null)
+				if (query_has_anim_info(tgt)) doAction.clearAnimInfo(tgt)
 				// console.log('tgt', tgt, 'y_delta', y_delta, 'y1', y1)
 				if ('touch_image' === move) {
 					const h = (scaling_delta * di) / scale_factor
@@ -310,7 +316,7 @@ export function touch_dispatcher(state, x, y, touchID) {
 						if (handle_close_to_goal()) {
 							//console.log('return_to_top', query_event('return_to_top'), 'tgt', tgt)
 							if (query_event('return_to_top') === tgt) {
-								doAction.setAnimInfo(tgt, {
+								doAction.addAnimInfo(tgt, {
 									slide_target: 1,
 									slide_duration: 200,
 								})
@@ -322,7 +328,7 @@ export function touch_dispatcher(state, x, y, touchID) {
 								let correct = f3 / f2
 								if (tgt !== arg_1) correct = f1 * f2
 								//console.log('f1', f1, 'correct', correct)
-								doAction.setAnimInfo(tgt, {
+								doAction.addAnimInfo(tgt, {
 									slide_target: correct,
 									slide_duration: 200,
 								})
@@ -337,8 +343,8 @@ export function touch_dispatcher(state, x, y, touchID) {
 							// doAction.addObjMisc(tgt, 'handle_opacity', null)
 							if ('touch_image' === move) {
 								//doAction.addObjMisc(arg_2, 'blink', 0.5)
-								doAction.setAnimInfo(arg_2, { blink: 0.5 })
-							} else doAction.setAnimInfo(tgt, { handle_blink: 0 })
+								doAction.addAnimInfo(arg_2, { blink: 0.5 })
+							} else doAction.addAnimInfo(tgt, { handle_blink: 0 })
 							doAction.setButtonDisplay('submit', null)
 							if (query_name_of(tgt).size > 1) {
 								//console.log('hide result door')

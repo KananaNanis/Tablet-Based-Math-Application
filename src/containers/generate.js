@@ -1,4 +1,4 @@
-import {global_constant} from '../App'
+import { global_constant } from '../App'
 import * as Actions from '../providers/actions'
 import {
 	pick_from_list,
@@ -7,7 +7,8 @@ import {
 	pick_animal_name,
 } from './gen_utile'
 //import {query_obj_misc, query_option_obj} from '../providers/query_store'
-import {approx_equal} from '../event/utils'
+import { approx_equal } from '../event/utils'
+import { tower_name2height, height2tower_name } from '../providers/query_tower';
 
 function find_gen_values_for_words(words, gen_vars) {
 	let res = words.slice()
@@ -22,7 +23,7 @@ function find_gen_values_for_words(words, gen_vars) {
 }
 
 function is_binary_op(s) {
-	return '+' === s || '-' === s || '*' === s || '/' === s
+	return '+' === s || '-' === s || '*' === s || '/' === s || '++' === s
 }
 
 function swap_in_array(arr, i, j) {
@@ -160,7 +161,17 @@ function apply_gen_instruction(
 		}
 	} else if ('string' === typeof inst) {
 		const words = inst.split(' ')
-		if (2 === words.length && 'height_from_animal' === words[0]) {
+		//console.log('words', words)
+		if (1 === words.length && gen_vars.hasOwnProperty(words[0])) {
+			gen_vars[id] = gen_vars[words[0]]
+			console.log(' gen', id, 'equal', gen_vars[id])
+		} else if (2 === words.length && 'standardize_name' === words[0]) {
+			let mean_name = gen_vars[words[1]]
+			let h = tower_name2height(mean_name)
+			let nice_name = height2tower_name(h)
+			console.log('mean_name', mean_name, 'h', h, 'nice_name', nice_name)
+			gen_vars[id] = nice_name
+		} else if (2 === words.length && 'height_from_animal' === words[0]) {
 			let animal_name = gen_vars[words[1]]
 			let h = global_constant.animals[animal_name].height
 			// console.log('animal_name', animal_name, 'h', h)
@@ -201,17 +212,25 @@ function apply_gen_instruction(
 				gen_vars[id] = vals[0] * vals[1]
 			} else if ('/' === words[1]) {
 				gen_vars[id] = vals[0] / vals[1]
+			} else if ('++' === words[1]) {
+				// console.log(' vals[0]', vals[0], 'vals[1]', vals[1])
+				if (vals[1] !== 0) {
+					gen_vars[id] = vals[0].concat([vals[1]])
+				} else {
+					gen_vars[id] = vals[0]
+				}
+				// console.log(' gen', id, 'equal', gen_vars[id])
 			}
 			//console.log('id', id, 'words', words, 'vals', vals, 'gen_vars[id]', gen_vars[id])
 		} else {
 			console.error(
-				'Warning:  unrecognized generate string instruction.',
+				'Warning 1:  unrecognized generate string instruction.',
 				id,
 				inst,
 			)
 		}
 	} else {
-		console.error('Warning:  unrecognized generate instruction.', id, inst)
+		console.error('Warning 2:  unrecognized generate instruction.', id, inst)
 	}
 	return ok
 }
@@ -235,7 +254,11 @@ export function generate_with_restrictions(
 			let words = 'string' === typeof c[id] ? c[id].split(' ') : null
 			if (id.startsWith('restriction_')) restrict.push(id)
 			else if (id.startsWith('option_')) option.push(id)
-			else if (words && 3 === words.length && is_binary_op(words[1])) {
+			else if (words &&
+				((1 === words.length) ||
+					(2 === words.length && 'standardize_name' === words[0]) ||
+					(3 === words.length && is_binary_op(words[1])))) {
+				// also allows identify function, special others!
 				binary.push(id)
 			} else all.push(id)
 		}

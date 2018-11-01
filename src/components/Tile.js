@@ -69,11 +69,12 @@ function init_dot_anim(props, time_value) {
 class Tile extends React.Component {
 	state = {
 		time_value: new Animated.Value(0),
+		timer: Anim.new_timer(),
 		peg_offset: this.compute_peg_offset(),
 	}
 
 	componentDidMount() {
-		Anim.init_anim(this.props.anim_info, this.state.time_value)
+		Anim.init_anim(this.props.id, this.props.anim_info, this.state.timer, this.state.time_value)
 		if (this.props.anim_info && this.props.anim_info.move_extra_dot) {
 			init_dot_anim(this.props, this.state.time_value)
 		}
@@ -81,7 +82,9 @@ class Tile extends React.Component {
 
 	componentDidUpdate(prev_props) {
 		Anim.update_anim(
+			this.props.id,
 			this.props.anim_info,
+			this.state.timer,
 			this.state.time_value,
 			prev_props.anim_info,
 		)
@@ -120,20 +123,23 @@ class Tile extends React.Component {
 		const extra_scale =
 			misc && 'undefined' !== typeof misc.extra_scale ? misc.extra_scale : 1
 		//console.log('Tile  id', id, 'extra_scale', extra_scale)
+		console.log('Tile  id', id, 'anim_info', anim_info)
 		const useAllBorders = false // use true when printing
 		const useNoBorders = false // need to allow this for some cases!
 
 		let animated_style = {}
-		if (Anim.has_timer(anim_info) && !just_grey) {
+		if (!just_grey) {
 			Anim.interpolate_anim_attr(
+				id,
 				anim_info,
-				this.state.time_value,
+				this.state.timer,
 				animated_style,
 			)
 		}
 
 		let extra_style = {}
-		let image_opacity = 1
+		let image_opacity =
+			misc && 'undefined' !== typeof misc.image_opacity ? misc.image_opacity : 1
 		if (just_grey) extra_style = { opacity: 0.1 }
 		const is_peg = name.startsWith('peg_')
 		const img_name = is_peg ? 'peg' : name
