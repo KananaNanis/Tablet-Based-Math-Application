@@ -8,7 +8,7 @@ import {
 	query_obj_misc,
 	//query_obj_style,
 	//query_position_of,
-	//query_name_of,
+	query_name_of,
 } from '../providers/query_store'
 import {height2tower_name} from '../providers/query_tower'
 
@@ -25,7 +25,13 @@ export function render_nums(
 	//console.log('render_nums just_grey', just_grey)
 	let nums = []
 	for (let i = 0; i < tower_ids.size; ++i) {
-		const m = query_obj_misc(tower_ids.get(i))
+		const id = tower_ids.get(i)
+		const m = query_obj_misc(id)
+		const n = query_name_of(id)
+		if ('undefined' === typeof n || null === n) {
+			console.error('cannot render Num id', id, 'name', n)
+			continue
+		}
 		let is_option = m ? m.get('is_option') : false
 		if (option_values && is_option) {
 			// console.log('id', id, 'option', option_values ? option_values.toJS() : null)
@@ -35,8 +41,8 @@ export function render_nums(
 				name = height2tower_name(name.get(0))
 				nums.push(
 					<NumContainer
-						key={tower_ids.get(i) + '_' + j}
-						id={tower_ids.get(i)}
+						key={id + '_' + j}
+						id={id}
 						just_grey={just_grey}
 						name={name}
 						offset_x={offset_x}
@@ -44,12 +50,13 @@ export function render_nums(
 				)
 			}
 			// store the name of the object that triggered the construction of options
-			nums.push(tower_ids.get(i))
+			nums.push(id)
 		} else if (!option_values && !is_option) {
+			// console.log('about to render Num id', id, 'name', n)
 			nums.push(
 				<NumContainer
-					key={tower_ids.get(i)}
-					id={tower_ids.get(i)}
+					key={id}
+					id={id}
 					just_grey={just_grey}
 					offset_x={offset_x}
 				/>,

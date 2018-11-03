@@ -33,6 +33,11 @@ class TowerName extends React.Component {
 			tower_name_style,
 			just_grey = false,
 		} = this.props
+		// console.log('TowerName id', id, 'name', name)
+		if ('undefined' === typeof name) {
+			console.error('Cannot render tower name id', id)
+			return null
+		}
 		let animated_style = {}
 		if (anim_info) {
 			Anim.interpolate_anim_attr(

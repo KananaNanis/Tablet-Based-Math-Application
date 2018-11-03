@@ -2,6 +2,7 @@ import React from 'react'
 import {StyleSheet, View} from 'react-native'
 import Tower from './Tower'
 import TowerName from './TowerName'
+import {get_is_fiver_from_group, get_block_size_from_group} from './Block'
 
 export const global_fiver_shadow = [
 	{},
@@ -17,6 +18,27 @@ export const global_fiver_shadow = [
 	},
 ]
 
+function only_fivers(name, reverse) {
+	let res = []
+	for (const i of name) {
+		if (reverse) {
+			if (!get_is_fiver_from_group(i)) res.push(i)
+		} else {
+			if (get_is_fiver_from_group(i)) res.push(i)
+		}
+	}
+	// console.log('only_fivers name', name, 'reverse', reverse, 'res', res)
+	return res
+}
+
+function only_one_size(name, size) {
+	let res = []
+	for (const i of name) {
+		if (size === get_block_size_from_group(i)) res.push(i)
+	}
+	return res
+}
+
 const Num = ({
 	id,
 	name,
@@ -29,6 +51,12 @@ const Num = ({
 	scale_factor,
 	just_grey = false,
 }) => {
+	let tn_name = name
+	if (misc && misc.show_only_fivers) tn_name = only_fivers(tn_name)
+	if (misc && misc.show_only_singletons) tn_name = only_fivers(tn_name, true)
+	if (misc && misc.show_only_size) {
+		tn_name = only_one_size(tn_name, misc.show_only_size)
+	}
 	let tower_name_style =
 		misc && misc.tower_name_style ? misc.tower_name_style : null
 	const tn =
@@ -37,7 +65,7 @@ const Num = ({
 				anim_info={anim_info}
 				id={id}
 				just_grey={just_grey}
-				name={name}
+				name={tn_name}
 				position={position}
 				tower_name_style={tower_name_style}
 			/>

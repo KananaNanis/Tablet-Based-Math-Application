@@ -228,6 +228,10 @@ class Tower extends React.Component {
 		} = this.props
 		// console.log('id', id, 'name', name, 'block_opacity', block_opacity)
 		// console.log('id', id, 'name', name, 'misc', misc)
+		if ('undefined' === typeof name) {
+			console.error('Cannot render tower id', id)
+			return null
+		}
 		let animated_style = {}
 		if (anim_info) {
 			Anim.interpolate_anim_attr(

@@ -121,7 +121,7 @@ function trigger_continuation(on_end) {
 	if (Array.isArray(on_end)) {
 		// this is a path to instructions
 		const w = get_config(fromJS(on_end))
-		console.log(w)
+		if (verbose) console.log('trigger_continuation config', w)
 		store_config_modify(w.modify, true)
 	} else if ('function' === typeof on_end) {
 		on_end()
@@ -212,10 +212,14 @@ export function update_anim(
 	prev_anim_info,
 	skip_reset = false,
 ) {
+	if (null === anim_info || 'undefined' === typeof anim_info) anim_info = {}
+	if (null === prev_anim_info || 'undefined' === typeof prev_anim_info) {
+		prev_anim_info = {}
+	}
 	let all_attr = [
 		...new Set([...Object.keys(anim_info), ...Object.keys(prev_anim_info)]),
 	]
-	console.log('update_anim all_attr', all_attr)
+	if (verbose) console.log('update_anim all_attr', all_attr)
 	for (const attr of all_attr) {
 		if (global_constant.anim_all_attributes.includes(attr)) {
 			if (anim_info.hasOwnProperty(attr)) {

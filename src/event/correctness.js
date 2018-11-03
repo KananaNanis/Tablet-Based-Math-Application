@@ -18,7 +18,7 @@ import {doAction, global_constant} from '../App'
 import {
 	expand_into_units,
 	approx_equal,
-	namesAreIdentical,
+	names_are_identical,
 	reduce_num_stars,
 	dist2D,
 } from './utils'
@@ -224,7 +224,12 @@ export function is_correct() {
 		} else {
 			name1 = query_tower_name(src).toJS()
 			name2 = query_tower_name(tgt).toJS()
-			if (namesAreIdentical(name1, name2)) delay = 0
+			const expand = query_event('expand_into_units')
+			if (expand) {
+				name1 = expand_into_units(name1)
+				name2 = expand_into_units(name2)
+			}
+			if (names_are_identical(name1, name2)) delay = 0
 		}
 		doAction.addLogEntry(curr_time, [
 			with_suffix(cp),

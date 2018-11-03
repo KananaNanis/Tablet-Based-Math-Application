@@ -1,5 +1,6 @@
 import {
 	query_prop,
+	query_event,
 	query_name_of,
 	query_position_of,
 	query_obj_misc,
@@ -93,7 +94,7 @@ export function approx_equal(x, y, thresh = 1e-8) {
 	return Math.abs(x - y) < thresh
 }
 
-export function namesAreIdentical(name1, name2) {
+export function names_are_identical(name1, name2) {
 	if (name1.length !== name2.length) return false
 	for (let i = 0; i < name1.length; ++i) {
 		if (!approx_equal(name1[i], name2[i])) return false
@@ -105,7 +106,7 @@ export function namesAreIdentical(name1, name2) {
 export function towersHaveIdenticalNames(num_id1, num_id2) {
   const name1 = query_tower_name(num_id1)
   const name2 = query_tower_name(num_id2)
-  return namesAreIdentical(name1, name2)
+  return names_are_identical(name1, name2)
 }
 */
 
@@ -159,7 +160,8 @@ export function set_primary_height(id, val) {
 export function update_keypad_button_visibility(size, is_fiver, how_many) {
 	//console.log('update_keypad_button_visibility', size, is_fiver, how_many)
 	const i_end = global_constant.buildTower_button_info.length
-	const require_standard_tower = true
+	let require_standard_tower = true
+	if (query_event('allow_non_standard')) require_standard_tower = false
 	for (let i = 0; i < i_end; ++i) {
 		const bsize = global_constant.buildTower_button_info[i][0]
 		const bfiver = global_constant.buildTower_button_info[i][1]

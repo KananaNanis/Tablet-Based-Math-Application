@@ -24,7 +24,7 @@ import {
 	reduce_num_stars,
 	pointIsInRectangle,
 	update_keypad_button_visibility,
-	namesAreIdentical,
+	names_are_identical,
 	distance_to_prim,
 	get_bbox,
 	dist2D,
@@ -394,6 +394,10 @@ let moving_was_merge
 
 export function handle_swipe_tower(state, x, y) {
 	const tgt = query_event('target')
+	if ('undefined' === typeof query_name_of(tgt)) {
+		console.error('cannot handle swipe event when tgt name is undefined.')
+		return
+	}
 	const moving = query_event('moving')
 
 	const tower_info = query_tower(tgt).toJS()
@@ -453,6 +457,8 @@ export function handle_swipe_tower(state, x, y) {
 				}
 				moving_split_name = [make_group_from(size, is_fiver)]
 			}
+		} else {
+			found_index = null
 		}
 	} else {
 		if (null !== found_index) {
@@ -468,7 +474,7 @@ export function handle_swipe_tower(state, x, y) {
 			let old_moving_name = query_name_of(moving).toJS()
 			if ((merge && merge_pos) || (split && split_pos)) {
 				let new_moving_name = merge ? moving_merge_name : moving_split_name
-				if (!namesAreIdentical(old_moving_name, new_moving_name)) {
+				if (!names_are_identical(old_moving_name, new_moving_name)) {
 					let new_pos = merge ? merge_pos : split_pos
 					doAction.setPosition(moving, [new_pos[0] + 0, new_pos[1]])
 					if (merge) {
@@ -481,7 +487,7 @@ export function handle_swipe_tower(state, x, y) {
 				}
 			} else {
 				let new_moving_name = []
-				if (!namesAreIdentical(old_moving_name, new_moving_name)) {
+				if (!names_are_identical(old_moving_name, new_moving_name)) {
 					const try_anim = false
 					if (try_anim) {
 						console.log('setting back to empty')
@@ -543,6 +549,22 @@ export function handle_swipe_tower(state, x, y) {
 }
 
 let orig_pos, delta_x, delta_y, is_moving
+
+export function clear_handler_variables() {
+	starting_x = null
+	found_index = null
+	merge_pos = null
+	split_pos = null
+	orig_name = null
+	split_name = null
+	moving_merge_name = null
+	moving_split_name = null
+	moving_was_merge = null
+	orig_pos
+	delta_x
+	delta_y
+	is_moving
+}
 
 export function handle_stack_arg_2(state, x, y) {
 	let arg_2 = query_arg(2)

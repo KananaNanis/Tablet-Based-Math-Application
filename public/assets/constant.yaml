@@ -1,7 +1,7 @@
 # these constants should be fixed!
 debug_mode: true
-num_exercises_for_debugging: 3
-debug_path: [animation_test]
+num_exercises_for_debugging: 2
+# debug_path: [animation_test]
 # debug_path: [two_doors]
 # debug_path: [identity_function, as_option, bars, level_1]
 # debug_path: [identity_function, as_drag, bars, level_1]
@@ -18,6 +18,8 @@ debug_path: [animation_test]
 # debug_path: [add_or_half, as_drag, arg_1_option, half, doors, level_1]
 
 # debug_path: [add_or_half, as_option, result_option, stack, bars, level_1]
+# debug_path: [add_or_half, as_option, result_option, stack, bars, level_2]
+# debug_path: [add_or_half, as_option, result_option, stack, bars, level_3]
 # debug_path: [add_or_half, as_option, result_option, bars, level_1]
 # debug_path: [add_or_half, as_drag, result_option, bars, level_1]
 # debug_path: [add_or_half, as_option, result_option, doors, level_1]
@@ -97,10 +99,31 @@ debug_path: [animation_test]
 # debug_path: [tower_1_2, level_2]
 # debug_path: [tower_1_2, diagrams, level_3]
 # debug_path: [tower_1_2, diagrams, level_4]
-# debug_path: [group_ungroup_1, stage_1]
-# debug_path: [group_ungroup_1, stage_2]
-# debug_path: [group_ungroup_1, stage_3]
-# debug_path: [group_ungroup_2, stage_1]
+# debug_path: [group_ungroup, stage_1]
+# debug_path: [group_ungroup, just_diagram, stage_1]
+# debug_path: [group_ungroup, direct, level_1]
+# debug_path: [group_ungroup, ungroup, stage_1]
+# debug_path: [group_ungroup, ungroup, just_diagram, stage_1]
+# debug_path: [group_ungroup, ungroup, direct, level_1]
+# debug_path: [group_ungroup, singletons, stage_1]
+# debug_path: [group_ungroup, singletons, just_diagram, stage_1]
+# debug_path: [group_ungroup, singletons, direct, level_1]
+# debug_path: [group_ungroup, singletons, ungroup, stage_1]
+# debug_path: [group_ungroup, singletons, ungroup, direct, level_1]
+# debug_path: [group_ungroup, singletons_separate_fivers, stage_1]
+# debug_path: [group_ungroup, singletons_separate_fivers, just_diagram, stage_1]
+# debug_path: [group_ungroup, singletons_separate_fivers, direct, level_1]
+# debug_path: [group_ungroup, singletons_separate_fivers, ungroup, stage_1]
+# debug_path: [group_ungroup, singletons_separate_fivers, ungroup, direct, level_1]
+# debug_path: [group_ungroup, singletons_with_a_fiver, stage_1]
+# debug_path: [group_ungroup, singletons_with_a_fiver, direct, level_1]
+# debug_path: [group_ungroup, singletons_with_fivers, stage_1]
+# debug_path: [group_ungroup, singletons_with_fivers, just_diagram, stage_1]
+# debug_path: [group_ungroup, singletons_with_fivers, direct, level_1]
+# debug_path: [group_ungroup, singletons_with_fivers, ungroup, stage_1]
+# debug_path: [group_ungroup, singletons_with_fivers, ungroup, just_diagram, stage_1]
+debug_path: [group_ungroup, singletons_with_fivers, ungroup, direct, level_1]
+# debug_path: [group_ungroup, jump_to_next]
 # debug_path: [all_done]
 # debug_path: [in_between]
 # starting_config_path: [one_through_five, five_frame, level_1] # P Oct 8
@@ -117,11 +140,15 @@ debug_path: [animation_test]
 # starting_config_path_Dom: [round_2_est_option, 1_to_4, notches] # Oct 26
 # starting_config_path_PCCS: [round_2_est_option, 1_to_4, notches] # Oct 26
 #starting_config_path_Dom: [round_2_est_option, 6_to_9, notches] # Oct 29
-starting_config_path_PCCS: [intro_diagrams_2, level_1] # Oct 29, 30
+# starting_config_path_PCCS: [intro_diagrams_2, level_1] # Oct 29, 30
 # starting_config_path_Dom: [round_2_est_option, 1_to_4, with_tower, level_1] # Oct 30
-starting_config_path_Dom: [round_2_est_option, 6_to_9, with_tower, level_1] # Oct 31
+# starting_config_path_Dom: [round_2_est_option, 6_to_9, with_tower, level_1] # Oct 31
+# starting_config_path_Dom: [add_or_half, as_option, result_option, stack, bars, level_1] # Nov 1
+# starting_config_path_PCCS: [add_or_half, as_option, result_option, stack, bars, level_1] # Nov 1
+starting_config_path_PCCS: [group_ungroup, stage_1] # Nov 2
+starting_config_path_Dom: [intro_diagrams_2, level_1] # Nov 2
 
-starting_level_for:  # these levels are for continuous visual estimation
+starting_level_for_prev:  # these levels are for continuous visual estimation
   m32: [round_2_est_option, 11_to_14, notches]
   m34: [round_2_est_option, 11_to_14, notches]
   m35: [round_2_est_option, 11_to_14, notches]
@@ -372,6 +399,7 @@ prop_types: [scale_factor, freeze_display, num_stars,
     center_text, top_left_text, top_right_text, problem_stage,
     blank_between_exercises, hide_dot, big_op, big_paren,
     repeat_level, skip_slide_down, correct_option_index,
+    show_only_fivers, show_only_singletons, show_only_size,
     answer_is_correct, top_block_under_construction, curr_op]
 prop_value_types: [number, string, boolean]
 event_handling_types: [target, comparison_source, correctness,
@@ -379,7 +407,7 @@ event_handling_types: [target, comparison_source, correctness,
   return_to_top, star_policy, touch_reveals_button,
   just_proportion, create_tower_by_height, stack_arg_2,
   swipe_tower, minimum_split_size, no_split_fiver, moving,
-  allow_non_standard,
+  allow_non_standard, expand_into_units,
   just_yaml_event, on_down, on_up,
   move, arg_1, arg_2, result]
 position_modifiers: [left, right, top, bottom,

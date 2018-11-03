@@ -1,5 +1,6 @@
 import {global_constant} from '../App'
 import * as Actions from '../providers/actions'
+import {query_prop} from '../providers/query_store'
 import {
 	pick_from_list,
 	pick_from_range,
@@ -73,6 +74,12 @@ function generate_option_values(
 
 let gen_vars = {}
 
+export function maybe_gen_var(val) {
+	return 'string' === typeof val && gen_vars.hasOwnProperty(val)
+		? gen_vars[val]
+		: val
+}
+
 function apply_gen_instruction(
 	id,
 	inst,
@@ -84,6 +91,11 @@ function apply_gen_instruction(
 	let ok = true
 	let verbose = false
 	// console.log('apply_gen_instruction id', id, 'inst', inst)
+	if (0 === Object.keys(gen_vars).length) {
+		// prepopulate with some useful examples
+		gen_vars['default_bar_width'] = global_constant.default_bar_width
+		gen_vars['scale_factor'] = query_prop('scale_factor')
+	}
 	if (id.startsWith('option_')) {
 		if ('option_value_delta' === id) {
 			option_delta[0] = inst
@@ -164,12 +176,12 @@ function apply_gen_instruction(
 		//console.log('words', words)
 		if (1 === words.length && gen_vars.hasOwnProperty(words[0])) {
 			gen_vars[id] = gen_vars[words[0]]
-			console.log(' gen', id, 'equal', gen_vars[id])
+			// console.log(' gen', id, 'equal', gen_vars[id])
 		} else if (2 === words.length && 'standardize_name' === words[0]) {
 			let mean_name = gen_vars[words[1]]
 			let h = tower_name2height(mean_name)
 			let nice_name = height2tower_name(h)
-			console.log('mean_name', mean_name, 'h', h, 'nice_name', nice_name)
+			// console.log('mean_name', mean_name, 'h', h, 'nice_name', nice_name)
 			gen_vars[id] = nice_name
 		} else if (2 === words.length && 'height_from_animal' === words[0]) {
 			let animal_name = gen_vars[words[1]]
@@ -213,12 +225,18 @@ function apply_gen_instruction(
 			} else if ('/' === words[1]) {
 				gen_vars[id] = vals[0] / vals[1]
 			} else if ('++' === words[1]) {
-				// console.log(' vals[0]', vals[0], 'vals[1]', vals[1])
-				if (vals[1] !== 0) {
-					gen_vars[id] = vals[0].concat([vals[1]])
-				} else {
-					gen_vars[id] = vals[0]
+				let vals0 = vals[0],
+					vals1 = vals[1]
+				if (!Array.isArray(vals0)) {
+					if (0 === vals0) vals0 = []
+					else vals0 = [vals0]
 				}
+				if (!Array.isArray(vals1)) {
+					if (0 === vals1) vals1 = []
+					else vals1 = [vals1]
+				}
+				// console.log(' vals0', vals0, 'vals1', vals1)
+				gen_vars[id] = vals0.concat(vals1)
 				// console.log(' gen', id, 'equal', gen_vars[id])
 			}
 			//console.log('id', id, 'words', words, 'vals', vals, 'gen_vars[id]', gen_vars[id])
