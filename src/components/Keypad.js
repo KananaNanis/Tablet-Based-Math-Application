@@ -33,17 +33,19 @@ export function get_keypad_width_height(kind) {
 	}
 }
 
-const Keypad = ({kind, button_display, button_highlight, freeze_display}) => {
+const Keypad = ({kind, button_display, button_highlight, freeze_display, scale_factor}) => {
 	let buttons = []
 	const add_words_on_side = false
 	const button_display2 = button_display.toJS()
 	const pos = global_constant.keypad_info[kind]
 	const geoms = get_button_geoms_for(kind)
+  const is_scaled = 520 !== scale_factor
 	for (let row = 0; row < pos.num_rows; ++row) {
 		for (let col = 0; col < pos.num_cols; ++col) {
 			const index = col + pos.num_cols * row
 			if (index in button_display2 && false === button_display2[index]) continue
 			const button_position = geoms[index].position
+			if (is_scaled) button_position[0] -= 10
 			const height = pos.button_height
 			let label = index,
 				label_style = {

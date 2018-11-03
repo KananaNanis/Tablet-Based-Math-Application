@@ -1,7 +1,7 @@
 /*global user_id*/
 import React from 'react'
-import {StyleSheet, View, Platform} from 'react-native'
-import {bindActionCreators} from 'redux'
+import { StyleSheet, View, Platform, PanResponder } from 'react-native'
+import { bindActionCreators } from 'redux'
 import yaml from 'js-yaml'
 
 import WorkspaceContainer from './containers/WorkspaceContainer'
@@ -11,16 +11,17 @@ import {
 	global_grass_height,
 	update_screen_dimensions,
 } from './components/Workspace'
-import {touchHandler} from './event/event'
-import {global_store} from './index.js'
+import { touchHandler } from './event/event'
+import { global_store } from './index.js'
 import Sound from './assets/sound'
 import * as Actions from './providers/actions'
 import PrintFigure from './components/PrintFigure'
-import {as_position, print_all_paths} from './providers/change_config'
-import {query_path, query_test, query_prop} from './providers/query_store'
-import {get_keypad_width_height} from './components/Keypad'
-import {enter_exit_config} from './providers/enter_exit'
-import {do_batched_actions} from './providers/reducers'
+import { as_position, print_all_paths } from './providers/change_config'
+import { query_path, query_test, query_prop } from './providers/query_store'
+import { get_keypad_width_height } from './components/Keypad'
+import { enter_exit_config } from './providers/enter_exit'
+import { do_batched_actions } from './providers/reducers'
+import { clear_handler_variables } from './event/handlers';
 
 export let doAction = {}
 export let global_sound = {}
@@ -33,6 +34,26 @@ export function sum(x, y) {
 	return x + y
 }
 
+export function initialize_redux_store(path) {
+	const verbose = false
+	doAction.addLogEntry(Date.now(), [path, 'initialize_redux_store'])
+	// clear the store
+	if (verbose) console.log('RESET ALL')
+	doAction.resetAll()
+	clear_handler_variables()
+
+	doAction.setPath('config', path)
+	doAction.setPath('prev_config', query_path('config'))
+	doAction.setProp('scale_factor', global_constant.scale_factor_from_yaml)
+	//get_config(path)
+
+	let enter = true,
+		action_list = []
+	enter_exit_config(path, enter, action_list)
+	if (verbose) console.log('applying actions to load initial values into store')
+	do_batched_actions(action_list)
+}
+
 // load_config_tree reads both config.yaml and constant.yaml
 //   load_config_tree is called repeatedly to check if config.yaml
 //   has changed, so that updates can be made on-the-fly
@@ -41,7 +62,7 @@ export let config_tree = {}
 export let global_constant = false
 export async function load_config_tree(appObj) {
 	function convert_unicode(input) {
-		return input.replace(/\\u(\w\w\w\w)/g, function(a, b) {
+		return input.replace(/\\u(\w\w\w\w)/g, function (a, b) {
 			const charcode = parseInt(b, 16)
 			return String.fromCharCode(charcode)
 		})
@@ -88,7 +109,7 @@ export async function load_config_tree(appObj) {
 			let doActionInner = bindActionCreators(Actions, global_store.dispatch)
 			for (const a in doActionInner) {
 				if (doActionInner.hasOwnProperty(a)) {
-					doAction[a] = function(...args) {
+					doAction[a] = function (...args) {
 						console.log(a, ...args)
 						return doActionInner[a](...args)
 					}
@@ -146,6 +167,24 @@ export async function load_config_tree(appObj) {
 				'loading_constants',
 			])
 		}
+		// check whether to reload after half a day
+		const half_day = 12*60*60*1000
+		// const half_day = 10*1000
+		const currentTime = Date.now()
+		if (currentTime > (global_constant.start_time + half_day)) {
+			// reload!
+			if (Platform.OS === 'web') {
+				initialize_redux_store(['reloading_message'])
+				console.error('reloading time')
+				//alert('reloading!')
+				doAction.addLogEntry(Date.now(), [[], 'reloading time'])
+				window.location.reload(true)
+			} else {
+				console.error('reloading time not implemented yet')
+			}
+			return
+		}
+
 		let response = await fetch('assets/config.yaml', {
 			credentials: 'same-origin',
 			cache: 'no-store',
@@ -184,7 +223,7 @@ export async function load_config_tree(appObj) {
 			const add_tablet_border = true
 			if (add_tablet_border) {
 				appObj.setState(_ => {
-					return {add_tablet_border: true}
+					return { add_tablet_border: true }
 				})
 			}
 		} else if (
@@ -196,22 +235,10 @@ export async function load_config_tree(appObj) {
 		) {
 			path = global_constant.starting_level_for[global_constant.username]
 		}
-		// clear the store
-		//console.log('RESET ALL')
-		doAction.resetAll()
-
-		doAction.setPath('config', path)
-		doAction.setPath('prev_config', query_path('config'))
-		doAction.setProp('scale_factor', global_constant.scale_factor_from_yaml)
-		//get_config(path)
-
-		let enter = true,
-			action_list = []
-		enter_exit_config(path, enter, action_list)
-		do_batched_actions(action_list)
+		initialize_redux_store(path)
 		if (query_prop('scale_factor') !== 520) {
 			appObj.setState(_ => {
-				return {add_scaling_border: true}
+				return { add_scaling_border: true }
 			})
 		}
 
@@ -238,7 +265,7 @@ export async function load_config_tree(appObj) {
 		const printPDF = false // for creating worksheets
 		if (printPDF) {
 			appObj.setState(_ => {
-				return {do_print: true}
+				return { do_print: true }
 			})
 		}
 	} catch (error) {
@@ -250,11 +277,19 @@ export async function load_config_tree(appObj) {
 export default class App extends React.Component {
 	constructor(props) {
 		super(props)
-		this.state = {do_print: false}
+		this.state = { do_print: false }
 		const poll_to_see_if_config_tree_changed = true
 		if (poll_to_see_if_config_tree_changed) {
 			window.setInterval(load_config_tree, 3000, this)
 		} else load_config_tree(this)
+		this._panResponder = PanResponder.create({
+			onStartShouldSetPanResponder: _ => true,
+			onMoveShouldSetPanResponder: _ => true,
+			onPanResponderGrant: (evt, gestureState) => touchHandler(evt, gestureState),
+			onPanResponderMove: (evt, gestureState) => touchHandler(evt, gestureState),
+			onPanResponderRelease: (evt, gestureState) => touchHandler(evt, gestureState),
+			onPanResponderTerminationRequest: _ => false,
+		})
 	}
 	componentDidMount() {
 		// preload some sounds?
@@ -306,18 +341,21 @@ export default class App extends React.Component {
 		// top level view, sets up event listeners
 		return (
 			<View
+				{...this._panResponder.panHandlers}
+				/*  if panResponder is not needed, here's lower level:
 				onMoveShouldSetResponder={_ => true}
-				onResponderGrant={evt => touchHandler(evt, true)}
+				onResponderGrant={evt => touchHandler(evt)}
 				onResponderMove={evt => touchHandler(evt)}
 				onResponderRelease={evt => touchHandler(evt)}
 				onResponderTerminationRequest={_ => false}
 				onStartShouldSetResponder={_ => true}
+				*/
 				style={[
 					styles.root,
 					{
 						width: global_screen_width,
 						height: global_screen_height,
-						transform: [{scale: global_constant.laptop_scaling_factor}],
+						transform: [{ scale: global_constant.laptop_scaling_factor }],
 					},
 				]}
 			>

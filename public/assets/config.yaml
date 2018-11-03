@@ -1,7 +1,7 @@
 # this config tree assumes order, even for yaml hashes!
 params:
-  modify:
-    expr_1: {left: 5, arg_spacing: 20, res_spacing: 30}
+  # modify:
+  #   expr_1: {left: 5, arg_spacing: 20, res_spacing: 30}
 identity_function:
   params:
     generate: { arg_1_name: [uniform, .1, 1.7] }
@@ -20,7 +20,7 @@ identity_function:
       top_right_text: average_error
     misc: 
       config_iteration: 5
-      num_stars: 3
+      num_stars: 2
       remove_on_exit: [err_box]
       blank_between_exercises: 500
       curr_op: identity
@@ -43,6 +43,7 @@ identity_function:
         arg_1: bar_1
         result: bar_3
     bars:
+      params:
       level_1:
         params:
           misc:
@@ -170,7 +171,7 @@ add_or_half:
       generate: 
         # option_value_delta: [[.5], [.3], [.2], [.1]]
         option_skip_permute: true  # before seed!
-        option_value_delta: 0.2
+        option_value_delta: 0.3
         restriction_3: option > 0
         restriction_4: option < 1.7
       modify:
@@ -202,11 +203,42 @@ add_or_half:
           modify:
             bar_3:
               style: {opacity: 0}
-          event_handling:
-            stack_arg_2: true
         bars:
+          params:
           level_1:
+            params:
+              event_handling:
+                stack_arg_2: true
+          level_2:
+            params:
+              generate:  # want to compute position for bar_2
+                bar_1_w: .25 * default_bar_width
+                bar_1_x: 10 + bar_1_w
+                bar_1_y: arg_1_name * scale_factor
+              modify:
+                bar_2:
+                  anim_info:
+                    left: [195, bar_1_x]
+                    bottom: [0, bar_1_y]
+                    delay: 500
+                    duration: 500
+                    on_end: [reveal_bar_3]
+          level_3:
+            params:
+              generate:  # want to compute position for bar_2
+                bar_1_w: .75 * default_bar_width
+                bar_1_x: 10 + bar_1_w
+                bar_1_y: arg_1_name * scale_factor
+              modify:
+                bar_2:
+                  anim_info:
+                    # left: [195, bar_1_x]
+                    bottom: [0, bar_1_y]
+                    delay: 500
+                    duration: 500
+                    on_end: [return_bar_2]
       bars:
+        params:
         level_1:
           params:
             misc:
@@ -236,6 +268,7 @@ add_or_half:
                 just_text: true
                 extra_scale: .4
         bars:
+          params:
           level_1:
             params:
               misc:
@@ -252,7 +285,7 @@ add_or_half:
     arg_1_option:
       params:
         generate:
-          option_value_delta: -0.2
+          option_value_delta: -0.3
           option_value_seed: arg_1_name
         modify:
           big_op:
@@ -266,6 +299,7 @@ add_or_half:
           bar_2: 
             position: [495, 0]
       bars:
+        params:
         level_1:
           params:
             misc:
@@ -295,6 +329,7 @@ add_or_half:
                 just_text: true
                 extra_scale: .4
         bars:
+          params:
           level_1:
             params:
               misc:
@@ -320,6 +355,7 @@ add_or_half:
               option_width: 95
               option_offset: 190
       bars:
+        params:
         level_1:
           params:
             misc:
@@ -350,7 +386,7 @@ add_or_half:
         arg_2: bar_2
         result: bar_3
         touch_reveals_button: submit
-        star_policy: loose
+        star_policy: extraLoose
     result_option:
       params:
         modify:
@@ -409,6 +445,7 @@ add_or_half:
           event_handling:
             arg_2: five_frame_2
         bars:
+          params:
           level_1:
             params:
               create:
@@ -482,6 +519,7 @@ add_or_half:
           event_handling:
             arg_2: five_frame_2
         bars:
+          params:
           level_1:
             params:
               create:
@@ -594,7 +632,7 @@ add_height:
         generate: 
           # option_value_delta: [[.5], [.3], [.2], [.1]]
           option_skip_permute: true  # before seed!
-          option_value_delta: -0.2
+          option_value_delta: -0.3
           option_value_seed: arg_1_name
           restriction_3: option > 0
           restriction_4: option < 1.7
@@ -2928,11 +2966,11 @@ intro_diagrams_2:
 tower_1_2:
   params:
     generate:
-      # mean_name_base: [pick_from_list, [[.5, .5], [1, .5, .5]]]
-      mean_name_base: [pick_from_list, [[.5,.5, .5,.5, .5,.5], [1, .5,.5, .5,.5], [2, .5,.5], [.5,.5, .5,.5], [1, .5,.5], [.5,.5]]]
-      extra_fiver: [pick_from_list, [0, .5]]
+      # mean_name_base_5: [pick_from_list, [[.5, .5], [1, .5, .5]]]
+      mean_name_base_5: [pick_from_list, [[.5,.5, .5,.5, .5,.5], [1, .5,.5, .5,.5], [2, .5,.5], [.5,.5, .5,.5], [1, .5,.5], [.5,.5]]]
       extra_delta: [pick_from_range, 0, .45, .1]
-      mean_name_f: mean_name_base ++ extra_fiver
+      extra_fiver: [pick_from_list, [0, .5]]
+      mean_name_f: mean_name_base_5 ++ extra_fiver
       mean_name: mean_name_f ++ extra_delta
     create:
       tower_1: { name: tower_1_name }
@@ -2964,11 +3002,12 @@ tower_1_2:
       moving: tower_moving
       correctness: identical
       swipe_tower: true
+      no_split_fiver: true
       minimum_split_size: -1
     misc:
       new_scale_factor: 200
-      config_iteration: 7
-      num_stars: 3
+      config_iteration: 4
+      num_stars: 2
   level_1:
     params:
       generate:
@@ -2988,7 +3027,6 @@ tower_1_2:
         # tower_2_name: [fixed, [1, .5, .2]]
         tower_2_name: standardize_name mean_name
       event_handling:
-        no_split_fiver: true
         minimum_split_size: -1
   diagrams:
     params:
@@ -3003,7 +3041,6 @@ tower_1_2:
           misc: 
             as_diagram: true
       event_handling:
-        no_split_fiver: true
         minimum_split_size: -1
     level_3:
       params:
@@ -3015,16 +3052,17 @@ tower_1_2:
         generate:
           tower_1_name: mean_name
           tower_2_name: standardize_name mean_name
-group_ungroup_1:
+group_ungroup:
   params:
     generate: # { tower_1_name: [pick_from_range, .1, 3.8, .1] }
-      mean_name_base: [pick_from_list, [[.5,.5, .5,.5, .5,.5], [1, .5,.5, .5,.5], [2, .5,.5], [.5,.5, .5,.5], [1, .5,.5], [.5,.5]]]
+      mean_name_base_5: [pick_from_list, [[.5,.5, .5,.5, .5,.5], [1, .5,.5, .5,.5], [2, .5,.5], [.5,.5, .5,.5], [1, .5,.5], [.5,.5]]]
+      # mean_name_base_5: [pick_from_list, [[.5,.5]]]
       extra_fiver: [pick_from_list, [0, .5]]
       extra_delta: [pick_from_range, 0, .45, .1]
-      mean_name_f: mean_name_base ++ extra_fiver
+      mean_name_f: mean_name_base_5 ++ extra_fiver
       mean_name: mean_name_f ++ extra_delta
+      # mean_name: [fixed, [2, .5, .5, .5, .4]]
       tower_1_name: mean_name
-      # tower_1_name: [fixed, [.5, .5]]
     create:
       tower_1: { name: tower_1_name }
       tower_mid: []
@@ -3035,7 +3073,7 @@ group_ungroup_1:
         position: [5, 0]
         tower_style: {opacity: 0}
       tower_mid:
-        position: [50vw, 0]
+        position: [40vw, 0]
         misc:
           hide_tower_name: true
       tower_2: 
@@ -3050,9 +3088,11 @@ group_ungroup_1:
     event_handling: 
       correctness: identical
       touch_reveals_button: [submit, delete]
+      no_split_fiver: true
+      minimum_split_size: -1
     misc: 
       new_scale_factor: 200
-      num_stars: 3
+      num_stars: 2
       remove_on_exit: [button_submit, button_delete]
       # config_iteration: 7
       # when ready to tie the different stages together:
@@ -3061,121 +3101,470 @@ group_ungroup_1:
       skip_in_between: true
       # skip_submit: true
   stage_1:
-    params:
-      event_handling:
-        create_tower_by_height: true
-        comparison_source: tower_1
-        target: tower_mid
-        allow_non_standard: true
+    params_from: [grouping_snippet_stage_1]
   stage_2:
-    params:
-      # generate:
-      #   tower_mid_name: [fixed, [.5, .5, .5, .2]]
-      # create:
-      #   tower_mid: {name: tower_mid_name}
-      event_handling:
-        target: tower_mid
-        moving: tower_moving
-        correctness: is_standardized
-        swipe_tower: true
-        minimum_split_size: -1
-        touch_reveals_button: [submit]
+    params_from: [grouping_snippet_stage_2]
   stage_3:
+    params_from: [grouping_snippet_stage_3]
     params:
+      misc:
+        goto_config: [4, [group_ungroup, stage_1]]
+  just_diagram:
+    params:
+      modify:
+        tower_mid:
+          misc:
+            as_diagram: true
+        tower_moving:
+          misc:
+            as_diagram: true
+    stage_1:
+      params_from: [grouping_snippet_stage_1]
+    stage_2:
+      params_from: [grouping_snippet_stage_2]
+    stage_3:
+      params_from: [grouping_snippet_stage_3]
+      params:
+        misc:
+          goto_config: [2, [group_ungroup, just_diagram, stage_1]]
+  direct:
+    params_from: [grouping_direct_snippet]
+    level_1:
+    level_2:
+      params:
+        modify:
+          tower_mid:
+            anim_info:
+              opacity: [1, 0]
+              delay: 500
+              duration: 1000
+    level_3:
+      params:
+        modify:
+          tower_mid:
+            style: {opacity: 0}
+  ungroup:
+    params:
+      generate:
+        tower_1_name: standardize_name mean_name
       create:
-        keypad_kind: 'buildTower'
-      event_handling:
-        comparison_source: tower_mid
-        target: tower_2
-        allow_non_standard: true
-      misc: 
-        # skip_submit: null
-        skip_in_between: null
-        problem_stage: null
-        goto_config: [7, [group_ungroup_1, stage_1]]
-        remove_on_exit: [button_submit, button_delete]
-group_ungroup_2:
-  params:
-    generate: # { tower_1_name: [pick_from_range, .1, 3.8, .1] }
-      mean_name_base: [pick_from_list, [[.5,.5, .5,.5, .5,.5], [1, .5,.5, .5,.5], [2, .5,.5], [.5,.5, .5,.5], [1, .5,.5], [.5,.5]]]
-      extra_fiver: [pick_from_list, [0, .5]]
-      extra_delta: [pick_from_range, 0, .45, .1]
-      mean_name_f: mean_name_base ++ extra_fiver
-      mean_name: mean_name_f ++ extra_delta
-      tower_1_name: mean_name
-      # tower_1_name: [fixed, [.5, .5]]
-    create:
-      tower_1: { name: tower_1_name }
-      tower_mid: []
-      tower_2: []
-      tower_moving: []
-    modify:
-      tower_1: 
-        position: [5, 0]
-        tower_style: {opacity: 0}
-      tower_mid:
-        position: [50vw, 0]
+        tower_4: mean_name
+      modify:
+        tower_1:
+          position: [75vw, 0]
+        tower_2:
+          position: [10vw, 0]
+        tower_4:
+          position: [10vw, 400]
+          style: {opacity: 0}
+          tower_style: {opacity: 0}
+          misc:
+            tower_name_style: { left: 5 }
+            show_only_fivers: true
+            show_only_size: -1
+    stage_1:
+      params_from: [grouping_snippet_stage_1_un]
+    stage_2:
+      params_from: [grouping_snippet_stage_2_un]
+    stage_3:
+      params_from: [grouping_snippet_stage_3_un]
+      params:
         misc:
-          hide_tower_name: true
-          as_diagram: true
-      tower_2: 
-        position: [right 10vw, 0]
-        tower_style: {opacity: 0}
+          goto_config: [4, [group_ungroup, ungroup, stage_1]]
+    just_diagram:
+      params:
+        modify:
+          tower_mid:
+            misc:
+              as_diagram: true
+          tower_moving:
+            misc:
+              as_diagram: true
+      stage_1:
+        params_from: [grouping_snippet_stage_1_un]
+      stage_2:
+        params_from: [grouping_snippet_stage_2_un]
+      stage_3:
+        params_from: [grouping_snippet_stage_3_un]
+        params:
+          misc:
+            goto_config: [2, [group_ungroup, ungroup, just_diagram, stage_1]]
+    direct:
+      params_from: [grouping_direct_snippet_un]
+      level_1:
+      level_2:
+        params:
+          modify:
+            tower_mid:
+              anim_info:
+                opacity: [1, 0]
+                delay: 500
+                duration: 1000
+      level_3:
+        skip_node_above:  # perhaps too difficult at first
+        params:
+          modify:
+            tower_mid:
+              style: {opacity: 0}
+  singletons:
+    params:
+      generate:
+        mean_name_base_1: [pick_from_list, [[.3,.3], [.4,.2], [.2,.4], [.4,.3], [.3,.4], [.4,.4]]]
+        # mean_name_base_1: [pick_from_list, [[.3,.4]]]
+        extra_box: [pick_from_range, 0, 2.1, 1]
+        mean_name: extra_box ++ mean_name_base_1
+      event_handling:
+        expand_into_units: true  # to allow .3, .4 == .4, .3
+    stage_1:
+      params_from: [grouping_snippet_stage_1]
+    stage_2:
+      params_from: [grouping_snippet_stage_2]
+    stage_3:
+      params_from: [grouping_snippet_stage_3]
+      params:
         misc:
-          tower_name_style: { left: 5 }
-      tower_moving:
-        position: [0, 0]
+          goto_config: [4, [group_ungroup, singletons, stage_1]]
+    just_diagram:
+      params:
+        modify:
+          tower_mid:
+            misc:
+              as_diagram: true
+          tower_moving:
+            misc:
+              as_diagram: true
+      stage_1:
+        params_from: [grouping_snippet_stage_1]
+      stage_2:
+        params_from: [grouping_snippet_stage_2]
+      stage_3:
+        params_from: [grouping_snippet_stage_3]
+        params:
+          misc:
+            goto_config: [2, [group_ungroup, singletons, just_diagram, stage_1]]
+    direct:
+      params_from: [grouping_direct_snippet]
+      params:
         misc:
-          hide_tower_name: true
-          as_diagram: true
-    event_handling: 
-      correctness: identical
-      touch_reveals_button: [submit, delete]
-    misc: 
-      new_scale_factor: 200
-      num_stars: 3
-      remove_on_exit: [button_submit, button_delete]
-      # config_iteration: 7
-      # when ready to tie the different stages together:
-      config_iteration: null
-      problem_stage: true
-      skip_in_between: true
-      # skip_submit: true
-  stage_1:
+          config_iteration: 7
+          num_stars: 3
+      level_1:
+        params:
+      level_2:
+        params:
+          modify:
+            tower_mid:
+              anim_info:
+                opacity: [1, 0]
+                delay: 500
+                duration: 1000
+      level_3:
+        params:
+          modify:
+            tower_mid:
+              style: {opacity: 0}
+    ungroup:
+      params:
+        generate:
+          tower_1_name: standardize_name mean_name
+        create:
+          tower_4: mean_name
+        modify:
+          tower_1:
+            position: [75vw, 0]
+          tower_2:
+            position: [5vw, 0]
+          tower_4:
+            position: [20vw, 400]
+            style: {opacity: 0}
+            tower_style: {opacity: 0}
+            misc:
+              tower_name_style: { left: 5 }
+              show_only_singletons: true
+              show_only_size: -1
+        event_handling:
+          no_split_fiver: false
+      stage_1:
+        params_from: [grouping_snippet_stage_1_un]
+      stage_2:
+        params_from: [grouping_snippet_stage_2_un]
+      stage_3:
+        params_from: [grouping_snippet_stage_3_un]
+        params:
+          misc:
+            goto_config: [4, [group_ungroup, singletons, ungroup, stage_1]]
+      direct:
+        params_from: [grouping_direct_snippet_un]
+        level_1:
+          params:
+        level_2:
+          params:
+            modify:
+              tower_mid:
+                anim_info:
+                  opacity: [1, 0]
+                  delay: 500
+                  duration: 1000
+        level_3:
+          params:
+            modify:
+              tower_mid:
+                style: {opacity: 0}
+  singletons_separate_fivers:
     params:
+      generate:
+        mean_name_base_1: [pick_from_list, [[.3,.3], [.4,.2], [.2,.4], [.4,.3], [.3,.4], [.4,.4]]]
+        mean_name_base_5: [pick_from_list, [[.5,.5, .5,.5, .5,.5], [1, .5,.5, .5,.5], [2, .5,.5], [.5,.5, .5,.5], [1, .5,.5], [.5,.5]]]
+        mean_name: mean_name_base_5 ++ mean_name_base_1
       event_handling:
-        create_tower_by_height: true
-        comparison_source: tower_1
-        target: tower_mid
-        allow_non_standard: true
-  stage_2:
+        expand_into_units: true  # to allow .3, .4 == .4, .3
+    stage_1:
+      params_from: [grouping_snippet_stage_1]
+    stage_2:
+      params_from: [grouping_snippet_stage_2]
+    stage_3:
+      params_from: [grouping_snippet_stage_3]
+      params:
+        misc:
+          goto_config: [4, [group_ungroup, singletons_separate_fivers, stage_1]]
+    just_diagram:
+      params:
+        modify:
+          tower_mid:
+            misc:
+              as_diagram: true
+          tower_moving:
+            misc:
+              as_diagram: true
+      stage_1:
+        params_from: [grouping_snippet_stage_1]
+      stage_2:
+        params_from: [grouping_snippet_stage_2]
+      stage_3:
+        params_from: [grouping_snippet_stage_3]
+        params:
+          misc:
+            goto_config: [2, [group_ungroup, singletons_separate_fivers, just_diagram, stage_1]]
+    direct:
+      params_from: [grouping_direct_snippet]
+      level_1:
+        params:
+      level_2:
+        params:
+          modify:
+            tower_mid:
+              anim_info:
+                opacity: [1, 0]
+                delay: 500
+                duration: 1000
+      level_3:
+        params:
+          modify:
+            tower_mid:
+              style: {opacity: 0}
+    ungroup:
+      params:
+        generate:
+          tower_1_name: standardize_name mean_name
+        create:
+          tower_4: mean_name
+        modify:
+          tower_1:
+            position: [75vw, 0]
+          tower_2:
+            position: [10vw, 0]
+          tower_4:
+            position: [10vw, 400]
+            style: {opacity: 0}
+            tower_style: {opacity: 0}
+            misc:
+              tower_name_style: { left: 5 }
+              show_only_size: -1
+        event_handling:
+          no_split_fiver: false
+      stage_1:
+        params_from: [grouping_snippet_stage_1_un]
+      stage_2:
+        params_from: [grouping_snippet_stage_2_un]
+      stage_3:
+        params_from: [grouping_snippet_stage_3_un]
+        params:
+          misc:
+            goto_config: [2, [group_ungroup, singletons_separate_fivers, ungroup, stage_1]]
+      direct:
+        params_from: [grouping_direct_snippet_un]
+        level_1:
+          params:
+        level_2:
+          params:
+            modify:
+              tower_mid:
+                anim_info:
+                  opacity: [1, 0]
+                  delay: 500
+                  duration: 1000
+        level_3:
+          skip_node_above:
+          params:
+            modify:
+              tower_mid:
+                style: {opacity: 0}
+  singletons_with_a_fiver:
     params:
-      # generate:
-      #   tower_mid_name: [fixed, [.5, .5, .5, .2]]
-      # create:
-      #   tower_mid: {name: tower_mid_name}
+      generate:
+        mean_name_base_1: [pick_from_list, [[.3,.3], [.4,.2], [.2,.4], [.4,.3], [.3,.4], [.4,.4]]]
+        extra_box: [pick_from_range, 0, 2.1, 1]
+        extra_fiver: [fixed, 0.5]
+        mean_name_f: extra_box ++ extra_fiver
+        mean_name: mean_name_f ++ mean_name_base_1
       event_handling:
-        target: tower_mid
-        moving: tower_moving
-        correctness: is_standardized
-        swipe_tower: true
-        minimum_split_size: -1
-        touch_reveals_button: [submit]
-  stage_3:
+        expand_into_units: true  # to allow .3, .4 == .4, .3
+    stage_1:
+      params_from: [grouping_snippet_stage_1]
+    stage_2:
+      params_from: [grouping_snippet_stage_2]
+    stage_3:
+      params_from: [grouping_snippet_stage_3]
+      params:
+        misc:
+          goto_config: [4, [group_ungroup, singletons_with_a_fiver, stage_1]]
+    direct:
+      params_from: [grouping_direct_snippet]
+      level_1:
+        params:
+      level_2:
+        params:
+          modify:
+            tower_mid:
+              anim_info:
+                opacity: [1, 0]
+                delay: 500
+                duration: 1000
+      level_3:
+        params:
+          modify:
+            tower_mid:
+              style: {opacity: 0}
+  singletons_with_fivers:
     params:
-      create:
-        keypad_kind: 'buildTower'
+      generate:
+        mean_name_base_1: [pick_from_list, [[.1, .2], [.3, .1], [.3,.3], [.4,.2], [.2,.4], [.4,.3], [.3,.4], [.4,.4]]]
+        mean_name_base_5: [pick_from_list, [[.5,.5, .5,.5, .5,.5], [1, .5,.5, .5,.5], [2, .5,.5], [.5,.5, .5,.5], [1, .5,.5], [.5,.5]]]
+        extra_fiver: [pick_from_list, [0, .5, .5, .5, .5]]
+        mean_name_f: mean_name_base_5 ++ extra_fiver
+        mean_name: mean_name_f ++ mean_name_base_1
       event_handling:
-        comparison_source: tower_mid
-        target: tower_2
-        allow_non_standard: true
-      misc: 
-        # skip_submit: null
-        skip_in_between: null
-        problem_stage: null
-        goto_config: [7, [group_ungroup_2, stage_1]]
-        remove_on_exit: [button_submit, button_delete]
-  after:
+        expand_into_units: true  # to allow .3, .4 == .4, .3
+    stage_1:
+      params_from: [grouping_snippet_stage_1]
+    stage_2:
+      params_from: [grouping_snippet_stage_2]
+    stage_3:
+      params_from: [grouping_snippet_stage_3]
+      params:
+        misc:
+          goto_config: [4, [group_ungroup, singletons_separate_fivers, stage_1]]
+    just_diagram:
+      params:
+        modify:
+          tower_mid:
+            misc:
+              as_diagram: true
+          tower_moving:
+            misc:
+              as_diagram: true
+      stage_1:
+        params_from: [grouping_snippet_stage_1]
+      stage_2:
+        params_from: [grouping_snippet_stage_2]
+      stage_3:
+        params_from: [grouping_snippet_stage_3]
+        params:
+          misc:
+            goto_config: [2, [group_ungroup, singletons_separate_fivers, just_diagram, stage_1]]
+    direct:
+      params_from: [grouping_direct_snippet]
+      level_1:
+        params:
+      level_2:
+        params:
+          modify:
+            tower_mid:
+              anim_info:
+                opacity: [1, 0]
+                delay: 500
+                duration: 1000
+      level_3:
+        params:
+          modify:
+            tower_mid:
+              style: {opacity: 0}
+    ungroup:
+      params:
+        generate:
+          tower_1_name: standardize_name mean_name
+        create:
+          tower_4: mean_name
+        modify:
+          tower_1:
+            position: [75vw, 0]
+          tower_2:
+            position: [10vw, 0]
+          tower_4:
+            position: [10vw, 400]
+            style: {opacity: 0}
+            tower_style: {opacity: 0}
+            misc:
+              tower_name_style: { left: 5 }
+              show_only_size: -1
+        event_handling:
+          no_split_fiver: false
+      stage_1:
+        params_from: [grouping_snippet_stage_1_un]
+      stage_2:
+        params_from: [grouping_snippet_stage_2_un]
+      stage_3:
+        params_from: [grouping_snippet_stage_3_un]
+        params:
+          misc:
+            goto_config: [4, [group_ungroup, singletons_separate_fivers, ungroup, stage_1]]
+      just_diagram:
+        params:
+          modify:
+            tower_mid:
+              misc:
+                as_diagram: true
+            tower_moving:
+              misc:
+                as_diagram: true
+        stage_1:
+          params_from: [grouping_snippet_stage_1_un]
+        stage_2:
+          params_from: [grouping_snippet_stage_2_un]
+        stage_3:
+          params_from: [grouping_snippet_stage_3_un]
+          params:
+            misc:
+              goto_config: [2, [group_ungroup, singletons_separate_fivers, ungroup, just_diagram, stage_1]]
+      direct:
+        params_from: [grouping_direct_snippet_un]
+        level_1:
+          params:
+        level_2:
+          params:
+            modify:
+              tower_mid:
+                anim_info:
+                  opacity: [1, 0]
+                  delay: 1000
+                  duration: 2000
+        level_3:
+          skip_node_above:
+          params:
+            modify:
+              tower_mid:
+                style: {opacity: 0}
+  jump_to_next:
     params:
       event_handling:
         create_tower_by_height: true
@@ -3183,10 +3572,10 @@ group_ungroup_2:
         target: tower_mid
         allow_non_standard: true
       misc:
-        config_iteration: 1
         skip_in_between: null
         problem_stage: null
-        jmp: jmp_label_2
+        config_iter: 1
+        jmp: [add_or_half, as_option, result_option, stack, bars, level_1] 
 # bar_addition:
 # - params:
 #   - generator: {random1: uniform, random2: uniform, sum_in_range: [.1,1]}
@@ -3227,6 +3616,14 @@ group_ungroup_2:
 # multi_size_multiplication:
 # decimal_to_shrink:
 # multi_digit_multiplication:
+all_done:
+  params:
+    create:
+      center_text:  That's all for today!
+reload_message:
+  params:
+    create:
+      center_text:  Reloading...
 suffix1:
   params:
     modify:
@@ -3236,10 +3633,110 @@ in_between:
   params:
     create:
       button_next:
-all_done:
+grouping_snippet_stage_1:
+    params:
+      event_handling:
+        create_tower_by_height: true
+        comparison_source: tower_1
+        target: tower_mid
+        allow_non_standard: true
+grouping_snippet_stage_1_un:
+  params_from: [grouping_snippet_stage_1]
+  params:
+    event_handling:
+      allow_non_standard: null
+grouping_snippet_stage_2:
+    params:
+      # generate:
+      #   tower_mid_name: [fixed, [.5, .5, .5, .2]]
+      # create:
+      #   tower_mid: {name: tower_mid_name}
+      event_handling:
+        target: tower_mid
+        moving: tower_moving
+        correctness: is_standardized
+        swipe_tower: true
+        touch_reveals_button: [submit]
+grouping_snippet_stage_2_un:
+  params_from: [grouping_snippet_stage_2]
+  params:
+    modify:
+      tower_4:
+        style: {opacity: 1}
+    event_handling:
+      comparison_source: tower_4
+      correctness: identical
+grouping_snippet_stage_3:
+    params:
+      create:
+        keypad_kind: 'buildTower'
+      event_handling:
+        comparison_source: tower_mid
+        target: tower_2
+        allow_non_standard: true
+      misc: 
+        # skip_submit: null
+        skip_in_between: null
+        problem_stage: null
+        remove_on_exit: [button_submit, button_delete]
+grouping_snippet_stage_3_un:
+  params_from: [grouping_snippet_stage_3]
+  params:
+    event_handling:
+      comparison_source: tower_4
+grouping_direct_snippet:
+    params:
+      generate:
+        nice_name: standardize_name mean_name
+      create:
+        keypad_kind: 'buildTower'
+        tower_mid: { name: tower_1_name }
+        tower_4: nice_name
+      modify:
+        tower_4:
+          position: [0, 0]
+          style: {opacity: 0}
+      event_handling:
+        target: tower_2
+        allow_non_standard: true
+        comparison_source: tower_4
+      misc: 
+        remove_on_exit: [button_submit, button_delete]
+        config_iteration: 4
+        num_stars: 2
+        problem_stage: null
+        skip_in_between: null
+grouping_direct_snippet_un:
+  params_from: [grouping_direct_snippet]
   params:
     create:
-      center_text:  That's all for today!
+      tower_4: mean_name
+    modify:
+      tower_4:
+        position: [20vw, 400]
+        # position: [0, 5]
+        style: {opacity: 1}
+    event_handling:
+      comparison_source: tower_4
+return_bar_2:  # this is not a level;  it is an animation snippet
+  params:
+    modify:
+      bar_2:
+        anim_info:
+          # left: [bar_1_x, 195]
+          bottom: [bar_1_y, 0]
+          delay: 1000
+          duration: 500
+          on_end: [reveal_bar_3]
+reveal_bar_3:  # this is not a level;  it is an animation snippet
+  params:
+    modify:
+      bar_3:
+        # style: {opacity: 1}
+        anim_info:
+          opacity: [0, 1]
+          delay: 500
+          duration: 500
 rotate45:  # this is not a level;  it is an animation snippet
   params:
     modify:

@@ -1,9 +1,9 @@
 import {Platform} from 'react-native'
-import {global_screen_width} from '../components/Workspace'
-import {global_constant} from '../App'
+import {global_screen_width, global_screen_height} from '../components/Workspace'
+import {global_constant, doAction, initialize_redux_store} from '../App'
 import {window2workspaceCoords} from '../components/Workspace'
 import {touch_dispatcher} from './dispatcher'
-import {doAction} from '../App'
+import {query_path} from '../providers/query_store'
 
 let mouseTouchID = 100
 let currentNumTouches = 0
@@ -27,8 +27,9 @@ function myPreventDefault(synthetic_event) {
 	} else synthetic_event.preventDefault()
 }
 
-export function touchHandler(synthetic_event) {
+export function touchHandler(synthetic_event, gestureState) {
 	myPreventDefault(synthetic_event) // prevent default on everything
+	gestureState.stateID // what is this good for?
 	let evt = synthetic_event.nativeEvent
 	const type = synthetic_event.type.substr(5)
 	//if ('move' != type) console.log('touchHandler ' + type)
@@ -38,31 +39,64 @@ export function touchHandler(synthetic_event) {
 	numTouchesAtRight = 0
 	numTouchesAtTop = 0
 	numTouchesAtTopLeft = 0
+	numTouchesBottomRightCorner = 0
+	numTouchesBottomLeftCorner = 0
+	numTouchesTopRightCorner = 0
+	let screen_width = global_screen_width, screen_height = global_screen_height
+  if (global_constant.laptop_scaling_factor !== 1) {
+		screen_width *= global_constant.laptop_scaling_factor
+		screen_height *= global_constant.laptop_scaling_factor
+	}
 	for (let i = 0, i_end = evt.touches.length; i < i_end; ++i) {
 		if (evt.touches[i].clientX < 100) ++numTouchesAtLeft
-		if (evt.touches[i].clientX > global_screen_width - 100) ++numTouchesAtRight
+		if (evt.touches[i].clientX > screen_width - 100) ++numTouchesAtRight
 		if (evt.touches[i].clientY < 100) ++numTouchesAtTop
 		if (evt.touches[i].clientX < 100 && evt.touches[i].clientY < 100) {
 			++numTouchesAtTopLeft
 		}
+		if (evt.touches[i].clientX > screen_width - 100 &&
+				evt.touches[i].clientY > screen_height - 100) ++numTouchesBottomRightCorner
+		if (evt.touches[i].clientX > screen_width - 100 &&
+				evt.touches[i].clientY < 100) ++numTouchesTopRightCorner
+		if (evt.touches[i].clientX < 100 &&
+				evt.touches[i].clientY > screen_height - 100) ++numTouchesBottomLeftCorner
 	}
 	//console.log('numTouchesAtLeft ' + numTouchesAtLeft + ' numTouchesAtTop ' + numTouchesAtTop)
+	//if (evt.touches.length > 0) console.log('x', evt.touches[0].clientX)
+	// console.log('type', type, 'numTouchesAtRight ' + numTouchesAtRight + ' numTouchesBottomRightCorner ' + numTouchesBottomRightCorner)
 	if (6 === currentNumTouches) {
 		// check whether reload is requested
-		if (4 === numTouchesAtTop) {
+		if (4 === numTouchesAtTop && 'down' === type) {
 			// this is to make it harder to do accidentally
 			if (Platform.OS === 'web') {
 				// reload!
-				alert('reloading!')
-				doAction.addLogEntry(Date.now(), [[], 'reloading'])
+				console.error('reloading!')
+				//alert('reloading!')
+				initialize_redux_store(['reloading_message'])
+				doAction.addLogEntry(Date.now(), [[], 'reloading gesture'])
 				window.location.reload(true)
 			} else {
-				console.warn('reloading not implemented yet')
+				console.error('reloading not implemented yet')
 			}
 			return
 		}
 	}
 	const is_mouse = Platform.OS === 'web'
+	if (numTouchesBottomRightCorner > 0
+			&& (global_constant.debug_mode ||
+				(numTouchesBottomLeftCorner > 0
+				&& numTouchesTopRightCorner > 0))
+			&& 'down' === type
+			) {
+		// reset this level
+		let path = query_path('config').toJS()
+		if (path[path.length-1].startsWith('stage_')) {
+			path[path.length-1] = 'stage_1'
+		}
+		console.error('soft reset to path', path)
+		initialize_redux_store(path)
+		return
+	}
 	if (is_mouse) mouseTouchID++
 	let handled = []
 	for (let i = 0, i_end = touches.length; i < i_end; ++i) {

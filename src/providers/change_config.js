@@ -21,20 +21,10 @@ const attach_properties = (to, from) => {
 	}
 }
 
-export function get_config(path) {
-	if (!List.isList(path)) console.error('Error:  expecting a List!', path)
-	//const path = path0.toJS()
-	let tree_loc = config_tree
-	let res = deep_clone(tree_loc.params)
-	// console.log('tree_loc', tree_loc)
-	// console.log('init res ', res)
-	//console.log('get_config path.size', path.size)
-	for (let i = 0; i < path.size; ++i) {
-		tree_loc = tree_loc[path.get(i)]
-		if (tree_loc) {
-			for (const category in tree_loc.params) {
+function attach_params_to_add(res, params_to_add) {
+			for (const category in params_to_add) {
 				if (!res.hasOwnProperty(category)) {
-					res[category] = deep_clone(tree_loc.params[category])
+					res[category] = deep_clone(params_to_add[category])
 				} else {
 					if (
 						'create' === category ||
@@ -42,9 +32,9 @@ export function get_config(path) {
 						'delay' === category
 					) {
 						// consider the ids one by one
-						for (const id in tree_loc.params[category]) {
-							if (tree_loc.params[category].hasOwnProperty(id)) {
-								const subtree = tree_loc.params[category][id]
+						for (const id in params_to_add[category]) {
+							if (params_to_add[category].hasOwnProperty(id)) {
+								const subtree = params_to_add[category][id]
 								if (subtree && 'remove' === subtree) {
 									delete res['create'][id]
 									delete res['modify'][id]
@@ -60,9 +50,37 @@ export function get_config(path) {
 							}
 						}
 					} else {
-						attach_properties(res[category], tree_loc.params[category])
+						attach_properties(res[category], params_to_add[category])
 					}
 				}
+			}
+}
+
+export function get_config(path, depth = 0) {
+	if (!List.isList(path)) {
+		console.error('Error:  expecting a List!', path)
+		return {}
+	}
+	if (depth > 100) {
+		console.error('Error:  recursing 100 times in get_config?')
+    return {}
+	}
+	//const path = path0.toJS()
+	let tree_loc = config_tree
+	// let res = deep_clone(tree_loc.params)
+	let res = {}
+	// console.log('tree_loc', tree_loc)
+	// console.log('init res ', res)
+	//console.log('get_config path.size', path.size)
+	for (let i = 0; i < path.size; ++i) {
+		tree_loc = tree_loc[path.get(i)]
+		if (tree_loc) {
+			if (tree_loc.params_from) {
+				let params_to_add = get_config(fromJS(tree_loc.params_from), depth+1)
+				attach_params_to_add(res, params_to_add)
+			}
+			if (tree_loc.params) {
+				attach_params_to_add(res, tree_loc.params)
 			}
 		}
 	}
@@ -152,6 +170,10 @@ export function transition_to_next_config(action_list, silent) {
 	const curr_num_stars = query_prop('num_stars')
 	action_list.push(Actions.clearEventHandling())
 	let cp = query_path('config')
+	if (query_path('goto') && query_prop('goto_iteration') === 1) {
+		// we are not going to jump, but we need to reset goto_iteration
+		action_list.push(Actions.setProp('goto_iteration', null))
+	}
 	if ('in_between' === query_path('config').get(0)) {
 		if (verbose) console.log('  in_between')
 		// special case
@@ -200,11 +222,11 @@ export function transition_to_next_config(action_list, silent) {
 		//console.log('HACK  remove this next line')
 		//action_list.push(Actions.setErrBox(null))
 		action_list.push(Actions.setPath('prev_config', query_path('config')))
-		console.log('new_path ', new_path.toJS())
 		action_list.push(Actions.setPath('config', new_path))
 		enter_exit_config(new_path, true, action_list, silent)
 		action_list.push(Actions.setProp('goto_iteration', iter - 1))
 		action_list.push(Actions.setProp('num_stars', curr_num_stars))
+		console.log('goto new_path ', new_path.toJS(), 'goto_iteration', iter-1)
 	} else if (query_prop('config_iteration') > 1) {
 		if (verbose) console.log('  next exercise')
 		const iter = query_prop('config_iteration')
@@ -288,6 +310,19 @@ export function print_all_paths() {
 	console.log(s)
 }
 
+function first_subpath(tree_loc) {
+  // is there a node that looks like the name of a level among tree_loc children
+	if ('object' !== typeof tree_loc || null === tree_loc) return null
+	const keys = Object.keys(tree_loc)
+	if ('skip_node_above' === keys[0]) return null
+	for (let i = 0; i < keys.length; ++i) {
+		if (!['params', 'params_from'].includes(keys[i])) {
+			return keys[i]
+		}
+	}
+  return null
+}
+
 export function first_config_path(starter) {
 	let res = starter ? starter.slice() : []
 	let tree_loc = config_tree
@@ -295,24 +330,22 @@ export function first_config_path(starter) {
 		// move down to the implied node, first!
 		for (let i = 0; i < starter.length; ++i) tree_loc = tree_loc[starter[i]]
 	}
-	while (
-		'object' === typeof tree_loc &&
-		null !== tree_loc &&
-		Object.keys(tree_loc).length > 1 &&
-		'skip_node_above' !== Object.keys(tree_loc)[0]
-	) {
-		if ('params' !== Object.keys(tree_loc)[0]) {
+	while (first_subpath(tree_loc)) {
+		/*
+		if (!['params', 'params_from'].includes(Object.keys(tree_loc)[0])) {
 			console.error(
-				"Error in first_config_path: first key not 'params' instead",
+				"Error in first_config_path: first key not 'params' or 'params_from' instead",
 				Object.keys(tree_loc)[0],
 			)
 			break
 		}
 		const k2 = Object.keys(tree_loc)[1]
+		*/
+		const k2 = first_subpath(tree_loc)
 		res.push(k2)
 		tree_loc = tree_loc[k2]
 	}
-	//console.log('first_config_path starter', starter, 'res', res)
+	// console.log('first_config_path starter', starter, 'res', res)
 	return res
 }
 

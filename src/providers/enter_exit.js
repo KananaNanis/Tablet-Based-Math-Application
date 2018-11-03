@@ -109,7 +109,11 @@ export function store_config_modify(
 					}
 				} else if ('anim_info' === key) {
 					const info = c[id0][key]
-					action_list.push(Actions.addAnimInfo(id, enter ? info : null))
+					if (enter) {
+						action_list.push(Actions.addAnimInfo(id, info))
+					} else {
+						action_list.push(Actions.clearAnimInfo(id))
+					}
 					/*  figuring out what anim_info means is done in the reducer now
 					if (null === info) {
 						action_list.push(Actions.clearAnimInfo(id))
@@ -259,7 +263,7 @@ export function enter_exit_config(
 						Actions.setButtonDisplay('start', enter ? true : null),
 					)
 				} else if (['center_text', 'big_op', 'big_paren'].includes(id)) {
-					console.log('setting prop', id, 'to', c[id0])
+					//console.log('setting prop', id, 'to', c[id0])
 					action_list.push(Actions.setProp(id, enter ? c[id0] : null))
 				} else if ('err_box' === id) {
 					action_list.push(Actions.setErrBox(enter ? {show: true} : null))
@@ -435,9 +439,13 @@ export function enter_exit_config(
 			if (c.hasOwnProperty(key0)) {
 				const key = remap_id(key0, remap_id_table)
 				if ('config_iteration' === key) {
-					let iter_val = global_constant.debug_mode
-						? global_constant.num_exercises_for_debugging
-						: c[key0]
+					let iter_val = c[key0]
+					if (global_constant.debug_mode) {
+						// possible over-ride, depending on which is greater
+						if (iter_val > global_constant.num_exercises_for_debugging) {
+							iter_val = global_constant.num_exercises_for_debugging
+						}
+					}
 					if (0 === iter_val || !enter) iter_val = null
 					action_list.push(Actions.setProp(key, iter_val))
 				} else if ('goto_config' === key) {

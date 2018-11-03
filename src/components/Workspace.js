@@ -66,7 +66,8 @@ const Workspace = ({
 	//console.log('Workspace config_path', config_path.toJS())
 	//console.log('Workspace five_frame_ids', five_frame_ids.toJS())
 	//console.log('Workspace bar_ids', bar_ids.toJS())
-	const is_scaled = 520 !== query_prop('scale_factor')
+	const scale_factor = query_prop('scale_factor')
+	const is_scaled = 520 !== scale_factor
 	const nums = render_nums(tower_ids)
 	const tiles = render_tiles(tile_ids)
 	const doors = render_doors(door_ids)
@@ -250,6 +251,7 @@ const Workspace = ({
 				button_highlight={button_highlight}
 				freeze_display={freeze_display}
 				kind={keypad_kind}
+				scale_factor={scale_factor}
 			/>,
 		)
 	}
@@ -291,15 +293,19 @@ const Workspace = ({
 						: freeze_no_highlight_style
 			} else if (special_button === button_highlight) bg_style = highlight_style
 			//console.log('bg_style', bg_style)
+			let position = global_constant.special_button_geoms[special_button].position.concat()
+			if (is_scaled) {
+				if (['submit', 'delete'].includes(special_button)) {
+					position[1] -= 10
+				}
+			}
 			misc_above.push(
 				<Button
 					key={key}
 					height={global_constant.special_button_geoms[special_button].height}
 					label={special_button}
 					label_style={styles.button_text_default}
-					position={
-						global_constant.special_button_geoms[special_button].position
-					}
+					position={position}
 					view_style={[
 						styles.button_view_default,
 						button_view[special_button],
