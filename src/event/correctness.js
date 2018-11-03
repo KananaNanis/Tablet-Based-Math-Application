@@ -225,9 +225,9 @@ export function is_correct() {
 			name1 = query_tower_name(src).toJS()
 			name2 = query_tower_name(tgt).toJS()
 			const expand = query_event('expand_into_units')
-		  if (expand) {
-    		name1 = expand_into_units(name1)
-    		name2 = expand_into_units(name2)
+			if (expand) {
+				name1 = expand_into_units(name1)
+				name2 = expand_into_units(name2)
 			}
 			if (names_are_identical(name1, name2)) delay = 0
 		}

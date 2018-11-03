@@ -74,11 +74,10 @@ function generate_option_values(
 
 let gen_vars = {}
 
-export function maybe_gen_var(val)
-{
-  return ('string' === typeof val && gen_vars.hasOwnProperty(val))
-          ? gen_vars[val]
-          : val
+export function maybe_gen_var(val) {
+	return 'string' === typeof val && gen_vars.hasOwnProperty(val)
+		? gen_vars[val]
+		: val
 }
 
 function apply_gen_instruction(
@@ -226,7 +225,8 @@ function apply_gen_instruction(
 			} else if ('/' === words[1]) {
 				gen_vars[id] = vals[0] / vals[1]
 			} else if ('++' === words[1]) {
-				let vals0 = vals[0], vals1 = vals[1]
+				let vals0 = vals[0],
+					vals1 = vals[1]
 				if (!Array.isArray(vals0)) {
 					if (0 === vals0) vals0 = []
 					else vals0 = [vals0]

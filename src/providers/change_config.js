@@ -22,38 +22,38 @@ const attach_properties = (to, from) => {
 }
 
 function attach_params_to_add(res, params_to_add) {
-			for (const category in params_to_add) {
-				if (!res.hasOwnProperty(category)) {
-					res[category] = deep_clone(params_to_add[category])
-				} else {
-					if (
-						'create' === category ||
-						'modify' === category ||
-						'delay' === category
-					) {
-						// consider the ids one by one
-						for (const id in params_to_add[category]) {
-							if (params_to_add[category].hasOwnProperty(id)) {
-								const subtree = params_to_add[category][id]
-								if (subtree && 'remove' === subtree) {
-									delete res['create'][id]
-									delete res['modify'][id]
-								} else if (
-									!res[category].hasOwnProperty(id) ||
-									'create' === category
-								) {
-									res[category][id] = deep_clone(subtree)
-								} else {
-									//console.log('for id', id, 'attaching', res[category][id], 'to', subtree)
-									attach_properties(res[category][id], subtree)
-								}
-							}
+	for (const category in params_to_add) {
+		if (!res.hasOwnProperty(category)) {
+			res[category] = deep_clone(params_to_add[category])
+		} else {
+			if (
+				'create' === category ||
+				'modify' === category ||
+				'delay' === category
+			) {
+				// consider the ids one by one
+				for (const id in params_to_add[category]) {
+					if (params_to_add[category].hasOwnProperty(id)) {
+						const subtree = params_to_add[category][id]
+						if (subtree && 'remove' === subtree) {
+							delete res['create'][id]
+							delete res['modify'][id]
+						} else if (
+							!res[category].hasOwnProperty(id) ||
+							'create' === category
+						) {
+							res[category][id] = deep_clone(subtree)
+						} else {
+							//console.log('for id', id, 'attaching', res[category][id], 'to', subtree)
+							attach_properties(res[category][id], subtree)
 						}
-					} else {
-						attach_properties(res[category], params_to_add[category])
 					}
 				}
+			} else {
+				attach_properties(res[category], params_to_add[category])
 			}
+		}
+	}
 }
 
 export function get_config(path, depth = 0) {
@@ -63,7 +63,7 @@ export function get_config(path, depth = 0) {
 	}
 	if (depth > 100) {
 		console.error('Error:  recursing 100 times in get_config?')
-    return {}
+		return {}
 	}
 	//const path = path0.toJS()
 	let tree_loc = config_tree
@@ -76,7 +76,7 @@ export function get_config(path, depth = 0) {
 		tree_loc = tree_loc[path.get(i)]
 		if (tree_loc) {
 			if (tree_loc.params_from) {
-				let params_to_add = get_config(fromJS(tree_loc.params_from), depth+1)
+				let params_to_add = get_config(fromJS(tree_loc.params_from), depth + 1)
 				attach_params_to_add(res, params_to_add)
 			}
 			if (tree_loc.params) {
@@ -226,7 +226,7 @@ export function transition_to_next_config(action_list, silent) {
 		enter_exit_config(new_path, true, action_list, silent)
 		action_list.push(Actions.setProp('goto_iteration', iter - 1))
 		action_list.push(Actions.setProp('num_stars', curr_num_stars))
-		console.log('goto new_path ', new_path.toJS(), 'goto_iteration', iter-1)
+		console.log('goto new_path ', new_path.toJS(), 'goto_iteration', iter - 1)
 	} else if (query_prop('config_iteration') > 1) {
 		if (verbose) console.log('  next exercise')
 		const iter = query_prop('config_iteration')
@@ -311,7 +311,7 @@ export function print_all_paths() {
 }
 
 function first_subpath(tree_loc) {
-  // is there a node that looks like the name of a level among tree_loc children
+	// is there a node that looks like the name of a level among tree_loc children
 	if ('object' !== typeof tree_loc || null === tree_loc) return null
 	const keys = Object.keys(tree_loc)
 	if ('skip_node_above' === keys[0]) return null
@@ -320,7 +320,7 @@ function first_subpath(tree_loc) {
 			return keys[i]
 		}
 	}
-  return null
+	return null
 }
 
 export function first_config_path(starter) {

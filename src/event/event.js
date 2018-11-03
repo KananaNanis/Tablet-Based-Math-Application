@@ -1,5 +1,8 @@
 import {Platform} from 'react-native'
-import {global_screen_width, global_screen_height} from '../components/Workspace'
+import {
+	global_screen_width,
+	global_screen_height,
+} from '../components/Workspace'
 import {global_constant, doAction, initialize_redux_store} from '../App'
 import {window2workspaceCoords} from '../components/Workspace'
 import {touch_dispatcher} from './dispatcher'
@@ -39,11 +42,12 @@ export function touchHandler(synthetic_event, gestureState) {
 	numTouchesAtRight = 0
 	numTouchesAtTop = 0
 	numTouchesAtTopLeft = 0
-	numTouchesBottomRightCorner = 0
-	numTouchesBottomLeftCorner = 0
-	numTouchesTopRightCorner = 0
-	let screen_width = global_screen_width, screen_height = global_screen_height
-  if (global_constant.laptop_scaling_factor !== 1) {
+	let numTouchesBottomRightCorner = 0
+	let numTouchesBottomLeftCorner = 0
+	let numTouchesTopRightCorner = 0
+	let screen_width = global_screen_width,
+		screen_height = global_screen_height
+	if (global_constant.laptop_scaling_factor !== 1) {
 		screen_width *= global_constant.laptop_scaling_factor
 		screen_height *= global_constant.laptop_scaling_factor
 	}
@@ -54,12 +58,24 @@ export function touchHandler(synthetic_event, gestureState) {
 		if (evt.touches[i].clientX < 100 && evt.touches[i].clientY < 100) {
 			++numTouchesAtTopLeft
 		}
-		if (evt.touches[i].clientX > screen_width - 100 &&
-				evt.touches[i].clientY > screen_height - 100) ++numTouchesBottomRightCorner
-		if (evt.touches[i].clientX > screen_width - 100 &&
-				evt.touches[i].clientY < 100) ++numTouchesTopRightCorner
-		if (evt.touches[i].clientX < 100 &&
-				evt.touches[i].clientY > screen_height - 100) ++numTouchesBottomLeftCorner
+		if (
+			evt.touches[i].clientX > screen_width - 100 &&
+			evt.touches[i].clientY > screen_height - 100
+		) {
+			++numTouchesBottomRightCorner
+		}
+		if (
+			evt.touches[i].clientX > screen_width - 100 &&
+			evt.touches[i].clientY < 100
+		) {
+			++numTouchesTopRightCorner
+		}
+		if (
+			evt.touches[i].clientX < 100 &&
+			evt.touches[i].clientY > screen_height - 100
+		) {
+			++numTouchesBottomLeftCorner
+		}
 	}
 	//console.log('numTouchesAtLeft ' + numTouchesAtLeft + ' numTouchesAtTop ' + numTouchesAtTop)
 	//if (evt.touches.length > 0) console.log('x', evt.touches[0].clientX)
@@ -82,16 +98,16 @@ export function touchHandler(synthetic_event, gestureState) {
 		}
 	}
 	const is_mouse = Platform.OS === 'web'
-	if (numTouchesBottomRightCorner > 0
-			&& (global_constant.debug_mode ||
-				(numTouchesBottomLeftCorner > 0
-				&& numTouchesTopRightCorner > 0))
-			&& 'down' === type
-			) {
+	if (
+		numTouchesBottomRightCorner > 0 &&
+		(global_constant.debug_mode ||
+			(numTouchesBottomLeftCorner > 0 && numTouchesTopRightCorner > 0)) &&
+		'down' === type
+	) {
 		// reset this level
 		let path = query_path('config').toJS()
-		if (path[path.length-1].startsWith('stage_')) {
-			path[path.length-1] = 'stage_1'
+		if (path[path.length - 1].startsWith('stage_')) {
+			path[path.length - 1] = 'stage_1'
 		}
 		console.error('soft reset to path', path)
 		initialize_redux_store(path)

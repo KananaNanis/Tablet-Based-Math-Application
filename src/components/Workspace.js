@@ -293,7 +293,9 @@ const Workspace = ({
 						: freeze_no_highlight_style
 			} else if (special_button === button_highlight) bg_style = highlight_style
 			//console.log('bg_style', bg_style)
-			let position = global_constant.special_button_geoms[special_button].position.concat()
+			let position = global_constant.special_button_geoms[
+				special_button
+			].position.concat()
 			if (is_scaled) {
 				if (['submit', 'delete'].includes(special_button)) {
 					position[1] -= 10

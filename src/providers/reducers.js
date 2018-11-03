@@ -1,13 +1,13 @@
 // import { combineReducers } from 'redux'
-import { combineReducers } from 'redux-immutable'
-import { List, Map, fromJS } from 'immutable'
-import { batchActions } from 'redux-batched-actions'
+import {combineReducers} from 'redux-immutable'
+import {List, Map, fromJS} from 'immutable'
+import {batchActions} from 'redux-batched-actions'
 
 import * as AT from './actionTypes'
-import { global_store } from '../index'
-import { add_block_to_name, remove_block_from_name } from '../components/Block'
-import { global_constant } from '../App'
-import { maybe_gen_var } from '../containers/generate';
+import {global_store} from '../index'
+import {add_block_to_name, remove_block_from_name} from '../components/Block'
+import {global_constant} from '../App'
+import {maybe_gen_var} from '../containers/generate'
 
 // the following reducers control the various overall chunks of the store
 
@@ -193,9 +193,13 @@ function anim_info(state = Map({}), action) {
 			const id = action.anim_info.anim_info_counter
 			for (const key in action.anim_info) {
 				if (
-					!['delay', 'duration', 'on_end', 'loop', 'anim_info_counter'].includes(
-						key,
-					) &&
+					![
+						'delay',
+						'duration',
+						'on_end',
+						'loop',
+						'anim_info_counter',
+					].includes(key) &&
 					action.anim_info.hasOwnProperty(key)
 				) {
 					const val = action.anim_info[key]
@@ -203,9 +207,10 @@ function anim_info(state = Map({}), action) {
 						// special case
 						new_anim_info = obj_add_remove_property(new_anim_info, key, null)
 					} else if (global_constant.anim_all_attributes.includes(key)) {
-						let val0 = maybe_gen_var(val[0]), val1 = maybe_gen_var(val[1])
+						let val0 = maybe_gen_var(val[0]),
+							val1 = maybe_gen_var(val[1])
 						if (['blink', 'handle_blink'].includes(key)) {
-							let full_val = { id, from: val0, to: val1, loop: true }
+							let full_val = {id, from: val0, to: val1, loop: true}
 							full_val.duration = duration ? duration : 500
 							if (delay) full_val.delay = delay
 							if (on_end) {
@@ -218,7 +223,7 @@ function anim_info(state = Map({}), action) {
 								fromJS(full_val),
 							)
 						} else if (duration) {
-							let full_val = { id, from: val0, to: val1 }
+							let full_val = {id, from: val0, to: val1}
 							full_val.duration = duration
 							if (delay) full_val.delay = delay
 							if (isLoop) full_val.loop = true
@@ -248,7 +253,10 @@ function anim_info(state = Map({}), action) {
 				}
 			}
 		} else {
-			console.error('Warning in reducer:  anim_info is false?', action.anim_info)
+			console.error(
+				'Warning in reducer:  anim_info is false?',
+				action.anim_info,
+			)
 		}
 		return state.set(action.id, new_anim_info)
 	}

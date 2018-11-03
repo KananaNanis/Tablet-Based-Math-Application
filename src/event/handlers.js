@@ -396,7 +396,7 @@ export function handle_swipe_tower(state, x, y) {
 	const tgt = query_event('target')
 	if ('undefined' === typeof query_name_of(tgt)) {
 		console.error('cannot handle swipe event when tgt name is undefined.')
-    return
+		return
 	}
 	const moving = query_event('moving')
 

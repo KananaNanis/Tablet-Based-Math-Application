@@ -2,7 +2,7 @@ import React from 'react'
 import {StyleSheet, View} from 'react-native'
 import Tower from './Tower'
 import TowerName from './TowerName'
-import { get_is_fiver_from_group, get_block_size_from_group } from './Block';
+import {get_is_fiver_from_group, get_block_size_from_group} from './Block'
 
 export const global_fiver_shadow = [
 	{},
@@ -54,7 +54,9 @@ const Num = ({
 	let tn_name = name
 	if (misc && misc.show_only_fivers) tn_name = only_fivers(tn_name)
 	if (misc && misc.show_only_singletons) tn_name = only_fivers(tn_name, true)
-	if (misc && misc.show_only_size) tn_name = only_one_size(tn_name, misc.show_only_size)
+	if (misc && misc.show_only_size) {
+		tn_name = only_one_size(tn_name, misc.show_only_size)
+	}
 	let tower_name_style =
 		misc && misc.tower_name_style ? misc.tower_name_style : null
 	const tn =

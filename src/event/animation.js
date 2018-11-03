@@ -213,7 +213,9 @@ export function update_anim(
 	skip_reset = false,
 ) {
 	if (null === anim_info || 'undefined' === typeof anim_info) anim_info = {}
-	if (null === prev_anim_info || 'undefined' === typeof prev_anim_info) prev_anim_info = {}
+	if (null === prev_anim_info || 'undefined' === typeof prev_anim_info) {
+		prev_anim_info = {}
+	}
 	let all_attr = [
 		...new Set([...Object.keys(anim_info), ...Object.keys(prev_anim_info)]),
 	]
