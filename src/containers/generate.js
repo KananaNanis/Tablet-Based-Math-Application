@@ -147,6 +147,28 @@ function apply_gen_instruction(
 				console.error('Warning:  unrecognized generate restriction.', id, inst)
 			}
 		}
+	} else if (id.startsWith('partition_')) {
+		const words = inst.split(' ')
+		if (
+			words.length === 5 &&
+			words[1] === 'into' &&
+			words[3] === 'and' &&
+			gen_vars[words[0]]
+		) {
+			const src = words[0]
+			const dst1 = words[2]
+			const dst2 = words[4]
+			// console.log('src', src, 'dst1', dst1, 'dst2', dst2)
+			gen_vars[dst1] = []
+			gen_vars[dst2] = []
+			for (let j = 0; j < gen_vars[src].length; ++j) {
+				if (0 === j % 2) gen_vars[dst1].push(gen_vars[src][j])
+				else gen_vars[dst2].push(gen_vars[src][j])
+			}
+			// console.log('src', gen_vars[src], 'dst1', gen_vars[dst1], 'dst2', gen_vars[dst2])
+		} else {
+			console.error('Warning:  unrecognized generate partition.', inst)
+		}
 	} else if (Array.isArray(inst)) {
 		if ('pick_from_list' === inst[0]) {
 			gen_vars[id] = pick_from_list(inst[1], gen_vars[id])
@@ -264,6 +286,7 @@ export function generate_with_restrictions(
 	// move restrictions to the end, and binary ops just before
 	let restrict = [],
 		binary = [],
+		partition = [],
 		option = [],
 		all = []
 	for (const id in c) {
@@ -271,6 +294,7 @@ export function generate_with_restrictions(
 		if (c.hasOwnProperty(id)) {
 			let words = 'string' === typeof c[id] ? c[id].split(' ') : null
 			if (id.startsWith('restriction_')) restrict.push(id)
+			else if (id.startsWith('partition_')) partition.push(id)
 			else if (id.startsWith('option_')) option.push(id)
 			else if (
 				words &&
@@ -285,6 +309,7 @@ export function generate_with_restrictions(
 	}
 	all = all.concat(binary)
 	all = all.concat(option)
+	all = all.concat(partition)
 	all = all.concat(restrict)
 	if (verbose) console.log('reordered all', all)
 

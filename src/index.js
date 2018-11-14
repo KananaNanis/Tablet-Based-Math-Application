@@ -7,7 +7,7 @@ import {Provider} from 'react-redux'
 import {createStore} from 'redux'
 import {enableBatching} from 'redux-batched-actions'
 import App from './App'
-import registerServiceWorker from './registerServiceWorker'
+//import registerServiceWorker from './registerServiceWorker'
 
 //import './providers/testThis.js';
 
@@ -19,4 +19,4 @@ ReactDOM.render(
 	</Provider>,
 	document.getElementById('root'),
 )
-registerServiceWorker()
+//registerServiceWorker()

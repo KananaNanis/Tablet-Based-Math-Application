@@ -1,7 +1,7 @@
 # these constants should be fixed!
 debug_mode: true
-num_exercises_for_debugging: 2
-# debug_path: [animation_test]
+num_exercises_for_debugging: 1
+debug_path: [animation_test]
 # debug_path: [two_doors]
 # debug_path: [identity_function, as_option, bars, level_1]
 # debug_path: [identity_function, as_drag, bars, level_1]
@@ -122,8 +122,10 @@ num_exercises_for_debugging: 2
 # debug_path: [group_ungroup, singletons_with_fivers, direct, level_1]
 # debug_path: [group_ungroup, singletons_with_fivers, ungroup, stage_1]
 # debug_path: [group_ungroup, singletons_with_fivers, ungroup, just_diagram, stage_1]
-debug_path: [group_ungroup, singletons_with_fivers, ungroup, direct, level_1]
+# debug_path: [group_ungroup, singletons_with_fivers, ungroup, direct, level_1]
 # debug_path: [group_ungroup, jump_to_next]
+# debug_path: [tower_addition, direct, level_1]
+# debug_path: [tower_addition, direct, level_2]
 # debug_path: [all_done]
 # debug_path: [in_between]
 # starting_config_path: [one_through_five, five_frame, level_1] # P Oct 8
@@ -145,8 +147,16 @@ debug_path: [group_ungroup, singletons_with_fivers, ungroup, direct, level_1]
 # starting_config_path_Dom: [round_2_est_option, 6_to_9, with_tower, level_1] # Oct 31
 # starting_config_path_Dom: [add_or_half, as_option, result_option, stack, bars, level_1] # Nov 1
 # starting_config_path_PCCS: [add_or_half, as_option, result_option, stack, bars, level_1] # Nov 1
-starting_config_path_PCCS: [group_ungroup, stage_1] # Nov 2
-starting_config_path_Dom: [intro_diagrams_2, level_1] # Nov 2
+# starting_config_path_PCCS: [group_ungroup, stage_1] # Nov 2
+# starting_config_path_Dom: [intro_diagrams_2, level_1] # Nov 2
+# starting_config_path_Dom: [group_ungroup, direct, level_1] # Nov 8
+# starting_config_path_PCCS: [group_ungroup, direct, level_1] # Nov 9
+starting_config_path_Dom: [tower_addition, direct, level_1] # Nov 9
+# starting_config_path_PCCS: [group_ungroup, direct, level_1] # Nov 12
+starting_config_path_PCCS: [group_ungroup, ungroup, direct, level_1] # Nov 13
+
+starting_level_for:
+  m19: [group_ungroup, direct, level_1] # Nov 13
 
 starting_level_for_prev:  # these levels are for continuous visual estimation
   m32: [round_2_est_option, 11_to_14, notches]
@@ -413,7 +423,8 @@ event_handling_types: [target, comparison_source, correctness,
 position_modifiers: [left, right, top, bottom,
   left_from_right, right_from_left, top_from_bottom,
   bottom_from_top]
-anim_all_attributes: [left, right, top, bottom, opacity, rotate, handle_opacity]
+anim_all_attributes: [left, right, top, bottom, opacity,
+  rotate, scale, handle_opacity, tower_opacity]
 default_bar_width: 75
 prompt_width: 300
 margin_for_merge: 50

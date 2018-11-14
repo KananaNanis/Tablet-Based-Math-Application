@@ -51,6 +51,7 @@ const Num = ({
 	scale_factor,
 	just_grey = false,
 }) => {
+	//console.log('Num id', id, 'anim_info', anim_info)
 	let tn_name = name
 	if (misc && misc.show_only_fivers) tn_name = only_fivers(tn_name)
 	if (misc && misc.show_only_singletons) tn_name = only_fivers(tn_name, true)
@@ -59,10 +60,18 @@ const Num = ({
 	}
 	let tower_name_style =
 		misc && misc.tower_name_style ? misc.tower_name_style : null
+	let tn_anim_info, t_anim_info
+	if (anim_info && anim_info.tower_opacity) {
+		// t_anim_info = anim_info
+		t_anim_info = anim_info
+	} else {
+		tn_anim_info = anim_info
+		t_anim_info = anim_info
+	}
 	const tn =
 		misc && misc.hide_tower_name ? null : (
 			<TowerName
-				anim_info={anim_info}
+				anim_info={tn_anim_info}
 				id={id}
 				just_grey={just_grey}
 				name={tn_name}
@@ -75,7 +84,7 @@ const Num = ({
 	return (
 		<View style={[styles.num, style, {left: position[0], bottom: position[1]}]}>
 			<Tower
-				anim_info={anim_info}
+				anim_info={t_anim_info}
 				block_opacity={block_opacity}
 				id={id}
 				just_grey={just_grey}
