@@ -228,6 +228,7 @@ class Tower extends React.Component {
 		} = this.props
 		// console.log('id', id, 'name', name, 'block_opacity', block_opacity)
 		// console.log('id', id, 'name', name, 'misc', misc)
+		// console.log('id', id, 'anim_info', anim_info)
 		if ('undefined' === typeof name) {
 			console.error('Cannot render tower id', id)
 			return null

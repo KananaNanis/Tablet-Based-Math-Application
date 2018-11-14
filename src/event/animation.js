@@ -53,15 +53,27 @@ export function interpolate_anim_attr(
 				})
 				const xform = constructXformFor(id, attr, t)
 				animated_style.transform = xform
+				/*
+			} else if ('tower_opacity' === attr) {
+				let attr2 = 'opacity'
+				let t = timer[attr2].interpolate({
+					inputRange: [0, 1],
+					outputRange: [anim_info[attr].from, anim_info[attr].to],
+				})
+				secondary_style[attr2] = t
+*/
 			} else if (global_constant.anim_all_attributes.includes(attr)) {
 				let attr2 = attr
-				if (['blink', 'handle_blink'].includes(attr)) attr2 = 'opacity'
+				if (['blink', 'handle_blink', 'tower_opacity'].includes(attr)) {
+					attr2 = 'opacity'
+				}
 				let t = timer[attr2].interpolate({
 					inputRange: [0, 1],
 					outputRange: [anim_info[attr].from, anim_info[attr].to],
 				})
 				if ('handle_blink' === attr) secondary_style[attr2] = t
 				else animated_style[attr2] = t
+				// console.log('animated_style', animated_style)
 			} else {
 				console.error(
 					'Warning in interpolate_anim_attr:  unrecognized anim_info attr',
@@ -131,6 +143,7 @@ function trigger_continuation(on_end) {
 }
 
 function collapse_anim_info(id, attr, info) {
+	// console.log('collapse_anim_info id', id, 'attr', attr, 'info', info)
 	if (['left', 'right', 'bottom', 'top'].includes(attr)) {
 		// positional update
 		const old_pos = query_position_of(id).toJS()
@@ -141,15 +154,17 @@ function collapse_anim_info(id, attr, info) {
 			doAction.setPosition(id, [old_pos[0], new_pos])
 		} else {
 			console.error(
-				'Warning in collapse_anim_info:  attr not completed implemented',
+				'Warning in collapse_anim_info:  attr not completely implemented',
 				attr,
 			)
 		}
-	} else if ('rotate' === attr) {
+	} else if (['rotate', 'scale'].includes(attr)) {
 		const xform = constructXformFor(id, attr, info.to)
 		doAction.addObjStyle(id, 'transform', xform)
 	} else if (['blink', 'opacity'].includes(attr)) {
 		doAction.addObjStyle(id, 'opacity', info.to)
+	} else if (['tower_opacity'].includes(attr)) {
+		doAction.towerAddStyle(id, 'opacity', info.to)
 	} else {
 		console.error(
 			'Warning in collapse_anim_info:  not implemented for attr',
@@ -196,7 +211,11 @@ export function init_anim(id, anim_info, timer, skip_reset = false) {
 	for (const attr in anim_info) {
 		if (anim_info.hasOwnProperty(attr)) {
 			if (global_constant.anim_all_attributes.includes(attr)) {
-				start_timer(id, attr, anim_info[attr], timer[attr], skip_reset)
+				let attr2 = attr
+				if (['blink', 'handle_blink', 'tower_opacity'].includes(attr)) {
+					attr2 = 'opacity'
+				}
+				start_timer(id, attr, anim_info[attr], timer[attr2], skip_reset)
 			}
 		} else {
 			console.error('old anim property?', attr)
@@ -305,7 +324,7 @@ export function start_anim_bounce(
 			Animated.timing(anim_var, {
 				toValue: (i + 1) % 2,
 				duration,
-				delay,
+				delay: 0 === i ? delay : 0,
 			}),
 		)
 	}
