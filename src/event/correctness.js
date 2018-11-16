@@ -7,6 +7,7 @@ import {
 	query_obj_misc,
 	with_suffix,
 	query_position_of,
+	query_option_obj,
 	// query_obj_anim_info,
 } from '../providers/query_store'
 import {
@@ -186,7 +187,24 @@ export function is_correct() {
 	const cp = query_path('config').toJS()
 	let delay = 'incorrect'
 	//console.log('is_correct src', src, 'how', how)
-	if ('same_height' === how || 'approx_height' === how) {
+	if ('option_button' === how) {
+		const seq_correct = query_prop('correct_option_index')
+		const option_obj = query_option_obj()
+		const seq_given = query_obj_misc(option_obj)
+			.get('option_button_choice')
+			.toJS()
+		// console.log(seq_correct, seq_given)
+		if (names_are_identical(seq_correct, seq_given)) {
+			delay = 0
+		}
+		doAction.addLogEntry(curr_time, [
+			with_suffix(cp),
+			'is_correct',
+			0 === delay,
+			seq_given,
+			seq_correct,
+		])
+	} else if ('same_height' === how || 'approx_height' === how) {
 		const tgt_height = query_tower_height(tgt)
 		let eq = 'unchecked'
 		let src_height

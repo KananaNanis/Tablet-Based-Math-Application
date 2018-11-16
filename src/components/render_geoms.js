@@ -10,7 +10,7 @@ import {
 	//query_position_of,
 	query_name_of,
 } from '../providers/query_store'
-import {height2tower_name} from '../providers/query_tower'
+//import {height2tower_name} from '../providers/query_tower'
 
 export function add_offset(pos, offset_x = 0) {
 	return [pos.get(0) + offset_x, pos.get(1)]
@@ -36,9 +36,11 @@ export function render_nums(
 		if (option_values && is_option) {
 			// console.log('id', id, 'option', option_values ? option_values.toJS() : null)
 			for (let j = 0; j < option_values.size; ++j) {
-				let name = option_values.get(nums.length)
+				let name = option_values.get(nums.length).get(0)
+				/*
 				// this name is not canonical, yet
-				name = height2tower_name(name.get(0))
+				name = height2tower_name(name)
+*/
 				nums.push(
 					<NumContainer
 						key={id + '_' + j}

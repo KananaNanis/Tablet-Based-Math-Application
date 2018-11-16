@@ -9,6 +9,7 @@ import {
 	query_has_anim_info,
 	query_obj_misc,
 	query_option_values,
+	query_option_obj,
 	query_position_of,
 } from '../providers/query_store'
 import {query_top_block, query_tower_height} from '../providers/query_tower'
@@ -51,6 +52,11 @@ import {
 	with_diameter_offset,
 } from '../components/Tile'
 import {store_config_modify} from '../providers/enter_exit'
+import {get_special_button_geom} from '../components/Button'
+import {
+	get_option_button_geom,
+	get_option_button_offset,
+} from '../components/OptionBackground'
 
 function perhaps_reveal_button() {
 	const trb = query_event('touch_reveals_button')
@@ -77,7 +83,11 @@ export function touch_dispatcher(state, x, y, touchID) {
 		}
 	} else {
 		//console.log('option_values' + query_option_values())
-		if (query_option_values() && !query_event('stack_arg_2')) {
+		if (
+			query_option_values() &&
+			!query_event('stack_arg_2') &&
+			!query_event('use_option_buttons')
+		) {
 			return handle_options(state, x, y, touchID)
 		}
 	}
@@ -101,7 +111,7 @@ export function touch_dispatcher(state, x, y, touchID) {
 	for (const i of visible) {
 		if (global_constant.special_button_geoms.hasOwnProperty(i)) {
 			//if ('down' === state ) console.log('checking i', i, 'x', x, 'y', y, 'geom', global_constant.special_button_geoms[i])
-			if (pointIsInRectangle([x, y], global_constant.special_button_geoms[i])) {
+			if (pointIsInRectangle([x, y], get_special_button_geom(i))) {
 				found_one = true
 				doAction.setButtonHighlight(i)
 				if ('submit' === i) handle_submit_button(state)
@@ -110,6 +120,40 @@ export function touch_dispatcher(state, x, y, touchID) {
 				else if ('start' === i) handle_start_button(state)
 				else console.warn('touch_dispatcher did not handle', i)
 				return
+			}
+		} else if (i.startsWith('top_') || i.startsWith('bottom_')) {
+			if (
+				pointIsInRectangle(
+					[x, y],
+					get_option_button_geom(i),
+					get_option_button_offset(i),
+				)
+			) {
+				doAction.setButtonHighlight(i)
+				found_one = true
+				if ('up' === state) {
+					const option_obj = query_option_obj()
+					let option_button_choice = query_obj_misc(option_obj)
+						.get('option_button_choice')
+						.toJS()
+					// console.log('option_button_choice', option_button_choice)
+					const n = Number(i.charAt(i.length - 1))
+					if (i.startsWith('top_')) option_button_choice[n] = 1
+					else if (i.startsWith('bottom_')) option_button_choice[n] = 2
+					doAction.addObjMisc(
+						option_obj,
+						'option_button_choice',
+						option_button_choice,
+					)
+					if (
+						option_button_choice[0] !== 0 &&
+						option_button_choice[1] !== 0 &&
+						option_button_choice[2] !== 0 &&
+						option_button_choice[3] !== 0
+					) {
+						doAction.setButtonDisplay('submit', 'on_right')
+					}
+				}
 			}
 		} else {
 			if (pointIsInRectangle([x, y], button_geoms[i], pos.position)) {
