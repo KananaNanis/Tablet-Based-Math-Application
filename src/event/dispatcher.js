@@ -53,7 +53,10 @@ import {
 } from '../components/Tile'
 import {store_config_modify} from '../providers/enter_exit'
 import {get_special_button_geom} from '../components/Button'
-import {get_option_button_geom, get_option_button_offset} from '../components/OptionBackground'
+import {
+	get_option_button_geom,
+	get_option_button_offset,
+} from '../components/OptionBackground'
 
 function perhaps_reveal_button() {
 	const trb = query_event('touch_reveals_button')
@@ -80,7 +83,11 @@ export function touch_dispatcher(state, x, y, touchID) {
 		}
 	} else {
 		//console.log('option_values' + query_option_values())
-		if (query_option_values() && !query_event('stack_arg_2') && !query_event('use_option_buttons')) {
+		if (
+			query_option_values() &&
+			!query_event('stack_arg_2') &&
+			!query_event('use_option_buttons')
+		) {
 			return handle_options(state, x, y, touchID)
 		}
 	}
@@ -115,21 +122,35 @@ export function touch_dispatcher(state, x, y, touchID) {
 				return
 			}
 		} else if (i.startsWith('top_') || i.startsWith('bottom_')) {
-			if (pointIsInRectangle([x, y], get_option_button_geom(i), get_option_button_offset(i))) {
+			if (
+				pointIsInRectangle(
+					[x, y],
+					get_option_button_geom(i),
+					get_option_button_offset(i),
+				)
+			) {
 				doAction.setButtonHighlight(i)
 				found_one = true
 				if ('up' === state) {
 					const option_obj = query_option_obj()
-					let option_button_choice = query_obj_misc(option_obj).get('option_button_choice').toJS()
+					let option_button_choice = query_obj_misc(option_obj)
+						.get('option_button_choice')
+						.toJS()
 					// console.log('option_button_choice', option_button_choice)
 					const n = Number(i.charAt(i.length - 1))
 					if (i.startsWith('top_')) option_button_choice[n] = 1
 					else if (i.startsWith('bottom_')) option_button_choice[n] = 2
-					doAction.addObjMisc(option_obj, 'option_button_choice', option_button_choice)
-					if (option_button_choice[0] !== 0 &&
-							option_button_choice[1] !== 0 &&
-							option_button_choice[2] !== 0 &&
-							option_button_choice[3] !== 0 ) {
+					doAction.addObjMisc(
+						option_obj,
+						'option_button_choice',
+						option_button_choice,
+					)
+					if (
+						option_button_choice[0] !== 0 &&
+						option_button_choice[1] !== 0 &&
+						option_button_choice[2] !== 0 &&
+						option_button_choice[3] !== 0
+					) {
 						doAction.setButtonDisplay('submit', 'on_right')
 					}
 				}

@@ -26,7 +26,14 @@ function find_gen_values_for_words(words, gen_vars) {
 }
 
 function is_binary_op(s) {
-	return '+' === s || '-' === s || '*' === s || '/' === s || '++' === s || '+*+' === s
+	return (
+		'+' === s ||
+		'-' === s ||
+		'*' === s ||
+		'/' === s ||
+		'++' === s ||
+		'+*+' === s
+	)
 }
 
 function swap_in_array(arr, i, j) {
@@ -46,98 +53,116 @@ export function permute_array_elements(arr) {
 function generate_variations_on(s0) {
 	const verbose = true
 	let starting_table = deep_clone(s0)
-// starting_table = [ [.5], [.5, .5] ]
-//starting_table = [ [1, .5, .2] ]
-//starting_table = [ [.2] ]
-//starting_table = [ [2] ]
+	// starting_table = [ [.5], [.5, .5] ]
+	//starting_table = [ [1, .5, .2] ]
+	//starting_table = [ [.2] ]
+	//starting_table = [ [2] ]
 	if (verbose) console.log('starting_table', starting_table)
 	const n_options = 4
 	let res = []
 	// choose the number of correct options
 	let n_correct
-  if (starting_table.length < 2) {
+	if (starting_table.length < 2) {
 		n_correct = 1
 	} else if (starting_table.length === 2) {
 		const val = Math.random()
-		if (val < .75) n_correct = 2
+		if (val < 0.75) n_correct = 2
 		else n_correct = 1
 	} else {
 		const val = Math.random()
-		if (val < .5) n_correct = 3
-		else if (val < .85) n_correct = 2
+		if (val < 0.5) n_correct = 3
+		else if (val < 0.85) n_correct = 2
 		else n_correct = 1
 	}
-  // select the correct options
+	// select the correct options
 	permute_array_elements(starting_table)
 	for (let i = 0; i < n_correct; ++i) {
 		res.push(starting_table[i])
 	}
 	if (verbose) console.log(' correct option(s)', res)
 	// create variations on these correct options
-	let variations = [], restarts = 0
+	let variations = [],
+		restarts = 0
 	const scale_factor = query_prop('scale_factor')
 	for (let i = res.length; i < n_options; ++i) {
 		// decide which element of res to use as a starting point
-		const base = res[ Math.floor(res.length * Math.random()) ]
+		const base = res[Math.floor(res.length * Math.random())]
 		let add = Math.floor(2 * Math.random())
 		let digit = Math.floor(3 * Math.random())
 		let vari
 		if (add > 0) {
 			if (0 === digit) {
 				vari = base.concat()
-				if (vari[vari.length-1] < .4) vari[vari.length-1] += .1
-				else vari = vari.concat([.1])
+				if (vari[vari.length - 1] < 0.4) vari[vari.length - 1] += 0.1
+				else vari = vari.concat([0.1])
 			} else if (1 === digit) {
 				let insertion_index = 0
-				while (insertion_index < base.length && base[insertion_index] > .4) {
+				while (insertion_index < base.length && base[insertion_index] > 0.4) {
 					++insertion_index
 				}
-				vari = base.slice(0, insertion_index).concat([.5]).concat(base.slice(insertion_index, base.length))
+				vari = base
+					.slice(0, insertion_index)
+					.concat([0.5])
+					.concat(base.slice(insertion_index, base.length))
 			} else if (2 === digit) vari = [1].concat(base)
 		} else {
 			vari = base.concat()
 			if (0 === digit) {
 				let last = vari.pop()
-				if (last < .5) {
-					if (last - .000001 > .1) vari.push(last - .1)
+				if (last < 0.5) {
+					if (last - 0.000001 > 0.1) vari.push(last - 0.1)
 					else {
-						if (verbose) console.log('base', base, 'is too short to remove a singleton')
+						if (verbose) {
+							console.log('base', base, 'is too short to remove a singleton')
+						}
 						vari = []
 					}
-				} else if (approx_equal(last, .5)) {
-					vari.push(last - .1)
-				} else { // should be an integer
+				} else if (approx_equal(last, 0.5)) {
+					vari.push(last - 0.1)
+				} else {
+					// should be an integer
 					if (last !== Math.round(last)) {
 						console.error('Error:  last entry should be an integer!')
 					}
 					if (last > 1) vari.push(last - 1)
-					vari.push(.5)
-					vari.push(.4)
+					vari.push(0.5)
+					vari.push(0.4)
 				}
 			} else if (1 === digit) {
-				if (tower_name2height(base) < .55) {
-					vari = []  // cannot do it
-					if (verbose) console.log('base', base, 'is too short to remove a fiver')
+				if (tower_name2height(base) < 0.55) {
+					vari = [] // cannot do it
+					if (verbose) {
+						console.log('base', base, 'is too short to remove a fiver')
+					}
 				} else {
 					let removal_index = 0
-					while (removal_index < base.length && base[removal_index] > .4) {
+					while (removal_index < base.length && base[removal_index] > 0.4) {
 						++removal_index
 					}
 					if (0 === removal_index) {
 						if (verbose) console.log('only singletons, cannot remove fiver')
 						vari = []
 					} else {
-						if (.5 === base[removal_index - 1]) {
-							vari = base.slice(0, removal_index - 1).concat(base.slice(removal_index, base.length))
+						if (0.5 === base[removal_index - 1]) {
+							vari = base
+								.slice(0, removal_index - 1)
+								.concat(base.slice(removal_index, base.length))
 						} else if (1 === base[removal_index - 1]) {
-							vari = base.slice(0, removal_index - 1).concat([.5]).concat(base.slice(removal_index, base.length))
+							vari = base
+								.slice(0, removal_index - 1)
+								.concat([0.5])
+								.concat(base.slice(removal_index, base.length))
 						} else {
-							vari = base.slice(0, removal_index - 1).concat([base[removal_index - 1] - 1]).concat([.5]).concat(base.slice(removal_index, base.length))
+							vari = base
+								.slice(0, removal_index - 1)
+								.concat([base[removal_index - 1] - 1])
+								.concat([0.5])
+								.concat(base.slice(removal_index, base.length))
 						}
 					}
 				}
 			} else if (2 === digit) {
-				vari = []  // punt for now
+				vari = [] // punt for now
 				if (verbose) console.log('tried to subtract a box, skipping.')
 			}
 		}
@@ -152,16 +177,16 @@ function generate_variations_on(s0) {
 		if (too_tall && verbose) {
 			console.log('too tall:  vari', vari, 'pixel_height', pixel_height)
 		}
-		if (!already_seen
-				&& vari.length > 0
-				&& !too_tall) {
+		if (!already_seen && vari.length > 0 && !too_tall) {
 			variations.push(vari)
 		} else {
 			++restarts
 			if (restarts < 25) {
 				--i
 			} else {
-				console.error('Error:  trouble finding a variation that has not been seen before.')
+				console.error(
+					'Error:  trouble finding a variation that has not been seen before.',
+				)
 				variations.push(vari)
 			}
 		}
@@ -470,8 +495,10 @@ export function generate_with_restrictions(
 			let words = 'string' === typeof c[id] ? c[id].split(' ') : null
 			if (id.startsWith('10_')) last.push(id)
 			else if (id.startsWith('restriction_')) restrict.push(id)
-			else if (id.startsWith('partition_') ||
-				(words && ['narrow_table', 'augment_table'].includes(words[0]))) {
+			else if (
+				id.startsWith('partition_') ||
+				(words && ['narrow_table', 'augment_table'].includes(words[0]))
+			) {
 				partition.push(id)
 			} else if (id.startsWith('option_')) option.push(id)
 			else if (
@@ -571,10 +598,16 @@ export function generate_with_restrictions(
 				// console.log('correct_option_index', i)
 			}
 		}
-		if (!found_it) {  // try to identify the = and != options
+		if (!found_it) {
+			// try to identify the = and != options
 			let answer = []
 			for (let i = 0; i < option_values.length; ++i) {
-				if (approx_equal(correct_option_value[0], tower_name2height(option_values[i][0]))) {
+				if (
+					approx_equal(
+						correct_option_value[0],
+						tower_name2height(option_values[i][0]),
+					)
+				) {
 					answer.push(1)
 				} else answer.push(2)
 			}

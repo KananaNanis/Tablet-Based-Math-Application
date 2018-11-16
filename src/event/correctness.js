@@ -190,7 +190,9 @@ export function is_correct() {
 	if ('option_button' === how) {
 		const seq_correct = query_prop('correct_option_index')
 		const option_obj = query_option_obj()
-		const seq_given = query_obj_misc(option_obj).get('option_button_choice').toJS()
+		const seq_given = query_obj_misc(option_obj)
+			.get('option_button_choice')
+			.toJS()
 		// console.log(seq_correct, seq_given)
 		if (names_are_identical(seq_correct, seq_given)) {
 			delay = 0

@@ -1,13 +1,18 @@
 import React from 'react'
 import {View, Image, Text, StyleSheet, Dimensions} from 'react-native'
 import Keypad from './Keypad'
-import Button, { get_special_button_geom } from './Button'
+import Button, {get_special_button_geom} from './Button'
 import Placard from './Placard'
 import ErrBox from './ErrBox'
 import CamelContainer from '../containers/CamelContainer'
 import OptionBackground from '../components/OptionBackground'
 import {global_constant, image_location} from '../App'
-import {query_event, query_arg, query_prop, query_obj_misc} from '../providers/query_store'
+import {
+	query_event,
+	query_arg,
+	query_prop,
+	query_obj_misc,
+} from '../providers/query_store'
 import {
 	render_nums,
 	render_tiles,
@@ -127,7 +132,9 @@ const Workspace = ({
 			option_inner = render_bars(bar_ids, option_values)
 		}
 		const option_obj = option_inner[option_values.size]
-		const option_button_choice = query_obj_misc(option_obj).get('option_button_choice')
+		const option_button_choice = query_obj_misc(option_obj).get(
+			'option_button_choice',
+		)
 		for (let i = 0; i < option_values.size; ++i) {
 			++key
 			let choice = option_button_choice ? option_button_choice.get(i) : null
@@ -296,9 +303,7 @@ const Workspace = ({
 						: freeze_no_highlight_style
 			} else if (special_button === button_highlight) bg_style = highlight_style
 			//console.log('bg_style', bg_style)
-			let position = get_special_button_geom(
-				special_button
-			).position.concat()
+			let position = get_special_button_geom(special_button).position.concat()
 			if (is_scaled) {
 				if (['submit', 'delete'].includes(special_button)) {
 					position[1] -= 10

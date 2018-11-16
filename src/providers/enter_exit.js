@@ -343,10 +343,8 @@ export function enter_exit_config(
 			if (c.hasOwnProperty(id0)) {
 				const id = remap_id(id0, remap_id_table)
 				if ('button_submit' === id) {
-					const t = ('on_right' === c[id0]) ? c[id0] : true
-					action_list.push(
-						Actions.setButtonDisplay('submit', enter ? t : null),
-					)
+					const t = 'on_right' === c[id0] ? c[id0] : true
+					action_list.push(Actions.setButtonDisplay('submit', enter ? t : null))
 				} else if ('button_delete' === id) {
 					action_list.push(
 						Actions.setButtonDisplay('delete', enter ? true : null),

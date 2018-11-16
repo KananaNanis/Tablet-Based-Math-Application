@@ -15,17 +15,17 @@ import Button from './Button'
 
 export function get_option_button_geom(i) {
 	let pos = i.startsWith('top_') ? [10, 820] : [10, 720]
-  let geom = {
-        position: pos,
-        width: 100,
-        height: 100,
-      }
-  return geom
+	let geom = {
+		position: pos,
+		width: 100,
+		height: 100,
+	}
+	return geom
 }
 
 export function get_option_button_offset(iFull) {
-	let i = Number(iFull.charAt(iFull.length-1))
-  const option_width = 120 // HELP!  Should not be hard-coded!
+	let i = Number(iFull.charAt(iFull.length - 1))
+	const option_width = 120 // HELP!  Should not be hard-coded!
 	return [i * option_width, 0]
 }
 
@@ -66,7 +66,14 @@ class OptionBackground extends React.Component {
 	}
 
 	render() {
-		let {i, button_highlight, style, anim_info, option_obj, option_button_choice} = this.props
+		let {
+			i,
+			button_highlight,
+			style,
+			anim_info,
+			option_obj,
+			option_button_choice,
+		} = this.props
 		//console.log('button_highlight', button_highlight)
 		//if (style && style.size > 0) style = style.toJS()  // should use HOC!
 		// console.log('OptionBackground style', style)
@@ -107,7 +114,8 @@ class OptionBackground extends React.Component {
 		pos_info.left = position[0]
 		let option_buttons = []
 		if (null !== option_button_choice) {
-			let extra_button = [null, null], extra_button_label = [null, null]
+			let extra_button = [null, null],
+				extra_button_label = [null, null]
 			let option_button_state = ['untouched', 'untouched']
 			if (1 === option_button_choice) {
 				option_button_state = ['chosen', 'notchosen']
@@ -124,14 +132,44 @@ class OptionBackground extends React.Component {
 				suffix[1] = 'highlight'
 			}
 
-			extra_button[0] = global_constant.option_button_style[option_button_state[0]][suffix[0]]
-			extra_button[1] = global_constant.option_button_style[option_button_state[1]][suffix[1]]
-			extra_button_label[0] = global_constant.option_button_label_style[option_button_state[0]][suffix[0]]
-			extra_button_label[1] = global_constant.option_button_label_style[option_button_state[1]][suffix[1]]
-			const geom = [get_option_button_geom('top_' + i),
-									get_option_button_geom('bottom_' + i)]
-			option_buttons.push(<Button key={1} position={geom[0].position} width={geom[0].width} height={geom[0].height} view_style={[styles.bg_button, extra_button[0]]} label={'='} label_style={[styles.bg_button_label, extra_button_label[0]]} />)
-			option_buttons.push(<Button key={2} position={geom[1].position} width={geom[1].width} height={geom[1].height} view_style={[styles.bg_button, extra_button[1]]} label={String.fromCharCode(parseInt('2260', 16))} label_style={[styles.bg_button_label, extra_button_label[1]]} />)
+			extra_button[0] =
+				global_constant.option_button_style[option_button_state[0]][suffix[0]]
+			extra_button[1] =
+				global_constant.option_button_style[option_button_state[1]][suffix[1]]
+			extra_button_label[0] =
+				global_constant.option_button_label_style[option_button_state[0]][
+					suffix[0]
+				]
+			extra_button_label[1] =
+				global_constant.option_button_label_style[option_button_state[1]][
+					suffix[1]
+				]
+			const geom = [
+				get_option_button_geom('top_' + i),
+				get_option_button_geom('bottom_' + i),
+			]
+			option_buttons.push(
+				<Button
+					key={1}
+					height={geom[0].height}
+					label="="
+					label_style={[styles.bg_button_label, extra_button_label[0]]}
+					position={geom[0].position}
+					view_style={[styles.bg_button, extra_button[0]]}
+					width={geom[0].width}
+				/>,
+			)
+			option_buttons.push(
+				<Button
+					key={2}
+					height={geom[1].height}
+					label={String.fromCharCode(parseInt('2260', 16))}
+					label_style={[styles.bg_button_label, extra_button_label[1]]}
+					position={geom[1].position}
+					view_style={[styles.bg_button, extra_button[1]]}
+					width={geom[1].width}
+				/>,
+			)
 		}
 		//console.log('Tile name', name, ' style', style)
 		return (

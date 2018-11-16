@@ -37,7 +37,7 @@ export function render_nums(
 			// console.log('id', id, 'option', option_values ? option_values.toJS() : null)
 			for (let j = 0; j < option_values.size; ++j) {
 				let name = option_values.get(nums.length).get(0)
-/*
+				/*
 				// this name is not canonical, yet
 				name = height2tower_name(name)
 */

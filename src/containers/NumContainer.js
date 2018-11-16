@@ -32,8 +32,8 @@ const mapStateToProps = (state, ownProps) => {
 	let {id, name, offset_x = 0, just_grey = false} = ownProps
 	if (!name) name = state.getIn(['name', id])
 	if ('number' === typeof name) {
-    // this name is not canonical, yet
-    name = height2tower_name(name)
+		// this name is not canonical, yet
+		name = height2tower_name(name)
 	}
 
 	const verbose = false
