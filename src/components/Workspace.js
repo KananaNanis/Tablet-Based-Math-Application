@@ -403,8 +403,8 @@ const styles = StyleSheet.create({
 	image_default: {
 		position: 'absolute',
 		top: 5,
-		width: 20,
-		height: 20,
+		width: 25,
+		height: 25,
 	},
 	username: {
 		position: 'absolute',
