@@ -11,7 +11,7 @@ import {enter_exit_config} from './enter_exit'
 import * as Actions from './actions'
 import {do_batched_actions} from './reducers'
 
-const deep_clone = obj => JSON.parse(JSON.stringify(obj))
+export const deep_clone = obj => JSON.parse(JSON.stringify(obj))
 
 const attach_properties = (to, from) => {
 	for (const key in from) {

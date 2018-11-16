@@ -8,8 +8,10 @@ import {
 	pick_animal_name,
 } from './gen_utile'
 //import {query_obj_misc, query_option_obj} from '../providers/query_store'
-import {approx_equal} from '../event/utils'
+import {approx_equal, names_are_identical} from '../event/utils'
 import {tower_name2height, height2tower_name} from '../providers/query_tower'
+import {global_workspace_height} from '../components/Workspace'
+import {deep_clone} from '../providers/change_config'
 
 function find_gen_values_for_words(words, gen_vars) {
 	let res = words.slice()
@@ -24,7 +26,7 @@ function find_gen_values_for_words(words, gen_vars) {
 }
 
 function is_binary_op(s) {
-	return '+' === s || '-' === s || '*' === s || '/' === s || '++' === s
+	return '+' === s || '-' === s || '*' === s || '/' === s || '++' === s || '+*+' === s
 }
 
 function swap_in_array(arr, i, j) {
@@ -41,6 +43,135 @@ export function permute_array_elements(arr) {
 	}
 }
 
+function generate_variations_on(s0) {
+	const verbose = true
+	let starting_table = deep_clone(s0)
+// starting_table = [ [.5], [.5, .5] ]
+//starting_table = [ [1, .5, .2] ]
+//starting_table = [ [.2] ]
+//starting_table = [ [2] ]
+	if (verbose) console.log('starting_table', starting_table)
+	const n_options = 4
+	let res = []
+	// choose the number of correct options
+	let n_correct
+  if (starting_table.length < 2) {
+		n_correct = 1
+	} else if (starting_table.length === 2) {
+		const val = Math.random()
+		if (val < .75) n_correct = 2
+		else n_correct = 1
+	} else {
+		const val = Math.random()
+		if (val < .5) n_correct = 3
+		else if (val < .85) n_correct = 2
+		else n_correct = 1
+	}
+  // select the correct options
+	permute_array_elements(starting_table)
+	for (let i = 0; i < n_correct; ++i) {
+		res.push(starting_table[i])
+	}
+	if (verbose) console.log(' correct option(s)', res)
+	// create variations on these correct options
+	let variations = [], restarts = 0
+	const scale_factor = query_prop('scale_factor')
+	for (let i = res.length; i < n_options; ++i) {
+		// decide which element of res to use as a starting point
+		const base = res[ Math.floor(res.length * Math.random()) ]
+		let add = Math.floor(2 * Math.random())
+		let digit = Math.floor(3 * Math.random())
+		let vari
+		if (add > 0) {
+			if (0 === digit) {
+				vari = base.concat()
+				if (vari[vari.length-1] < .4) vari[vari.length-1] += .1
+				else vari = vari.concat([.1])
+			} else if (1 === digit) {
+				let insertion_index = 0
+				while (insertion_index < base.length && base[insertion_index] > .4) {
+					++insertion_index
+				}
+				vari = base.slice(0, insertion_index).concat([.5]).concat(base.slice(insertion_index, base.length))
+			} else if (2 === digit) vari = [1].concat(base)
+		} else {
+			vari = base.concat()
+			if (0 === digit) {
+				let last = vari.pop()
+				if (last < .5) {
+					if (last - .000001 > .1) vari.push(last - .1)
+					else {
+						if (verbose) console.log('base', base, 'is too short to remove a singleton')
+						vari = []
+					}
+				} else if (approx_equal(last, .5)) {
+					vari.push(last - .1)
+				} else { // should be an integer
+					if (last !== Math.round(last)) {
+						console.error('Error:  last entry should be an integer!')
+					}
+					if (last > 1) vari.push(last - 1)
+					vari.push(.5)
+					vari.push(.4)
+				}
+			} else if (1 === digit) {
+				if (tower_name2height(base) < .55) {
+					vari = []  // cannot do it
+					if (verbose) console.log('base', base, 'is too short to remove a fiver')
+				} else {
+					let removal_index = 0
+					while (removal_index < base.length && base[removal_index] > .4) {
+						++removal_index
+					}
+					if (0 === removal_index) {
+						if (verbose) console.log('only singletons, cannot remove fiver')
+						vari = []
+					} else {
+						if (.5 === base[removal_index - 1]) {
+							vari = base.slice(0, removal_index - 1).concat(base.slice(removal_index, base.length))
+						} else if (1 === base[removal_index - 1]) {
+							vari = base.slice(0, removal_index - 1).concat([.5]).concat(base.slice(removal_index, base.length))
+						} else {
+							vari = base.slice(0, removal_index - 1).concat([base[removal_index - 1] - 1]).concat([.5]).concat(base.slice(removal_index, base.length))
+						}
+					}
+				}
+			} else if (2 === digit) {
+				vari = []  // punt for now
+				if (verbose) console.log('tried to subtract a box, skipping.')
+			}
+		}
+		let already_seen = false
+		for (let j = 0; j < variations.length; ++j) {
+			if (names_are_identical(vari, variations[j])) {
+				already_seen = true
+			}
+		}
+		const pixel_height = scale_factor * tower_name2height(vari)
+		const too_tall = pixel_height > global_workspace_height
+		if (too_tall && verbose) {
+			console.log('too tall:  vari', vari, 'pixel_height', pixel_height)
+		}
+		if (!already_seen
+				&& vari.length > 0
+				&& !too_tall) {
+			variations.push(vari)
+		} else {
+			++restarts
+			if (restarts < 25) {
+				--i
+			} else {
+				console.error('Error:  trouble finding a variation that has not been seen before.')
+				variations.push(vari)
+			}
+		}
+	}
+	if (verbose) console.log('variations', variations)
+	res = res.concat(variations)
+	permute_array_elements(res)
+	return res
+}
+
 function generate_option_values(
 	inst,
 	option_delta,
@@ -52,7 +183,7 @@ function generate_option_values(
 	if ('number' !== typeof option_delta[0]) {
 		// use the delta as the actual values
 		for (let i = 0; i < option_delta[0].length; ++i) {
-			option_values.push(option_delta[0][i])
+			option_values.push([option_delta[0][i]])
 		}
 	} else {
 		let offset = Math.floor(4 * Math.random())
@@ -90,7 +221,7 @@ function apply_gen_instruction(
 ) {
 	let ok = true
 	let verbose = false
-	// console.log('apply_gen_instruction id', id, 'inst', inst)
+	if (verbose) console.log('apply_gen_instruction id', id, 'inst', inst)
 	if (0 === Object.keys(gen_vars).length) {
 		// prepopulate with some useful examples
 		gen_vars['default_bar_width'] = global_constant.default_bar_width
@@ -112,10 +243,11 @@ function apply_gen_instruction(
 			const skip_permute = gen_vars['option_skip_permute']
 			//console.log('skip_permute', skip_permute)
 			generate_option_values(inst, option_delta, option_values, skip_permute)
-			//console.log(' here, option_values', option_values, 'correct_option_value', correct_option_value)
+			// console.log(' here, option_values', option_values, 'correct_option_value', correct_option_value)
 			for (let i = 0; i < 4; ++i) {
 				gen_vars['option_' + i] = option_values[i][0]
 			}
+			// console.log(' gen_vars[option_0]', gen_vars.option_0)
 		}
 	} else if (id.startsWith('restriction_')) {
 		if (inst) {
@@ -226,6 +358,14 @@ function apply_gen_instruction(
 			//let h = global_constant.animals[animal_name].height
 			//console.log('val', val, 'animal_name', animal_name, 'h', h)
 			gen_vars[id] = animal_name
+		} else if (2 === words.length && 'augment_table' === words[0]) {
+			let starting_table = gen_vars[words[1]]
+			let res = generate_variations_on(starting_table)
+			// console.log('augment_table res', res)
+			gen_vars[id] = res
+			if ('delay_option_value_delta' === id) {
+				option_delta[0] = res
+			}
 		} else if (3 === words.length && 'as_peg_name' === words[0]) {
 			let peg_type = gen_vars[words[1]],
 				peg_height = gen_vars[words[2]],
@@ -236,6 +376,18 @@ function apply_gen_instruction(
 			peg_name = 'peg_' + peg_type + peg_num
 			// console.log('peg type', peg_type, 'peg_height', peg_height, 'peg_num', peg_num, 'peg_name', peg_name)
 			gen_vars[id] = peg_name
+		} else if (3 === words.length && 'narrow_table' === words[0]) {
+			let starting_table = gen_vars[words[1]],
+				one_height = gen_vars[words[2]],
+				res = []
+			for (let i = 0; i < starting_table.length; ++i) {
+				if (approx_equal(tower_name2height(starting_table[i]), one_height)) {
+					res.push(starting_table[i])
+				}
+			}
+			// console.log('one_height', one_height, 'res', res)
+			gen_vars[id] = res
+			if (!res || res.length < 1) ok = false
 		} else if (3 === words.length && is_binary_op(words[1])) {
 			let vals = find_gen_values_for_words([words[0], words[2]], gen_vars)
 			if ('+' === words[1]) {
@@ -247,6 +399,7 @@ function apply_gen_instruction(
 			} else if ('/' === words[1]) {
 				gen_vars[id] = vals[0] / vals[1]
 			} else if ('++' === words[1]) {
+				// concatenate two lists, with special handling for zero
 				let vals0 = vals[0],
 					vals1 = vals[1]
 				if (!Array.isArray(vals0)) {
@@ -259,7 +412,27 @@ function apply_gen_instruction(
 				}
 				// console.log(' vals0', vals0, 'vals1', vals1)
 				gen_vars[id] = vals0.concat(vals1)
-				// console.log(' gen', id, 'equal', gen_vars[id])
+			} else if ('+*+' === words[1]) {
+				// a kind of outer product, with special handling for zero
+				let vals0 = vals[0],
+					vals1 = vals[1],
+					res = []
+				for (let i = 0; i < vals0.length; ++i) {
+					if (!Array.isArray(vals0[i])) {
+						if (0 === vals0[i]) vals0[i] = []
+						else vals0[i] = [vals0[i]]
+					}
+					for (let j = 0; j < vals1.length; ++j) {
+						if (!Array.isArray(vals1[j])) {
+							if (0 === vals1[j]) vals1[i] = []
+							else vals1[j] = [vals1[j]]
+						}
+						res.push(vals0[i].concat(vals1[j]))
+					}
+				}
+				// console.log(' vals0', vals0, 'vals1', vals1)
+				gen_vars[id] = res
+				//console.log(' gen', id, 'equal', gen_vars[id])
 			}
 			//console.log('id', id, 'words', words, 'vals', vals, 'gen_vars[id]', gen_vars[id])
 		} else {
@@ -282,9 +455,11 @@ export function generate_with_restrictions(
 	silent = false,
 ) {
 	const verbose = false
+	if (verbose) console.log('generate_with_restrictions c', c)
 
 	// move restrictions to the end, and binary ops just before
-	let restrict = [],
+	let last = [],
+		restrict = [],
 		binary = [],
 		partition = [],
 		option = [],
@@ -293,9 +468,12 @@ export function generate_with_restrictions(
 		// console.log('  id', id)
 		if (c.hasOwnProperty(id)) {
 			let words = 'string' === typeof c[id] ? c[id].split(' ') : null
-			if (id.startsWith('restriction_')) restrict.push(id)
-			else if (id.startsWith('partition_')) partition.push(id)
-			else if (id.startsWith('option_')) option.push(id)
+			if (id.startsWith('10_')) last.push(id)
+			else if (id.startsWith('restriction_')) restrict.push(id)
+			else if (id.startsWith('partition_') ||
+				(words && ['narrow_table', 'augment_table'].includes(words[0]))) {
+				partition.push(id)
+			} else if (id.startsWith('option_')) option.push(id)
 			else if (
 				words &&
 				(1 === words.length ||
@@ -311,6 +489,7 @@ export function generate_with_restrictions(
 	all = all.concat(option)
 	all = all.concat(partition)
 	all = all.concat(restrict)
+	all = all.concat(last)
 	if (verbose) console.log('reordered all', all)
 
 	// try to create a valid set of values, and then check restrictions
@@ -322,9 +501,10 @@ export function generate_with_restrictions(
 		correct_option_value = []
 	for (i = 0; i < max_i; ++i) {
 		let ok = true
-		for (const id of all) {
+		for (let id of all) {
 			//console.log('id', id)
 			const inst = c[id]
+			if (id.startsWith('10_')) id = id.substr(3)
 			if (!Array.isArray(inst) && 'object' === typeof inst) {
 				// apply restrictions to the use of some instructions
 				for (let key in inst) {
@@ -355,7 +535,7 @@ export function generate_with_restrictions(
 					ok &&
 					apply_gen_instruction(
 						id,
-						c[id],
+						inst,
 						option_delta,
 						option_values,
 						correct_option_value,
@@ -366,7 +546,7 @@ export function generate_with_restrictions(
 						'id',
 						id,
 						'c[id]',
-						c[id],
+						inst,
 						'ok',
 						ok,
 						'option_values',
@@ -383,11 +563,23 @@ export function generate_with_restrictions(
 		action_list.push(Actions.setOptionValues(option_values))
 		// console.log('correct_option_value', correct_option_value)
 		// console.log('option_values', option_values)
+		let found_it = false
 		for (let i = 0; i < option_values.length; ++i) {
 			if (approx_equal(correct_option_value[0], option_values[i][0])) {
 				action_list.push(Actions.setProp('correct_option_index', i))
+				found_it = true
 				// console.log('correct_option_index', i)
 			}
+		}
+		if (!found_it) {  // try to identify the = and != options
+			let answer = []
+			for (let i = 0; i < option_values.length; ++i) {
+				if (approx_equal(correct_option_value[0], tower_name2height(option_values[i][0]))) {
+					answer.push(1)
+				} else answer.push(2)
+			}
+			action_list.push(Actions.setProp('correct_option_index', answer))
+			//console.log('setting correct_option_index to', answer)
 		}
 	}
 	if (i >= max_i) {

@@ -11,6 +11,23 @@ import {
 	query_option_values,
 } from '../providers/query_store'
 import * as Anim from '../event/animation'
+import Button from './Button'
+
+export function get_option_button_geom(i) {
+	let pos = i.startsWith('top_') ? [10, 820] : [10, 720]
+  let geom = {
+        position: pos,
+        width: 100,
+        height: 100,
+      }
+  return geom
+}
+
+export function get_option_button_offset(iFull) {
+	let i = Number(iFull.charAt(iFull.length-1))
+  const option_width = 120 // HELP!  Should not be hard-coded!
+	return [i * option_width, 0]
+}
 
 export function option_geometry(i, option_obj) {
 	const n = query_option_values().size
@@ -49,7 +66,7 @@ class OptionBackground extends React.Component {
 	}
 
 	render() {
-		let {i, button_highlight, style, anim_info, option_obj} = this.props
+		let {i, button_highlight, style, anim_info, option_obj, option_button_choice} = this.props
 		//console.log('button_highlight', button_highlight)
 		//if (style && style.size > 0) style = style.toJS()  // should use HOC!
 		// console.log('OptionBackground style', style)
@@ -80,10 +97,42 @@ class OptionBackground extends React.Component {
 		} else if (i % 2) {
 			extra_style.backgroundColor = '#e8e8e8'
 		}
+		const obj_misc = query_obj_misc(option_obj)
+		if (obj_misc && obj_misc.get('hide_overflow')) {
+			extra_style.overflow = 'hidden'
+		}
 		const {position, width, height} = option_geometry(i, option_obj)
 		//console.log('OptionBackground i', i, 'position', position, 'width', width, 'height', height)
 		let pos_info = {bottom: position[1]}
 		pos_info.left = position[0]
+		let option_buttons = []
+		if (null !== option_button_choice) {
+			let extra_button = [null, null], extra_button_label = [null, null]
+			let option_button_state = ['untouched', 'untouched']
+			if (1 === option_button_choice) {
+				option_button_state = ['chosen', 'notchosen']
+			}
+			if (2 === option_button_choice) {
+				option_button_state = ['notchosen', 'chosen']
+			}
+
+			let suffix = ['top', 'bottom']
+			if (button_highlight && button_highlight === 'top_' + i) {
+				suffix[0] = 'highlight'
+			}
+			if (button_highlight && button_highlight === 'bottom_' + i) {
+				suffix[1] = 'highlight'
+			}
+
+			extra_button[0] = global_constant.option_button_style[option_button_state[0]][suffix[0]]
+			extra_button[1] = global_constant.option_button_style[option_button_state[1]][suffix[1]]
+			extra_button_label[0] = global_constant.option_button_label_style[option_button_state[0]][suffix[0]]
+			extra_button_label[1] = global_constant.option_button_label_style[option_button_state[1]][suffix[1]]
+			const geom = [get_option_button_geom('top_' + i),
+									get_option_button_geom('bottom_' + i)]
+			option_buttons.push(<Button key={1} position={geom[0].position} width={geom[0].width} height={geom[0].height} view_style={[styles.bg_button, extra_button[0]]} label={'='} label_style={[styles.bg_button_label, extra_button_label[0]]} />)
+			option_buttons.push(<Button key={2} position={geom[1].position} width={geom[1].width} height={geom[1].height} view_style={[styles.bg_button, extra_button[1]]} label={String.fromCharCode(parseInt('2260', 16))} label_style={[styles.bg_button_label, extra_button_label[1]]} />)
+		}
 		//console.log('Tile name', name, ' style', style)
 		return (
 			<Animated.View
@@ -100,6 +149,7 @@ class OptionBackground extends React.Component {
 				]}
 			>
 				{this.props.children}
+				{option_buttons}
 			</Animated.View>
 		)
 	}
@@ -112,6 +162,15 @@ const styles = StyleSheet.create({
 		backgroundColor: almostWhite,
 		justifyContent: 'flex-end',
 		alignItems: 'center',
+		// overflow: 'hidden',  // put into misc
+	},
+	bg_button: {
+		borderRadius: 30,
+	},
+	bg_button_label: {
+		position: 'absolute',
+		fontSize: 100,
+		bottom: 0,
 	},
 })
 

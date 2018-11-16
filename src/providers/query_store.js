@@ -81,8 +81,19 @@ export function query_visible_buttons() {
 			}
 		}
 	}
+	if (state.getIn(['event_handling', 'use_option_buttons'])) {
+		for (let i = 0; i < 4; ++i) {
+			res.push('top_' + i)
+			res.push('bottom_' + i)
+		}
+	}
 	// console.log('query_visible_buttons res', res, 'button_display', state.get('button_display').toJS())
 	return res
+}
+
+export function query_button_detail(id) {
+	const state = global_store.getState()
+	return state.getIn(['button_display', id])
 }
 
 export function query_name_of(id) {

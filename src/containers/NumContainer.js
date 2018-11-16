@@ -4,6 +4,7 @@ import {connect} from 'react-redux'
 import {add_offset} from '../components/render_geoms'
 import {toJS} from './to_js'
 import Num from '../components/Num'
+import {height2tower_name} from '../providers/query_tower'
 
 /*
 generic version seems to work for this one?!
@@ -30,6 +31,10 @@ const toJS_num = WrappedComponent => wrappedComponentProps => {
 const mapStateToProps = (state, ownProps) => {
 	let {id, name, offset_x = 0, just_grey = false} = ownProps
 	if (!name) name = state.getIn(['name', id])
+	if ('number' === typeof name) {
+    // this name is not canonical, yet
+    name = height2tower_name(name)
+	}
 
 	const verbose = false
 	if (verbose) {

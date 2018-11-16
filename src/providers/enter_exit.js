@@ -227,6 +227,107 @@ export function enter_exit_config(
 	}
 	// let's handle the various parts of the config one at a time
 	let sc = global_constant.scale_factor_from_yaml // may not be available
+	let remap_id_table = {}
+	if (config['remap_ids']) {
+		remap_id_table = config['remap_ids']
+		console.log('remap_id_table', remap_id_table)
+	}
+	// do misc first, so that the generate section can use the correct scale
+	let suffix_path,
+		skip_suffix_for_this_level = false
+	if (config['misc']) {
+		const c = config['misc']
+		for (const key0 in c) {
+			if (c.hasOwnProperty(key0)) {
+				const key = remap_id(key0, remap_id_table)
+				if ('config_iteration' === key) {
+					let iter_val = c[key0]
+					if (global_constant.debug_mode) {
+						// possible over-ride, depending on which is greater
+						if (iter_val > global_constant.num_exercises_for_debugging) {
+							iter_val = global_constant.num_exercises_for_debugging
+						}
+					}
+					if (0 === iter_val || !enter) iter_val = null
+					action_list.push(Actions.setProp(key, iter_val))
+				} else if ('goto_config' === key) {
+					// this attribute is special:  it is not erased at the end!
+					if (enter) {
+						const iter = query_prop('goto_iteration')
+						let goto_iter = global_constant.debug_mode
+							? global_constant.num_exercises_for_debugging
+							: c[key0][0]
+						if (!iter || !(iter > 0)) {
+							console.log(
+								'iter was',
+								iter,
+								'setting goto iteration',
+								goto_iter,
+								'path',
+								c[key0][1],
+							)
+							action_list.push(Actions.setProp('goto_iteration', goto_iter))
+						} else {
+							console.log('skipping setting iteration, iter', iter)
+						}
+					}
+					action_list.push(Actions.setPath('goto', enter ? c[key0][1] : null))
+				} else if ('jmp_no_suffix' === key) {
+					if (enter && !use_suffix) {
+						const has_suffix = suffix_path || query_path('suffix_path')
+						// const has_suffix = true
+						if (!has_suffix) {
+							console.log('setting jmp')
+							action_list.push(Actions.setPath('jmp', c[key0]))
+						} else {
+							console.log('clearing jmp')
+							action_list.push(Actions.setPath('jmp', null))
+							suffix_path = null
+							action_list.push(Actions.setPath('suffix_path', null))
+						}
+					}
+				} else if ('jmp' === key) {
+					if (enter && !use_suffix) {
+						// don't unset this state here... wait for in-between
+						action_list.push(Actions.setPath(key, c[key0]))
+					}
+				} else if ('skip_suffix_for_this_level' === key) {
+					if (c[key0]) skip_suffix_for_this_level = true
+				} else if ('suffix_path' === key) {
+					if (enter && !c['jmp_no_suffix'] && !use_suffix) {
+						// don't unset this state here... wait for in-between
+						action_list.push(Actions.setPath(key, c[key0]))
+						suffix_path = c[key0]
+					}
+				} else if (
+					[
+						'num_stars',
+						'skip_submit',
+						'skip_in_between',
+						'skip_slide_down',
+						'problem_stage',
+						'freeze_display',
+						'answer_is_correct',
+						'hide_dot',
+						'curr_op',
+					].includes(key)
+				) {
+					action_list.push(Actions.setProp(key, enter ? c[key0] : null))
+				} else if ('blank_between_exercises' === key) {
+					action_list.push(Actions.setProp(key, !enter ? c[key0] : null))
+					//console.log('blank', query_prop('blank_between_exercises'))
+				} else if ('new_scale_factor' === key) {
+					doAction.setProp(
+						'scale_factor',
+						enter ? c[key0] : global_constant.scale_factor_from_yaml,
+					)
+				} else if ('remove_on_exit' === key && !enter) {
+					//console.log('remove_on_exit', c[key0])
+					remove_on_exit(c[key0], action_list)
+				}
+			}
+		}
+	}
 	const gen_vars =
 		enter && config['generate']
 			? generate_with_restrictions(
@@ -236,19 +337,15 @@ export function enter_exit_config(
 					silent,
 			  )
 			: {}
-	let remap_id_table = {}
-	if (config['remap_ids']) {
-		remap_id_table = config['remap_ids']
-		console.log('remap_id_table', remap_id_table)
-	}
 	if (config['create']) {
 		const c = config['create']
 		for (const id0 in c) {
 			if (c.hasOwnProperty(id0)) {
 				const id = remap_id(id0, remap_id_table)
 				if ('button_submit' === id) {
+					const t = ('on_right' === c[id0]) ? c[id0] : true
 					action_list.push(
-						Actions.setButtonDisplay('submit', enter ? true : null),
+						Actions.setButtonDisplay('submit', enter ? t : null),
 					)
 				} else if ('button_delete' === id) {
 					action_list.push(
@@ -428,101 +525,6 @@ export function enter_exit_config(
 				const val0 = c[key]
 				const val = remap_id(val0, remap_id_table)
 				action_list.push(Actions.setEventHandlingParam(key, enter ? val : null))
-			}
-		}
-	}
-	let suffix_path,
-		skip_suffix_for_this_level = false
-	if (config['misc']) {
-		const c = config['misc']
-		for (const key0 in c) {
-			if (c.hasOwnProperty(key0)) {
-				const key = remap_id(key0, remap_id_table)
-				if ('config_iteration' === key) {
-					let iter_val = c[key0]
-					if (global_constant.debug_mode) {
-						// possible over-ride, depending on which is greater
-						if (iter_val > global_constant.num_exercises_for_debugging) {
-							iter_val = global_constant.num_exercises_for_debugging
-						}
-					}
-					if (0 === iter_val || !enter) iter_val = null
-					action_list.push(Actions.setProp(key, iter_val))
-				} else if ('goto_config' === key) {
-					// this attribute is special:  it is not erased at the end!
-					if (enter) {
-						const iter = query_prop('goto_iteration')
-						let goto_iter = global_constant.debug_mode
-							? global_constant.num_exercises_for_debugging
-							: c[key0][0]
-						if (!iter || !(iter > 0)) {
-							console.log(
-								'iter was',
-								iter,
-								'setting goto iteration',
-								goto_iter,
-								'path',
-								c[key0][1],
-							)
-							action_list.push(Actions.setProp('goto_iteration', goto_iter))
-						} else {
-							console.log('skipping setting iteration, iter', iter)
-						}
-					}
-					action_list.push(Actions.setPath('goto', enter ? c[key0][1] : null))
-				} else if ('jmp_no_suffix' === key) {
-					if (enter && !use_suffix) {
-						const has_suffix = suffix_path || query_path('suffix_path')
-						// const has_suffix = true
-						if (!has_suffix) {
-							console.log('setting jmp')
-							action_list.push(Actions.setPath('jmp', c[key0]))
-						} else {
-							console.log('clearing jmp')
-							action_list.push(Actions.setPath('jmp', null))
-							suffix_path = null
-							action_list.push(Actions.setPath('suffix_path', null))
-						}
-					}
-				} else if ('jmp' === key) {
-					if (enter && !use_suffix) {
-						// don't unset this state here... wait for in-between
-						action_list.push(Actions.setPath(key, c[key0]))
-					}
-				} else if ('skip_suffix_for_this_level' === key) {
-					if (c[key0]) skip_suffix_for_this_level = true
-				} else if ('suffix_path' === key) {
-					if (enter && !c['jmp_no_suffix'] && !use_suffix) {
-						// don't unset this state here... wait for in-between
-						action_list.push(Actions.setPath(key, c[key0]))
-						suffix_path = c[key0]
-					}
-				} else if (
-					[
-						'num_stars',
-						'skip_submit',
-						'skip_in_between',
-						'skip_slide_down',
-						'problem_stage',
-						'freeze_display',
-						'answer_is_correct',
-						'hide_dot',
-						'curr_op',
-					].includes(key)
-				) {
-					action_list.push(Actions.setProp(key, enter ? c[key0] : null))
-				} else if ('blank_between_exercises' === key) {
-					action_list.push(Actions.setProp(key, !enter ? c[key0] : null))
-					//console.log('blank', query_prop('blank_between_exercises'))
-				} else if ('new_scale_factor' === key) {
-					doAction.setProp(
-						'scale_factor',
-						enter ? c[key0] : global_constant.scale_factor_from_yaml,
-					)
-				} else if ('remove_on_exit' === key && !enter) {
-					//console.log('remove_on_exit', c[key0])
-					remove_on_exit(c[key0], action_list)
-				}
 			}
 		}
 	}

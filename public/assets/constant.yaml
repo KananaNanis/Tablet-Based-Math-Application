@@ -1,7 +1,12 @@
 # these constants should be fixed!
-debug_mode: true
-num_exercises_for_debugging: 1
-debug_path: [animation_test]
+debug_mode: false
+num_exercises_for_debugging: 2
+# debug_path: [tower_variations, level_2]
+# debug_path: [tower_variations, singletons, level_1]
+# debug_path: [tower_variations, singletons_separate_fivers, level_1]
+debug_path: [tower_variations, singletons_with_a_fiver, level_1]
+# debug_path: [tower_variations, singletons_with_fivers, level_1]
+# debug_path: [animation_test]
 # debug_path: [two_doors]
 # debug_path: [identity_function, as_option, bars, level_1]
 # debug_path: [identity_function, as_drag, bars, level_1]
@@ -153,7 +158,8 @@ debug_path: [animation_test]
 # starting_config_path_PCCS: [group_ungroup, direct, level_1] # Nov 9
 starting_config_path_Dom: [tower_addition, direct, level_1] # Nov 9
 # starting_config_path_PCCS: [group_ungroup, direct, level_1] # Nov 12
-starting_config_path_PCCS: [group_ungroup, ungroup, direct, level_1] # Nov 13
+# starting_config_path_PCCS: [group_ungroup, ungroup, direct, level_1] # Nov 13
+starting_config_path_PCCS: [tower_variations, level_1] # Nov 16
 
 starting_level_for:
   m19: [group_ungroup, direct, level_1] # Nov 13
@@ -268,6 +274,10 @@ special_button_geoms:
   submit: 
     position: [40, top 15]
     width: 210
+    height: 70
+  submit_on_right: 
+    position: [right 10, top 30]
+    width: 150
     height: 70
   restart: 
     position: [40, top 90]
@@ -418,7 +428,7 @@ event_handling_types: [target, comparison_source, correctness,
   just_proportion, create_tower_by_height, stack_arg_2,
   swipe_tower, minimum_split_size, no_split_fiver, moving,
   allow_non_standard, expand_into_units,
-  just_yaml_event, on_down, on_up,
+  just_yaml_event, on_down, on_up, use_option_buttons,
   move, arg_1, arg_2, result]
 position_modifiers: [left, right, top, bottom,
   left_from_right, right_from_left, top_from_bottom,
@@ -465,3 +475,54 @@ animal_landmarks:
     front5: [386, 586]
     nose: [540, 688]
     ear: [364, 846]
+option_button_style:
+  untouched:
+    top:
+      borderColor: green
+      borderWidth: 1
+    bottom:
+      borderColor: red
+      borderWidth: 1
+    highlight:
+      borderColor: yellow
+      borderWidth: 1
+  chosen:
+    top:
+      backgroundColor: green
+    bottom:
+      backgroundColor: red
+    highlight:
+      backgroundColor: yellow
+  notchosen:
+    top:
+      borderColor: grey
+      borderWidth: 1
+    bottom:
+      borderColor: grey
+      borderWidth: 1
+    highlight:
+      borderColor: yellow
+      borderWidth: 1
+option_button_label_style:
+  untouched:
+    top:
+      color: green
+    bottom:
+      color: red
+    highlight:
+      color: yellow
+  chosen:
+    top:
+      color: white
+    bottom:
+      color: white
+    highlight:
+      color: white
+  notchosen:
+    top:
+      color: grey
+    bottom:
+      color: grey
+    highlight:
+      color: yellow
+

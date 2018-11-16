@@ -1,13 +1,13 @@
 import React from 'react'
 import {View, Image, Text, StyleSheet, Dimensions} from 'react-native'
 import Keypad from './Keypad'
-import Button from './Button'
+import Button, { get_special_button_geom } from './Button'
 import Placard from './Placard'
 import ErrBox from './ErrBox'
 import CamelContainer from '../containers/CamelContainer'
 import OptionBackground from '../components/OptionBackground'
 import {global_constant, image_location} from '../App'
-import {query_event, query_arg, query_prop} from '../providers/query_store'
+import {query_event, query_arg, query_prop, query_obj_misc} from '../providers/query_store'
 import {
 	render_nums,
 	render_tiles,
@@ -127,13 +127,16 @@ const Workspace = ({
 			option_inner = render_bars(bar_ids, option_values)
 		}
 		const option_obj = option_inner[option_values.size]
+		const option_button_choice = query_obj_misc(option_obj).get('option_button_choice')
 		for (let i = 0; i < option_values.size; ++i) {
 			++key
+			let choice = option_button_choice ? option_button_choice.get(i) : null
 			options.push(
 				<OptionBackground
 					key={i}
 					button_highlight={button_highlight}
 					i={i}
+					option_button_choice={choice}
 					option_obj={option_obj}
 				>
 					{option_inner[i]}
@@ -178,7 +181,7 @@ const Workspace = ({
 	}
 	if (center_text) {
 		++key
-		misc_below.push(
+		misc_above.push(
 			<Text key={key} style={styles.center_text}>
 				{center_text}
 			</Text>,
@@ -188,7 +191,7 @@ const Workspace = ({
 		++key
 		let top = 0
 		if (is_scaled) top += 10
-		misc_below.push(
+		misc_above.push(
 			<Text
 				key={key}
 				style={[
@@ -208,7 +211,7 @@ const Workspace = ({
 			top += 10
 			left += 10
 		}
-		misc_below.push(
+		misc_above.push(
 			<Text key={key} style={[styles.top_left_text, {top, left}]}>
 				{top_left_text}
 			</Text>,
@@ -293,9 +296,9 @@ const Workspace = ({
 						: freeze_no_highlight_style
 			} else if (special_button === button_highlight) bg_style = highlight_style
 			//console.log('bg_style', bg_style)
-			let position = global_constant.special_button_geoms[
+			let position = get_special_button_geom(
 				special_button
-			].position.concat()
+			).position.concat()
 			if (is_scaled) {
 				if (['submit', 'delete'].includes(special_button)) {
 					position[1] -= 10
@@ -304,7 +307,7 @@ const Workspace = ({
 			misc_above.push(
 				<Button
 					key={key}
-					height={global_constant.special_button_geoms[special_button].height}
+					height={get_special_button_geom(special_button).height}
 					label={special_button}
 					label_style={styles.button_text_default}
 					position={position}
@@ -315,7 +318,7 @@ const Workspace = ({
 						//(special_button === button_highlight) ?
 						//  (freeze_display ? freeze_highlight_style : highlight_style) : {}
 					]}
-					width={global_constant.special_button_geoms[special_button].width}
+					width={get_special_button_geom(special_button).width}
 				/>,
 			)
 		}

@@ -1,5 +1,15 @@
 import React from 'react'
 import {StyleSheet, View, Text} from 'react-native'
+import {global_constant} from '../App'
+import {query_button_detail} from '../providers/query_store'
+
+export function get_special_button_geom(i) {
+	let res = global_constant.special_button_geoms[i]
+	if ('submit' === i && 'on_right' === query_button_detail(i)) {
+		res = global_constant.special_button_geoms['submit_on_right']
+	}
+	return res
+}
 
 const Button = ({position, width, height, view_style, label, label_style}) => {
 	return (
