@@ -1,7 +1,7 @@
 import React from 'react'
 import {View, Image, Text, StyleSheet} from 'react-native'
 import {fromJS} from 'immutable'
-import {image_location} from '../App'
+import {image_location} from '../lib/images'
 import {query_tower_name} from '../providers/query_tower'
 
 export function get_block_size_from_group(group) {

@@ -15,7 +15,7 @@ import {
 	query_tower_height,
 	height2tower_name,
 } from '../providers/query_tower'
-import {doAction, global_constant} from '../App'
+import {doAction, global_constant} from '../lib/global'
 import {
 	expand_into_units,
 	approx_equal,

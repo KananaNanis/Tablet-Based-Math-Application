@@ -1,5 +1,5 @@
 import {global_store} from '../index'
-import {global_constant} from '../App'
+import {global_constant} from '../lib/global'
 import {get_button_geoms_for} from '../components/Keypad'
 import {Map} from 'immutable'
 

@@ -1,6 +1,6 @@
 import {connect} from 'react-redux'
 import Camel from '../components/Camel'
-import {global_constant, doAction} from '../App'
+import {global_constant, doAction} from '../lib/global'
 import {global_screen_width} from '../components/Workspace'
 import {query_event, query_log, query_prop} from '../providers/query_store'
 

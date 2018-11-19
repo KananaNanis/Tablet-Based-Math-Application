@@ -9,7 +9,7 @@ import {
 	query_option_values,
 	query_obj_anim_info,
 } from '../providers/query_store'
-import {global_constant, doAction} from '../App'
+import {global_constant, doAction} from '../lib/global'
 import {fromJS} from 'immutable'
 import {num_stars} from '../containers/CamelContainer'
 import {current_pixel_size_of_animal} from '../components/Tile'

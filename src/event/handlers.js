@@ -16,7 +16,7 @@ import {
 	query_tower_blocks,
 	query_tower,
 } from '../providers/query_tower'
-import {doAction, global_constant, global_sound} from '../App'
+import {doAction, global_constant, global_sound} from '../lib/global'
 import {transition_to_next_config} from '../providers/change_config'
 import {enter_exit_config} from '../providers/enter_exit'
 import {is_correct, show_err_with_delay} from './correctness'

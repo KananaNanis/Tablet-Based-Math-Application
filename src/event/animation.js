@@ -1,5 +1,5 @@
 import {Animated} from 'react-native'
-import {doAction, global_constant} from '../App'
+import {doAction, global_constant} from '../lib/global'
 import {query_position_of, query_obj_style} from '../providers/query_store'
 import {store_config_modify} from '../providers/enter_exit'
 import {get_config} from '../providers/change_config'

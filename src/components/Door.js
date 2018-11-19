@@ -3,7 +3,7 @@ import {Map, fromJS} from 'immutable'
 import {StyleSheet, View, Animated} from 'react-native'
 import {as_greyscale} from './Tower'
 import {render_nums, render_tiles, render_doors} from './render_geoms'
-import {global_constant, doAction} from '../App'
+import {global_constant, doAction} from '../lib/global'
 import {apply_bounds} from '../event/utils'
 import * as Anim from '../event/animation'
 

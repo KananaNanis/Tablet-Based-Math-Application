@@ -1,5 +1,5 @@
 import {global_workspace_height} from '../components/Workspace'
-import {global_constant} from '../App'
+import {global_constant} from '../lib/global'
 import {query_prop} from '../providers/query_store'
 
 export function height_too_tall(height) {

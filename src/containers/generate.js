@@ -1,4 +1,4 @@
-import {global_constant} from '../App'
+import {global_constant} from '../lib/global'
 import * as Actions from '../providers/actions'
 import {query_prop} from '../providers/query_store'
 import {

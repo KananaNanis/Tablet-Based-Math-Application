@@ -5,7 +5,7 @@ import {
 	query_position_of,
 	query_obj_misc,
 } from '../providers/query_store'
-import {doAction, global_constant} from '../App'
+import {doAction, global_constant} from '../lib/global'
 import {
 	get_block_size_from_group,
 	get_how_many_from_group,

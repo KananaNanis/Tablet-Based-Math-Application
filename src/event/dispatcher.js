@@ -15,7 +15,7 @@ import {
 import {query_top_block, query_tower_height} from '../providers/query_tower'
 import {get_button_geoms_for} from '../components/Keypad'
 import {global_workspace_height} from '../components/Workspace'
-import {doAction, global_sound, global_constant} from '../App'
+import {doAction, global_sound, global_constant} from '../lib/global'
 import {transition_to_next_config} from '../providers/change_config'
 import {
 	pointIsInRectangle,

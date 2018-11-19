@@ -6,7 +6,7 @@ import {batchActions} from 'redux-batched-actions'
 import * as AT from './actionTypes'
 import {global_store} from '../index'
 import {add_block_to_name, remove_block_from_name} from '../components/Block'
-import {global_constant} from '../App'
+import {global_constant} from '../lib/global'
 import {maybe_gen_var} from '../containers/generate'
 
 // the following reducers control the various overall chunks of the store

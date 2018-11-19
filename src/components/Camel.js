@@ -1,6 +1,7 @@
 import React from 'react'
 import {View, Image, StyleSheet} from 'react-native'
-import {image_location, global_constant} from '../App'
+import {global_constant} from '../lib/global'
+import {image_location} from '../lib/images'
 import ErrBox from './ErrBox'
 
 const CamelBaggage = ({err_box_updated, scale_factor, bottom, err_list}) => {

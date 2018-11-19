@@ -2,9 +2,10 @@ import {Platform} from 'react-native'
 import {
 	global_screen_width,
 	global_screen_height,
+	window2workspaceCoords,
 } from '../components/Workspace'
-import {global_constant, doAction, initialize_redux_store} from '../App'
-import {window2workspaceCoords} from '../components/Workspace'
+import {global_constant} from '../lib/global'
+import {doAction, initialize_redux_store} from '../lib/global'
 import {touch_dispatcher} from './dispatcher'
 import {query_path} from '../providers/query_store'
 
