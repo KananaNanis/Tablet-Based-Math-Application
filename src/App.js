@@ -7,11 +7,8 @@ import {
 	global_grass_height,
 } from './components/Workspace'
 import {touchHandler} from './event/event'
-import Sound from './assets/sound'
 import PrintFigure from './components/PrintFigure'
-import {load_config_tree, global_constant} from './lib/global'
-
-export let global_sound = {}
+import {load_config_tree, global_constant, load_sounds} from './lib/global'
 
 // top level component
 export default class App extends React.Component {
@@ -36,19 +33,7 @@ export default class App extends React.Component {
 	}
 	componentDidMount() {
 		// preload some sounds?
-		const available_sounds = [
-			'chirp1',
-			'chirp2',
-			'bells',
-			'level0',
-			'level1',
-			'level2',
-			'level3',
-		]
-		for (const snd of available_sounds) {
-			global_sound[snd] = new Sound('assets/snd/' + snd + '.wav')
-		}
-		global_sound['chirp1'] = new Sound('assets/snd/chirp1.wav')
+		load_sounds()
 	}
 	render() {
 		//console.log(global_screen_height)

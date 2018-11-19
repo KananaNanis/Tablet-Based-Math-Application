@@ -6,12 +6,30 @@ import {global_screen_height, update_screen_dimensions} from '../components/Work
 import {enter_exit_config} from '../providers/enter_exit'
 import {do_batched_actions} from '../providers/reducers'
 import {query_path, query_test, query_prop} from '../providers/query_store'
-// import {global_constant, doAction, config_tree} from '../lib/global'
 import {clear_handler_variables} from '../event/handlers'
 import {global_store} from '../index.js'
 import * as Actions from '../providers/actions'
 import {as_position, print_all_paths} from '../providers/change_config'
 import {get_keypad_width_height} from '../components/Keypad'
+import Sound from '../assets/sound'
+
+export let global_sound = {}
+
+export const load_sounds = () => {
+	const available_sounds = [
+		'chirp1',
+		'chirp2',
+		'bells',
+		'level0',
+		'level1',
+		'level2',
+		'level3',
+	]
+	for (const snd of available_sounds) {
+		global_sound[snd] = new Sound('../assets/snd/' + snd + '.wav')
+	}
+	global_sound['chirp1'] = new Sound('../assets/snd/chirp1.wav')
+}
 
 export let doAction = {}
 
