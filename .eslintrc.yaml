@@ -12,6 +12,8 @@ extends:
   - plugin:react/recommended
   - prettier
   - prettier/react
+  - plugin:import/errors
+  - plugin:import/warnings
 
 settings:
   react:
