@@ -2,7 +2,10 @@
 import {Platform} from 'react-native'
 import {bindActionCreators} from 'redux'
 import yaml from 'js-yaml'
-import {global_screen_height, update_screen_dimensions} from '../components/Workspace'
+import {
+	global_screen_height,
+	update_screen_dimensions,
+} from '../components/Workspace'
 import {enter_exit_config} from '../providers/enter_exit'
 import {do_batched_actions} from '../providers/reducers'
 import {query_path, query_test, query_prop} from '../providers/query_store'
