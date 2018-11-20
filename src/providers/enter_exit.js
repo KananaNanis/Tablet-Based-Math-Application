@@ -1,4 +1,4 @@
-import {doAction, global_constant} from '../App'
+import {doAction, global_constant} from '../lib/global'
 import * as Actions from '../providers/actions'
 import {
 	query_path,

@@ -1,5 +1,5 @@
 import {List, fromJS} from 'immutable'
-import {config_tree, global_constant} from '../App'
+import {config_tree, global_constant} from '../lib/global'
 import {with_suffix, query_path, query_prop} from './query_store'
 import {tower_name2height} from './query_tower'
 import {

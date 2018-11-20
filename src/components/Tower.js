@@ -4,7 +4,7 @@ import {StyleSheet, Animated} from 'react-native'
 import {query_tower_blocks} from '../providers/query_tower'
 import {global_workspace_height} from './Workspace'
 import {global_fiver_shadow} from './Num'
-import {global_constant} from '../App'
+import {global_constant} from '../lib/global'
 import * as Anim from '../event/animation'
 
 function colorNameToHex(color) {

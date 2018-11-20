@@ -6,7 +6,8 @@ import Placard from './Placard'
 import ErrBox from './ErrBox'
 import CamelContainer from '../containers/CamelContainer'
 import OptionBackground from '../components/OptionBackground'
-import {global_constant, image_location} from '../App'
+import {global_constant} from '../lib/global'
+import {image_location} from '../lib/images'
 import {
 	query_event,
 	query_arg,

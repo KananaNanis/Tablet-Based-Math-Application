@@ -1,6 +1,6 @@
 import * as AT from './actionTypes'
 import {fromJS} from 'immutable'
-import {global_constant} from '../App'
+import {global_constant} from '../lib/global'
 
 export function towerCreate(id, name, position) {
 	return {

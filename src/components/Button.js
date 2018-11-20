@@ -1,6 +1,6 @@
 import React from 'react'
 import {StyleSheet, View, Text} from 'react-native'
-import {global_constant} from '../App'
+import {global_constant} from '../lib/global'
 import {query_button_detail} from '../providers/query_store'
 
 export function get_special_button_geom(i) {

@@ -2,7 +2,7 @@ import React from 'react'
 import {StyleSheet, View, Text} from 'react-native'
 import Button from './Button'
 import {global_fiver_shadow} from './Num'
-import {global_constant} from '../App'
+import {global_constant} from '../lib/global'
 
 export function get_button_geoms_for(kind) {
 	//console.warn('get_button_geoms_for', kind)

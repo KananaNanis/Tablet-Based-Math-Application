@@ -15,7 +15,7 @@ import {
 	query_tower_height,
 	height2tower_name,
 } from '../providers/query_tower'
-import {doAction, global_constant} from '../App'
+import {doAction, global_constant} from '../lib/global'
 import {
 	expand_into_units,
 	approx_equal,
@@ -27,7 +27,7 @@ import {
 	describe_numerical,
 	get_err_box_location,
 	show_thin_height,
-	get_door_or_tile_height,
+	get_height_of,
 	show_thin_height_2,
 } from './extract'
 import {landmark_location} from '../components/Tile'
@@ -409,9 +409,9 @@ export function is_correct() {
 			correct_height = query_tower_height(src)
 		} else {
 			const arg_1 = query_arg(1)
-			const val_1 = get_door_or_tile_height(arg_1)
+			const val_1 = get_height_of(arg_1)
 			const arg_2 = query_arg(2)
-			const val_2 = get_door_or_tile_height(arg_2)
+			const val_2 = get_height_of(arg_2)
 			//console.log('arg_1', arg_1, 'name_1', name_1, 'val_1', val_1)
 			correct_height = val_1 + val_2
 			// console.log('correct_height', correct_height)

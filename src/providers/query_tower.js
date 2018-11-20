@@ -1,5 +1,5 @@
 import {global_store} from '../index'
-import {global_constant} from '../App'
+import {global_constant} from '../lib/global'
 import {
 	get_block_size_from_group,
 	get_how_many_from_group,

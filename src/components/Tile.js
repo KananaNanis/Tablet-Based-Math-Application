@@ -1,6 +1,7 @@
 import React from 'react'
 import {StyleSheet, View, Animated} from 'react-native'
-import {global_constant, image_location} from '../App'
+import {global_constant} from '../lib/global'
+import {image_location} from '../lib/images'
 import {query_prop} from '../providers/query_store'
 import * as Anim from '../event/animation'
 
