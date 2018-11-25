@@ -22,6 +22,9 @@ import {
 	names_are_identical,
 	reduce_num_stars,
 	dist2D,
+	show_blocks_moving_to_result,
+	create_name_match_from,
+	design_compatible_name_for_addend,
 } from './utils'
 import {
 	describe_numerical,
@@ -32,6 +35,7 @@ import {
 } from './extract'
 import {landmark_location} from '../components/Tile'
 import {name_is_in_standard_form} from '../components/Block'
+import {all_blocks_have_offsets} from './handlers'
 
 export function correct_next_button() {
 	const verbose = false
@@ -187,7 +191,40 @@ export function is_correct() {
 	const cp = query_path('config').toJS()
 	let delay = 'incorrect'
 	//console.log('is_correct src', src, 'how', how)
-	if ('option_button' === how) {
+	if ('subset' === how) {
+		const arg_1 = query_arg(1)
+		const result = query_arg('result')
+		const as_units = true
+		const toggle = create_name_match_from(arg_1, result, as_units)
+		if (toggle) {
+			// match was found
+			delay = 0
+			if (query_event('show_blocks_moving_to_result')) {
+				// console.log('show', query_event('show_blocks_moving_to_result'))
+				delay = show_blocks_moving_to_result(arg_1, query_arg(2), result)
+			}
+		}
+		doAction.addLogEntry(curr_time, [
+			with_suffix(cp),
+			'is_correct',
+			Boolean(toggle),
+			toggle,
+			true,
+		])
+	} else if ('all_moved' === how) {
+		const arg_1 = query_arg(1)
+		const arg_2 = query_arg(2)
+		if (all_blocks_have_offsets(arg_1) && all_blocks_have_offsets(arg_2)) {
+			delay = 0
+		}
+		doAction.addLogEntry(curr_time, [
+			with_suffix(cp),
+			'is_correct',
+			0 === delay,
+			all_blocks_have_offsets(arg_1) && all_blocks_have_offsets(arg_2),
+			true,
+		])
+	} else if ('option_button' === how) {
 		const seq_correct = query_prop('correct_option_index')
 		const option_obj = query_option_obj()
 		const seq_given = query_obj_misc(option_obj)
@@ -216,17 +253,51 @@ export function is_correct() {
 					eq = approx_equal(src_height, tgt_height, 0.075)
 				} else eq = approx_equal(src_height, tgt_height)
 			}
+		} else if (src.startsWith('tower_')) {
+			src_height = get_height_of(src)
+			eq = approx_equal(src_height, tgt_height)
 		} else {
 			src_height = query_name_of(src).get(0)
 			eq = approx_equal(src_height, tgt_height)
 		}
 		// console.log('src_height', src_height, 'tgt_height', tgt_height, 'eq', eq)
 		if (eq !== 'unchecked') {
-			if (eq) delay = 0
+			if (eq) {
+				delay = 0
+				if (query_event('show_mean_result_at_end')) {
+					const mean_name = query_name_of('tower_mean').toJS()
+					// console.log('mean_name', mean_name)
+					if (mean_name) {
+						doAction.setName(query_arg('result'), mean_name)
+						delay = 1000
+					}
+				}
+				if (query_event('show_blocks_moving_to_result')) {
+					const arg_2 = query_arg(2)
+					const orig_name_2 = query_name_of(arg_2)
+					const name_2 = design_compatible_name_for_addend(
+						query_arg(1),
+						arg_2,
+						query_arg('result'),
+					)
+					if (!names_are_identical(name_2, orig_name_2)) {
+						doAction.setName(arg_2, name_2)
+					}
+					if (query_name_of(arg_2 + '_shadow')) {
+						doAction.setName(arg_2 + '_shadow', name_2)
+					}
+					delay = show_blocks_moving_to_result(
+						query_arg(1),
+						arg_2,
+						query_arg('result'),
+					)
+					delay += 1000
+				}
+			}
 			doAction.addLogEntry(curr_time, [
 				with_suffix(cp),
 				'is_correct',
-				0 === delay,
+				eq,
 				tgt_height,
 				src_height,
 			])
@@ -247,7 +318,17 @@ export function is_correct() {
 				name1 = expand_into_units(name1)
 				name2 = expand_into_units(name2)
 			}
-			if (names_are_identical(name1, name2)) delay = 0
+			if (names_are_identical(name1, name2)) {
+				delay = 0
+				if (query_event('show_blocks_moving_to_result')) {
+					delay = show_blocks_moving_to_result(
+						query_arg(1),
+						query_arg(2),
+						query_arg('result'),
+					)
+					delay += 1000
+				}
+			}
 		}
 		doAction.addLogEntry(curr_time, [
 			with_suffix(cp),

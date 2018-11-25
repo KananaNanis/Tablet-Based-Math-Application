@@ -127,6 +127,18 @@ export function store_config_modify(
 						}
 					}
 					*/
+				} else if ('block_anim_info' === key) {
+					const info = c[id0][key]
+					for (let j = 0; j < info.length; ++j) {
+						if ('undefined' !== typeof info[j] && null !== info[j]) {
+							if (enter) {
+								//console.log('enter_exit block_anim_info j',j,'info',info[j])
+								action_list.push(Actions.addBlockAnimInfo(id, j, info[j]))
+							} else {
+								action_list.push(Actions.clearBlockAnimInfo(id, j))
+							}
+						}
+					}
 				} else if ('tower_style' === key) {
 					let props = c[id0][key]
 					for (const key2 in props) {
@@ -417,18 +429,25 @@ export function enter_exit_config(
 								if ('number' === typeof name) name = height2tower_name(name)
 								const w = width_pixels_from_name(name, sc)
 								const h = height_pixels_from_name(name, sc)
-								action_list.push(
-									Actions.towerCreate(
+								if (!config['modify'][id0] || !config['modify'][id0].position) {
+									console.error(
+										'Error:  must specify position for new tower',
 										id,
-										name,
-										as_position(
-											config['modify'][id0]['position'],
-											w,
-											h,
-											extra_scale,
+									)
+								} else {
+									action_list.push(
+										Actions.towerCreate(
+											id,
+											name,
+											as_position(
+												config['modify'][id0]['position'],
+												w,
+												h,
+												extra_scale,
+											),
 										),
-									),
-								)
+									)
+								}
 							} else {
 								//console.log('deleting', id)
 								action_list.push(Actions.towerDelete(id))

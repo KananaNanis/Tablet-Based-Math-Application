@@ -427,7 +427,7 @@ const styles = StyleSheet.create({
 	},
 	big_op: {
 		position: 'absolute',
-		fontSize: 200,
+		fontSize: 170,
 		left: 0,
 		bottom: 0,
 		// left: 70,

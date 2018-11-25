@@ -175,83 +175,79 @@ function style(state = Map({}), action) {
 	}
 }
 
+function unpack_incoming_info(new_anim_info, incoming) {
+	const delay = incoming.hasOwnProperty('delay') ? incoming['delay'] : null
+	const duration = incoming.hasOwnProperty('duration')
+		? incoming['duration']
+		: null
+	let on_end = incoming.hasOwnProperty('on_end') ? incoming['on_end'] : null
+	const isLoop = incoming.hasOwnProperty('loop')
+	const id = incoming.anim_info_counter
+	for (const key in incoming) {
+		if (
+			!['delay', 'duration', 'on_end', 'loop', 'anim_info_counter'].includes(
+				key,
+			) &&
+			incoming.hasOwnProperty(key)
+		) {
+			const val = incoming[key]
+			if (null === val) {
+				// special case
+				new_anim_info = obj_add_remove_property(new_anim_info, key, null)
+			} else if (global_constant.anim_all_attributes.includes(key)) {
+				let outputRange = []
+				for (let j = 0; j < val.length; ++j) {
+					let elt = maybe_gen_var(val[j])
+					outputRange.push(elt)
+				}
+				if (['blink', 'handle_blink'].includes(key)) {
+					let full_val = {id, outputRange, loop: true}
+					full_val.duration = duration ? duration : 500
+					if (delay) full_val.delay = delay
+					if (on_end) {
+						full_val.on_end = on_end
+						on_end = null
+					}
+					new_anim_info = obj_add_remove_property(
+						new_anim_info,
+						key,
+						fromJS(full_val),
+					)
+				} else if (duration) {
+					let full_val = {id, outputRange}
+					full_val.duration = duration
+					if (delay) full_val.delay = delay
+					if (isLoop) full_val.loop = true
+					if (on_end) {
+						full_val.on_end = on_end
+						on_end = null
+					}
+					new_anim_info = obj_add_remove_property(
+						new_anim_info,
+						key,
+						fromJS(full_val),
+					)
+				} else {
+					console.error(
+						'Warning in reducer:  anim_info attr',
+						key,
+						'not changed without duration.',
+					)
+				}
+			} else {
+				new_anim_info = obj_add_remove_property(new_anim_info, key, fromJS(val))
+			}
+		}
+	}
+	return new_anim_info
+}
+
 function anim_info(state = Map({}), action) {
 	if (AT.ADD_ANIM_INFO === action.type) {
 		// parse this one carefully
 		let new_anim_info = state.get(action.id) ? state.get(action.id) : Map({})
 		if (action.anim_info) {
-			const delay = action.anim_info.hasOwnProperty('delay')
-				? action.anim_info['delay']
-				: null
-			const duration = action.anim_info.hasOwnProperty('duration')
-				? action.anim_info['duration']
-				: null
-			let on_end = action.anim_info.hasOwnProperty('on_end')
-				? action.anim_info['on_end']
-				: null
-			const isLoop = action.anim_info.hasOwnProperty('loop')
-			const id = action.anim_info.anim_info_counter
-			for (const key in action.anim_info) {
-				if (
-					![
-						'delay',
-						'duration',
-						'on_end',
-						'loop',
-						'anim_info_counter',
-					].includes(key) &&
-					action.anim_info.hasOwnProperty(key)
-				) {
-					const val = action.anim_info[key]
-					if (null === val) {
-						// special case
-						new_anim_info = obj_add_remove_property(new_anim_info, key, null)
-					} else if (global_constant.anim_all_attributes.includes(key)) {
-						let val0 = maybe_gen_var(val[0]),
-							val1 = maybe_gen_var(val[1])
-						if (['blink', 'handle_blink'].includes(key)) {
-							let full_val = {id, from: val0, to: val1, loop: true}
-							full_val.duration = duration ? duration : 500
-							if (delay) full_val.delay = delay
-							if (on_end) {
-								full_val.on_end = on_end
-								on_end = null
-							}
-							new_anim_info = obj_add_remove_property(
-								new_anim_info,
-								key,
-								fromJS(full_val),
-							)
-						} else if (duration) {
-							let full_val = {id, from: val0, to: val1}
-							full_val.duration = duration
-							if (delay) full_val.delay = delay
-							if (isLoop) full_val.loop = true
-							if (on_end) {
-								full_val.on_end = on_end
-								on_end = null
-							}
-							new_anim_info = obj_add_remove_property(
-								new_anim_info,
-								key,
-								fromJS(full_val),
-							)
-						} else {
-							console.error(
-								'Warning in reducer:  anim_info attr',
-								key,
-								'not changed without duration.',
-							)
-						}
-					} else {
-						new_anim_info = obj_add_remove_property(
-							new_anim_info,
-							key,
-							fromJS(val),
-						)
-					}
-				}
-			}
+			new_anim_info = unpack_incoming_info(new_anim_info, action.anim_info)
 		} else {
 			console.error(
 				'Warning in reducer:  anim_info is false?',
@@ -275,6 +271,38 @@ function anim_info(state = Map({}), action) {
 		case AT.FIVE_FRAME_DELETE:
 		case AT.BAR_DELETE:
 			//console.log('removing anim_info for id', action.id)
+			return obj_add_remove_property(state, action.id, null)
+		default:
+			return state
+	}
+}
+
+function block_anim_info(state = Map({}), action) {
+	if (AT.ADD_BLOCK_ANIM_INFO === action.type) {
+		let new_anim_info_elt = Map({})
+		if (state.get(action.id) && state.get(action.id).get(action.index)) {
+			new_anim_info_elt = state.get(action.id).get(action.index)
+		}
+		if (action.anim_info) {
+			new_anim_info_elt = unpack_incoming_info(
+				new_anim_info_elt,
+				action.anim_info,
+			)
+		} else {
+			console.error(
+				'Warning in reducer:  block_anim_info is false?',
+				action.anim_info,
+			)
+		}
+		let new_anim_info = state.get(action.id) ? state.get(action.id) : List([])
+		new_anim_info = new_anim_info.set(action.index, new_anim_info_elt)
+		return state.set(action.id, new_anim_info)
+	}
+	switch (action.type) {
+		case AT.CLEAR_BLOCK_ANIM_INFO:
+		case AT.TOWER_CREATE:
+		case AT.TOWER_DELETE:
+			//console.log('removing block_anim_info for id', action.id, 'index', action.index)
 			return obj_add_remove_property(state, action.id, null)
 		default:
 			return state
@@ -469,6 +497,7 @@ const suujiAppInner = combineReducers({
 	anim_info,
 	tower_style,
 	block_opacity,
+	block_anim_info,
 	misc,
 	keypad_kind,
 	button_display,

@@ -135,6 +135,11 @@ export function query_obj_anim_info(id) {
 	return state.getIn(['anim_info', id])
 }
 
+export function query_block_anim_info(id) {
+	const state = global_store.getState()
+	return state.getIn(['block_anim_info', id])
+}
+
 export function query_obj_misc(id) {
 	const state = global_store.getState()
 	return state.getIn(['misc', id])

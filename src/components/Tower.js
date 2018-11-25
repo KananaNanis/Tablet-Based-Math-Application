@@ -223,12 +223,14 @@ class Tower extends React.Component {
 			anim_info = {},
 			misc = null,
 			block_opacity = [],
+			block_anim_info = [],
 			just_grey = false,
 			scale_factor,
 		} = this.props
 		// console.log('id', id, 'name', name, 'block_opacity', block_opacity)
 		// console.log('id', id, 'name', name, 'misc', misc)
 		// console.log('id', id, 'anim_info', anim_info)
+		// console.log('id', id, 'block_anim_info', block_anim_info)
 		if ('undefined' === typeof name) {
 			console.error('Cannot render tower id', id)
 			return null
@@ -312,6 +314,14 @@ class Tower extends React.Component {
 				marginLeft,
 				//...fiver_style
 			}
+			if (misc && misc.block_offset && misc.block_offset[i]) {
+				view_style.left = misc.block_offset[i][0]
+				view_style.bottom = misc.block_offset[i][1]
+			}
+			let inner_anim_info
+			if (block_anim_info && block_anim_info[i]) {
+				inner_anim_info = block_anim_info[i]
+			}
 			if ('undefined' !== typeof b.block_opacity) {
 				view_style.opacity = b.block_opacity
 			} else if (
@@ -387,14 +397,19 @@ class Tower extends React.Component {
 					view_style.backgroundColor = '#dbb'
 				}
 			}
+			let swap_channel
+			if (misc && misc.swap_channel) swap_channel = misc.swap_channel
 			blocks.push(
 				<Block
 					key={i}
+					anim_info={inner_anim_info}
 					height={height}
+					id={id + '.' + i}
 					img_name={img_name}
 					just_grey={just_grey}
 					radius_style={radius_style}
 					scale_factor={scale_factor}
+					swap_channel={swap_channel}
 					text_content={text_content}
 					text_style={text_style}
 					view_style={view_style}

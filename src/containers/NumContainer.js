@@ -60,6 +60,7 @@ const mapStateToProps = (state, ownProps) => {
 		misc: state.getIn(['misc', id]),
 		tower_style: state.getIn(['tower_style', id]),
 		block_opacity: state.getIn(['block_opacity', id]),
+		block_anim_info: state.getIn(['block_anim_info', id]),
 		scale_factor: state.getIn(['prop', 'scale_factor']),
 		just_grey,
 	}

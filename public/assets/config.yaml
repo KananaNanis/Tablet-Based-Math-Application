@@ -3611,6 +3611,177 @@ group_ungroup:
         problem_stage: null
         config_iter: 1
         jmp: [add_or_half, as_option, result_option, stack, bars, level_1] 
+drag_blocks:
+  params:
+    generate: # { tower_1_name: [pick_from_range, .1, 3.8, .1] }
+      mean_name_base_1: [pick_from_list, [[.1, .2], [.3, .1], [.3,.3], [.4,.2], [.2,.4], [.4,.3], [.3,.4], [.4,.4]]]
+      mean_name_base_5: [pick_from_list, [[.5,.5, .5,.5, .5,.5], [1, .5,.5, .5,.5], [2, .5,.5], [.5,.5, .5,.5], [1, .5,.5], [.5,.5]]]
+      extra_fiver: [pick_from_list, [0, .5, .5, .5, .5]]
+      mean_name_f: mean_name_base_5 ++ extra_fiver
+      mean_name: mean_name_f ++ mean_name_base_1
+      # mean_name: [fixed, [.3, .3]]
+      nice_name: standardize_name mean_name
+      partition_1: mean_name into m1 and m2
+    create:
+      big_paren: true
+      big_op: +
+      tower_2_shadow: { name: m2 }
+      tower_1_shadow: { name: m1 }
+      tower_result: { name: mean_name }
+      tower_2: { name: m2 }
+      tower_1: { name: m1 }
+    modify:
+      big_paren:
+        position: [20, 0]
+        style: { width: 500 }
+      big_op:
+        position: [205, 0]
+      tower_1: 
+        position: [15, 0]
+        misc:
+          tower_name_style: { left: 25 }
+          swap_channel: '12'
+          draggable: all
+      tower_1_shadow: 
+        position: [15, 0]
+        tower_style: {opacity: 0.2}
+        misc:
+          hide_tower_name: true
+          swap_channel: '12'
+      tower_2:
+        position: [300, 0]
+        misc:
+          tower_name_style: { left: 25 }
+          swap_channel: '01'
+          draggable: all
+          # block_offset: [ [25, 25], null ]
+      tower_2_shadow: 
+        position: [300, 0]
+        tower_style: {opacity: 0.2}
+        misc:
+          hide_tower_name: true
+          swap_channel: '01'
+      tower_result: 
+        position: [550, 0]
+        misc:
+          tower_name_style: { left: 25 }
+          toggle: mean_name_toggle  # created by the partition
+    event_handling: 
+      arg_1: tower_1
+      arg_2: tower_2
+      result: tower_result
+      drag_blocks_to_result: true
+      correctness: all_moved
+      touch_reveals_button: [submit]
+      # no_split_fiver: true
+      # minimum_split_size: -1
+    misc: 
+      new_scale_factor: 200
+      config_iteration: 4
+      num_stars: 2
+      remove_on_exit: [button_submit]
+  missing_addend:
+    level_1:
+      params:
+        misc:
+          config_iteration: 2
+    level_2:
+      params:
+        create:
+          tower_result: { name: nice_name }
+          tower_4: { name: mean_name }
+          tower_moving: []
+        modify:
+          tower_4:
+            position: [550, 0]
+            style: {opacity: 0}
+          tower_moving:
+            position: [0, 0]
+            width: 50vw
+            overflow: 'hidden'
+            misc:
+              hide_tower_name: true
+        event_handling:
+          drag_blocks_to_result: null
+          swipe_tower: true
+          target: tower_result
+          moving: tower_moving
+          # no_split_fiver: true
+          minimum_split_size: -1
+          comparison_source: tower_4
+          correctness: identical
+          expand_into_units: true
+          show_blocks_moving_to_result: true
+        misc:
+          config_iteration: 3
+      level_2a:
+        params_from: [simple_mean_name_snippet]
+      level_2b:
+    level_3:
+      params:
+        create:
+          tower_result: { name: nice_name }
+          tower_moving: []
+          tower_2: []
+          tower_2_shadow: []
+          tower_4: { name: m2 }
+        modify:
+          tower_moving:
+            position: [0, 0]
+            width: 50vw
+            overflow: 'hidden'
+            misc:
+              hide_tower_name: true
+          tower_4:
+            position: [550, 0]
+            style: {opacity: 0}
+        event_handling:
+          drag_blocks_to_result: null
+          swipe_tower: true
+          target: tower_result
+          moving: tower_moving
+          minimum_split_size: -1
+          correctness: subset
+          show_blocks_moving_to_result: true
+        misc:
+          config_iteration: null
+          problem_stage: true
+          skip_submit: true
+          skip_in_between: true
+      simpler_case:
+        params_from: [simple_mean_name_snippet]
+        stage_1:
+        stage_2:
+          params_from: [stage_2_building_arg_2_snippet]
+          params:
+            misc:
+              goto_config: [3, [drag_blocks, missing_addend, level_3, simpler_case, stage_1]]
+      harder_case:
+        stage_1:
+        stage_2:
+          params_from: [stage_2_building_arg_2_snippet]
+          params:
+            misc:
+              goto_config: [3, [drag_blocks, missing_addend, level_3, harder_case, stage_1]]
+      level_3b:
+        params:
+          event_handling:
+            show_blocks_moving_to_result: false
+        simpler_case:
+          params_from: [simple_mean_name_snippet]
+          stage_1:
+          stage_2:
+            params_from: [stage_2_building_arg_2_snippet]
+            params:
+              misc:
+                goto_config: [3, [drag_blocks, missing_addend, level_3, level_3b, simpler_case, stage_1]]
+        harder_case:
+          stage_1:
+          stage_2:
+            params_from: [stage_2_building_arg_2_snippet]
+            params:
+              misc:
+                goto_config: [3, [drag_blocks, missing_addend, level_3, level_3b, harder_case, stage_1]]
 tower_addition:
   params:
     generate: # { tower_1_name: [pick_from_range, .1, 3.8, .1] }
@@ -3626,9 +3797,11 @@ tower_addition:
     create:
       big_paren: true
       big_op: +
-      tower_1: { name: m1 }
-      tower_2: { name: m2 }
+      tower_2_shadow: { name: m2 }
+      tower_1_shadow: { name: m1 }
       tower_result: []
+      tower_2: { name: m2 }
+      tower_1: { name: m1 }
     modify:
       big_paren:
         position: [20, 0]
@@ -3637,14 +3810,29 @@ tower_addition:
         position: [195, 0]
       tower_1: 
         position: [15, 0]
-        # tower_style: {opacity: 0}
+        misc:
+          swap_channel: '12'
+      tower_1_shadow: 
+        position: [15, 0]
+        tower_style: {opacity: 0.2}
+        misc:
+          hide_tower_name: true
+          swap_channel: '12'
       tower_2:
         position: [300, 0]
+        misc:
+          swap_channel: '01'
+      tower_2_shadow: 
+        position: [300, 0]
+        tower_style: {opacity: 0.2}
+        misc:
+          hide_tower_name: true
+          swap_channel: '01'
       tower_result: 
         position: [right 10vw, 0]
         tower_style: {opacity: 0}
         misc:
-          tower_name_style: { left: 5 }
+          tower_name_style: { left: 25 }
     event_handling: 
       correctness: identical
       touch_reveals_button: [submit, delete]
@@ -3655,9 +3843,8 @@ tower_addition:
       num_stars: 2
       remove_on_exit: [button_submit, button_delete]
       config_iteration: 4
-      # when ready to tie the different stages together:
-      # skip_submit: true
   direct:
+    skip_node_above:
     params_from: [tower_addition_direct_snippet]
     level_1:
     level_2:
@@ -3674,48 +3861,35 @@ tower_addition:
               delay: 500
               duration: 1000
     level_3:
+      skip_node_above:
       params:
         modify:
           tower_1:
             tower_style: {opacity: 0}
           tower_2:
             tower_style: {opacity: 0}
-  ungroup:  # this level is an incomplete draft
-    skip_node_above:
+  missing_addend:
+    params_from: [tower_missing_addend_direct_snippet]
     params:
       generate:
-        tower_1_name: standardize_name mean_name
-      create:
-        tower_4: mean_name
-      modify:
-        tower_1:
-          position: [75vw, 0]
-        tower_result:
-          position: [10vw, 0]
-        tower_4:
-          position: [10vw, 400]
-          style: {opacity: 0}
-          tower_style: {opacity: 0}
-          misc:
-            tower_name_style: { left: 5 }
-            show_only_fivers: true
-            show_only_size: -1
-    direct:
-      params_from: [tower_addition_direct_snippet_un]
-      level_1:
-      level_2:
-        params:
-          modify:
-            tower_2:
-              anim_info:
-                opacity: [1, 0]
-                delay: 500
-                duration: 1000
-      level_3:
-        params:
-          modify:
-            tower_2:
-              style: {opacity: 0}
+        extra_delta: [fixed, 0]
+    level_1:
+      params:
+        event_handling:
+          # show_mean_result_at_end: true
+          # show_blocks_moving_to_result: true
+    level_2:
+      params_from: [fade_tower_1_snippet]
+    level_3:
+      params_from: [fade_tower_1_and_result_snippet]
+  missing_addend_2:
+    params_from: [tower_missing_addend_direct_snippet]
+    level_1:
+    level_2:
+      params_from: [fade_tower_1_snippet]
+    level_3:
+      params_from: [fade_tower_1_and_result_snippet]
+      # jmp: [tower_addition, singletons, missing_addend, level_1]
   singletons:
     params:
       generate:
@@ -3726,6 +3900,7 @@ tower_addition:
       event_handling:
         expand_into_units: true  # to allow .3, .4 == .4, .3
     direct:
+      skip_node_above:
       params_from: [tower_addition_direct_snippet]
       params:
         misc:
@@ -3747,51 +3922,21 @@ tower_addition:
                 delay: 500
                 duration: 1000
       level_3:
+        skip_node_above:
         params:
           modify:
             tower_1:
               tower_style: {opacity: 0}
             tower_2:
               tower_style: {opacity: 0}
-    ungroup:
-      skip_node_above:
-      params:
-        generate:
-          tower_1_name: standardize_name mean_name
-        create:
-          tower_4: mean_name
-        modify:
-          tower_1:
-            position: [75vw, 0]
-          tower_result:
-            position: [5vw, 0]
-          tower_4:
-            position: [20vw, 400]
-            style: {opacity: 0}
-            tower_style: {opacity: 0}
-            misc:
-              tower_name_style: { left: 5 }
-              show_only_singletons: true
-              show_only_size: -1
-        event_handling:
-          no_split_fiver: false
-      direct:
-        params_from: [tower_addition_direct_snippet_un]
-        level_1:
-          params:
-        level_2:
-          params:
-            modify:
-              tower_2:
-                anim_info:
-                  opacity: [1, 0]
-                  delay: 500
-                  duration: 1000
-        level_3:
-          params:
-            modify:
-              tower_2:
-                style: {opacity: 0}
+    missing_addend:
+      params_from: [tower_missing_addend_direct_snippet]
+      level_1:
+      level_2:
+        params_from: [fade_tower_1_snippet]
+      level_3:
+        params_from: [fade_tower_1_and_result_snippet]
+        # jmp: [tower_addition, singletons_separate_fivers, missing_addend, level_1]
   singletons_separate_fivers:
     params:
       generate:
@@ -3801,6 +3946,7 @@ tower_addition:
       event_handling:
         expand_into_units: true  # to allow .3, .4 == .4, .3
     direct:
+      skip_node_above:
       params_from: [tower_addition_direct_snippet]
       level_1:
         params:
@@ -3818,50 +3964,21 @@ tower_addition:
                 delay: 500
                 duration: 1000
       level_3:
+        skip_node_above:
         params:
           modify:
             tower_1:
               tower_style: {opacity: 0}
             tower_2:
               tower_style: {opacity: 0}
-    ungroup:
-      skip_node_above:
-      params:
-        generate:
-          tower_1_name: standardize_name mean_name
-        create:
-          tower_4: mean_name
-        modify:
-          tower_1:
-            position: [75vw, 0]
-          tower_result:
-            position: [10vw, 0]
-          tower_4:
-            position: [10vw, 400]
-            style: {opacity: 0}
-            tower_style: {opacity: 0}
-            misc:
-              tower_name_style: { left: 5 }
-              show_only_size: -1
-        event_handling:
-          no_split_fiver: false
-      direct:
-        params_from: [tower_addition_direct_snippet_un]
-        level_1:
-          params:
-        level_2:
-          params:
-            modify:
-              tower_2:
-                anim_info:
-                  opacity: [1, 0]
-                  delay: 500
-                  duration: 1000
-        level_3:
-          params:
-            modify:
-              tower_2:
-                style: {opacity: 0}
+    missing_addend:
+      params_from: [tower_missing_addend_direct_snippet]
+      level_1:
+      level_2:
+        params_from: [fade_tower_1_snippet]
+      level_3:
+        params_from: [fade_tower_1_and_result_snippet]
+        # jmp: [tower_addition, singletons_with_a_fiver, missing_addend, level_1]
   singletons_with_a_fiver:
     params:
       generate:
@@ -3873,6 +3990,7 @@ tower_addition:
       event_handling:
         expand_into_units: true  # to allow .3, .4 == .4, .3
     direct:
+      skip_node_above:
       params_from: [tower_addition_direct_snippet]
       level_1:
         params:
@@ -3890,12 +4008,21 @@ tower_addition:
                 delay: 500
                 duration: 1000
       level_3:
+        skip_node_above:
         params:
           modify:
             tower_1:
               tower_style: {opacity: 0}
             tower_2:
               tower_style: {opacity: 0}
+    missing_addend:
+      params_from: [tower_missing_addend_direct_snippet]
+      level_1:
+      level_2:
+        params_from: [fade_tower_1_snippet]
+      level_3:
+        params_from: [fade_tower_1_and_result_snippet]
+        # jmp: [tower_addition, singletons_with_fivers, missing_addend, level_1]
   singletons_with_fivers:
     params:
       generate:
@@ -3907,6 +4034,7 @@ tower_addition:
       event_handling:
         expand_into_units: true  # to allow .3, .4 == .4, .3
     direct:
+      skip_node_above:
       params_from: [tower_addition_direct_snippet]
       level_1:
         params:
@@ -3924,50 +4052,21 @@ tower_addition:
                 delay: 500
                 duration: 1000
       level_3:
+        skip_node_above:
         params:
           modify:
             tower_1:
               tower_style: {opacity: 0}
             tower_2:
               tower_style: {opacity: 0}
-    ungroup:  # this level is an incomplete draft
-      skip_node_above:
-      params:
-        generate:
-          tower_1_name: standardize_name mean_name
-        create:
-          tower_4: mean_name
-        modify:
-          tower_1:
-            position: [75vw, 0]
-          tower_result:
-            position: [10vw, 0]
-          tower_4:
-            position: [10vw, 400]
-            style: {opacity: 0}
-            tower_style: {opacity: 0}
-            misc:
-              tower_name_style: { left: 5 }
-              show_only_size: -1
-        event_handling:
-          no_split_fiver: false
-      direct:
-        params_from: [tower_addition_direct_snippet_un]
-        level_1:
-          params:
-        level_2:
-          params:
-            modify:
-              tower_2:
-                anim_info:
-                  opacity: [1, 0]
-                  delay: 1000
-                  duration: 2000
-        level_3:
-          params:
-            modify:
-              tower_2:
-                style: {opacity: 0}
+    missing_addend:
+      params_from: [tower_missing_addend_direct_snippet]
+      level_1:
+      level_2:
+        params_from: [fade_tower_1_snippet]
+      level_3:
+        params_from: [fade_tower_1_and_result_snippet]
+        # jmp: [all_done]
 tower_variations:
   params:
     generate: 
@@ -4134,6 +4233,33 @@ in_between:
   params:
     create:
       button_next:
+stage_2_building_arg_2_snippet:
+  params:
+    create:
+      keypad_kind: 'buildTower'
+    event_handling:
+      swipe_tower: false
+      correctness: same_height
+      comparison_source: tower_4
+      show_blocks_moving_to_result: true
+      target: tower_2
+      touch_reveals_button: [submit, delete]
+      allow_non_standard: true
+    misc:
+      problem_stage: false
+      skip_submit: false
+      skip_in_between: false
+      remove_on_exit: [button_submit, button_delete]
+simple_mean_name_snippet:
+  params:
+    generate:
+      mean_name_base_5: [pick_from_list, [[.5,.5, .5,.5, .5,.5], [1, .5,.5, .5,.5], [2, .5,.5], [.5,.5, .5,.5], [1, .5,.5], [.5,.5]]]
+      extra_fiver: [pick_from_list, [0, .5]]
+      # extra_delta: [pick_from_range, 0, .45, .1]
+      extra_delta: [fixed, 0]
+      mean_name_f: mean_name_base_5 ++ extra_fiver
+      mean_name: mean_name_f ++ extra_delta
+      nice_name: standardize_name mean_name
 tower_2_disappearing_snippet:
   params:
     modify:
@@ -4263,18 +4389,65 @@ tower_addition_direct_snippet:
         num_stars: 2
         problem_stage: null
         skip_in_between: null
-tower_addition_direct_snippet_un:
-  params_from: [grouping_direct_snippet]
+tower_missing_addend_direct_snippet:
+  params_from: [tower_addition_direct_snippet]
   params:
     create:
-      tower_4: mean_name
+      tower_2: []
+      tower_2_shadow: []
+      tower_4: m2
+      tower_result: { name: nice_name }
+      tower_mean: { name: mean_name }
     modify:
+      tower_1:
+        misc:
+          tower_name_style: { left: 25 }
+      tower_2:
+        misc:
+          tower_name_style: { left: 25 }
       tower_4:
-        position: [20vw, 400]
-        # position: [0, 5]
-        style: {opacity: 1}
+        position: [300, 0]
+        style: {opacity: 0}
+      tower_result:
+        position: [550, 0]
+        tower_style: {opacity: 1}
+      tower_mean:
+        position: [550, 0]
+        style: {opacity: 0}
     event_handling:
       comparison_source: tower_4
+      target: tower_2
+      correctness: same_height
+fade_tower_1_snippet:
+  params:
+    modify:
+      tower_1:
+        anim_info:
+          tower_opacity: [1, 0]
+          delay: 500
+          duration: 1000
+      tower_1_shadow:
+        tower_style: {opacity: 0}
+      tower_2:
+        tower_style: {opacity: 0}
+      tower_2_shadow:
+        tower_style: {opacity: 0}
+fade_tower_1_and_result_snippet:
+  params:
+    modify:
+      tower_1:
+        tower_style: {opacity: 0}
+      tower_1_shadow:
+        tower_style: {opacity: 0}
+      tower_2:
+        tower_style: {opacity: 0}
+      tower_2_shadow:
+        tower_style: {opacity: 0}
+      tower_result:
+        anim_info:
+          tower_opacity: [1, 0]
+          delay: 500
+          duration: 1000
 return_bar_2:  # this is not a level;  it is an animation snippet
   params:
     modify:

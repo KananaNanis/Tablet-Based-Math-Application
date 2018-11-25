@@ -1,6 +1,11 @@
 import {Animated} from 'react-native'
 import {doAction, global_constant} from '../lib/global'
-import {query_position_of, query_obj_style} from '../providers/query_store'
+import {
+	query_position_of,
+	query_obj_style,
+	query_obj_misc,
+} from '../providers/query_store'
+import {query_tower_blocks} from '../providers/query_tower'
 import {store_config_modify} from '../providers/enter_exit'
 import {get_config} from '../providers/change_config'
 import {fromJS} from 'immutable'
@@ -44,12 +49,17 @@ export function interpolate_anim_attr(
 	for (const attr in anim_info) {
 		if (anim_info.hasOwnProperty(attr)) {
 			if (verbose) {
-				console.log('interpolate attr', attr, 'to', anim_info[attr].to)
+				console.log(
+					'interpolate attr',
+					attr,
+					'outputRange',
+					anim_info[attr].outputRange,
+				)
 			}
 			if (['rotate', 'scale'].includes(attr)) {
 				let t = timer[attr].interpolate({
 					inputRange: [0, 1],
-					outputRange: [anim_info[attr].from, anim_info[attr].to],
+					outputRange: anim_info[attr].outputRange,
 				})
 				const xform = constructXformFor(id, attr, t)
 				animated_style.transform = xform
@@ -64,15 +74,39 @@ export function interpolate_anim_attr(
 */
 			} else if (global_constant.anim_all_attributes.includes(attr)) {
 				let attr2 = attr
-				if (['blink', 'handle_blink', 'tower_opacity'].includes(attr)) {
-					attr2 = 'opacity'
+				if (attr.startsWith('block_')) {
+					/*
+					const elts = anim_info[attr]
+					if (elts.outputRange && Array.isArray(secondary_style)) {
+						attr2 = attr.substr(6)
+						// construct style parameters for each of the indicated blocks
+						while (secondary_style.length < elts.outputRange.length) {
+							secondary_style.push({})
+						}
+						for (let i = 0; i < elts.outputRange.length; ++i) {
+							if (elts.outputRange[i]) {
+								let t = timer[attr].interpolate({
+									inputRange: [0, 1],
+									outputRange: elts.outputRange[i],
+								})
+								secondary_style[i][attr2] = t
+							}
+						}
+						console.log('anim_info', anim_info, 'secondary_style', secondary_style)
+					}
+*/
+				} else {
+					if (['blink', 'handle_blink', 'tower_opacity'].includes(attr)) {
+						attr2 = 'opacity'
+					}
+					let t = timer[attr2].interpolate({
+						inputRange: [0, 1],
+						outputRange: anim_info[attr].outputRange,
+					})
+					if ('handle_blink' === attr) {
+						secondary_style[attr2] = t
+					} else animated_style[attr2] = t
 				}
-				let t = timer[attr2].interpolate({
-					inputRange: [0, 1],
-					outputRange: [anim_info[attr].from, anim_info[attr].to],
-				})
-				if ('handle_blink' === attr) secondary_style[attr2] = t
-				else animated_style[attr2] = t
 				// console.log('animated_style', animated_style)
 			} else {
 				console.error(
@@ -142,12 +176,49 @@ function trigger_continuation(on_end) {
 	}
 }
 
+function is_individual_block(id) {
+	return id.startsWith('tower_') && id.split('.').length === 2
+}
+
 function collapse_anim_info(id, attr, info) {
 	// console.log('collapse_anim_info id', id, 'attr', attr, 'info', info)
+	if (is_individual_block(id)) {
+		// special case
+		console.log('is_indiv!')
+		const handle_this_case = false // FIX ME!!!
+		if (handle_this_case) {
+			const parts = id.split('.')
+			const tower_id = parts[0]
+			const index = Number(parts[1])
+
+			let block_offset = []
+			const misc = query_obj_misc(tower_id)
+			if (misc && misc.get('block_offset')) {
+				block_offset = misc.get('block_offset').toJS()
+			}
+			let old_pos = block_offset[index] ? block_offset[index] : false
+			if (!old_pos) {
+				// try to figure out the original values
+				const block_info = query_tower_blocks(tower_id)
+				const bot = block_info[index].bottom
+				// console.log('bot', bot)
+				old_pos = [0, bot]
+			}
+			const new_pos = info.outputRange[info.outputRange.length - 1]
+			if ('left' === attr) block_offset[index] = [new_pos, old_pos[1]]
+			else if ('bottom' === attr) block_offset[index] = [old_pos[0], new_pos]
+			doAction.addObjMisc(tower_id, 'block_offset', block_offset)
+
+			//  remove the appropriate portion of anim_info from the tower
+			doAction.addBlockAnimInfo(tower_id, index, {[attr]: null})
+			return
+		}
+	}
+	const out_end = info.outputRange[info.outputRange.length - 1]
 	if (['left', 'right', 'bottom', 'top'].includes(attr)) {
 		// positional update
 		const old_pos = query_position_of(id).toJS()
-		const new_pos = info.to
+		const new_pos = out_end
 		if ('left' === attr) {
 			doAction.setPosition(id, [new_pos, old_pos[1]])
 		} else if ('bottom' === attr) {
@@ -159,12 +230,12 @@ function collapse_anim_info(id, attr, info) {
 			)
 		}
 	} else if (['rotate', 'scale'].includes(attr)) {
-		const xform = constructXformFor(id, attr, info.to)
+		const xform = constructXformFor(id, attr, out_end)
 		doAction.addObjStyle(id, 'transform', xform)
 	} else if (['blink', 'opacity'].includes(attr)) {
-		doAction.addObjStyle(id, 'opacity', info.to)
+		doAction.addObjStyle(id, 'opacity', out_end)
 	} else if (['tower_opacity'].includes(attr)) {
-		doAction.towerAddStyle(id, 'opacity', info.to)
+		doAction.towerAddStyle(id, 'opacity', out_end)
 	} else {
 		console.error(
 			'Warning in collapse_anim_info:  not implemented for attr',
@@ -210,7 +281,10 @@ export function has_timer(anim_info) {
 export function init_anim(id, anim_info, timer, skip_reset = false) {
 	for (const attr in anim_info) {
 		if (anim_info.hasOwnProperty(attr)) {
-			if (global_constant.anim_all_attributes.includes(attr)) {
+			if (
+				global_constant.anim_all_attributes.includes(attr) &&
+				!attr.startsWith('block_')
+			) {
 				let attr2 = attr
 				if (['blink', 'handle_blink', 'tower_opacity'].includes(attr)) {
 					attr2 = 'opacity'
