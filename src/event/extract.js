@@ -9,6 +9,7 @@ import {
 	query_option_values,
 	query_obj_anim_info,
 } from '../providers/query_store'
+import {tower_name2height} from '../providers/query_tower'
 import {global_constant, doAction} from '../lib/global'
 import {fromJS} from 'immutable'
 import {num_stars} from '../containers/CamelContainer'
@@ -203,6 +204,8 @@ export function get_height_of(id) {
 	if (id.startsWith('door_')) res = query_name_of(id).get(0)
 	else if (id.startsWith('tile_')) {
 		res = global_constant.animals[query_name_of(id)].height
+	} else if (id.startsWith('tower_')) {
+		res = tower_name2height(query_name_of(id).toJS())
 	} else if (id.startsWith('bar_')) {
 		res = query_name_of(id).get(0)
 	} else if (id.startsWith('five_frame_')) {

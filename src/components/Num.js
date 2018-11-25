@@ -48,6 +48,7 @@ const Num = ({
 	misc,
 	tower_style,
 	block_opacity,
+	block_anim_info,
 	scale_factor,
 	just_grey = false,
 }) => {
@@ -85,6 +86,7 @@ const Num = ({
 		<View style={[styles.num, style, {left: position[0], bottom: position[1]}]}>
 			<Tower
 				anim_info={t_anim_info}
+				block_anim_info={block_anim_info}
 				block_opacity={block_opacity}
 				id={id}
 				just_grey={just_grey}

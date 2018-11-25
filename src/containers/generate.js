@@ -8,7 +8,11 @@ import {
 	pick_animal_name,
 } from './gen_utile'
 //import {query_obj_misc, query_option_obj} from '../providers/query_store'
-import {approx_equal, names_are_identical} from '../event/utils'
+import {
+	approx_equal,
+	names_are_identical,
+	create_name_match_from_raw,
+} from '../event/utils'
 import {tower_name2height, height2tower_name} from '../providers/query_tower'
 import {global_workspace_height} from '../components/Workspace'
 import {deep_clone} from '../providers/change_config'
@@ -316,13 +320,41 @@ function apply_gen_instruction(
 			const dst1 = words[2]
 			const dst2 = words[4]
 			// console.log('src', src, 'dst1', dst1, 'dst2', dst2)
-			gen_vars[dst1] = []
-			gen_vars[dst2] = []
-			for (let j = 0; j < gen_vars[src].length; ++j) {
-				if (0 === j % 2) gen_vars[dst1].push(gen_vars[src][j])
-				else gen_vars[dst2].push(gen_vars[src][j])
+			const n = gen_vars[src].length
+			const h_src = tower_name2height(gen_vars[src])
+			const std_src = height2tower_name(h_src)
+			let found_one = false
+			for (let k = 0; !found_one && k < 20; ++k) {
+				gen_vars[dst1] = []
+				gen_vars[dst2] = []
+				let toggle = []
+				let num_ones = Math.floor(n * Math.random())
+				if (num_ones < n / 3) num_ones = Math.round(n / 3)
+				if (num_ones > n - n / 3) num_ones = Math.round(n - n / 3)
+				for (let j = 0; j < num_ones; ++j) toggle.push(1)
+				for (let j = num_ones; j < n; ++j) toggle.push(0)
+				permute_array_elements(toggle)
+				// fix the last two elements, in part to distribute the singletons
+				toggle[n - 2] = 0
+				toggle[n - 1] = 1
+				gen_vars[src + '_toggle'] = toggle
+				for (let j = 0; j < n; ++j) {
+					if (0 === toggle[j]) {
+						gen_vars[dst1].push(gen_vars[src][j])
+					} else {
+						gen_vars[dst2].push(gen_vars[src][j])
+					}
+				}
+				// check:  will this partition require a swipe on the result tower?
+				const is_subset = create_name_match_from_raw(gen_vars[dst1], std_src)
+				if (!is_subset) {
+					found_one = true
+				}
 			}
-			// console.log('src', gen_vars[src], 'dst1', gen_vars[dst1], 'dst2', gen_vars[dst2])
+			if (!found_one) {
+				console.log('Warning:  did not find a partition that required a swipe.')
+			}
+			// console.log('src', gen_vars[src], 'dst1', gen_vars[dst1], 'dst2', gen_vars[dst2], 'toggle', toggle)
 		} else {
 			console.error('Warning:  unrecognized generate partition.', inst)
 		}

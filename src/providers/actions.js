@@ -111,8 +111,20 @@ export function addAnimInfo(id, anim_info) {
 	//return {type: AT.ADD_ANIM_INFO, id, key, value: fromJS(value)}
 }
 
+export function addBlockAnimInfo(id, index, anim_info) {
+	if ('object' === typeof anim_info && null !== anim_info) {
+		anim_info_counter++
+		anim_info.anim_info_counter = anim_info_counter
+	}
+	return {type: AT.ADD_BLOCK_ANIM_INFO, id, index, anim_info}
+}
+
 export function clearAnimInfo(id) {
 	return {type: AT.CLEAR_ANIM_INFO, id}
+}
+
+export function clearBlockAnimInfo(id, index) {
+	return {type: AT.CLEAR_ANIM_INFO, id, index}
 }
 
 export function towerSetWidth(id, width) {

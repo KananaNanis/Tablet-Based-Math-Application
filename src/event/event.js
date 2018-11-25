@@ -6,7 +6,7 @@ import {
 } from '../components/Workspace'
 import {doAction, initialize_redux_store, global_constant} from '../lib/global'
 import {touch_dispatcher} from './dispatcher'
-import {query_path} from '../providers/query_store'
+import {query_path, with_suffix} from '../providers/query_store'
 
 let mouseTouchID = 100
 let currentNumTouches = 0
@@ -99,9 +99,9 @@ export function touchHandler(synthetic_event, gestureState) {
 	}
 	const is_mouse = Platform.OS === 'web'
 	if (
-		numTouchesBottomRightCorner > 0 &&
+		numTouchesBottomLeftCorner > 0 &&
 		(global_constant.debug_mode ||
-			(numTouchesBottomLeftCorner > 0 && numTouchesTopRightCorner > 0)) &&
+			(numTouchesBottomRightCorner > 0 && numTouchesTopRightCorner > 0)) &&
 		'down' === type
 	) {
 		// reset this level
@@ -172,24 +172,31 @@ function handlerDispatch(type, x, y, touchID) {
 	}
 	let recordTouchesRightAway = mouseIsDown
 	if (recordTouchesRightAway) store_this_touch(type, x, y, touchID)
-	switch (type) {
-		case 'down':
-		case 'start':
-			touch_dispatcher('down', x, y, touchID)
-			break
-		case 'move':
-			if (global.is_mobile || mouseIsDown) {
-				touch_dispatcher('move', x, y, touchID)
-			}
-			break
-		case 'up':
-		case 'cancel':
-		case 'end':
-			touch_dispatcher('up', x, y, touchID)
-			break
-		default:
-			console.log('unrecognized event type: ' + type)
-			return
+	try {
+		switch (type) {
+			case 'down':
+			case 'start':
+				touch_dispatcher('down', x, y, touchID)
+				break
+			case 'move':
+				if (global.is_mobile || mouseIsDown) {
+					touch_dispatcher('move', x, y, touchID)
+				}
+				break
+			case 'up':
+			case 'cancel':
+			case 'end':
+				touch_dispatcher('up', x, y, touchID)
+				break
+			default:
+				console.log('unrecognized event type: ' + type)
+				return
+		}
+	} catch (error) {
+		console.error(error)
+		// log the error
+		const cp = query_path('config').toJS()
+		doAction.addLogEntry(Date.now(), [with_suffix(cp), 'error', error])
 	}
 	if (['up', 'end', 'cleanup', 'cancel'].includes(type)) {
 		store_this_touch(type, x, y, touchID) // wait until after event

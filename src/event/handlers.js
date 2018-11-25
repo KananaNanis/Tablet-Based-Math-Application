@@ -8,6 +8,7 @@ import {
 	with_suffix,
 	query_option_obj,
 	query_position_of,
+	query_obj_misc,
 } from '../providers/query_store'
 import {
 	query_top_block,
@@ -25,6 +26,7 @@ import {
 	pointIsInRectangle,
 	update_keypad_button_visibility,
 	names_are_identical,
+	approx_equal,
 	distance_to_prim,
 	get_bbox,
 	dist2D,
@@ -388,7 +390,7 @@ function find_block_index_at_height(block_pos, y) {
 	return res
 }
 
-let starting_x, found_index, merge_pos, split_pos
+let starting_x, found_tower, found_index, merge_pos, split_pos
 let orig_name, split_name, moving_merge_name, moving_split_name
 let moving_was_merge
 
@@ -560,10 +562,10 @@ export function clear_handler_variables() {
 	moving_merge_name = null
 	moving_split_name = null
 	moving_was_merge = null
-	orig_pos
-	delta_x
-	delta_y
-	is_moving
+	orig_pos = null
+	delta_x = null
+	delta_y = null
+	is_moving = null
 }
 
 export function handle_stack_arg_2(state, x, y) {
@@ -614,4 +616,258 @@ export function handle_stack_arg_2(state, x, y) {
 			}
 		}
 	}
+}
+
+function num_blocks(tower_id) {
+	return query_tower_blocks(tower_id).length
+}
+
+function get_draggable(tower_id, block_index) {
+	let res = false
+	const misc = query_obj_misc(tower_id)
+	if (misc && misc.has('draggable')) {
+		if ('all' === misc.get('draggable')) {
+			res = true
+		} else {
+			const drag_list = misc.get('draggable').toJS()
+			if (drag_list.length > block_index) res = drag_list[block_index]
+		}
+	}
+	return res
+}
+
+function set_draggable(tower_id, block_index, t) {
+	let draggable = []
+	const m = query_obj_misc(tower_id)
+	if (m && m.get('draggable')) {
+		if ('all' === m.get('draggable')) {
+			// special case
+			draggable = new Array(num_blocks(tower_id)).fill(true)
+		} else draggable = m.get('draggable').toJS()
+	}
+	draggable[block_index] = t
+	doAction.addObjMisc(tower_id, 'draggable', draggable)
+	// console.log('set_draggable', tower_id, draggable)
+}
+
+function has_moved_block_to_y_offset(tower_id, y_offset, skip = null) {
+	let res = false
+	const misc = query_obj_misc(tower_id)
+	if (misc) {
+		let block_offset = misc.get('block_offset')
+		if (block_offset) {
+			block_offset = block_offset.toJS()
+			for (let i = 0; i < block_offset.length; ++i) {
+				if (
+					skip !== i &&
+					block_offset[i] &&
+					approx_equal(block_offset[i][1], y_offset)
+				) {
+					res = true
+				}
+			}
+		}
+	}
+	// console.log('has_moved_block_to_y_offset tower_id', tower_id, 'y_offset', y_offset, 'skip', skip, 'res', res)
+	return res
+}
+
+export function all_blocks_have_offsets(tower_id) {
+	let res = false
+	const misc = query_obj_misc(tower_id)
+	if (misc) {
+		let block_offset = misc.get('block_offset')
+		if (block_offset) {
+			block_offset = block_offset.toJS()
+			let n = num_blocks(tower_id)
+			if (n === block_offset.length) {
+				res = true
+				for (let i = 0; i < n; ++i) {
+					if (!block_offset[i]) res = false
+				}
+			}
+		}
+	}
+	// console.log('all_blocks_have_offsets tower_id', tower_id, 'res', res)
+	return res
+}
+
+export function handle_drag_blocks_to_result(state, x, y) {
+	let arg_1 = query_arg(1)
+	let arg_2 = query_arg(2)
+	let arg12 = [arg_1, arg_2]
+	let result = query_arg('result')
+	if ('down' === state) {
+		const tower_pos = [
+			query_position_of(arg_1).toJS(),
+			query_position_of(arg_2).toJS(),
+		]
+		const tower_info = [query_tower(arg_1).toJS(), query_tower(arg_2).toJS()]
+		const block_info = [
+			query_tower_blocks(arg_1, tower_info[0]),
+			query_tower_blocks(arg_2, tower_info[1]),
+		]
+		const block_pos = [
+			query_tower_blocks(arg_1, tower_info[0], true),
+			query_tower_blocks(arg_2, tower_info[1], true),
+		]
+
+		found_index = null
+		if (y > 0) {
+			if (x < tower_pos[1][0] - 50) found_tower = 0
+			else found_tower = 1
+			found_index = find_block_index_at_height(block_pos[found_tower], y)
+			if (null !== found_index) {
+				// is this a draggable block?
+				let tgt = arg12[found_tower]
+				let draggable = get_draggable(tgt, found_index)
+				if (draggable) {
+					// const d = distance_to_prim(x, y, arg_2)
+					const d = 0 // HELP!  What is the distance to a single block?
+					// console.log('d', d)
+					if (d < 50) {
+						orig_pos = [0, block_info[found_tower][found_index].bottom]
+						delta_x = orig_pos[0] - x
+						delta_y = orig_pos[1] - y
+					} else {
+						found_index = null
+					}
+				} else {
+					found_index = null
+				}
+			}
+		}
+	} else {
+		if (null !== found_index) {
+			let tgt = arg12[found_tower]
+			let block_offset = []
+			const misc = query_obj_misc(tgt)
+			if (misc && misc.get('block_offset')) {
+				block_offset = misc.get('block_offset').toJS()
+			}
+			let new_pos = [x + delta_x, y + delta_y]
+			if ('up' === state) {
+				// place on result or move back to start
+				// figure out if we are covering an appropriate block on result tower
+				let back_to_start = true
+				const tower_pos = [
+					query_position_of(arg_1).toJS(),
+					query_position_of(arg_2).toJS(),
+				]
+				const result_pos = query_position_of(result).toJS()
+				let corner_pos = [
+					tower_pos[found_tower][0] + new_pos[0],
+					tower_pos[found_tower][1] + new_pos[1],
+				]
+				let result_index
+				if (corner_pos[0] > result_pos[0] - 100) {
+					const result_tower_info = query_tower(result).toJS()
+					const result_block_pos = query_tower_blocks(
+						result,
+						result_tower_info,
+						true,
+					)
+					result_index = find_block_index_at_height(result_block_pos, y)
+					// console.log('result_index', result_index)
+					if (null !== result_index) {
+						// is this result block the same type as the current block?
+						const tower_info = [
+							query_tower(arg_1).toJS(),
+							query_tower(arg_2).toJS(),
+						]
+						const block_info = [
+							query_tower_blocks(arg_1, tower_info[0]),
+							query_tower_blocks(arg_2, tower_info[1]),
+						]
+						const result_block_info = query_tower_blocks(
+							result,
+							result_tower_info,
+						)[result_index]
+						const same_size =
+							block_info[found_tower][found_index].size ===
+							result_block_info.size
+						const same_fiver =
+							Boolean(block_info[found_tower][found_index].is_fiver) ===
+							Boolean(result_block_info.is_fiver)
+						if (same_size && same_fiver) {
+							// check whether this location is already occupied
+							let occupied = false
+							const not_tgt = arg12[(found_tower + 1) % 2]
+							if (
+								has_moved_block_to_y_offset(not_tgt, result_block_info.bottom)
+							) {
+								occupied = true
+							}
+							if (
+								has_moved_block_to_y_offset(
+									tgt,
+									result_block_info.bottom,
+									found_index,
+								)
+							) {
+								occupied = true
+							}
+							if (!occupied) {
+								back_to_start = false
+								new_pos = [
+									result_pos[0] - tower_pos[found_tower][0],
+									result_block_info.bottom,
+								]
+								block_offset[found_index] = new_pos
+								doAction.addObjMisc(tgt, 'block_offset', block_offset)
+								set_draggable(tgt, found_index, false)
+							}
+						}
+					}
+				}
+				if (back_to_start) {
+					block_offset[found_index] = null
+					doAction.addObjMisc(tgt, 'block_offset', block_offset)
+				}
+				found_index = null
+			} else {
+				// move
+				block_offset[found_index] = new_pos
+				doAction.addObjMisc(tgt, 'block_offset', block_offset)
+			}
+		}
+	}
+	/*
+	if ('down' === state) {
+	} else {
+		if (is_moving) {
+			let new_pos = [x + delta_x, y + delta_y]
+			doAction.setPosition(arg_2, new_pos)
+			if ('up' === state) {
+				is_moving = false
+				// stack arg_2 precisely on arg_1
+				const arg_1 = query_arg(1)
+				const bbox1 = get_bbox(arg_1)
+				const final_pos = [
+					bbox1.position[0] + 0.25 * bbox1.width,
+					bbox1.position[1] + bbox1.height,
+				]
+				let d = dist2D(new_pos, final_pos)
+				if (d < 100) {
+					// doAction.setPosition(arg_2, final_pos)
+					doAction.addAnimInfo(arg_2, {
+						left: [new_pos[0], final_pos[0]],
+						bottom: [new_pos[1], final_pos[1]],
+						duration: 0.8 * d,
+					})
+					const result = query_arg('result')
+					doAction.addObjStyle(result, 'opacity', null)
+					doAction.setEventHandlingParam('stack_arg_2', null)
+				} else {
+					d = dist2D(new_pos, orig_pos)
+					doAction.addAnimInfo(arg_2, {
+						left: [new_pos[0], orig_pos[0]],
+						bottom: [new_pos[1], orig_pos[1]],
+						duration: 0.8 * d,
+					})
+				}
+			}
+		}
+	}
+*/
 }

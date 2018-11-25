@@ -8,13 +8,19 @@ import {
 } from './components/Workspace'
 import {touchHandler} from './event/event'
 import PrintFigure from './components/PrintFigure'
-import {load_config_tree, global_constant, load_sounds} from './lib/global'
+import {
+	load_config_tree,
+	global_constant,
+	load_sounds,
+	doAction,
+} from './lib/global'
+import {query_path, with_suffix} from './providers/query_store'
 
 // top level component
 export default class App extends React.Component {
 	constructor(props) {
 		super(props)
-		this.state = {do_print: false}
+		this.state = {do_print: false, has_error: false}
 		const poll_to_see_if_config_tree_changed = true
 		if (poll_to_see_if_config_tree_changed) {
 			window.setInterval(load_config_tree, 3000, this)
@@ -35,9 +41,21 @@ export default class App extends React.Component {
 		// preload some sounds?
 		load_sounds()
 	}
+	componentDidCatch(error, info) {
+		// Display fallback UI
+		this.setState({has_error: true})
+		// log the error
+		const cp = query_path('config').toJS()
+		doAction.addLogEntry(Date.now(), [with_suffix(cp), 'error', error, info])
+	}
 	render() {
 		//console.log(global_screen_height)
+		//console.log('misc for tower_result', query_obj_misc('tower_result'))
 		let tablet_border, scaling_border
+		if (this.state.has_error) {
+			console.log('Error caught at top level.')
+			return <h1>Something went wrong.</h1>
+		}
 		if (this.state.add_tablet_border) {
 			tablet_border = (
 				<View

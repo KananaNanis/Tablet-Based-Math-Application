@@ -34,6 +34,7 @@ import {
 	handle_create_tower_by_height,
 	handle_swipe_tower,
 	handle_stack_arg_2,
+	handle_drag_blocks_to_result,
 } from './handlers'
 import {correct_next_button} from './correctness'
 import {
@@ -75,6 +76,7 @@ export function touch_dispatcher(state, x, y, touchID) {
 	//console.log('touch_dispatcher state ' + state + ' x ' + x + ' y ' + y + ' touchID ' + touchID)
 	const visible = query_visible_buttons()
 	//if('down' === state) console.log('visible', visible)
+	//if ('down' === state && x > 500) console.log(x.thisdoesntexist[3])
 	if (query_prop('freeze_display')) {
 		// perhaps allow start or submit?
 		if (!visible.includes('start')) {
@@ -109,6 +111,7 @@ export function touch_dispatcher(state, x, y, touchID) {
 	const tgt = query_event('target')
 	//if ('down' === state ) console.log('visible', visible)
 	for (const i of visible) {
+		// console.log('of visible, i is', i)
 		if (global_constant.special_button_geoms.hasOwnProperty(i)) {
 			//if ('down' === state ) console.log('checking i', i, 'x', x, 'y', y, 'geom', global_constant.special_button_geoms[i])
 			if (pointIsInRectangle([x, y], get_special_button_geom(i))) {
@@ -121,7 +124,10 @@ export function touch_dispatcher(state, x, y, touchID) {
 				else console.warn('touch_dispatcher did not handle', i)
 				return
 			}
-		} else if (i.startsWith('top_') || i.startsWith('bottom_')) {
+		} else if (
+			'string' === typeof i &&
+			(i.startsWith('top_') || i.startsWith('bottom_'))
+		) {
 			if (
 				pointIsInRectangle(
 					[x, y],
@@ -199,6 +205,8 @@ export function touch_dispatcher(state, x, y, touchID) {
 		handle_swipe_tower(state, x, y, touchID)
 	} else if (query_event('stack_arg_2')) {
 		handle_stack_arg_2(state, x, y, touchID)
+	} else if (query_event('drag_blocks_to_result')) {
+		handle_drag_blocks_to_result(state, x, y, touchID)
 	} else if (query_event('target') && query_event('move')) {
 		const tgt = query_event('target')
 		const scale_factor = query_prop('scale_factor')

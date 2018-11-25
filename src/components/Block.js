@@ -1,8 +1,9 @@
 import React from 'react'
-import {View, Image, Text, StyleSheet} from 'react-native'
+import {Animated, View, Image, Text, StyleSheet} from 'react-native'
 import {fromJS} from 'immutable'
 import {image_location} from '../lib/images'
 import {query_tower_name} from '../providers/query_tower'
+import * as Anim from '../event/animation'
 
 export function get_block_size_from_group(group) {
 	return 0 + Math.ceil(-1 + 0.00001 + Math.log(group) / Math.log(10))
@@ -17,6 +18,10 @@ export function get_how_many_from_group(group) {
 export function get_is_fiver_from_group(group) {
 	const n = Math.round(group / 10 ** get_block_size_from_group(group))
 	return n >= 5 ? 1 : 0
+}
+
+export function get_how_many_blocks_from_group(group) {
+	return get_is_fiver_from_group(group) ? 1 : get_how_many_from_group(group)
 }
 
 export function make_group_from(size, is_fiver) {
@@ -157,68 +162,105 @@ export function add_block_to_name(new_size, new_is_fiver, name0) {
 	return fromJS(name)
 }
 
-const Block = ({
-	width,
-	height,
-	radius_style,
-	img_name,
-	view_style,
-	text_style,
-	text_content,
-	just_grey,
-	scale_factor,
-}) => {
-	// console.log('Block img_name', img_name, 'view_style', view_style, 'radius_style', radius_style, 'just_grey', just_grey)
-	if ('outline' === just_grey) {
-		return (
-			<View
-				style={[
-					styles.block,
-					view_style,
-					radius_style,
-					{
-						width,
-						height,
-					},
-				]}
-			/>
-		)
-	}
-	let img = null
-	if ('diagram' === img_name) {
-		// make a tower diagram
-	} else if (img_name) {
-		img = (
-			<Image
-				source={image_location(img_name, just_grey)}
-				style={[styles.image_default, radius_style, {width, height}]}
-			/>
-		)
-	}
-	let txt = null
-	if ('|' === text_content) {
-		txt = (
-			<View
-				style={[
-					styles.vert_bar,
-					{
-						left: scale_factor / 17,
-						width: scale_factor / 52,
-						height: scale_factor * 0.98,
-					},
-				]}
-			/>
-		)
-	} else {
-		txt = <Text style={text_style}>{text_content}</Text>
+class Block extends React.Component {
+	state = {
+		timer: Anim.new_timer(),
 	}
 
-	return (
-		<View style={[view_style, radius_style, {width, height}]}>
-			{img}
-			{txt}
-		</View>
-	)
+	componentDidMount() {
+		Anim.init_anim(this.props.id, this.props.anim_info, this.state.timer)
+	}
+
+	componentDidUpdate(prev_props) {
+		Anim.update_anim(
+			this.props.id,
+			this.props.anim_info,
+			this.state.timer,
+			prev_props.anim_info,
+		)
+	}
+
+	render() {
+		let {
+			id,
+			width,
+			height,
+			radius_style,
+			img_name,
+			view_style,
+			anim_info,
+			text_style,
+			text_content,
+			just_grey,
+			swap_channel,
+			scale_factor,
+		} = this.props
+		// console.log('Block img_name', img_name, 'view_style', view_style, 'radius_style', radius_style, 'just_grey', just_grey)
+
+		let animated_style = {}
+		if (anim_info) {
+			// console.log('Block id', id, 'anim_info', anim_info)
+			Anim.interpolate_anim_attr(
+				id,
+				anim_info,
+				this.state.timer,
+				animated_style,
+			)
+		}
+
+		if ('outline' === just_grey) {
+			return (
+				<View
+					style={[
+						styles.block,
+						view_style,
+						radius_style,
+						{
+							width,
+							height,
+						},
+					]}
+				/>
+			)
+		}
+		let img = null
+		if ('diagram' === img_name) {
+			// make a tower diagram
+		} else if (img_name) {
+			img = (
+				<Image
+					source={image_location(img_name, just_grey, swap_channel)}
+					style={[styles.image_default, radius_style, {width, height}]}
+				/>
+			)
+		}
+		let txt = null
+		if ('|' === text_content) {
+			txt = (
+				<View
+					style={[
+						styles.vert_bar,
+						{
+							left: scale_factor / 17,
+							width: scale_factor / 52,
+							height: scale_factor * 0.98,
+						},
+					]}
+				/>
+			)
+		} else {
+			txt = <Text style={text_style}>{text_content}</Text>
+		}
+
+		return (
+			<Animated.View
+				style={[view_style, radius_style, {width, height}, animated_style]}
+			>
+				{img}
+				{txt}
+			</Animated.View>
+		)
+	}
 }
 
 const none = 'none'

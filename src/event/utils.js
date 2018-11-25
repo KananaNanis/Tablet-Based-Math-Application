@@ -4,12 +4,15 @@ import {
 	query_name_of,
 	query_position_of,
 	query_obj_misc,
+	query_block_anim_info,
 } from '../providers/query_store'
+import {query_tower, query_tower_blocks} from '../providers/query_tower'
 import {doAction, global_constant} from '../lib/global'
 import {
 	get_block_size_from_group,
 	get_how_many_from_group,
 	get_is_fiver_from_group,
+	condense_groups_of,
 } from '../components/Block'
 
 export function elapsed_time() {
@@ -180,4 +183,124 @@ export function update_keypad_button_visibility(size, is_fiver, how_many) {
 		}
 		doAction.setButtonDisplay(i, show)
 	}
+}
+
+export function show_blocks_moving_to_result(arg_1, arg_2, result) {
+	// const toggle = query_obj_misc(result).get('toggle').toJS()
+	const arg12 = [arg_1, arg_2]
+	let tower_name = [query_name_of(arg_1).toJS(), query_name_of(arg_2).toJS()]
+	tower_name[0] = expand_into_units(tower_name[0])
+	tower_name[1] = expand_into_units(tower_name[1])
+	let result_tower_name = query_name_of(result).toJS()
+	result_tower_name = expand_into_units(result_tower_name)
+	const toggle = create_name_match_from_raw(tower_name[0], result_tower_name)
+
+	const tower_info = [query_tower(arg_1).toJS(), query_tower(arg_2).toJS()]
+	const block_info = [
+		query_tower_blocks(arg_1, tower_info[0]),
+		query_tower_blocks(arg_2, tower_info[1]),
+	]
+	const tower_pos = [
+		query_position_of(arg_1).toJS(),
+		query_position_of(arg_2).toJS(),
+	]
+	const result_tower_info = query_tower(result).toJS()
+	const result_block_info = query_tower_blocks(result, result_tower_info)
+	const result_tower_pos = query_position_of(result).toJS()
+	const dx = [
+		result_tower_pos[0] - tower_pos[0][0],
+		result_tower_pos[0] - tower_pos[1][0],
+	]
+	let block_index = [0, 0, 0],
+		delay = 0
+	const already_animated_side_0 = Boolean(query_block_anim_info(arg_1))
+	for (let i = 0; i < toggle.length; ++i) {
+		let side = toggle[i]
+		if (1 === side && 0 === tower_name[1].length) {
+			// skip this one
+		} else if (0 === side && already_animated_side_0) {
+			// skip this one too
+		} else {
+			let xpos = [0, dx[side]]
+			let ypos = [
+				block_info[side][block_index[side]].bottom,
+				result_block_info[block_index[2]].bottom,
+			]
+			let duration = 0.8 * dist2D([xpos[0], ypos[0]], [xpos[1], ypos[1]])
+			doAction.addBlockAnimInfo(arg12[side], block_index[side], {
+				left: xpos,
+				bottom: ypos,
+				duration,
+			})
+			if (duration > delay) delay = duration
+		}
+		++block_index[side]
+		++block_index[2]
+	}
+	return delay
+}
+
+export function create_name_match_from_raw(name_1, name_res) {
+	// this function tries to match up the names directly, with no
+	//   changes to either name
+	let res = [],
+		j = 0,
+		found_end = false
+	for (let i = 0; i < name_res.length; ++i) {
+		if (!found_end && approx_equal(name_1[j], name_res[i])) {
+			res.push(0)
+			++j
+			if (j === name_1.length) found_end = true
+		} else {
+			res.push(1)
+		}
+	}
+	return found_end ? res : false
+}
+
+export function create_name_match_from(arg_1, result, as_units = false) {
+	let name_1 = query_name_of(arg_1).toJS()
+	let name_res = query_name_of(result).toJS()
+	if (as_units) {
+		name_1 = expand_into_units(name_1)
+		name_res = expand_into_units(name_res)
+	}
+	return create_name_match_from_raw(name_1, name_res)
+}
+
+export function design_compatible_name_for_addend(arg_1, arg_2, result) {
+	const verbose = false
+	let name_1 = query_name_of(arg_1).toJS()
+	let name_2 = []
+	let name_res = query_name_of(result).toJS()
+
+	// I would like to construct a name for arg_2 that allows a matching
+	//   between the blocks of arg1/arg2 and result.  I am assuming that
+	//   it is possible to do so:  the blocks of arg_1 should be a subset
+	//   of the blocks of result, and arg2 should have the correct height.
+	// Convert name_1 and name_res to blocks, since this is all that
+	//   we actually need from those towers.  Then find the missing blocks
+	//   in the result, and place them as the blocks of arg_2, perhaps
+	//   consolidating their name first.  I don't know if this will be
+	//   enough to prepare for the animation yet though.
+
+	name_1 = expand_into_units(name_1)
+	name_res = expand_into_units(name_res)
+
+	let j = 0,
+		found_end = false
+	for (let i = 0; i < name_res.length; ++i) {
+		if (!found_end && approx_equal(name_1[j], name_res[i])) {
+			++j
+			if (j === name_1.length) found_end = true
+		} else {
+			name_2.push(name_res[i])
+		}
+	}
+	if (verbose) console.log(' raw name_2:', name_2)
+
+	name_2 = condense_groups_of(name_2)
+	if (verbose) console.log(' after condense:', name_2)
+
+	return name_2
 }
