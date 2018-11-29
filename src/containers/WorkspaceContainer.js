@@ -24,6 +24,7 @@ const mapStateToProps = (state, ownProps) => {
 		center_text: state.getIn(['prop', 'center_text']),
 		top_left_text: state.getIn(['prop', 'top_left_text']),
 		top_right_text: state.getIn(['prop', 'top_right_text']),
+		stderr_text: state.getIn(['prop', 'stderr_text']),
 		big_op: state.getIn(['prop', 'big_op']),
 		big_paren: state.getIn(['prop', 'big_paren']),
 		big_paren_style: state.getIn(['style', 'big_paren']),

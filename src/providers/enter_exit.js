@@ -322,6 +322,9 @@ export function enter_exit_config(
 						'answer_is_correct',
 						'hide_dot',
 						'curr_op',
+						'center_text',
+						'top_right_text',
+						'stderr_text',
 					].includes(key)
 				) {
 					action_list.push(Actions.setProp(key, enter ? c[key0] : null))
@@ -333,9 +336,13 @@ export function enter_exit_config(
 						'scale_factor',
 						enter ? c[key0] : global_constant.scale_factor_from_yaml,
 					)
-				} else if ('remove_on_exit' === key && !enter) {
+				} else if ('remove_on_exit' === key) {
 					//console.log('remove_on_exit', c[key0])
-					remove_on_exit(c[key0], action_list)
+					if (!enter) {
+						remove_on_exit(c[key0], action_list)
+					}
+				} else {
+					console.log('Warning:  in misc, unrecognized key', key)
 				}
 			}
 		}

@@ -1,5 +1,5 @@
 # these constants should be fixed!
-debug_mode: false
+debug_mode: true
 num_exercises_for_debugging: 2
 # debug_path: [tower_variations, level_1]
 # debug_path: [tower_variations, singletons, level_1]
@@ -132,10 +132,10 @@ num_exercises_for_debugging: 2
 # debug_path: [drag_blocks, missing_addend, level_1]
 # debug_path: [drag_blocks, missing_addend, level_2, level_2a]
 # debug_path: [drag_blocks, missing_addend, level_3, stage_1]
-# debug_path: [drag_blocks, missing_addend, level_3, level_3b, stage_1]
+debug_path: [drag_blocks, missing_addend, level_3, level_3b, simpler_case, stage_1]
 # debug_path: [tower_addition, direct, level_1]
 # debug_path: [tower_addition, direct, level_2]
-debug_path: [tower_addition, missing_addend, level_1]
+# debug_path: [tower_addition, missing_addend, level_1]
 # debug_path: [all_done]
 # debug_path: [in_between]
 # starting_config_path: [one_through_five, five_frame, level_1] # P Oct 8
@@ -167,10 +167,31 @@ starting_config_path_Dom: [tower_addition, direct, level_1] # Nov 9
 # starting_config_path_PCCS: [tower_variations, level_1] # Nov 16
 # starting_config_path_PCCS: [tower_variations, singletons, level_1] # Nov 19, unused
 # starting_config_path_PCCS: [tower_addition, missing_addend, level_1] # Nov 20
-starting_config_path_PCCS: [drag_blocks, missing_addend, level_1] # Nov 26
+# starting_config_path_PCCS: [drag_blocks, missing_addend, level_1] # Nov 26
+starting_config_path_PCCS: [drag_blocks, missing_addend, level_3, harder_case, stage_1] # Nov 27
 
-starting_level_for_prev2:
-  m19: [group_ungroup, direct, level_1] # Nov 13
+starting_level_for: # Nov 29
+  m01: [drag_blocks, missing_addend, level_3, level_3b, simpler_case, stage_1]
+  m02: [drag_blocks, missing_addend, level_3, simpler_case, stage_1]
+  m03: [drag_blocks, missing_addend, level_3, simpler_case, stage_1]
+  m04: [drag_blocks, missing_addend, level_2, level_2a]
+  m05: [drag_blocks, missing_addend, level_3, level_3b, simpler_case, stage_1]
+  m06: [drag_blocks, missing_addend, level_3, level_3b, simpler_case, stage_1]
+  m07: [drag_blocks, missing_addend, level_2, level_2a]
+  m08: [drag_blocks, missing_addend, level_2, level_2a]
+  m09: [drag_blocks, missing_addend, level_1]
+  m10: [tower_addition, missing_addend, level_1]
+  m11: [drag_blocks, missing_addend, level_1]
+  m12: [drag_blocks, missing_addend, level_3, level_3b, simpler_case, stage_1]
+  m13: [drag_blocks, missing_addend, level_3, level_3b, simpler_case, stage_1]
+  m14: [drag_blocks, missing_addend, level_2, level_2a]
+  m15: [drag_blocks, missing_addend, level_3, level_3b, simpler_case, stage_1]
+  m16: [tower_addition, missing_addend, level_1]
+  m17: [drag_blocks, missing_addend, level_3, level_3b, simpler_case, stage_1]
+  m18: [drag_blocks, missing_addend, level_3, level_3b, simpler_case, stage_1]
+  m19: [drag_blocks, missing_addend, level_3, level_3b, simpler_case, stage_1]
+  m20: [drag_blocks, missing_addend, level_3, simpler_case, stage_1]
+  m29: [drag_blocks, missing_addend, level_3, level_3b, simpler_case, stage_1]
 
 starting_level_for_prev:  # these levels are for continuous visual estimation
   m32: [round_2_est_option, 11_to_14, notches]
@@ -282,33 +303,33 @@ special_button_geoms:
   submit: 
     position: [40, top 15]
     width: 210
-    height: 70
+    height: 80
   submit_on_right: 
     position: [right 10, top 30]
     width: 150
-    height: 70
+    height: 80
   restart: 
-    position: [40, top 90]
+    position: [40, top 100]
     width: 210
-    height: 70
+    height: 80
   delete: 
-    position: [40, top 90]
+    position: [40, top 100]
     width: 210
-    height: 70
+    height: 80
   next: 
     position: [center, 30vh]
     width: 210
-    height: 70
+    height: 80
   start: 
     position: [right 5, top 30]
     width: 210
-    height: 70
+    height: 80
 keypad_info:
   buildTower:
     # position: [right 5, top 5]
     position: [25, top 25]
-    button_width: 50
-    button_height: 50
+    button_width: 80
+    button_height: 80
     space_width: 20
     space_height: 30
     num_cols: 2
@@ -425,7 +446,7 @@ star_policy:
 path_types: [config, prev_config, goto, jmp, jmp_no_suffix, suffix_path]
 prop_types: [scale_factor, freeze_display, num_stars,
     config_iteration, goto_iteration, skip_submit, skip_in_between,
-    center_text, top_left_text, top_right_text, problem_stage,
+    center_text, top_left_text, top_right_text, stderr_text, problem_stage,
     blank_between_exercises, hide_dot, big_op, big_paren,
     repeat_level, skip_slide_down, correct_option_index,
     show_only_fivers, show_only_singletons, show_only_size,
