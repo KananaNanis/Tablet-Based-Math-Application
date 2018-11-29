@@ -24,6 +24,7 @@ import {
 } from './render_geoms'
 //import FiveFrame from './FiveFrame'
 import BarContainer from '../containers/BarContainer'
+//import {runInDebugContext} from 'vm'
 
 export let global_screen_width = Dimensions.get('window').width
 export let global_screen_height = Dimensions.get('window').height
@@ -60,6 +61,7 @@ const Workspace = ({
 	center_text,
 	top_left_text,
 	top_right_text,
+	stderr_text,
 	big_op,
 	big_paren,
 	big_paren_style,
@@ -346,6 +348,16 @@ const Workspace = ({
 		)
 		//source={require('img/star.png')}
 	}
+	if (stderr_text) {
+		++key
+		let top = 40
+		let left = 10
+		misc_above.push(
+			<Text key={key} style={[styles.stderr_text, {top, left}]}>
+				{stderr_text}
+			</Text>,
+		)
+	}
 	//console.log(doors.length)
 	//console.log('using global_workspace_height of', global_workspace_height)
 	return (
@@ -380,6 +392,7 @@ const green = 'green'
 const blue = 'blue'
 const white = 'white'
 const grey = 'grey'
+const purple = 'rgb(255, 0, 255)'
 const paren_color_1 = '#eee'
 const styles = StyleSheet.create({
 	workspace: {
@@ -424,6 +437,12 @@ const styles = StyleSheet.create({
 		position: 'absolute',
 		fontSize: 8,
 		top: 0,
+	},
+	stderr_text: {
+		position: 'absolute',
+		fontSize: 40,
+		top: 40,
+		color: purple,
 	},
 	big_op: {
 		position: 'absolute',

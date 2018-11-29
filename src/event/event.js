@@ -34,10 +34,12 @@ export function touchHandler(synthetic_event, gestureState) {
 	myPreventDefault(synthetic_event) // prevent default on everything
 	gestureState.stateID // what is this good for?
 	let evt = synthetic_event.nativeEvent
-	const type = synthetic_event.type.substr(5)
-	//if ('move' != type) console.log('touchHandler ' + type)
-	const touches = evt.changedTouches // , first = touches[0]
+	let type = synthetic_event.type.substr(5)
+	if ('start' === type) type = 'down'
+	if ('end' === type || 'cancel' === type) type = 'up'
+	//const touches = evt.changedTouches // , first = touches[0]
 	currentNumTouches = evt.touches.length
+	// if ('move' !== type) console.log('touchHandler', type, 'num', currentNumTouches)
 	numTouchesAtLeft = 0
 	numTouchesAtRight = 0
 	numTouchesAtTop = 0
@@ -77,12 +79,29 @@ export function touchHandler(synthetic_event, gestureState) {
 			++numTouchesBottomLeftCorner
 		}
 	}
+	const showGestureInfo = false
+	if (showGestureInfo) {
+		let msg = ''
+		msg += 'stateID ' + String(gestureState.stateID) + '\n'
+		msg += 'moveX,Y ' + gestureState.moveX + ',' + gestureState.moveY + '\n'
+		msg += 'x0,y0 ' + gestureState.x0 + ',' + gestureState.y0 + '\n'
+		msg += 'active ' + gestureState.numberActiveTouches + '\n'
+		msg += 'type ' + synthetic_event.type + '\n'
+		msg += 'num ' + currentNumTouches + '\n'
+		for (let i = 0, i_end = evt.touches.length; i < i_end; ++i) {
+			msg +=
+				i + '\t' + evt.touches[i].clientX + ',' + evt.touches[i].clientY + '\n'
+		}
+		doAction.setProp('stderr_text', msg)
+	}
 	//console.log('numTouchesAtLeft ' + numTouchesAtLeft + ' numTouchesAtTop ' + numTouchesAtTop)
 	//if (evt.touches.length > 0) console.log('x', evt.touches[0].clientX)
 	// console.log('type', type, 'numTouchesAtRight ' + numTouchesAtRight + ' numTouchesBottomRightCorner ' + numTouchesBottomRightCorner)
 	if (6 === currentNumTouches) {
 		// check whether reload is requested
-		if (4 === numTouchesAtTop && 'down' === type) {
+		if (
+			4 === numTouchesAtTop // && 'down' === type
+		) {
 			// this is to make it harder to do accidentally
 			if (Platform.OS === 'web') {
 				// reload!
@@ -101,8 +120,8 @@ export function touchHandler(synthetic_event, gestureState) {
 	if (
 		numTouchesBottomLeftCorner > 0 &&
 		(global_constant.debug_mode ||
-			(numTouchesBottomRightCorner > 0 && numTouchesTopRightCorner > 0)) &&
-		'down' === type
+			(numTouchesBottomRightCorner > 0 && numTouchesTopRightCorner > 0))
+		// && 'down' === type
 	) {
 		// reset this level
 		let path = query_path('config').toJS()
@@ -113,7 +132,24 @@ export function touchHandler(synthetic_event, gestureState) {
 		initialize_redux_store(path)
 		return
 	}
-	if (is_mouse) mouseTouchID++
+	let mX = gestureState.moveX
+	let mY = gestureState.moveY
+	if ('down' === type) {
+		mX = gestureState.x0
+		mY = gestureState.y0
+	}
+	if ('up' === type && mX <= 0 && mY <= 0) {
+		mX = gestureState.x0
+		mY = gestureState.y0
+	}
+	if (-1 !== mX) {
+		const [x, y] = window2workspaceCoords([mX, mY])
+		handlerDispatch(type, x, y, 1, evt)
+	}
+	if (is_mouse) {
+		mouseTouchID++
+	}
+	/*
 	let handled = []
 	for (let i = 0, i_end = touches.length; i < i_end; ++i) {
 		const x0 = touches[i].clientX,
@@ -131,6 +167,9 @@ export function touchHandler(synthetic_event, gestureState) {
 		handled.push(touches[i].identifier)
 	}
 	if (!is_mouse) extraTouchCleanup(evt, handled)
+	*/
+	extraTouchCleanup
+	return mouseTouchID
 }
 
 function handlerDispatch(type, x, y, touchID) {
