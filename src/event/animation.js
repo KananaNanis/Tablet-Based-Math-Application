@@ -211,8 +211,8 @@ function collapse_anim_info(id, attr, info) {
 
 			//  remove the appropriate portion of anim_info from the tower
 			doAction.addBlockAnimInfo(tower_id, index, {[attr]: null})
-			return
 		}
+		return
 	}
 	const out_end = info.outputRange[info.outputRange.length - 1]
 	if (['left', 'right', 'bottom', 'top'].includes(attr)) {

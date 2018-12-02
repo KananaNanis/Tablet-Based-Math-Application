@@ -129,13 +129,14 @@ num_exercises_for_debugging: 2
 # debug_path: [group_ungroup, singletons_with_fivers, ungroup, just_diagram, stage_1]
 # debug_path: [group_ungroup, singletons_with_fivers, ungroup, direct, level_1]
 # debug_path: [group_ungroup, jump_to_next]
-debug_path: [drag_blocks, missing_addend, level_1]
+# debug_path: [drag_blocks, missing_addend, level_1]
 # debug_path: [drag_blocks, missing_addend, level_2, level_2a]
 # debug_path: [drag_blocks, missing_addend, level_3, stage_1]
 # debug_path: [drag_blocks, missing_addend, level_3, level_3b, simpler_case, stage_1]
 # debug_path: [tower_addition, direct, level_1]
 # debug_path: [tower_addition, direct, level_2]
 # debug_path: [tower_addition, missing_addend, level_1]
+debug_path: [counting_up_sub, missing_addend, level_1]
 # debug_path: [all_done]
 # debug_path: [in_between]
 # starting_config_path: [one_through_five, five_frame, level_1] # P Oct 8
@@ -168,29 +169,30 @@ starting_config_path_Dom: [tower_addition, direct, level_1] # Nov 9
 # starting_config_path_PCCS: [tower_variations, singletons, level_1] # Nov 19, unused
 # starting_config_path_PCCS: [tower_addition, missing_addend, level_1] # Nov 20
 # starting_config_path_PCCS: [drag_blocks, missing_addend, level_1] # Nov 26
-starting_config_path_PCCS: [drag_blocks, missing_addend, level_3, harder_case, stage_1] # Nov 27
+# starting_config_path_PCCS: [drag_blocks, missing_addend, level_3, harder_case, stage_1] # Nov 27
+starting_config_path_PCCS: [counting_up_sub, missing_addend, level_1] # Dec 3
 
-starting_level_for: # Nov 29
+starting_level_for_Nov_30: # Nov 30
   m01: [drag_blocks, missing_addend, level_3, level_3b, simpler_case, stage_1]
   m02: [drag_blocks, missing_addend, level_3, simpler_case, stage_1]
   m03: [drag_blocks, missing_addend, level_3, simpler_case, stage_1]
-  m04: [drag_blocks, missing_addend, level_2, level_2a]
-  m05: [drag_blocks, missing_addend, level_3, level_3b, simpler_case, stage_1]
+  m04: [drag_blocks, missing_addend, level_3, simpler_case, stage_1]
+  m05: [tower_addition, missing_addend, level_1]
   m06: [drag_blocks, missing_addend, level_3, level_3b, simpler_case, stage_1]
   m07: [drag_blocks, missing_addend, level_2, level_2a]
-  m08: [drag_blocks, missing_addend, level_2, level_2a]
-  m09: [drag_blocks, missing_addend, level_1]
-  m10: [tower_addition, missing_addend, level_1]
-  m11: [drag_blocks, missing_addend, level_1]
+  m08: [drag_blocks, missing_addend, level_3, simpler_case, stage_1]
+  m09: [drag_blocks, missing_addend, level_3, level_3b, simpler_case, stage_1]
+  m10: [tower_addition, singletons_separate_fivers, missing_addend, level_1]
+  m11: [drag_blocks, missing_addend, level_3, simpler_case, stage_1]
   m12: [drag_blocks, missing_addend, level_3, level_3b, simpler_case, stage_1]
-  m13: [drag_blocks, missing_addend, level_3, level_3b, simpler_case, stage_1]
+  m13: [tower_addition, missing_addend_2, level_1]
   m14: [drag_blocks, missing_addend, level_2, level_2a]
-  m15: [drag_blocks, missing_addend, level_3, level_3b, simpler_case, stage_1]
-  m16: [tower_addition, missing_addend, level_1]
-  m17: [drag_blocks, missing_addend, level_3, level_3b, simpler_case, stage_1]
-  m18: [drag_blocks, missing_addend, level_3, level_3b, simpler_case, stage_1]
-  m19: [drag_blocks, missing_addend, level_3, level_3b, simpler_case, stage_1]
-  m20: [drag_blocks, missing_addend, level_3, simpler_case, stage_1]
+  m15: [tower_addition, singletons, missing_addend, level_1]
+  m16: [tower_addition, singletons_with_a_fiver, missing_addend, level_3]
+  m17: [tower_addition, missing_addend, level_1]
+  m18: [tower_addition, missing_addend, level_1]
+  m19: [tower_addition, missing_addend, level_1]
+  m20: [tower_addition, missing_addend_2, level_1]
   m29: [drag_blocks, missing_addend, level_3, level_3b, simpler_case, stage_1]
 
 starting_level_for_prev:  # these levels are for continuous visual estimation
@@ -450,6 +452,7 @@ prop_types: [scale_factor, freeze_display, num_stars,
     blank_between_exercises, hide_dot, big_op, big_paren,
     repeat_level, skip_slide_down, correct_option_index,
     show_only_fivers, show_only_singletons, show_only_size,
+    trigger_blocks_moving_to_result,
     answer_is_correct, top_block_under_construction, curr_op]
 prop_value_types: [number, string, boolean]
 event_handling_types: [target, comparison_source, correctness,
@@ -460,6 +463,7 @@ event_handling_types: [target, comparison_source, correctness,
   allow_non_standard, expand_into_units, drag_blocks_to_result,
   just_yaml_event, on_down, on_up, use_option_buttons,
   show_blocks_moving_to_result, show_mean_result_at_end,
+  counting_up_sub,
   move, arg_1, arg_2, result]
 position_modifiers: [left, right, top, bottom,
   left_from_right, right_from_left, top_from_bottom,

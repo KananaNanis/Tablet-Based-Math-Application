@@ -23,6 +23,7 @@ import {
 	dist2D,
 	apply_bounds,
 	update_keypad_button_visibility,
+	redraw_mixed_tower,
 } from './utils'
 import {
 	handle_submit_button,
@@ -185,6 +186,7 @@ export function touch_dispatcher(state, x, y, touchID) {
 						doAction.towerAddBlock(tgt, new_size, new_is_fiver)
 						const [size, is_fiver, how_many] = query_top_block(tgt)
 						update_keypad_button_visibility(size, is_fiver, how_many)
+						if (query_event('counting_up_sub')) redraw_mixed_tower()
 					}
 				}
 			}

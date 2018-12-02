@@ -185,8 +185,45 @@ export function update_keypad_button_visibility(size, is_fiver, how_many) {
 	}
 }
 
-export function show_blocks_moving_to_result(arg_1, arg_2, result) {
+export function create_orderly_sum(arg_1, arg_2, result) {
+	// compute the 'correct' value obtained by adding arg1 and arg2
+	const name_1 = query_name_of(arg_1).toJS()
+	const name_2 = query_name_of(arg_2).toJS()
+	let i1 = 0,
+		i2 = 0,
+		len = name_1.length + name_2.length
+	let res = []
+	while (i1 + i2 < len) {
+		if (
+			i1 < name_1.length &&
+			(i2 >= name_2.length || name_1[i1] >= name_2[i2])
+		) {
+			res.push(name_1[i1])
+			++i1
+		} else {
+			res.push(name_2[i2])
+			++i2
+		}
+	}
+	res = condense_groups_of(res)
+	doAction.setName(result, res)
+	// console.log('create_orderly_sum res', res)
+}
+
+export function redraw_mixed_tower() {
+	const jj_end = query_name_of('tower_1').size
+	console.log('clearing block anim info, jj_end', jj_end)
+	for (let jj = 0; jj < jj_end; ++jj) {
+		doAction.clearBlockAnimInfo('tower_1', jj)
+	}
+	doAction.setName('tower_2_shadow', query_name_of('tower_2').toJS())
+	create_orderly_sum('tower_1', 'tower_2', 'tower_mixed')
+	show_blocks_moving_to_result('tower_1', 'tower_2', 'tower_mixed', true)
+}
+
+export function show_blocks_moving_to_result(arg_1, arg_2, result, instant) {
 	// const toggle = query_obj_misc(result).get('toggle').toJS()
+	const verbose = false
 	const arg12 = [arg_1, arg_2]
 	let tower_name = [query_name_of(arg_1).toJS(), query_name_of(arg_2).toJS()]
 	tower_name[0] = expand_into_units(tower_name[0])
@@ -194,6 +231,7 @@ export function show_blocks_moving_to_result(arg_1, arg_2, result) {
 	let result_tower_name = query_name_of(result).toJS()
 	result_tower_name = expand_into_units(result_tower_name)
 	const toggle = create_name_match_from_raw(tower_name[0], result_tower_name)
+	if (verbose) console.log(' toggle', toggle)
 
 	const tower_info = [query_tower(arg_1).toJS(), query_tower(arg_2).toJS()]
 	const block_info = [
@@ -212,30 +250,44 @@ export function show_blocks_moving_to_result(arg_1, arg_2, result) {
 		result_tower_pos[0] - tower_pos[1][0],
 	]
 	let block_index = [0, 0, 0],
+		block_offset = [[], []],
 		delay = 0
 	const already_animated_side_0 = Boolean(query_block_anim_info(arg_1))
 	for (let i = 0; i < toggle.length; ++i) {
 		let side = toggle[i]
 		if (1 === side && 0 === tower_name[1].length) {
 			// skip this one
-		} else if (0 === side && already_animated_side_0) {
-			// skip this one too
 		} else {
 			let xpos = [0, dx[side]]
 			let ypos = [
 				block_info[side][block_index[side]].bottom,
 				result_block_info[block_index[2]].bottom,
 			]
-			let duration = 0.8 * dist2D([xpos[0], ypos[0]], [xpos[1], ypos[1]])
-			doAction.addBlockAnimInfo(arg12[side], block_index[side], {
-				left: xpos,
-				bottom: ypos,
-				duration,
-			})
-			if (duration > delay) delay = duration
+			if (instant) {
+				block_offset[side].push([xpos[1], ypos[1]])
+			} else if (0 === side && already_animated_side_0) {
+				// skip this one too
+			} else {
+				let duration = 0.8 * dist2D([xpos[0], ypos[0]], [xpos[1], ypos[1]])
+				doAction.addBlockAnimInfo(arg12[side], block_index[side], {
+					left: xpos,
+					bottom: ypos,
+					duration,
+				})
+				if (duration > delay) delay = duration
+			}
 		}
 		++block_index[side]
 		++block_index[2]
+	}
+	if (instant) {
+		if (verbose) console.log(' block_offset[0]', block_offset[0])
+		if (verbose) console.log(' block_offset[1]', block_offset[1])
+		for (let side = 0; side < 2; ++side) {
+			if (block_offset[side].length > 0) {
+				doAction.addObjMisc(arg12[side], 'block_offset', block_offset[side])
+			}
+		}
 	}
 	return delay
 }

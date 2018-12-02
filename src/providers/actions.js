@@ -124,7 +124,7 @@ export function clearAnimInfo(id) {
 }
 
 export function clearBlockAnimInfo(id, index) {
-	return {type: AT.CLEAR_ANIM_INFO, id, index}
+	return {type: AT.CLEAR_BLOCK_ANIM_INFO, id, index}
 }
 
 export function towerSetWidth(id, width) {

@@ -30,6 +30,7 @@ import {
 	distance_to_prim,
 	get_bbox,
 	dist2D,
+	redraw_mixed_tower,
 } from './utils'
 import {option_geometry} from '../components/OptionBackground'
 import {
@@ -50,7 +51,10 @@ import * as Actions from '../providers/actions'
 export function handle_delete_button(state) {
 	if ('up' === state) {
 		const tgt = query_event('target')
-		if (query_tower_name(tgt).size > 0) doAction.towerRemoveBlock(tgt)
+		if (query_tower_name(tgt).size > 0) {
+			doAction.towerRemoveBlock(tgt)
+			if (query_event('counting_up_sub')) redraw_mixed_tower()
+		}
 		doAction.setButtonHighlight(null)
 		const [size, is_fiver, how_many] = query_top_block(tgt)
 		update_keypad_button_visibility(size, is_fiver, how_many)
