@@ -3611,6 +3611,115 @@ group_ungroup:
         problem_stage: null
         config_iter: 1
         jmp: [add_or_half, as_option, result_option, stack, bars, level_1] 
+tower_variations:
+  params:
+    generate: 
+      mean_names_base_5: [fixed, [[.5,.5, .5,.5, .5,.5], [1, .5,.5, .5,.5], [2, .5,.5], [.5,.5, .5,.5], [1, .5,.5], [.5,.5]]]
+      extra_fiver: [fixed, [0, .5]]
+      extra_delta: [fixed, [0, .1, .2, .3, .4]]
+      mean_names_f: mean_names_base_5 +*+ extra_fiver
+      mean_names: mean_names_f +*+ extra_delta
+      one_height: [pick_from_range, 1.5, 3.5, .1]
+      narrowed_names: narrow_table mean_names one_height
+      delay_option_value_delta: augment_table narrowed_names
+      10_option_value_seed: one_height   # the 10_ is to delay!
+      # mean_name: [fixed, [2, .5, .5, .5, .4]]
+      # tower_1_name: mean_name
+      # tower_1_name: [pick_from_range, .1, 1.8, .1]
+      # tower_1_name: [fixed, 1.1]
+    create:
+      # tower_1: { name: tower_1_name }
+      tower_1: { name: one_height }
+      tower_2: []
+      # button_submit: 'on_right'
+    modify:
+      tower_1: 
+        position: [left_from_right 150, 0]
+        misc:
+          tower_name_style: { left: 25 }
+      tower_2: 
+        position: [5, 0]
+        misc:
+          tower_name_style: { left: 25 }
+          hide_overflow: true
+          is_option: true
+          option_offset: 5
+          option_width: 120
+          option_button_choice: [0, 0, 0, 0]
+    event_handling: 
+      comparison_source: tower_1
+      arg_1: tower_1
+      target: tower_2
+      correctness: option_button
+      use_option_buttons: true
+    misc: 
+      new_scale_factor: 200
+      config_iteration: 4
+      num_stars: 2
+      remove_on_exit: [button_submit]
+  level_1:
+  level_2:
+    params_from: [tower_2_disappearing_snippet]
+  # level_3:
+  #   params_from: [tower_2_disappeared_snippet]
+  singletons:
+    params:
+      generate:
+        mean_names_base_1: [fixed, [[.3,.3], [.4,.2], [.2,.4], [.4,.3], [.3,.4], [.4,.4]]]
+        extra_box: [fixed, [0, 1, 2]]
+        mean_names: extra_box +*+ mean_names_base_1
+        one_height: [pick_from_list, [.6, .7, .8, 1.6, 1.7, 1.8, 2.6, 2.7, 2.9]]
+    level_1:
+    level_2:
+      params_from: [tower_2_disappearing_snippet]
+    # level_3:
+    #   params_from: [tower_2_disappeared_snippet]
+  singletons_separate_fivers:
+    params:
+      generate:
+        mean_names_base_5: [fixed, [[.5,.5, .5,.5, .5,.5], [1, .5,.5, .5,.5], [2, .5,.5], [.5,.5, .5,.5], [1, .5,.5], [.5,.5]]]
+        mean_names_base_1: [fixed, [[.3,.3], [.4,.2], [.2,.4], [.4,.3], [.3,.4], [.4,.4]]]
+        mean_names: mean_names_base_5 +*+ mean_names_base_1
+        one_height: [pick_from_list, [1.6, 1.7, 1.8, 2.6, 2.7, 2.8, 3.6, 3.7, 3.8]]
+      event_handling:
+        expand_into_units: true  # to allow .3, .4 == .4, .3
+    level_1:
+    level_2:
+      params_from: [tower_2_disappearing_snippet]
+    # level_3:
+    #   params_from: [tower_2_disappeared_snippet]
+  singletons_with_a_fiver:
+    params:
+      generate:
+        mean_names_base_1: [fixed, [[.3,.3], [.4,.2], [.2,.4], [.4,.3], [.3,.4], [.4,.4]]]
+        extra_box: [fixed, [[], [1], [2]]]
+        extra_fiver: [fixed, [0.5]]
+        mean_names_f: extra_box +*+ extra_fiver
+        mean_names: mean_names_f +*+ mean_names_base_1
+        one_height: [pick_from_list, [1.1, 1.2, 1.3, 2.1, 2.2, 2.3, 3.1, 3.2, 3.3]]
+      event_handling:
+        expand_into_units: true  # to allow .3, .4 == .4, .3
+    level_1:
+    level_2:
+      params_from: [tower_2_disappearing_snippet]
+    # level_3:
+    #   params_from: [tower_2_disappeared_snippet]
+  singletons_with_fivers:
+    params:
+      generate:
+        mean_names_base_5: [fixed, [[.5,.5, .5,.5, .5,.5], [1, .5,.5, .5,.5], [2, .5,.5], [.5,.5, .5,.5], [1, .5,.5], [.5,.5]]]
+        mean_names_base_1: [fixed, [[.1, .2], [.3, .1], [.3,.3], [.4,.2], [.2,.4], [.4,.3], [.3,.4], [.4,.4]]]
+        extra_fiver: [fixed, [0, .5]]
+        mean_names_f: mean_names_base_5 +*+ extra_fiver
+        mean_names: mean_names_f +*+ mean_names_base_1
+        one_height: [pick_from_range, 1.5, 4.15, .1]
+      event_handling:
+        expand_into_units: true  # to allow .3, .4 == .4, .3
+    level_1:
+    level_2:
+      params_from: [tower_2_disappearing_snippet]
+    # level_3:
+    #   params_from: [tower_2_disappeared_snippet]
 drag_blocks:
   params:
     generate: # { tower_1_name: [pick_from_range, .1, 3.8, .1] }
@@ -3782,6 +3891,155 @@ drag_blocks:
             params:
               misc:
                 goto_config: [3, [drag_blocks, missing_addend, level_3, level_3b, harder_case, stage_1]]
+counting_up_sub:
+  params:
+    generate: # { tower_1_name: [pick_from_range, .1, 3.8, .1] }
+      mean_name_base_5: [pick_from_list, [[.5,.5, .5,.5, .5,.5], [1, .5,.5, .5,.5], [2, .5,.5], [.5,.5, .5,.5], [1, .5,.5], [.5,.5]]]
+      # mean_name_base_5: [pick_from_list, [[1, .5,.5]]]
+      extra_fiver: [pick_from_list, [0, .5]]
+      extra_delta: [pick_from_range, 0, .45, .1]
+      mean_name_f: mean_name_base_5 ++ extra_fiver
+      mean_name: mean_name_f ++ extra_delta
+      partition_1: mean_name into m1 and m2
+      # mean_name: [fixed, [2, .5, .5, .5, .4]]
+      # tower_1_name: mean_name
+    create:
+      big_paren: true
+      big_op: +
+      tower_2_shadow: { name: m2 }
+      tower_1_shadow: { name: m1 }
+      tower_mixed: []
+      tower_2: { name: m2 }
+      tower_1: { name: m1 }
+      tower_result: []
+    modify:
+      big_paren:
+        position: [20, 0]
+        style: { width: 500 }
+      big_op:
+        position: [195, 0]
+      tower_1: 
+        position: [15, 0]
+        misc:
+          swap_channel: '12'
+      tower_1_shadow: 
+        position: [15, 0]
+        tower_style: {opacity: 0.2}
+        misc:
+          hide_tower_name: true
+          swap_channel: '12'
+      tower_2:
+        position: [300, 0]
+        misc:
+          swap_channel: '01'
+      tower_2_shadow: 
+        position: [300, 0]
+        tower_style: {opacity: 0.2}
+        misc:
+          hide_tower_name: true
+          swap_channel: '01'
+      tower_mixed: 
+        position: [510, 0]
+        tower_style: {opacity: 0}
+        misc:
+          hide_tower_name: true
+      tower_result: 
+        position: [right 10vw, 0]
+        tower_style: {opacity: 0}
+        misc:
+          tower_name_style: { left: 25 }
+    event_handling: 
+      correctness: identical
+      touch_reveals_button: [submit, delete]
+      counting_up_sub: true
+    misc: 
+      new_scale_factor: 200
+      num_stars: 2
+      remove_on_exit: [button_submit, button_delete]
+      config_iteration: 4
+      trigger_blocks_moving_to_result: 500
+  missing_addend:
+    params_from: [tower_missing_addend_direct_snippet]
+    params:
+      generate:
+        extra_delta: [fixed, 0]
+      event_handling:
+        allow_non_standard: null
+    level_1:
+      params:
+        create:
+          # tower_1: [.5]
+          # tower_2: []
+        event_handling:
+          # show_mean_result_at_end: true
+          # show_blocks_moving_to_result: true
+  missing_addend_2:
+    params_from: [tower_missing_addend_direct_snippet]
+    params:
+      event_handling:
+        allow_non_standard: null
+    level_1:
+  singletons:
+    params:
+      generate:
+        mean_name_base_1: [pick_from_list, [[.3,.3], [.4,.2], [.2,.4], [.4,.3], [.3,.4], [.4,.4]]]
+        # mean_name_base_1: [pick_from_list, [[.3,.4]]]
+        extra_box: [pick_from_range, 0, 2.1, 1]
+        mean_name: extra_box ++ mean_name_base_1
+      event_handling:
+        expand_into_units: true  # to allow .3, .4 == .4, .3
+    missing_addend:
+      params_from: [tower_missing_addend_direct_snippet]
+      params:
+        event_handling:
+          allow_non_standard: null
+      level_1:
+  singletons_separate_fivers:
+    params:
+      generate:
+        mean_name_base_1: [pick_from_list, [[.3,.3], [.4,.2], [.2,.4], [.4,.3], [.3,.4], [.4,.4]]]
+        mean_name_base_5: [pick_from_list, [[.5,.5, .5,.5, .5,.5], [1, .5,.5, .5,.5], [2, .5,.5], [.5,.5, .5,.5], [1, .5,.5], [.5,.5]]]
+        mean_name: mean_name_base_5 ++ mean_name_base_1
+      event_handling:
+        expand_into_units: true  # to allow .3, .4 == .4, .3
+    missing_addend:
+      params_from: [tower_missing_addend_direct_snippet]
+      params:
+        event_handling:
+          allow_non_standard: null
+      level_1:
+  singletons_with_a_fiver:
+    params:
+      generate:
+        mean_name_base_1: [pick_from_list, [[.3,.3], [.4,.2], [.2,.4], [.4,.3], [.3,.4], [.4,.4]]]
+        extra_box: [pick_from_range, 0, 2.1, 1]
+        extra_fiver: [fixed, 0.5]
+        mean_name_f: extra_box ++ extra_fiver
+        mean_name: mean_name_f ++ mean_name_base_1
+      event_handling:
+        expand_into_units: true  # to allow .3, .4 == .4, .3
+    missing_addend:
+      params_from: [tower_missing_addend_direct_snippet]
+      params:
+        event_handling:
+          allow_non_standard: null
+      level_1:
+  singletons_with_fivers:
+    params:
+      generate:
+        mean_name_base_1: [pick_from_list, [[.1, .2], [.3, .1], [.3,.3], [.4,.2], [.2,.4], [.4,.3], [.3,.4], [.4,.4]]]
+        mean_name_base_5: [pick_from_list, [[.5,.5, .5,.5, .5,.5], [1, .5,.5, .5,.5], [2, .5,.5], [.5,.5, .5,.5], [1, .5,.5], [.5,.5]]]
+        extra_fiver: [pick_from_list, [0, .5, .5, .5, .5]]
+        mean_name_f: mean_name_base_5 ++ extra_fiver
+        mean_name: mean_name_f ++ mean_name_base_1
+      event_handling:
+        expand_into_units: true  # to allow .3, .4 == .4, .3
+    missing_addend:
+      params_from: [tower_missing_addend_direct_snippet]
+      params:
+        event_handling:
+          allow_non_standard: null
+      level_1:
 tower_addition:
   params:
     generate: # { tower_1_name: [pick_from_range, .1, 3.8, .1] }
@@ -4067,115 +4325,6 @@ tower_addition:
       level_3:
         params_from: [fade_tower_1_and_result_snippet]
         # jmp: [all_done]
-tower_variations:
-  params:
-    generate: 
-      mean_names_base_5: [fixed, [[.5,.5, .5,.5, .5,.5], [1, .5,.5, .5,.5], [2, .5,.5], [.5,.5, .5,.5], [1, .5,.5], [.5,.5]]]
-      extra_fiver: [fixed, [0, .5]]
-      extra_delta: [fixed, [0, .1, .2, .3, .4]]
-      mean_names_f: mean_names_base_5 +*+ extra_fiver
-      mean_names: mean_names_f +*+ extra_delta
-      one_height: [pick_from_range, 1.5, 3.5, .1]
-      narrowed_names: narrow_table mean_names one_height
-      delay_option_value_delta: augment_table narrowed_names
-      10_option_value_seed: one_height   # the 10_ is to delay!
-      # mean_name: [fixed, [2, .5, .5, .5, .4]]
-      # tower_1_name: mean_name
-      # tower_1_name: [pick_from_range, .1, 1.8, .1]
-      # tower_1_name: [fixed, 1.1]
-    create:
-      # tower_1: { name: tower_1_name }
-      tower_1: { name: one_height }
-      tower_2: []
-      # button_submit: 'on_right'
-    modify:
-      tower_1: 
-        position: [left_from_right 150, 0]
-        misc:
-          tower_name_style: { left: 25 }
-      tower_2: 
-        position: [5, 0]
-        misc:
-          tower_name_style: { left: 25 }
-          hide_overflow: true
-          is_option: true
-          option_offset: 5
-          option_width: 120
-          option_button_choice: [0, 0, 0, 0]
-    event_handling: 
-      comparison_source: tower_1
-      arg_1: tower_1
-      target: tower_2
-      correctness: option_button
-      use_option_buttons: true
-    misc: 
-      new_scale_factor: 200
-      config_iteration: 4
-      num_stars: 2
-      remove_on_exit: [button_submit]
-  level_1:
-  level_2:
-    params_from: [tower_2_disappearing_snippet]
-  # level_3:
-  #   params_from: [tower_2_disappeared_snippet]
-  singletons:
-    params:
-      generate:
-        mean_names_base_1: [fixed, [[.3,.3], [.4,.2], [.2,.4], [.4,.3], [.3,.4], [.4,.4]]]
-        extra_box: [fixed, [0, 1, 2]]
-        mean_names: extra_box +*+ mean_names_base_1
-        one_height: [pick_from_list, [.6, .7, .8, 1.6, 1.7, 1.8, 2.6, 2.7, 2.9]]
-    level_1:
-    level_2:
-      params_from: [tower_2_disappearing_snippet]
-    # level_3:
-    #   params_from: [tower_2_disappeared_snippet]
-  singletons_separate_fivers:
-    params:
-      generate:
-        mean_names_base_5: [fixed, [[.5,.5, .5,.5, .5,.5], [1, .5,.5, .5,.5], [2, .5,.5], [.5,.5, .5,.5], [1, .5,.5], [.5,.5]]]
-        mean_names_base_1: [fixed, [[.3,.3], [.4,.2], [.2,.4], [.4,.3], [.3,.4], [.4,.4]]]
-        mean_names: mean_names_base_5 +*+ mean_names_base_1
-        one_height: [pick_from_list, [1.6, 1.7, 1.8, 2.6, 2.7, 2.8, 3.6, 3.7, 3.8]]
-      event_handling:
-        expand_into_units: true  # to allow .3, .4 == .4, .3
-    level_1:
-    level_2:
-      params_from: [tower_2_disappearing_snippet]
-    # level_3:
-    #   params_from: [tower_2_disappeared_snippet]
-  singletons_with_a_fiver:
-    params:
-      generate:
-        mean_names_base_1: [fixed, [[.3,.3], [.4,.2], [.2,.4], [.4,.3], [.3,.4], [.4,.4]]]
-        extra_box: [fixed, [[], [1], [2]]]
-        extra_fiver: [fixed, [0.5]]
-        mean_names_f: extra_box +*+ extra_fiver
-        mean_names: mean_names_f +*+ mean_names_base_1
-        one_height: [pick_from_list, [1.1, 1.2, 1.3, 2.1, 2.2, 2.3, 3.1, 3.2, 3.3]]
-      event_handling:
-        expand_into_units: true  # to allow .3, .4 == .4, .3
-    level_1:
-    level_2:
-      params_from: [tower_2_disappearing_snippet]
-    # level_3:
-    #   params_from: [tower_2_disappeared_snippet]
-  singletons_with_fivers:
-    params:
-      generate:
-        mean_names_base_5: [fixed, [[.5,.5, .5,.5, .5,.5], [1, .5,.5, .5,.5], [2, .5,.5], [.5,.5, .5,.5], [1, .5,.5], [.5,.5]]]
-        mean_names_base_1: [fixed, [[.1, .2], [.3, .1], [.3,.3], [.4,.2], [.2,.4], [.4,.3], [.3,.4], [.4,.4]]]
-        extra_fiver: [fixed, [0, .5]]
-        mean_names_f: mean_names_base_5 +*+ extra_fiver
-        mean_names: mean_names_f +*+ mean_names_base_1
-        one_height: [pick_from_range, 1.5, 4.15, .1]
-      event_handling:
-        expand_into_units: true  # to allow .3, .4 == .4, .3
-    level_1:
-    level_2:
-      params_from: [tower_2_disappearing_snippet]
-    # level_3:
-    #   params_from: [tower_2_disappeared_snippet]
 # bar_addition:
 # - params:
 #   - generator: {random1: uniform, random2: uniform, sum_in_range: [.1,1]}

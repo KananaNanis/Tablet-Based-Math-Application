@@ -19,7 +19,11 @@ import {
 	width_pixels_from_name,
 	height_pixels_from_name,
 } from './change_config'
-import {update_keypad_button_visibility} from '../event/utils'
+import {
+	update_keypad_button_visibility,
+	create_orderly_sum,
+	show_blocks_moving_to_result,
+} from '../event/utils'
 import {landmark_location} from '../components/Tile'
 import {List, fromJS} from 'immutable'
 import {do_batched_actions} from './reducers'
@@ -246,6 +250,7 @@ export function enter_exit_config(
 	}
 	// do misc first, so that the generate section can use the correct scale
 	let suffix_path,
+		trigger_blocks_moving_to_result,
 		skip_suffix_for_this_level = false
 	if (config['misc']) {
 		const c = config['misc']
@@ -305,6 +310,8 @@ export function enter_exit_config(
 					}
 				} else if ('skip_suffix_for_this_level' === key) {
 					if (c[key0]) skip_suffix_for_this_level = true
+				} else if ('trigger_blocks_moving_to_result' === key) {
+					if (enter && c[key0]) trigger_blocks_moving_to_result = c[key0]
 				} else if ('suffix_path' === key) {
 					if (enter && !c['jmp_no_suffix'] && !use_suffix) {
 						// don't unset this state here... wait for in-between
@@ -567,6 +574,15 @@ export function enter_exit_config(
 			// console.log('loc', loc, 'scale_factor', scale_factor)
 			action_list.push(Actions.setName('door_1', [loc[1] / (h * scale_factor)]))
 		}
+		if (trigger_blocks_moving_to_result) {
+			const delay = trigger_blocks_moving_to_result
+			// console.log('trigger_blocks_moving_to_result delay', delay)
+			window.setTimeout(function() {
+				create_orderly_sum('tower_1', 'tower_2', 'tower_mixed')
+				show_blocks_moving_to_result('tower_1', 'tower_2', 'tower_mixed')
+			}, delay)
+		}
+
 		if (
 			!use_suffix &&
 			!skip_suffix_for_this_level &&
