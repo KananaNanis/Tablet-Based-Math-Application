@@ -28,6 +28,7 @@ yarn-error.log*
 .flowconfig
 .watchmanconfig
 README.md.orig
+notesFromDom
 index.js.orig
 public/assets/
 public/favicon.ico
