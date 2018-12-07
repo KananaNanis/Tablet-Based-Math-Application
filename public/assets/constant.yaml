@@ -1,6 +1,7 @@
 # these constants should be fixed!
 debug_mode: true
 num_exercises_for_debugging: 2
+debug_path: [tangrams]
 # debug_path: [tower_variations, level_1]
 # debug_path: [tower_variations, singletons, level_1]
 # debug_path: [tower_variations, singletons_separate_fivers, level_1]
@@ -136,7 +137,7 @@ num_exercises_for_debugging: 2
 # debug_path: [tower_addition, direct, level_1]
 # debug_path: [tower_addition, direct, level_2]
 # debug_path: [tower_addition, missing_addend, level_1]
-debug_path: [counting_up_sub, missing_addend, level_1]
+# debug_path: [counting_up_sub, missing_addend, level_1]
 # debug_path: [all_done]
 # debug_path: [in_between]
 # starting_config_path: [one_through_five, five_frame, level_1] # P Oct 8
