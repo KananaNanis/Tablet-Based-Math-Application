@@ -27,9 +27,12 @@ yarn-error.log*
 .flowconfig
 .watchmanconfig
 README.md.orig
+notesFromDom
 index.js.orig
 public/favicon.ico
 public_stub/
+public/assets/bundle.js
+public/assets/bundle.js.moved
 log/
 src/providers/testThis.js
 src/downloadGoogleDoc.py
