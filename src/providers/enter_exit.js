@@ -332,6 +332,7 @@ export function enter_exit_config(
 						'center_text',
 						'top_right_text',
 						'stderr_text',
+						'is_game',
 					].includes(key)
 				) {
 					action_list.push(Actions.setProp(key, enter ? c[key0] : null))

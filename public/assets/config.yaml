@@ -10,15 +10,15 @@ identity_function:
       bar_1: { name: [arg_1_name] }
       bar_3: { name: [arg_1_name] }
     modify:
-      bar_1: 
+      bar_1:
         position: [100, 0]
-      bar_3: 
+      bar_3:
         position: [460, 0]
-    event_handling: 
+    event_handling:
       arg_1: bar_1
       correctness: near_height
       top_right_text: average_error
-    misc: 
+    misc:
       config_iteration: 5
       num_stars: 2
       remove_on_exit: [err_box]
@@ -26,16 +26,16 @@ identity_function:
       curr_op: identity
   as_option:
     params:
-      generate: 
+      generate:
         option_skip_permute: true  # before seed!
         option_value_delta: 0.2
         option_value_seed: arg_1_name
         restriction_1: option > 0.05
         restriction_2: option < 1.7
       modify:
-        bar_3: 
+        bar_3:
           position: [10, 0]
-          misc: 
+          misc:
             is_option: true
             option_width: 95
             option_offset: 280
@@ -63,7 +63,7 @@ identity_function:
       modify:
         bar_3:
           anim_info: { blink: [.5, 1] }
-      event_handling: 
+      event_handling:
         move: stretch_bar
         comparison_source: bar_1
         target: bar_3
@@ -81,9 +81,9 @@ identity_function:
             bar_1: door_1
             bar_3: door_3
           modify:
-            bar_3: 
+            bar_3:
               style: {opacity: 1}
-              misc: 
+              misc:
                 handle_opacity: 0
                 mutable: true
           event_handling:
@@ -91,14 +91,14 @@ identity_function:
             move: move_handle
 intro_halves:
   params:
-    generate: 
+    generate:
       # bar_1_name: [fixed, .5]
       bar_1_name: [uniform, .2, 1.1]
     create:
       door_3: [.5]
       bar_1: { name: bar_1_name }
     modify:
-      door_3: 
+      door_3:
         position: [35vw, 0]
         style:
         misc:
@@ -107,13 +107,13 @@ intro_halves:
           handle_width: 300
           handle_opacity: 0
           handle_color: orange
-      bar_1: 
+      bar_1:
         position: [40vw, 0]
         anim_info: { blink: [.5, 1] }
         style:
           borderRadius: 25
           width: 250
-    event_handling: 
+    event_handling:
       move: move_handle
       comparison_source: bar_1
       target: door_3
@@ -131,7 +131,7 @@ intro_halves:
         jmp: [add_or_half, as_option, result_option, half, bars, level_1]
 add_or_half:
   params:
-    generate: { arg_1_name: [uniform, .1, 1.6], 
+    generate: { arg_1_name: [uniform, .1, 1.6],
                 # arg_1_name: [fixed, .2],
                 result_name: [uniform, .2, 1.7],
                 # result_name: [fixed, .5],
@@ -154,13 +154,13 @@ add_or_half:
       big_op:
         position: [80, 0]
         style: {opacity: 1}
-    event_handling: 
+    event_handling:
       correctness: near_height
       top_right_text: average_error
       arg_1: bar_1
       arg_2: bar_2
       result: bar_3
-    misc: 
+    misc:
       config_iteration: 7
       num_stars: 3
       remove_on_exit: [err_box]
@@ -168,7 +168,7 @@ add_or_half:
       event_handling: { arg_2: bar_2 }
   as_option:
     params:
-      generate: 
+      generate:
         # option_value_delta: [[.5], [.3], [.2], [.1]]
         option_skip_permute: true  # before seed!
         option_value_delta: 0.3
@@ -179,9 +179,9 @@ add_or_half:
           position: [80, 0]
         big_paren:
           style: { width: 570 }
-        bar_1: 
+        bar_1:
           position: [10, 0]
-        bar_3: 
+        bar_3:
           position: [580, 0]
     result_option:
       params:
@@ -190,11 +190,11 @@ add_or_half:
         modify:
           big_paren:
             style: { width: 270 }
-          bar_2: 
+          bar_2:
             position: [195, 0]
-          bar_3: 
+          bar_3:
             position: [10, 0]
-            misc: 
+            misc:
               is_option: true
               option_width: 95
               option_offset: 280
@@ -290,13 +290,13 @@ add_or_half:
         modify:
           big_op:
             position: [380, 0]
-          bar_1: 
+          bar_1:
             position: [10, 0]
-            misc: 
+            misc:
               is_option: true
               option_width: 95
               option_offset: 0
-          bar_2: 
+          bar_2:
             position: [495, 0]
       bars:
         params:
@@ -348,9 +348,9 @@ add_or_half:
         generate:
           option_value_seed: arg_2_name
         modify:
-          bar_2: 
+          bar_2:
             position: [10, 0]
-            misc: 
+            misc:
               is_option: true
               option_width: 95
               option_offset: 190
@@ -375,13 +375,13 @@ add_or_half:
       create:
         err_box:
       modify:
-        bar_1: 
+        bar_1:
           position: [10, 0]
-        bar_2: 
+        bar_2:
           position: [220, 0]
-        bar_3: 
+        bar_3:
           position: [320, 0]
-      event_handling: 
+      event_handling:
         arg_1: bar_1
         arg_2: bar_2
         result: bar_3
@@ -390,12 +390,12 @@ add_or_half:
     result_option:
       params:
         modify:
-          bar_3: 
+          bar_3:
             style: {opacity: 1}
             anim_info: { blink: [0, 1] }
-            misc: 
+            misc:
               mutable: true
-        event_handling: 
+        event_handling:
           move: stretch_bar
           target: bar_3
       bars:
@@ -416,10 +416,10 @@ add_or_half:
           create:
             # bar_2: { name: [0] }
           modify:
-            bar_3: 
+            bar_3:
               misc:
                 handle_opacity: 0
-          event_handling: 
+          event_handling:
             move: move_handle
         level_1:
           params:
@@ -458,10 +458,10 @@ add_or_half:
               bar_1: door_1
               bar_3: door_3
             modify:
-              bar_3: 
+              bar_3:
                 misc:
                   handle_opacity: 0
-            event_handling: 
+            event_handling:
               move: move_handle
           level_1:
             params:
@@ -470,12 +470,12 @@ add_or_half:
     arg_1_option:
       params:
         modify:
-          bar_1: 
+          bar_1:
             style: {opacity: 1}
             anim_info: { blink: [0, 1] }
-            misc: 
+            misc:
               mutable: true
-        event_handling: 
+        event_handling:
           move: stretch_bar
           target: bar_1
       bars:
@@ -495,10 +495,10 @@ add_or_half:
           create:
             # bar_2: { name: [0] }
           modify:
-            bar_1: 
+            bar_1:
               misc:
                 handle_opacity: 0
-          event_handling: 
+          event_handling:
             move: move_handle
         level_1:
           params: {misc: {jmp: all_done}}
@@ -532,10 +532,10 @@ add_or_half:
               bar_1: door_1
               bar_3: door_3
             modify:
-              bar_1: 
+              bar_1:
                 misc:
                   handle_opacity: 0
-            event_handling: 
+            event_handling:
               move: move_handle
           level_1:
             params:
@@ -544,12 +544,12 @@ add_or_half:
     arg_2_option:
       params:
         modify:
-          bar_2: 
+          bar_2:
             style: {opacity: 1}
             anim_info: { blink: [0, 1] }
-            misc: 
+            misc:
               mutable: true
-        event_handling: 
+        event_handling:
           move: stretch_bar
           target: bar_2
       bars:
@@ -569,10 +569,10 @@ add_or_half:
           create:
             # bar_2: { name: [0] }
           modify:
-            bar_2: 
+            bar_2:
               misc:
                 handle_opacity: 0
-          event_handling: 
+          event_handling:
             move: move_handle
         level_1:
           params:
@@ -580,7 +580,7 @@ add_or_half:
               jmp: [add_or_half, as_option, arg_1_option, bars, level_1]
 add_height:
   params:
-    generate: { arg_1_name: [uniform, .1, 1.6], 
+    generate: { arg_1_name: [uniform, .1, 1.6],
                 # arg_1_name: [fixed, .2],
                 result_name: [uniform, .2, 1.7],
                 # result_name: [fixed, .5],
@@ -597,10 +597,10 @@ add_height:
       big_op:
         position: [80, 0]
         style: {opacity: 1}
-    event_handling: 
+    event_handling:
       correctness: near_height
       top_right_text: average_error
-    misc: 
+    misc:
       config_iteration: 2
       num_stars: 3
       remove_on_exit: [err_box]
@@ -620,16 +620,16 @@ add_height:
           style: { width: 570 }
         big_op:
           position: [380, 0]
-        bar_1: 
+        bar_1:
           position: [10, 0]
-        bar_2: 
+        bar_2:
           position: [495, 0]
-        bar_3: 
+        bar_3:
           position: [580, 0]
       event_handling: { arg_2: bar_2 }
     arg1_option:
       params:
-        generate: 
+        generate:
           # option_value_delta: [[.5], [.3], [.2], [.1]]
           option_skip_permute: true  # before seed!
           option_value_delta: -0.3
@@ -637,9 +637,9 @@ add_height:
           restriction_3: option > 0
           restriction_4: option < 1.7
         modify:
-          bar_1: 
+          bar_1:
             position: [10, 0]
-            misc: 
+            misc:
               is_option: true
               option_width: 95
               option_offset: 0
@@ -652,11 +652,11 @@ add_height:
         create:
           err_box:
         modify:
-          bar_3: 
+          bar_3:
             style: {opacity: 1}
-            misc: 
+            misc:
               mutable: true
-        event_handling: 
+        event_handling:
           target: bar_3
           touch_reveals_button: submit
           star_policy: loose
@@ -673,13 +673,13 @@ add_height:
         # door_2: { name: [arg_2_name] }
         door_2: [.3]
       modify:
-        door_1: 
+        door_1:
           position: [10, 0]
-        door_3: 
+        door_3:
           position: [320, 0]
-        door_2: 
+        door_2:
           position: [220, 0]
-      event_handling: 
+      event_handling:
         arg_1: door_1
         arg_2: door_2
         result: door_3
@@ -689,13 +689,13 @@ add_height:
         create:
           err_box:
         modify:
-          door_3: 
+          door_3:
             style: {opacity: 1}
             anim_info: { blink: [0, 1] }
-            misc: 
+            misc:
               handle_opacity: 0
               mutable: true
-        event_handling: 
+        event_handling:
           target: door_3
           touch_reveals_button: submit
           star_policy: loose
@@ -706,7 +706,7 @@ add_height:
       level_2:
 pure_five_frame:
   params:
-    generate: 
+    generate:
       prompt_value: [pick_from_range, 1, 5.5, 1]
       option_value_delta: [[1], [2], [3], [4], [5]]
       option_value_seed: prompt_value
@@ -717,7 +717,7 @@ pure_five_frame:
       five_frame_2: { name: 1 }
       door_9: [10.0]  # as a reference
     modify:
-      five_frame_1: 
+      five_frame_1:
         position: [20, 0]
         # this only works once, since it is looking for changes!
         # anim_info: { opacity: [1, 0], duration: 1000 }
@@ -729,7 +729,7 @@ pure_five_frame:
           is_option: true
           just_text: true
           extra_scale: .5
-      door_9: 
+      door_9:
         position: [10, 0]
         misc: {tickmarks: [.5, 1.5]}
     event_handling:
@@ -737,7 +737,7 @@ pure_five_frame:
       target: five_frame_2
       arg_1: five_frame_1
       comparison_source: five_frame_1
-    misc: 
+    misc:
       config_iteration: 5
       num_stars: 3
   level_1:
@@ -797,7 +797,7 @@ intro_diagrams:
     event_handling: { target: tower_2 }
     modify:
       tower_2: { position: [65vw, 0] }
-    misc: 
+    misc:
       config_iteration: 4
       # config_iteration: 1
       num_stars: 3
@@ -810,17 +810,17 @@ intro_diagrams:
         button_submit: remove
         keypad_kind: remove  # new approach does not use keypad
       modify:
-        tower_1: 
+        tower_1:
           position: [5, 0]
           # width: 60vw
           # overflow: 'hidden'
           misc:
             hide_tower_name: true
             # top_just_outline: true
-        tower_2: 
+        tower_2:
           misc:
             hide_tower_name: true
-      event_handling: 
+      event_handling:
         comparison_source: tower_1
         target: tower_2
         correctness: identical
@@ -836,7 +836,7 @@ intro_diagrams:
         modify:
           tower_2:
             position: [0, 0]
-            misc: 
+            misc:
               is_option: true
         event_handling:
           arg_1: tower_1
@@ -856,11 +856,11 @@ intro_diagrams:
           restriction_4: option < 1.9
         modify:
           tower_1:
-            misc: 
+            misc:
               as_diagram: true
           tower_2:
             position: [0, 0]
-            misc: 
+            misc:
               is_option: true
               as_diagram: true
         event_handling:
@@ -869,10 +869,10 @@ intro_diagrams:
       params:
         modify:
           tower_1:
-            misc: 
+            misc:
               as_diagram: true
           tower_2:
-            misc: 
+            misc:
               as_diagram: true
         event_handling:
           touch_reveals_button: [submit, delete]
@@ -895,16 +895,16 @@ intro_diagrams:
         params:
           modify:
             tower_1:
-              misc: 
+              misc:
                 as_diagram: true
             tower_2:
-              misc: 
+              misc:
                 is_option: true
       level_5b:
         params:
           modify:
             tower_2:
-              misc: 
+              misc:
                 is_option: true
                 as_diagram: true
 intro_names:
@@ -915,11 +915,11 @@ intro_names:
       button_submit:
     event_handling: { target: tower_2 }
     modify:
-      tower_2: 
+      tower_2:
         position: [65vw, 0]
         misc:
           tower_name_style: { left: 5 }
-    misc: 
+    misc:
       config_iteration: 4
       # config_iteration: 1
       num_stars: 3
@@ -932,7 +932,7 @@ intro_names:
         button_submit: remove
         keypad_kind: remove  # new approach does not use keypad
       modify:
-        tower_1: 
+        tower_1:
           position: [5, 0]
           tower_style: {opacity: 0}
           # width: 60vw
@@ -940,11 +940,11 @@ intro_names:
           # misc:
             # hide_tower_name: true
             # top_just_outline: true
-        tower_2: 
+        tower_2:
           tower_style: {opacity: 0}
           # misc:
             # hide_tower_name: true
-      event_handling: 
+      event_handling:
         comparison_source: tower_1
         target: tower_2
         correctness: identical
@@ -958,7 +958,7 @@ intro_names:
         modify:
           tower_2:
             position: [0, 0]
-            misc: 
+            misc:
               is_option: true
         event_handling:
           arg_1: tower_1
@@ -982,7 +982,7 @@ intro_names:
           tower_2:
             position: [0, 0]
             tower_style: {opacity: null}
-            misc: 
+            misc:
               is_option: true
               hide_tower_name: true
               # as_diagram: true
@@ -994,11 +994,11 @@ intro_names:
           modify:
             tower_1:
               tower_style: {opacity: null}
-              misc: 
+              misc:
                 hide_tower_name: true
             tower_2:
               tower_style: {opacity: 0}
-              misc: 
+              misc:
                 hide_tower_name: null
     level_4:
       params:
@@ -1007,9 +1007,9 @@ intro_names:
         modify:
           tower_1:
             tower_style: {opacity: null}
-            misc: 
+            misc:
               hide_tower_name: true
-          tower_2: 
+          tower_2:
             position: [right 100, 0]
         event_handling:
           touch_reveals_button: [submit, delete]
@@ -1020,7 +1020,7 @@ intro_names:
         modify:
           tower_2:
             tower_style: {opacity: null}
-            misc: 
+            misc:
               hide_tower_name: true
         event_handling:
           touch_reveals_button: [submit, delete]
@@ -1038,7 +1038,7 @@ intro_names:
           tower_2:
             position: [0, 0]
             tower_style: {opacity: null}
-            misc: 
+            misc:
               is_option: true
               hide_tower_name: true
               as_diagram: true
@@ -1050,12 +1050,12 @@ intro_names:
           modify:
             tower_1:
               tower_style: {opacity: null}
-              misc: 
+              misc:
                 hide_tower_name: true
                 as_diagram: true
             tower_2:
               tower_style: {opacity: 0}
-              misc: 
+              misc:
                 hide_tower_name: null
     level_7:
       params:
@@ -1064,7 +1064,7 @@ intro_names:
         modify:
           tower_1:
             tower_style: {opacity: null}
-            misc: 
+            misc:
               hide_tower_name: true
               as_diagram: true
         event_handling:
@@ -1076,7 +1076,7 @@ intro_names:
         modify:
           tower_2:
             tower_style: {opacity: null}
-            misc: 
+            misc:
               hide_tower_name: true
               as_diagram: true
         event_handling:
@@ -1086,7 +1086,7 @@ intro_names:
           remove_on_exit: [button_submit, button_delete]
 one_through_five:
   params:
-    generate: 
+    generate:
       prompt_value: [pick_from_range, .1, .55, .1]
       option_value_delta: [[.1], [.2], [.3], [.4], [.5]]
       option_value_seed: prompt_value
@@ -1095,7 +1095,7 @@ one_through_five:
     create:
       tower_2: []
     modify:
-      tower_2: 
+      tower_2:
         position: [0, 0]
         tower_style: { opacity: 0 }
         misc:
@@ -1104,14 +1104,14 @@ one_through_five:
     event_handling:
       target: tower_2
       correctness: identical
-    misc: 
+    misc:
       config_iteration: 7
       # config_iteration: 2
       # config_iteration: 1
       num_stars: 3
   pegs:
     params:
-      generate: 
+      generate:
         peg_type: [pick_from_list, ['a', 'b', 'c']]
         peg_name: as_peg_name peg_type prompt_value
         option_value_delta: [[.1], [.2], [.3], [.4], [.5]]
@@ -1121,13 +1121,13 @@ one_through_five:
         tile_1: { name: peg_name }
         door_9: [10.0]  # as a reference
       modify:
-        tile_1: 
+        tile_1:
           position: [20, 0]
           style: { borderTopWidth: 0 }
-        door_9: 
+        door_9:
           position: [10, 0]
           misc: {tickmarks: [.5, 1.5]}
-      event_handling: 
+      event_handling:
         arg_1: tile_1
         comparison_source: tile_1
     pegs_with_five_frames:
@@ -1261,15 +1261,15 @@ one_through_five:
                 appear_after: 250
   doors:
     params:
-      generate: 
+      generate:
         restriction_4: option < .6
       create:
         door_1: { name: [prompt_value] }
       modify:
-        door_1: 
+        door_1:
           position: [10, 0]
           misc: {tickmarks: [.5, 1.5]}
-      event_handling: 
+      event_handling:
         arg_1: door_1
         comparison_source: door_1
     level_1:
@@ -1338,14 +1338,14 @@ estimate_names_1_to_5:
     create:
       keypad_kind: 'buildTower'
       tower_2: []
-    event_handling: 
+    event_handling:
       target: tower_2
       touch_reveals_button: [submit, delete]
     modify:
-      tower_2: 
+      tower_2:
         position: [65vw, 0]
         tower_style: {opacity: 0}
-    misc: 
+    misc:
       config_iteration: 7
       # config_iteration: 2
       # config_iteration: 1
@@ -1357,24 +1357,24 @@ estimate_names_1_to_5:
       create:
         door_1: { name: [door_1_name] }
       modify:
-        door_1: 
+        door_1:
           position: [10, 0]
           misc: {tickmarks: [.5, 1.5]}
-      event_handling: 
+      event_handling:
         comparison_source: door_1
         # correctness: identical
         correctness: same_height
     level_1:
       params:
-        generate: 
+        generate:
           door_1_name: [pick_from_list, [.1, .2, .3, .4, .5]]
           # door_1_name: [fixed, .5]
         modify:
-          tower_2: 
+          tower_2:
             tower_style: {opacity: 0}
 six_through_nine:
   params:
-    generate: 
+    generate:
       prompt_value: [pick_from_range, .6, .95, .1]
       option_value_delta: [[.6], [.7], [.8], [.9]]
       option_value_seed: prompt_value
@@ -1383,7 +1383,7 @@ six_through_nine:
     create:
       tower_2: []
     modify:
-      tower_2: 
+      tower_2:
         position: [0, 0]
         tower_style: { opacity: 0 }
         misc:
@@ -1392,7 +1392,7 @@ six_through_nine:
     event_handling:
       target: tower_2
       correctness: identical
-    misc: 
+    misc:
       config_iteration: 7
       # config_iteration: 2
       # config_iteration: 1
@@ -1415,17 +1415,17 @@ six_through_nine:
       event_handling:
         arg_1: tower_1
         target: door_2
-      misc: 
+      misc:
         config_iteration: 5
   doors:
     params:
       create:
         door_1: { name: [prompt_value] }
       modify:
-        door_1: 
+        door_1:
           position: [10, 0]
           misc: {tickmarks: [.5, 1.5]}
-      event_handling: 
+      event_handling:
         arg_1: door_1
         comparison_source: door_1
     level_1:
@@ -1433,8 +1433,8 @@ six_through_nine:
         create:
           tower_3: { name: prompt_value }
         modify:
-          door_1: 
-            misc: 
+          door_1:
+            misc:
               handle_opacity: 0
           tower_3:
             position: [20, 0]
@@ -1519,14 +1519,14 @@ estimate_names_6_to_9:
     create:
       keypad_kind: 'buildTower'
       tower_2: []
-    event_handling: 
+    event_handling:
       target: tower_2
       touch_reveals_button: [submit, delete]
     modify:
-      tower_2: 
+      tower_2:
         position: [65vw, 0]
         tower_style: {opacity: 0}
-    misc: 
+    misc:
       config_iteration: 7
       # config_iteration: 2
       # config_iteration: 1
@@ -1538,23 +1538,23 @@ estimate_names_6_to_9:
       create:
         door_1: { name: [door_1_name] }
       modify:
-        door_1: 
+        door_1:
           position: [10, 0]
           misc: {tickmarks: [.5, 1.5]}
-      event_handling: 
+      event_handling:
         comparison_source: door_1
         # correctness: identical
         correctness: same_height
     level_1:
       params:
-        generate: 
+        generate:
           door_1_name: [pick_from_list, [.6, .7, .8, .9]]
         modify:
-          tower_2: 
+          tower_2:
             tower_style: {opacity: 0}
 eleven_through_fourteen:
   params:
-    generate: 
+    generate:
       prompt_value: [pick_from_range, 1.1, 1.45, .1]
       option_value_delta: [[1.1], [1.2], [1.3], [1.4]]
       option_value_seed: prompt_value
@@ -1563,7 +1563,7 @@ eleven_through_fourteen:
     create:
       tower_2: []
     modify:
-      tower_2: 
+      tower_2:
         position: [0, 0]
         tower_style: { opacity: 0 }
         misc:
@@ -1572,7 +1572,7 @@ eleven_through_fourteen:
     event_handling:
       target: tower_2
       correctness: identical
-    misc: 
+    misc:
       config_iteration: 7
       # config_iteration: 2
       # config_iteration: 1
@@ -1595,17 +1595,17 @@ eleven_through_fourteen:
       event_handling:
         arg_1: tower_1
         target: door_2
-      misc: 
+      misc:
         config_iteration: 5
   doors:
     params:
       create:
         door_1: { name: [prompt_value] }
       modify:
-        door_1: 
+        door_1:
           position: [10, 0]
           misc: {tickmarks: [.5, 1.5]}
-      event_handling: 
+      event_handling:
         arg_1: door_1
         comparison_source: door_1
     level_1:
@@ -1613,8 +1613,8 @@ eleven_through_fourteen:
         create:
           tower_3: { name: prompt_value }
         modify:
-          door_1: 
-            misc: 
+          door_1:
+            misc:
               handle_opacity: 0
           tower_3:
             position: [20, 0]
@@ -1687,14 +1687,14 @@ estimate_names_11_to_14:
     create:
       keypad_kind: 'buildTower'
       tower_2: []
-    event_handling: 
+    event_handling:
       target: tower_2
       touch_reveals_button: [submit, delete]
     modify:
-      tower_2: 
+      tower_2:
         position: [65vw, 0]
         tower_style: {opacity: 0}
-    misc: 
+    misc:
       config_iteration: 7
       # config_iteration: 2
       # config_iteration: 1
@@ -1706,28 +1706,28 @@ estimate_names_11_to_14:
       create:
         door_1: { name: [door_1_name] }
       modify:
-        door_1: 
+        door_1:
           position: [10, 0]
           misc: {tickmarks: [.5, 1.5]}
-      event_handling: 
+      event_handling:
         comparison_source: door_1
         # correctness: identical
         correctness: same_height
     level_1:
       params:
-        generate: 
+        generate:
           door_1_name: [pick_from_list, [1.1, 1.2, 1.3, 1.4]]
         modify:
-          tower_2: 
+          tower_2:
             tower_style: {opacity: 0}
         misc:
           jmp: ['estimate_names', 'of_doors', 'level_1']
 estimate_tower_height:
   params:
-    generate: 
+    generate:
       # tower_1_name: [pick_from_range, .1, 1.8, .1]
       # tower_1_name: [pick_from_range, .1, .8, .1]
-      tower_1_name: 
+      tower_1_name:
         exercise0: [fixed, [1]]
         exercise1: [fixed, [.5]]
         exercise2: [fixed, [.1]]
@@ -1736,17 +1736,17 @@ estimate_tower_height:
       tower_1: { name: tower_1_name }
       door_3: [0]
     modify:
-      tower_1: 
+      tower_1:
         position: [5, 0]
         width: 60vw
         overflow: 'hidden'
         tower_style: { opacity: 0 }
-      door_3: 
+      door_3:
         position: [right 80, 0]
         anim_info: { blink: [0, 1] }
         misc:
           handle_opacity: 0
-    event_handling: 
+    event_handling:
       move: move_handle
       comparison_source: tower_1
       target: door_3
@@ -1767,7 +1767,7 @@ estimate_tower_height:
   level_3:
     params:
       generate:
-        tower_1_name: 
+        tower_1_name:
           exercise0: [fixed, [.5]]
           exercise1: [fixed, [.5, .4]]
           exercise2: [fixed, [1, .1]]
@@ -1776,7 +1776,7 @@ estimate_tower_height:
     skip_node_above:
     params:
       generate:
-        tower_1_name: 
+        tower_1_name:
           exercise0: [fixed, [1]]
           exercise1: [fixed, [.5, .5]]
           exercise2: [fixed, [1, .5]]
@@ -1785,7 +1785,7 @@ estimate_tower_height:
     skip_node_above:
     params:
       generate:
-        tower_1_name: 
+        tower_1_name:
           exercise0: [fixed, [.5]]
           exercise1: [fixed, [.2, .3]]
           exercise2: [fixed, [.5, .5]]
@@ -1803,14 +1803,14 @@ estimate_names:
     create:
       keypad_kind: 'buildTower'
       tower_2: []
-    event_handling: 
+    event_handling:
       target: tower_2
       touch_reveals_button: [submit, delete]
     modify:
-      tower_2: 
+      tower_2:
         position: [65vw, 0]
         tower_style: {opacity: 0}
-    misc: 
+    misc:
       config_iteration: 7
       # config_iteration: 1
       num_stars: 3
@@ -1821,7 +1821,7 @@ estimate_names:
         tile_1: { name: tile_1_name }
         door_9: [10.0]  # as a reference
       modify:
-        tile_1: 
+        tile_1:
           position: [right 40vw, 0]
           # anim_info:   # EXAMPLES OF USING ANIMATION
           #   duration: [2000, 1000, 500, 250]
@@ -1829,53 +1829,53 @@ estimate_names:
           #   # loop: true
           #   bottom: [0, 200]
           #   opacity: [.5, 1]
-        door_9: 
+        door_9:
           position: [right 39vw, 0]
           misc: {tickmarks: [.5, 1.5]}
-      event_handling: 
+      event_handling:
         comparison_source: tile_1
         # correctness: identical
         correctness: same_height
     level_1:
       params:
-        generate: 
+        generate:
           # tile_1_value: [pick_from_range, .1, 1.8, .1]
           tile_1_value: [pick_from_list, [.1, .9, 1.0, 1.1]]
           tile_1_name: as_animal_name tile_1_value
         modify:
-          tower_2: 
+          tower_2:
             tower_style: {opacity: 0.1}
     level_2:
       params:
-        generate: 
+        generate:
           tile_1_value: [pick_from_list, [.1, .9, 1.0, 1.1]]
           tile_1_name: as_animal_name tile_1_value
     level_3:
       params:
-        generate: 
+        generate:
           tile_1_value: [pick_from_list, [.2, .5, .8, 1.2]]
           tile_1_name: as_animal_name tile_1_value
     level_4:
       params:
-        generate: 
+        generate:
           tile_1_value: [pick_from_list, [.3, .4, .6, .7]]
           tile_1_name: as_animal_name tile_1_value
     level_5:
       params:
-        generate: 
+        generate:
           tile_1_value: [pick_from_list, [1.5, 1.6, 1.7, 1.8]]
           tile_1_name: as_animal_name tile_1_value
         modify:
-          tower_2: 
+          tower_2:
             tower_style: {opacity: 0.1}
     level_6:
       params:
-        generate: 
+        generate:
           tile_1_value: [pick_from_list, [1.5, 1.6, 1.7, 1.8]]
           tile_1_name: as_animal_name tile_1_value
     level_7:
       params:
-        generate: 
+        generate:
           tile_1_value: [pick_from_list, [1.5, 1.4, 1.3, 1.2]]
           tile_1_name: as_animal_name tile_1_value
   of_doors:
@@ -1884,51 +1884,51 @@ estimate_names:
       create:
         door_1: { name: [door_1_name] }
       modify:
-        door_1: 
+        door_1:
           position: [10, 0]
           misc: {tickmarks: [.5, 1.5]}
-      event_handling: 
+      event_handling:
         comparison_source: door_1
         # correctness: identical
         correctness: same_height
     level_1:
       params:
-        generate: 
+        generate:
           door_1_name: [pick_from_list, [.1, .9, 1.0, 1.1]]
           # door_1_name: [fixed, .5]
         modify:
-          tower_2: 
+          tower_2:
             tower_style: {opacity: 0.1}
     level_2:
       params:
-        generate: 
+        generate:
           door_1_name: [pick_from_list, [.1, .9, 1.0, 1.1]]
     level_3:
       params:
-        generate: 
+        generate:
           door_1_name: [pick_from_list, [.2, .5, .8, 1.2]]
     level_4:
       params:
-        generate: 
+        generate:
           door_1_name: [pick_from_list, [.3, .4, .6, .7]]
     level_5:
       params:
-        generate: 
+        generate:
           door_1_name: [pick_from_list, [1.5, 1.6, 1.7, 1.8]]
         modify:
-          tower_2: 
+          tower_2:
             tower_style: {opacity: 0.1}
     level_6:
       params:
-        generate: 
+        generate:
           door_1_name: [pick_from_list, [1.5, 1.6, 1.7, 1.8]]
     level_7:
       params:
-        generate: 
+        generate:
           door_1_name: [pick_from_list, [1.5, 1.4, 1.3, 1.2]]
     all_values:
       params:
-        generate: 
+        generate:
           door_1_name: [pick_from_range, .1, 1.8, .1]
       level_8:
       level_9:
@@ -1940,17 +1940,17 @@ estimate_names:
             suffix_path: [suffix1]
 round_2_est_option:
   params:
-    generate: 
+    generate:
       restriction_3: option > 0
       restriction_4: option < 1.9
     create:
       door_1: { name: [prompt_value] }
       tower_2: []
     modify:
-      door_1: 
+      door_1:
         position: [10, 0]
         misc: {tickmarks: [.5, 1.5]}
-      tower_2: 
+      tower_2:
         position: [0, 0]
         tower_style: { opacity: 0 }
         misc:
@@ -1961,7 +1961,7 @@ round_2_est_option:
       correctness: identical
       arg_1: door_1
       comparison_source: door_1
-    misc: 
+    misc:
       config_iteration: 7
       num_stars: 3
   1_to_4:
@@ -1995,7 +1995,7 @@ round_2_est_option:
                 duration: 500
     notches:
     no_notches:
-      params: 
+      params:
         modify: { door_1: { misc: {tickmarks: null}}}
         misc:
           jmp: ['round_2_est_button', '1_to_4']
@@ -2029,7 +2029,7 @@ round_2_est_option:
                 duration: 500
     notches:
     no_notches:
-      params: 
+      params:
         modify: { door_1: { misc: {tickmarks: null}}}
         misc:
           jmp: ['round_2_est_button', '6_to_9']
@@ -2041,7 +2041,7 @@ round_2_est_option:
         option_value_seed: prompt_value
     notches:
     no_notches:
-      params: 
+      params:
         modify: { door_1: { misc: {tickmarks: null}}}
         misc:
           jmp: ['round_2_est_button', '1_to_9']
@@ -2053,7 +2053,7 @@ round_2_est_option:
         option_value_seed: prompt_value
     notches:
     no_notches:
-      params: 
+      params:
         modify: { door_1: { misc: {tickmarks: null}}}
         misc:
           jmp: ['round_2_est_button', '11_to_14']
@@ -2065,7 +2065,7 @@ round_2_est_option:
         option_value_seed: prompt_value
     notches:
     no_notches:
-      params: 
+      params:
         modify: { door_1: { misc: {tickmarks: null}}}
         misc:
           jmp: ['round_2_est_button', '15_to_18']
@@ -2077,7 +2077,7 @@ round_2_est_option:
         option_value_seed: prompt_value
     notches:
     no_notches:
-      params: 
+      params:
         modify: { door_1: { misc: {tickmarks: null}}}
         misc:
           jmp: ['round_2_est_button', '1_to_18']
@@ -2088,53 +2088,53 @@ round_2_est_button:
       door_1: { name: [door_1_name] }
       tower_2: []
     modify:
-      door_1: 
+      door_1:
         position: [10, 0]
-      tower_2: 
+      tower_2:
         position: [65vw, 0]
         tower_style: {opacity: 0}
-    event_handling: 
+    event_handling:
       comparison_source: door_1
       correctness: same_height
       target: tower_2
       touch_reveals_button: [submit, delete]
-    misc: 
+    misc:
       config_iteration: 7
       num_stars: 3
       remove_on_exit: [button_submit, button_delete]
   1_to_4:
     params:
-      generate: 
+      generate:
         door_1_name: [pick_from_list, [.1, .2, .3, .4]]
       misc:
         jmp: ['round_2_est_option', '6_to_9', 'notches']
   6_to_9:
     params:
-      generate: 
+      generate:
         door_1_name: [pick_from_range, .6, .95, .1]
       misc:
         jmp: ['round_2_est_option', '1_to_9', 'notches']
   1_to_9:
     params:
-      generate: 
+      generate:
         door_1_name: [pick_from_range, .1, .95, .1]
       misc:
         jmp: ['round_2_est_option', '11_to_14', 'notches']
   11_to_14:
     params:
-      generate: 
+      generate:
         door_1_name: [pick_from_range, 1.1, 1.45, .1]
       misc:
         jmp: ['round_2_est_option', '15_to_18', 'notches']
   15_to_18:
     params:
-      generate: 
+      generate:
         door_1_name: [pick_from_range, 1.5, 1.85, .1]
       misc:
         jmp: ['round_2_est_option', '1_to_18', 'notches']
   1_to_18:
     params:
-      generate: 
+      generate:
         door_1_name: [pick_from_range, 0.1, 1.85, .1]
       misc:
         jmp: ['all_done']
@@ -2147,7 +2147,7 @@ measure_height:
     event_handling:
       target: tower_2
       touch_reveals_button: [submit, delete]
-    misc: 
+    misc:
       remove_on_exit: [button_submit, button_delete]
       config_iteration: 7
       # config_iteration: 1
@@ -2159,7 +2159,7 @@ measure_height:
         tile_1: { name: tile_1_name }
       modify:
         tile_1: { position: [right 40vw, 0] }
-      event_handling: 
+      event_handling:
         comparison_source: tile_1
         correctness: approx_height
     level_1:
@@ -2170,7 +2170,7 @@ measure_height:
       params:
         modify:
           tower_2:
-            misc: 
+            misc:
               hide_tower_name: true
               as_diagram: true
         event_handling:
@@ -2198,7 +2198,7 @@ measure_height:
       params:
         modify:
           tower_2:
-            misc: 
+            misc:
               hide_tower_name: true
               as_diagram: true
         event_handling:
@@ -2217,7 +2217,7 @@ measure_height:
         tower_1: { name: tower_1_name }
         keypad_kind: 'buildTower'
       modify:
-        tower_1: 
+        tower_1:
           position: [5, 0]
           width: 60vw
           overflow: 'hidden'
@@ -2232,8 +2232,8 @@ measure_height:
         create:
           button_start:
         modify:
-          tower_1: 
-            style: { opacity: 0 }  
+          tower_1:
+            style: { opacity: 0 }
         misc:
           freeze_display: true
       level_2:
@@ -2275,21 +2275,21 @@ measure_height:
         button_start:
         keypad_kind: 'buildTower'
       modify:
-        tile_1: 
+        tile_1:
           position: [right 40vw, 0]
           # appear_after: 2000
           style: { borderTopWidth: 0, opacity: 0 }
           # style: { borderTopWidth: 0 }
         tower_2:
           tower_style: { opacity: 0 }
-      event_handling: 
+      event_handling:
         comparison_source: tile_1
         correctness: approx_height
         touch_reveals_button: submit
       misc:
         remove_on_exit: [button_submit]
         freeze_display: true
-        jmp: [measure_height,  animal_height, level_1] 
+        jmp: [measure_height,  animal_height, level_1]
       delay:
         modify:
           tile_1:
@@ -2299,7 +2299,7 @@ measure_height:
               duration: 1000
 animal_sum:
   params:
-    generate: 
+    generate:
       tile_1_name: [pick_animal_name]
       # tile_1_name: [fixed, kitty]
       tile_1_height: height_from_animal tile_1_name
@@ -2315,12 +2315,12 @@ animal_sum:
     modify:
       tile_1: { position: [right 405, 0] }
       tile_2: { position: [right 200, 0] }
-      door_3: 
+      door_3:
         position: [right 80, 0]
         anim_info: { blink: [0, 1] }
         misc:
           handle_opacity: 0
-    event_handling: 
+    event_handling:
       move: move_handle
       arg_1: tile_1
       arg_2: tile_2
@@ -2355,7 +2355,7 @@ two_doors:  # for a figure
       num_stars: 3
 two_animals:
   params:
-    generate: 
+    generate:
       # some changes have been added for the sake of making a figure
       tile_1_name: [pick_from_list, [unicorn]]
       #tile_1_name: [pick_from_list, [unicorn, dragon, sloth]]
@@ -2372,12 +2372,12 @@ two_animals:
       tile_1: { name: tile_1_name }
       button_start:
     modify:
-      tile_1: 
+      tile_1:
         # position: [right_from_left 60vw, 0]
         position: [right_from_left 89vw, 0]
         misc:
           landmark_index: landmark_index
-      tile_2: 
+      tile_2:
         # position: [right 50, 0]
         position: [right 0, 0]
         misc:
@@ -2385,11 +2385,11 @@ two_animals:
           image_opacity: 0  # added this!!
           landmark_index: landmark_index  # added this!!
           extra_scale: tile_2_scale
-    event_handling: 
+    event_handling:
       correctness: move_dot
       arg_1: tile_1
       touch_reveals_button: submit
-    misc: 
+    misc:
       config_iteration: 4
       num_stars: 3
       blank_between_exercises: 500
@@ -2397,7 +2397,7 @@ two_animals:
       freeze_display: true
   just_dot:
     params:
-      event_handling: 
+      event_handling:
         target: tile_2
         move: move_dot
   with_handle:
@@ -2415,7 +2415,7 @@ two_animals:
           misc:
             handle_opacity: 0
             extra_scale: tile_2_height
-      event_handling: 
+      event_handling:
         target: door_2
         move: move_handle_dot
       delay:
@@ -2444,7 +2444,7 @@ two_animals:
               anim_info:
                 opacity: [1, 0]
                 duration: 1000
-        door_9: 
+        door_9:
     both_animals:
       params:
         misc:
@@ -2474,7 +2474,7 @@ two_animals:
       level_1:
 proportion:
   params:
-    generate: { portal_1_name: [uniform, .2, .9], 
+    generate: { portal_1_name: [uniform, .2, .9],
                 door_2_name: [uniform, .1, .9],
                 # door_2_name: [fixed, .5],
                 door_3_name: portal_1_name * door_2_name,
@@ -2487,15 +2487,15 @@ proportion:
     modify:
       portal_1: { position: [0, 0], misc: {stealth_mode: true} }
       door_2: { position: [220, 0], misc: {handle_color: orange} }
-      door_3: 
+      door_3:
         position: [320, 0]
         style: { opacity: 1 }
         anim_info: { blink: [0, 1] }
-        misc: 
+        misc:
           handle_opacity: 0
           handle_color: orange
           extra_scale: portal_1_name
-    event_handling: 
+    event_handling:
       arg_1: portal_1
       arg_2: door_2
       result: door_3
@@ -2508,7 +2508,7 @@ proportion:
       slide_portal: false
       touch_reveals_button: submit
       star_policy: loose
-    misc: 
+    misc:
       config_iteration: 4
       num_stars: 3
       remove_on_exit: [err_box]
@@ -2531,14 +2531,14 @@ proportion:
         door_3:
           position: [0, 0]
           anim_info: null
-          misc: 
+          misc:
             is_option: true
             handle_opacity: null
-      event_handling: 
+      event_handling:
         show_camel: null
     pure_copy:
       params:
-        generate: 
+        generate:
           restriction_2: null
           restriction_5: null
         create:
@@ -2546,8 +2546,8 @@ proportion:
         misc:
           config_iteration: 3
       level_1: { params: { generate: { portal_1_name: [fixed, 1] } } }
-      level_2: 
-        params: 
+      level_2:
+        params:
           generate: { portal_1_name: [fixed, 1] }
           modify:
             portal_1:
@@ -2559,8 +2559,8 @@ proportion:
             door_3:
               appear_after: 1500
       level_3: { params: { generate: { portal_1_name: [fixed, .5] } } }
-      level_4: 
-        params: 
+      level_4:
+        params:
           generate: { portal_1_name: [fixed, .5] }
           modify:
             portal_1:
@@ -2578,8 +2578,8 @@ proportion:
             door_3:
               appear_after: 1500
       level_5: { params: { generate: { portal_1_name: [fixed, .25] } } }
-      level_6: 
-        params: 
+      level_6:
+        params:
           generate: { portal_1_name: [fixed, .25] }
           modify:
             portal_1:
@@ -2598,25 +2598,25 @@ proportion:
               appear_after: 1500
     zoom_down:
       params:
-        generate: 
+        generate:
           restriction_5: null
       level_1:
         params:
           modify:
             portal_1:
-              zoom_anim: 
+              zoom_anim:
                 source: 1
                 target: portal_1_name
                 time: [ {delay: 1000, duration: 1000} ]
             door_3:
               appear_after: 3000
-          misc: 
+          misc:
             skip_slide_down: true
       level_2:
         params:
           modify:
             portal_1:
-              zoom_anim: 
+              zoom_anim:
                 source: 1
                 target: portal_1_name
                 time: [ {delay: 1000, duration: 500} ]
@@ -2629,7 +2629,7 @@ proportion:
           generate: { door_2_name: [fixed, .5] }
           modify:
             portal_1:
-              zoom_anim: 
+              zoom_anim:
                 source: 1
                 target: portal_1_name
                 time: [ {delay: 1000, duration: 500}, {delay: 2000, duration: 250} ]
@@ -2640,7 +2640,7 @@ proportion:
           generate: { door_2_name: [pick_from_list, [.25, .5, .75]] }
           modify:
             portal_1:
-              zoom_anim: 
+              zoom_anim:
                 source: 1
                 target: portal_1_name
                 time: [ {delay: 1000, duration: 250}, {delay: 1000, duration: 250} ]
@@ -2650,7 +2650,7 @@ proportion:
         params:
           modify:
             portal_1:
-              zoom_anim: 
+              zoom_anim:
                 source: 1
                 target: portal_1_name
                 time: [ {delay: 1000, duration: 250}, {delay: 500, duration: 500} ]
@@ -2670,7 +2670,7 @@ proportion:
       level_3:
       level_4:
         params:
-          generate: 
+          generate:
             restriction_5: null
   # here are the original levels that do not use options
   pure_copy:
@@ -2689,20 +2689,20 @@ proportion:
       params:
         modify:
           portal_1:
-            zoom_anim: 
+            zoom_anim:
               source: 1
               target: portal_1_name
               time: [ {delay: 1000, duration: 1000} ]
           door_3:
             appear_after: 3000
             anim_info: { blink: [0, 1], delay: 3000 }
-        misc: 
+        misc:
           skip_slide_down: true
     level_2:
       params:
         modify:
           portal_1:
-            zoom_anim: 
+            zoom_anim:
               source: 1
               target: portal_1_name
               time: [ {delay: 1000, duration: 500} ]
@@ -2717,7 +2717,7 @@ proportion:
         generate: { door_2_name: [fixed, .5] }
         modify:
           portal_1:
-            zoom_anim: 
+            zoom_anim:
               source: 1
               target: portal_1_name
               time: [ {delay: 1000, duration: 500}, {delay: 2000, duration: 250} ]
@@ -2729,7 +2729,7 @@ proportion:
         generate: { door_2_name: [pick_from_list, [.25, .5, .75]] }
         modify:
           portal_1:
-            zoom_anim: 
+            zoom_anim:
               source: 1
               target: portal_1_name
               time: [ {delay: 1000, duration: 250}, {delay: 1000, duration: 250} ]
@@ -2740,7 +2740,7 @@ proportion:
       params:
         modify:
           portal_1:
-            zoom_anim: 
+            zoom_anim:
               source: 1
               target: portal_1_name
               time: [ {delay: 1000, duration: 250}, {delay: 500, duration: 500} ]
@@ -2763,7 +2763,7 @@ proportion:
     level_4:
 multiply_height:
   params:
-    generate: { portal_1_name: [uniform, .1, .9], 
+    generate: { portal_1_name: [uniform, .1, .9],
                 door_3_name: [uniform, .1, .9], }
     create:
       door_3: { name: [door_3_name] }
@@ -2776,13 +2776,13 @@ multiply_height:
       portal_1: { position: [0, 0], anim_info: { handle_blink: [0, 1] } }
       door_3: { position: [320, 0], misc: {handle_color: orange} }
       # tower_1: { position: [50vw, 0] }
-    event_handling: 
+    event_handling:
       arg_1: portal_1
       result: door_3
       correctness: near_height
       top_right_text: average_error
       slide_portal: true
-    misc: 
+    misc:
       config_iteration: 2
       num_stars: 3
       remove_on_exit: [err_box]
@@ -2797,7 +2797,7 @@ multiply_height:
         tile_2: { name: tile_2_name }
       modify:
         tile_2: { position: [right_from_left 280, 0] }
-      event_handling: 
+      event_handling:
         arg_2: tile_2
         target: portal_1
     touch_image:
@@ -2806,14 +2806,14 @@ multiply_height:
           portal_1: { position: [0, 0], anim_info: null }
           tile_2:
             anim_info: { blink: [.5, 1] }
-        event_handling: 
+        event_handling:
           move: touch_image
-          star_policy: extraLoose 
+          star_policy: extraLoose
     move_handle:
       params:
-        event_handling: 
+        event_handling:
           move: move_handle
-          star_policy: loose 
+          star_policy: loose
   door_target:
     params:
       generate: { door_2_name: [uniform, .1, .9],
@@ -2827,9 +2827,9 @@ multiply_height:
       event_handling: { arg_2: door_2, move: move_handle }
     move_portal_handle_to_match:
       params:
-        event_handling: 
+        event_handling:
           target: portal_1
-          star_policy: moderate 
+          star_policy: moderate
     move_portal_handle_to_shadow:
       params:
         create:
@@ -2837,13 +2837,13 @@ multiply_height:
           button_submit: remove
         modify:
           door_3: { style: {opacity: 0} }
-        event_handling: 
+        event_handling:
           target: portal_1
           star_policy: strict
       level_1:
       levels_with_stages:
         params:
-          misc: 
+          misc:
             config_iteration: null
             problem_stage: true
             skip_submit: true
@@ -2853,14 +2853,14 @@ multiply_height:
           params:
             modify:
               portal_1: { anim_info: null }
-              door_3: 
+              door_3:
                 style: {opacity: 1}
                 anim_info: { blink: [0, 1] }
-                misc: 
+                misc:
                   handle_opacity: 0
-            event_handling: 
+            event_handling:
               target: door_3
-            misc: 
+            misc:
               skip_submit: null
               skip_in_between: null
               problem_stage: null
@@ -2869,7 +2869,7 @@ multiply_height:
               remove_on_exit: [err_box, button_submit]
         level_3a:
           params:
-            event_handling: 
+            event_handling:
               return_to_top: portal_1
         level_3b:
           params:
@@ -2878,16 +2878,16 @@ multiply_height:
               button_submit:
             modify:
               portal_1: { anim_info: null }
-              door_3: 
+              door_3:
                 style: {opacity: 1}
                 anim_info: { blink: [0, 1] }
-                misc: 
+                misc:
                   handle_opacity: 0
-            event_handling: 
+            event_handling:
               target: door_3
               show_camel: true
               slide_portal: false
-            misc: 
+            misc:
               skip_submit: null
               skip_in_between: null
               problem_stage: null
@@ -2901,13 +2901,13 @@ multiply_height:
           err_box:
         modify:
           portal_1: { anim_info: null }
-          door_3: 
+          door_3:
             style: {opacity: 1}
             anim_info: { blink: [0, 1] }
-            misc: 
+            misc:
               handle_opacity: 0
               handle_color: orange
-        event_handling: 
+        event_handling:
           target: door_3
           show_camel: true
           slide_portal: false
@@ -2924,20 +2924,20 @@ intro_diagrams_2:
       tower_1: { name: tower_1_name }
       tower_2: []
     modify:
-      tower_1: 
+      tower_1:
         position: [5, 0]
         tower_style: {opacity: 0}
-      tower_2: 
+      tower_2:
         position: [65vw, 0]
         tower_style: {opacity: 0}
         misc:
           tower_name_style: { left: 5 }
-    event_handling: 
+    event_handling:
       comparison_source: tower_1
       target: tower_2
       correctness: identical
       touch_reveals_button: [submit, delete]
-    misc: 
+    misc:
       new_scale_factor: 200
       config_iteration: 7
       num_stars: 3
@@ -2958,7 +2958,7 @@ intro_diagrams_2:
       modify:
         tower_2:
           tower_style: {opacity: null}
-          misc: 
+          misc:
             hide_tower_name: true
             as_diagram: true
       event_handling:
@@ -3032,13 +3032,13 @@ tower_1_2:
     params:
       modify:
         tower_1:
-          misc: 
+          misc:
             as_diagram: true
         tower_2:
-          misc: 
+          misc:
             as_diagram: true
         tower_moving:
-          misc: 
+          misc:
             as_diagram: true
       event_handling:
         minimum_split_size: -1
@@ -3069,14 +3069,14 @@ group_ungroup:
       tower_2: []
       tower_moving: []
     modify:
-      tower_1: 
+      tower_1:
         position: [5, 0]
         tower_style: {opacity: 0}
       tower_mid:
         position: [40vw, 0]
         misc:
           hide_tower_name: true
-      tower_2: 
+      tower_2:
         position: [right 10vw, 0]
         tower_style: {opacity: 0}
         misc:
@@ -3085,12 +3085,12 @@ group_ungroup:
         position: [0, 0]
         misc:
           hide_tower_name: true
-    event_handling: 
+    event_handling:
       correctness: identical
       touch_reveals_button: [submit, delete]
       no_split_fiver: true
       minimum_split_size: -1
-    misc: 
+    misc:
       new_scale_factor: 200
       num_stars: 2
       remove_on_exit: [button_submit, button_delete]
@@ -3610,10 +3610,10 @@ group_ungroup:
         skip_in_between: null
         problem_stage: null
         config_iter: 1
-        jmp: [add_or_half, as_option, result_option, stack, bars, level_1] 
+        jmp: [add_or_half, as_option, result_option, stack, bars, level_1]
 tower_variations:
   params:
-    generate: 
+    generate:
       mean_names_base_5: [fixed, [[.5,.5, .5,.5, .5,.5], [1, .5,.5, .5,.5], [2, .5,.5], [.5,.5, .5,.5], [1, .5,.5], [.5,.5]]]
       extra_fiver: [fixed, [0, .5]]
       extra_delta: [fixed, [0, .1, .2, .3, .4]]
@@ -3633,11 +3633,11 @@ tower_variations:
       tower_2: []
       # button_submit: 'on_right'
     modify:
-      tower_1: 
+      tower_1:
         position: [left_from_right 150, 0]
         misc:
           tower_name_style: { left: 25 }
-      tower_2: 
+      tower_2:
         position: [5, 0]
         misc:
           tower_name_style: { left: 25 }
@@ -3646,13 +3646,13 @@ tower_variations:
           option_offset: 5
           option_width: 120
           option_button_choice: [0, 0, 0, 0]
-    event_handling: 
+    event_handling:
       comparison_source: tower_1
       arg_1: tower_1
       target: tower_2
       correctness: option_button
       use_option_buttons: true
-    misc: 
+    misc:
       new_scale_factor: 200
       config_iteration: 4
       num_stars: 2
@@ -3745,13 +3745,13 @@ drag_blocks:
         style: { width: 500 }
       big_op:
         position: [205, 0]
-      tower_1: 
+      tower_1:
         position: [15, 0]
         misc:
           tower_name_style: { left: 25 }
           swap_channel: '12'
           draggable: all
-      tower_1_shadow: 
+      tower_1_shadow:
         position: [15, 0]
         tower_style: {opacity: 0.2}
         misc:
@@ -3764,18 +3764,18 @@ drag_blocks:
           swap_channel: '01'
           draggable: all
           # block_offset: [ [25, 25], null ]
-      tower_2_shadow: 
+      tower_2_shadow:
         position: [300, 0]
         tower_style: {opacity: 0.2}
         misc:
           hide_tower_name: true
           swap_channel: '01'
-      tower_result: 
+      tower_result:
         position: [550, 0]
         misc:
           tower_name_style: { left: 25 }
           toggle: mean_name_toggle  # created by the partition
-    event_handling: 
+    event_handling:
       arg_1: tower_1
       arg_2: tower_2
       result: tower_result
@@ -3784,7 +3784,7 @@ drag_blocks:
       touch_reveals_button: [submit]
       # no_split_fiver: true
       # minimum_split_size: -1
-    misc: 
+    misc:
       new_scale_factor: 200
       config_iteration: 4
       num_stars: 2
@@ -3918,11 +3918,11 @@ counting_up_sub:
         style: { width: 500 }
       big_op:
         position: [195, 0]
-      tower_1: 
+      tower_1:
         position: [15, 0]
         misc:
           swap_channel: '12'
-      tower_1_shadow: 
+      tower_1_shadow:
         position: [15, 0]
         tower_style: {opacity: 0.2}
         misc:
@@ -3932,27 +3932,27 @@ counting_up_sub:
         position: [300, 0]
         misc:
           swap_channel: '01'
-      tower_2_shadow: 
+      tower_2_shadow:
         position: [300, 0]
         tower_style: {opacity: 0.2}
         misc:
           hide_tower_name: true
           swap_channel: '01'
-      tower_mixed: 
+      tower_mixed:
         position: [510, 0]
         tower_style: {opacity: 0}
         misc:
           hide_tower_name: true
-      tower_result: 
+      tower_result:
         position: [right 10vw, 0]
         tower_style: {opacity: 0}
         misc:
           tower_name_style: { left: 25 }
-    event_handling: 
+    event_handling:
       correctness: identical
       touch_reveals_button: [submit, delete]
       counting_up_sub: true
-    misc: 
+    misc:
       new_scale_factor: 200
       num_stars: 2
       remove_on_exit: [button_submit, button_delete]
@@ -4066,11 +4066,11 @@ tower_addition:
         style: { width: 500 }
       big_op:
         position: [195, 0]
-      tower_1: 
+      tower_1:
         position: [15, 0]
         misc:
           swap_channel: '12'
-      tower_1_shadow: 
+      tower_1_shadow:
         position: [15, 0]
         tower_style: {opacity: 0.2}
         misc:
@@ -4080,23 +4080,23 @@ tower_addition:
         position: [300, 0]
         misc:
           swap_channel: '01'
-      tower_2_shadow: 
+      tower_2_shadow:
         position: [300, 0]
         tower_style: {opacity: 0.2}
         misc:
           hide_tower_name: true
           swap_channel: '01'
-      tower_result: 
+      tower_result:
         position: [right 10vw, 0]
         tower_style: {opacity: 0}
         misc:
           tower_name_style: { left: 25 }
-    event_handling: 
+    event_handling:
       correctness: identical
       touch_reveals_button: [submit, delete]
       no_split_fiver: true
       minimum_split_size: -1
-    misc: 
+    misc:
       new_scale_factor: 200
       num_stars: 2
       remove_on_exit: [button_submit, button_delete]
@@ -4376,7 +4376,7 @@ reload_message:
 suffix1:
   params:
     modify:
-      door_1: 
+      door_1:
         misc: {tickmarks: null}
 in_between:
   params:
@@ -4472,7 +4472,7 @@ grouping_snippet_stage_3:
         comparison_source: tower_mid
         target: tower_2
         allow_non_standard: true
-      misc: 
+      misc:
         # skip_submit: null
         skip_in_between: null
         problem_stage: null
@@ -4498,7 +4498,7 @@ grouping_direct_snippet:
         target: tower_2
         allow_non_standard: true
         comparison_source: tower_4
-      misc: 
+      misc:
         remove_on_exit: [button_submit, button_delete]
         config_iteration: 4
         num_stars: 2
@@ -4532,7 +4532,7 @@ tower_addition_direct_snippet:
         target: tower_result
         allow_non_standard: true
         comparison_source: tower_4
-      misc: 
+      misc:
         remove_on_exit: [button_submit, button_delete]
         config_iteration: 4
         num_stars: 2
@@ -4647,7 +4647,7 @@ animation_test:
           delay: 500
           duration: [500, 500, 500]
           # on_end: [make_green]
-    event_handling: 
+    event_handling:
       just_yaml_event: true
       on_down:
         modify:
@@ -4661,3 +4661,8 @@ animation_test:
             anim_info:
               bottom: [100, 0]
               duration: 500
+
+tangrams:
+  params:
+    misc:
+      is_game: true
