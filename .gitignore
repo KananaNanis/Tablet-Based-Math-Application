@@ -11,7 +11,6 @@
 
 # production
 /build
-/public/assets
 
 # misc
 .env.local
@@ -29,7 +28,6 @@ yarn-error.log*
 .watchmanconfig
 README.md.orig
 index.js.orig
-public/assets/
 public/favicon.ico
 public_stub/
 log/
