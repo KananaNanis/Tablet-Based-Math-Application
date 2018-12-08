@@ -38,7 +38,8 @@ export function condense_groups_of(name) {
 		const how_many = get_how_many_from_group(name[i])
 		if (how_many !== 1 && how_many !== 5) {
 			console.error(
-				'Error in condense_groups_of:  does not handle values other than singletons and fivers!',
+				'Error in condense_groups_of:  does not handle values other than singletons and fivers! how_many',
+				how_many,
 			)
 		}
 		if (i + 1 < name.length) {

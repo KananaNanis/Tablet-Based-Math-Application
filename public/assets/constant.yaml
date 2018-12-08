@@ -1,6 +1,6 @@
 # these constants should be fixed!
-debug_mode: true
-num_exercises_for_debugging: 2
+debug_mode: false
+num_exercises_for_debugging: 1
 # debug_path: [tower_variations, level_1]
 # debug_path: [tower_variations, singletons, level_1]
 # debug_path: [tower_variations, singletons_separate_fivers, level_1]
@@ -133,10 +133,11 @@ num_exercises_for_debugging: 2
 # debug_path: [drag_blocks, missing_addend, level_2, level_2a]
 # debug_path: [drag_blocks, missing_addend, level_3, stage_1]
 # debug_path: [drag_blocks, missing_addend, level_3, level_3b, simpler_case, stage_1]
+# debug_path: [counting_up_sub, missing_addend, level_1]
 # debug_path: [tower_addition, direct, level_1]
 # debug_path: [tower_addition, direct, level_2]
 # debug_path: [tower_addition, missing_addend, level_1]
-debug_path: [counting_up_sub, missing_addend, level_1]
+debug_path: [t_add_mix_1, ma1]
 # debug_path: [all_done]
 # debug_path: [in_between]
 # starting_config_path: [one_through_five, five_frame, level_1] # P Oct 8
@@ -170,7 +171,8 @@ starting_config_path_Dom: [tower_addition, direct, level_1] # Nov 9
 # starting_config_path_PCCS: [tower_addition, missing_addend, level_1] # Nov 20
 # starting_config_path_PCCS: [drag_blocks, missing_addend, level_1] # Nov 26
 # starting_config_path_PCCS: [drag_blocks, missing_addend, level_3, harder_case, stage_1] # Nov 27
-starting_config_path_PCCS: [counting_up_sub, missing_addend, level_1] # Dec 3
+# starting_config_path_PCCS: [counting_up_sub, missing_addend, level_1] # Dec 3
+starting_config_path_PCCS: [t_add_mix_1, ma1] # Dec 7
 
 starting_level_for_Nov_30: # Nov 30
   m01: [drag_blocks, missing_addend, level_3, level_3b, simpler_case, stage_1]
