@@ -205,6 +205,7 @@ export function create_orderly_sum(arg_1, arg_2, result) {
 			++i2
 		}
 	}
+	res = expand_into_units(res)
 	res = condense_groups_of(res)
 	doAction.setName(result, res)
 	// console.log('create_orderly_sum res', res)
@@ -212,7 +213,7 @@ export function create_orderly_sum(arg_1, arg_2, result) {
 
 export function redraw_mixed_tower() {
 	const jj_end = query_name_of('tower_1').size
-	console.log('clearing block anim info, jj_end', jj_end)
+	// console.log('clearing block anim info, jj_end', jj_end)
 	for (let jj = 0; jj < jj_end; ++jj) {
 		doAction.clearBlockAnimInfo('tower_1', jj)
 	}

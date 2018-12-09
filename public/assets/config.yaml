@@ -4325,6 +4325,56 @@ tower_addition:
       level_3:
         params_from: [fade_tower_1_and_result_snippet]
         # jmp: [all_done]
+t_add_mix_1:
+  ma1:
+    params_from: [tower_addition, missing_addend, level_1]
+  ma2:
+    params_from: [tower_addition, missing_addend, level_2]
+  ma21:
+    params_from: [tower_addition, missing_addend_2, level_1]
+  ma22:
+    params_from: [tower_addition, missing_addend_2, level_2]
+  sing1:
+    params_from: [tower_addition, singletons, missing_addend, level_1]
+  sing2:
+    params_from: [tower_addition, singletons, missing_addend, level_2]
+  sep1:
+    params_from: [tower_addition, singletons_separate_fivers, missing_addend, level_1]
+  sep2:
+    params_from: [tower_addition, singletons_separate_fivers, missing_addend, level_2]
+  both1:
+    params_from: [tower_addition, singletons_with_a_fiver, missing_addend, level_1]
+  both2:
+    params_from: [tower_addition, singletons_with_a_fiver, missing_addend, level_2]
+  all1:
+    params_from: [tower_addition, singletons_with_fivers, missing_addend, level_1]
+  all2:
+    params_from: [tower_addition, singletons_with_fivers, missing_addend, level_2]
+t_add_mix_2:
+  ma2:
+    params_from: [tower_addition, missing_addend, level_2]
+  ma3:
+    params_from: [tower_addition, missing_addend, level_3]
+  ma22:
+    params_from: [tower_addition, missing_addend_2, level_2]
+  ma23:
+    params_from: [tower_addition, missing_addend_2, level_3]
+  sing2:
+    params_from: [tower_addition, singletons, missing_addend, level_2]
+  sing3:
+    params_from: [tower_addition, singletons, missing_addend, level_3]
+  sep2:
+    params_from: [tower_addition, singletons_separate_fivers, missing_addend, level_2]
+  sep3:
+    params_from: [tower_addition, singletons_separate_fivers, missing_addend, level_3]
+  both2:
+    params_from: [tower_addition, singletons_with_a_fiver, missing_addend, level_2]
+  both3:
+    params_from: [tower_addition, singletons_with_a_fiver, missing_addend, level_3]
+  all2:
+    params_from: [tower_addition, singletons_with_fivers, missing_addend, level_2]
+  all3:
+    params_from: [tower_addition, singletons_with_fivers, missing_addend, level_3]
 # bar_addition:
 # - params:
 #   - generator: {random1: uniform, random2: uniform, sum_in_range: [.1,1]}
