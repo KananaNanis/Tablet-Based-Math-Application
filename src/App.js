@@ -59,9 +59,7 @@ class App extends React.Component {
 			return <h1>Something went wrong.</h1>
 		}
 		if (this.props.is_game) {
-			return (
-				<Tangrams level="test"/>
-			)
+			return <Tangrams level="test" />
 		}
 		if (this.state.add_tablet_border) {
 			tablet_border = (

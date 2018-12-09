@@ -1,7 +1,7 @@
 # these constants should be fixed!
 debug_mode: true
-num_exercises_for_debugging: 2
-debug_path: [tangrams]
+num_exercises_for_debugging: 1
+# debug_path: [tangrams]
 # debug_path: [tower_variations, level_1]
 # debug_path: [tower_variations, singletons, level_1]
 # debug_path: [tower_variations, singletons_separate_fivers, level_1]
@@ -9,7 +9,7 @@ debug_path: [tangrams]
 # debug_path: [tower_variations, singletons_with_fivers, level_1]
 # debug_path: [animation_test]
 # debug_path: [two_doors]
-# debug_path: [identity_function, as_option, bars, level_1]
+debug_path: [identity_function, as_option, bars, level_1]
 # debug_path: [identity_function, as_drag, bars, level_1]
 # debug_path: [identity_function, as_option, doors, level_1]
 # debug_path: [identity_function, as_drag, doors, level_1]
@@ -139,7 +139,7 @@ debug_path: [tangrams]
 # debug_path: [tower_addition, direct, level_2]
 # debug_path: [tower_addition, missing_addend, level_1]
 # debug_path: [counting_up_sub, missing_addend, level_1]
-debug_path: [t_add_mix_1, ma1]
+# debug_path: [t_add_mix_1, ma1]
 # debug_path: [all_done]
 # debug_path: [in_between]
 # starting_config_path: [one_through_five, five_frame, level_1] # P Oct 8
@@ -532,4 +532,3 @@ option_button_label_style:
       color: grey
     highlight:
       color: yellow
-

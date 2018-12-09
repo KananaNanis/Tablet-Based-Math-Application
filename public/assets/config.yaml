@@ -47,7 +47,8 @@ identity_function:
       level_1:
         params:
           misc:
-            jmp: [identity_function, as_drag, bars, level_1]
+            # jmp: [identity_function, as_drag, bars, level_1]
+            jmp: [tangrams]
     doors:
       level_1:
         params:
@@ -4711,7 +4712,6 @@ animation_test:
             anim_info:
               bottom: [100, 0]
               duration: 500
-
 tangrams:
   params:
     misc:
