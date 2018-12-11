@@ -58,9 +58,9 @@ class App extends React.Component {
 			console.log('Error caught at top level.')
 			return <h1>Something went wrong.</h1>
 		}
-		if (this.props.is_game) {
+		if (this.props.is_game && this.props.game_name) {
 			if (this.props.game_name === 'tangrams') {
-				return <Tangrams level={this.props.game_level_name} />
+				return <Tangrams game_level_name={this.props.game_level_name} />
 			}
 		}
 		if (this.state.add_tablet_border) {
