@@ -15,9 +15,11 @@ import {
 	doAction,
 } from './lib/global'
 import {query_path, with_suffix} from './providers/query_store'
+import {Tangrams} from './games/tangrams'
+import {connect} from 'react-redux'
 
 // top level component
-export default class App extends React.Component {
+class App extends React.Component {
 	constructor(props) {
 		super(props)
 		this.state = {do_print: false, has_error: false}
@@ -55,6 +57,11 @@ export default class App extends React.Component {
 		if (this.state.has_error) {
 			console.log('Error caught at top level.')
 			return <h1>Something went wrong.</h1>
+		}
+		if (this.props.is_game && this.props.game_name) {
+			if (this.props.game_name === 'tangrams') {
+				return <Tangrams game_level_name={this.props.game_level_name} />
+			}
 		}
 		if (this.state.add_tablet_border) {
 			tablet_border = (
@@ -120,6 +127,16 @@ export default class App extends React.Component {
 		)
 	}
 }
+
+function mapStateToProps(state) {
+	return {
+		is_game: state ? state.getIn(['prop', 'is_game']) : false,
+		game_name: state ? state.getIn(['prop', 'game_name']) : '',
+		game_level_name: state ? state.getIn(['prop', 'game_level_name']) : '',
+	}
+}
+
+export default connect(mapStateToProps)(App)
 
 const grassColor = 'lightgreen'
 const scalingBorderColor = '#43464b'

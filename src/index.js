@@ -20,3 +20,13 @@ ReactDOM.render(
 	document.getElementById('root'),
 )
 //registerServiceWorker()
+
+let obj = document.getElementById('root')
+obj.addEventListener(
+	'touchmove',
+	function(event) {
+		// If there's exactly one finger inside this element
+		event.preventDefault()
+	},
+	false,
+)

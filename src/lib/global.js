@@ -42,6 +42,10 @@ export let doAction = {}
 export let config_tree = {}
 export let global_constant = false
 
+export function print_global_constant() {
+	console.log(global_constant)
+}
+
 export function initialize_redux_store(path) {
 	const verbose = false
 	doAction.addLogEntry(Date.now(), [path, 'initialize_redux_store'])
@@ -123,6 +127,7 @@ export async function load_config_tree(appObj) {
 
 	try {
 		if (!global_constant) {
+			window.print_global_constant = print_global_constant
 			// first load the constants
 			let const_buffer = await fetch('assets/constant.yaml', {
 				credentials: 'same-origin',
