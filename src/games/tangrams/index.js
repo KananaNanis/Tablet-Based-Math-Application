@@ -6,30 +6,36 @@ import {levels} from './config/levels.json'
 import {TangramsLevel} from './components/level'
 
 export class TangramsView extends React.Component {
+	componentDidMount() {
+		// setTimeout(() => {
+		//   doAction.setProp('game_level_name', 'cat')
+		// }, 3000)
+	}
 
-  componentDidMount() {
-    // setTimeout(() => {
-    //   doAction.setProp('game_level_name', 'cat')
-    // }, 3000)
-  }
-
-  backToCoreApp = () => {
-    console.log('back to core app')
-    doAction.setProp('is_game', false)
-  }
+	backToCoreApp = () => {
+		console.log('back to core app')
+		doAction.setProp('is_game', false)
+	}
 
 	render() {
 		const {game_level_name} = this.props
-    const {width} = Dimensions.get('window')
-    console.log(levels)
-    const currentLevel = levels.find(level => level.name === game_level_name)
+		const {width} = Dimensions.get('window')
+		console.log(levels)
+		const currentLevel = levels.find(level => level.name === game_level_name)
 		return (
-      <View style={{flex: 1, alignItems: 'center', justifyContent: 'center', width: width}}>
-        <TangramsLevel
-          currentLevel={currentLevel}
-          onSolved={this.backToCoreApp}
-        />
-      </View>
+			<View
+				style={{
+					flex: 1,
+					alignItems: 'center',
+					justifyContent: 'center',
+					width: width,
+				}}
+			>
+				<TangramsLevel
+					currentLevel={currentLevel}
+					onSolved={this.backToCoreApp}
+				/>
+			</View>
 		)
 	}
 }

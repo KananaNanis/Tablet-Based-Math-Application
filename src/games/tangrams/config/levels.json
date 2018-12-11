@@ -2,8 +2,34 @@
 	"levels": [
 		{
 			"name": "house",
-			"goalPieces": {"mediumTriangle":{"initialX":-0.0078125,"initialY":-0.171875,"initialAngle":-2.356194490192345,"shape":"mediumTriangle"},"square":{"initialX":-0.0234375,"initialY":0.3125,"initialAngle":0.7853981633974483,"shape":"square"}},
-			"movablePieces": {"mediumTriangle":{"initialX":-1,"initialY":2.796875,"initialAngle":-2.356194490192345,"shape":"mediumTriangle"},"square":{"initialX":1.0625,"initialY":2.34375,"initialAngle":0.7853981633974483,"shape":"square"}}
+			"goalPieces": {
+				"mediumTriangle": {
+					"initialX": -0.0078125,
+					"initialY": -0.171875,
+					"initialAngle": -2.356194490192345,
+					"shape": "mediumTriangle"
+				},
+				"square": {
+					"initialX": -0.0234375,
+					"initialY": 0.3125,
+					"initialAngle": 0.7853981633974483,
+					"shape": "square"
+				}
+			},
+			"movablePieces": {
+				"mediumTriangle": {
+					"initialX": -1,
+					"initialY": 2.796875,
+					"initialAngle": -2.356194490192345,
+					"shape": "mediumTriangle"
+				},
+				"square": {
+					"initialX": 1.0625,
+					"initialY": 2.34375,
+					"initialAngle": 0.7853981633974483,
+					"shape": "square"
+				}
+			}
 		},
 		{
 			"name": "blank",
@@ -329,10 +355,92 @@
 		{
 			"name": "cat",
 			"goalPieces": {
-				"bigTriangle1":{"initialX":0.87158203125,"initialY":1.759765625,"initialAngle":-5.497787143782138,"shape":"bigTriangle"},"bigTriangle2":{"initialX":0.6640625,"initialY":0.265625,"initialAngle":0,"shape":"bigTriangle"},"mediumTriangle":{"initialX":-0.04150390625,"initialY":-0.17431640625,"initialAngle":2.356194490192345,"shape":"mediumTriangle"},"parallelogram":{"initialX":2.21630859375,"initialY":1.228515625,"initialAngle":-0.6108652381980153,"shape":"parallelogram"},"smallTriangle1":{"initialX":-0.7802734375,"initialY":-2.16650390625,"initialAngle":1.5707963267948966,"shape":"smallTriangle"},"smallTriangle2":{"initialX":-0.0830078125,"initialY":-2.158203125,"initialAngle":-1.5707963267948966,"shape":"smallTriangle"},"square":{"initialX":-0.42333984375,"initialY":-1.46923828125,"initialAngle":-1.3877787807814457e-17,"shape":"square"}
+				"bigTriangle1": {
+					"initialX": 0.87158203125,
+					"initialY": 1.759765625,
+					"initialAngle": -5.497787143782138,
+					"shape": "bigTriangle"
+				},
+				"bigTriangle2": {
+					"initialX": 0.6640625,
+					"initialY": 0.265625,
+					"initialAngle": 0,
+					"shape": "bigTriangle"
+				},
+				"mediumTriangle": {
+					"initialX": -0.04150390625,
+					"initialY": -0.17431640625,
+					"initialAngle": 2.356194490192345,
+					"shape": "mediumTriangle"
+				},
+				"parallelogram": {
+					"initialX": 2.21630859375,
+					"initialY": 1.228515625,
+					"initialAngle": -0.6108652381980153,
+					"shape": "parallelogram"
+				},
+				"smallTriangle1": {
+					"initialX": -0.7802734375,
+					"initialY": -2.16650390625,
+					"initialAngle": 1.5707963267948966,
+					"shape": "smallTriangle"
+				},
+				"smallTriangle2": {
+					"initialX": -0.0830078125,
+					"initialY": -2.158203125,
+					"initialAngle": -1.5707963267948966,
+					"shape": "smallTriangle"
+				},
+				"square": {
+					"initialX": -0.42333984375,
+					"initialY": -1.46923828125,
+					"initialAngle": -1.3877787807814457e-17,
+					"shape": "square"
+				}
 			},
 			"movablePieces": {
-				"bigTriangle1":{"initialX":-2.4404296875,"initialY":1.162109375,"initialAngle":-3.4033920413889422,"shape":"bigTriangle"},"bigTriangle2":{"initialX":1.8759765625,"initialY":-1.56884765625,"initialAngle":-0.7853981633974483,"shape":"bigTriangle"},"mediumTriangle":{"initialX":-0.67236328125,"initialY":0.8134765625,"initialAngle":1.9198621771937623,"shape":"mediumTriangle"},"parallelogram":{"initialX":1.31982421875,"initialY":-0.498046875,"initialAngle":-2.356194490192345,"shape":"parallelogram"},"smallTriangle1":{"initialX":-1.6767578125,"initialY":-2.10009765625,"initialAngle":1.5707963267948966,"shape":"smallTriangle"},"smallTriangle2":{"initialX":0.98779296875,"initialY":-2.45703125,"initialAngle":-3.141592653589793,"shape":"smallTriangle"},"square":{"initialX":-1.53564453125,"initialY":-0.763671875,"initialAngle":0.7853981633974483,"shape":"square"}
+				"bigTriangle1": {
+					"initialX": -2.4404296875,
+					"initialY": 1.162109375,
+					"initialAngle": -3.4033920413889422,
+					"shape": "bigTriangle"
+				},
+				"bigTriangle2": {
+					"initialX": 1.8759765625,
+					"initialY": -1.56884765625,
+					"initialAngle": -0.7853981633974483,
+					"shape": "bigTriangle"
+				},
+				"mediumTriangle": {
+					"initialX": -0.67236328125,
+					"initialY": 0.8134765625,
+					"initialAngle": 1.9198621771937623,
+					"shape": "mediumTriangle"
+				},
+				"parallelogram": {
+					"initialX": 1.31982421875,
+					"initialY": -0.498046875,
+					"initialAngle": -2.356194490192345,
+					"shape": "parallelogram"
+				},
+				"smallTriangle1": {
+					"initialX": -1.6767578125,
+					"initialY": -2.10009765625,
+					"initialAngle": 1.5707963267948966,
+					"shape": "smallTriangle"
+				},
+				"smallTriangle2": {
+					"initialX": 0.98779296875,
+					"initialY": -2.45703125,
+					"initialAngle": -3.141592653589793,
+					"shape": "smallTriangle"
+				},
+				"square": {
+					"initialX": -1.53564453125,
+					"initialY": -0.763671875,
+					"initialAngle": 0.7853981633974483,
+					"shape": "square"
+				}
 			}
 		}
 	]

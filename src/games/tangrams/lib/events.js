@@ -1,7 +1,11 @@
 // @flow
 
 import minBy from 'lodash/minBy'
-import type {GestureEvent, PanEvent, RotationEvent} from '../components/gesture-handler/types'
+import type {
+	GestureEvent,
+	PanEvent,
+	RotationEvent,
+} from '../components/gesture-handler/types'
 import {HandlerState} from '../components/gesture-handler'
 
 export const getSelectedShape = (
