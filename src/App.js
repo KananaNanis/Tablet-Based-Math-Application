@@ -59,7 +59,9 @@ class App extends React.Component {
 			return <h1>Something went wrong.</h1>
 		}
 		if (this.props.is_game) {
-			return <Tangrams level="test" />
+			if (this.props.game_name === 'tangrams') {
+				return <Tangrams level={this.props.game_level_name} />
+			}
 		}
 		if (this.state.add_tablet_border) {
 			tablet_border = (
@@ -129,6 +131,8 @@ class App extends React.Component {
 function mapStateToProps(state) {
 	return {
 		is_game: state ? state.getIn(['prop', 'is_game']) : false,
+		game_name: state ? state.getIn(['prop', 'game_name']) : '',
+		game_level_name: state ? state.getIn(['prop', 'game_level_name']) : '',
 	}
 }
 
