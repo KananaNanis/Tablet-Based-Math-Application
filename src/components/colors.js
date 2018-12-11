@@ -1,0 +1,7 @@
+export const grassColor = 'lightgreen'
+export const scalingBorderColor = '#43464b'
+export const tabletBorderColor = 'purple'
+export const green = 'green'
+export const blue = 'blue'
+export const white = 'white'
+export const grey = 'grey'
