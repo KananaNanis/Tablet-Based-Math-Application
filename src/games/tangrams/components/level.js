@@ -7,7 +7,10 @@ import type {
 	PanEvent,
 	RotationEvent,
 } from './gesture-handler/types'
-import {PanRotateGestureHandler, HandlerState} from './gesture-handler'
+import {
+	PanRotateGestureHandler,
+	HandlerState,
+} from './gesture-handler'
 import {
 	getSelectedShape,
 	panGestureUpdate,
@@ -42,9 +45,8 @@ export class TangramsLevel extends React.Component<Props, ComponentState> {
 	constructor(props: Props) {
 		super(props)
 		const {currentLevel} = this.props
-		console.log(currentLevel)
 		const {width} = Dimensions.get('window')
-		const scale = width / 8.5
+		const scale = width/6
 		this.selectedKey = undefined
 		const piecesData = getMovablePiecesData(
 			currentLevel.movablePieces,
@@ -69,7 +71,10 @@ export class TangramsLevel extends React.Component<Props, ComponentState> {
 				shape: val.shape,
 			}
 		})
-		this.goalShapeData = getStaticPiecesData(currentLevel.goalPieces, scale)
+		this.goalShapeData = getStaticPiecesData(
+			currentLevel.goalPieces,
+			scale,
+		)
 	}
 
 	state = {
@@ -117,10 +122,7 @@ export class TangramsLevel extends React.Component<Props, ComponentState> {
 						this.numberOfMatchedPieces += 1
 						this.matchedPieces[selectedKey] = true
 					}
-					if (
-						this.numberOfMatchedPieces ===
-						Object.keys(this.goalShapeData).length
-					) {
+					if (this.numberOfMatchedPieces === Object.keys(this.goalShapeData).length) {
 						this.solvedPuzzle()
 					}
 				} else {
@@ -148,7 +150,9 @@ export class TangramsLevel extends React.Component<Props, ComponentState> {
 
 	render() {
 		if (this.state.solved) {
-			return <Yay />
+			return (
+				<Yay />
+			)
 		}
 		const movablePieces = map(this.piecesData, (val, key) => (
 			<Animated.Image

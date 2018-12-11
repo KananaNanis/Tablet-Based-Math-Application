@@ -4341,16 +4341,34 @@ t_add_mix_1:
     params_from: [tower_addition, singletons, missing_addend, level_2]
   sep1:
     params_from: [tower_addition, singletons_separate_fivers, missing_addend, level_1]
+    params:
+      misc:
+        jmp: [tangrams, easy_levels, demo_1]
   sep2:
     params_from: [tower_addition, singletons_separate_fivers, missing_addend, level_2]
+    params:
+      misc:
+        jmp: [tangrams, easy_levels, demo_2]
   both1:
     params_from: [tower_addition, singletons_with_a_fiver, missing_addend, level_1]
+    params:
+      misc:
+        jmp: [tangrams, easy_levels, house_1]
   both2:
     params_from: [tower_addition, singletons_with_a_fiver, missing_addend, level_2]
+    params:
+      misc:
+        jmp: [tangrams, easy_levels, house_2]
   all1:
     params_from: [tower_addition, singletons_with_fivers, missing_addend, level_1]
+    params:
+      misc:
+        jmp: [tangrams, easy_levels, turtle_1]
   all2:
     params_from: [tower_addition, singletons_with_fivers, missing_addend, level_2]
+    params:
+      misc:
+        jmp: [tangrams, easy_levels, turtle_2]
 t_add_mix_2:
   ma2:
     params_from: [tower_addition, missing_addend, level_2]
@@ -4718,11 +4736,27 @@ tangrams:
       is_game: true
       game_name: 'tangrams'
   easy_levels:
-    level_1:
+    demo_1:
       params:
         misc:
-          game_level_name: 'cat'
-    level_2:
+          game_level_name: 'demo_1'
+    demo_2:
       params:
         misc:
-          game_level_name: 'arrow'
+          game_level_name: 'demo_2'
+    house_1:
+      params:
+        misc:
+          game_level_name: 'house_1'
+    house_2:
+      params:
+        misc:
+          game_level_name: 'house_2'
+    turtle_1:
+      params:
+        misc:
+          game_level_name: 'turtle_1'
+    turtle_2:
+      params:
+        misc:
+          game_level_name: 'turtle_2'
