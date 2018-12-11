@@ -425,7 +425,7 @@ prop_types: [scale_factor, freeze_display, num_stars,
     repeat_level, skip_slide_down, correct_option_index,
     show_only_fivers, show_only_singletons, show_only_size,
     trigger_blocks_moving_to_result,
-    answer_is_correct, top_block_under_construction, curr_op, is_game]
+    answer_is_correct, top_block_under_construction, curr_op, is_game, game_name, game_level_name]
 prop_value_types: [number, string, boolean]
 event_handling_types: [target, comparison_source, correctness,
   event_move, top_right_text, show_camel, slide_portal,

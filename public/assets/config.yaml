@@ -4716,3 +4716,13 @@ tangrams:
   params:
     misc:
       is_game: true
+      game_name: 'tangrams'
+  easy_levels:
+    level_1:
+      params:
+        misc:
+          game_level_name: 'cat'
+    level_2:
+      params:
+        misc:
+          game_level_name: 'arrow'
