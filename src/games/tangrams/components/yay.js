@@ -1,7 +1,8 @@
 import React from 'react'
 import {View, Text, StyleSheet, Dimensions} from 'react-native'
+import * as c from '../../../components/colors'
 
-const {height, width} = Dimensions.get('window')
+const {width} = Dimensions.get('window')
 
 export class Yay extends React.Component {
 	render() {
@@ -18,7 +19,7 @@ export class Yay extends React.Component {
 const styles = StyleSheet.create({
 	innerContainer: {},
 	outerContainer: {
-		borderColor: 'green',
+		borderColor: c.green,
 		borderWidth: 25,
 		borderRadius: 20,
 		height: width / 2,

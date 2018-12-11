@@ -1,7 +1,69 @@
 {
 	"levels": [
 		{
-			"name": "house",
+			"name": "demo_1",
+			"goalPieces": {
+				"square": {
+					"initialX": -0.0390625,
+					"initialY": -1.7265625,
+					"initialAngle": 0.7853981633974483,
+					"shape": "square"
+				},
+				"mediumTriangle": {
+					"initialX": -0.0546875,
+					"initialY": 0.125,
+					"initialAngle": -2.356194490192345,
+					"shape": "mediumTriangle"
+				}
+			},
+			"movablePieces": {
+				"square": {
+					"initialX": 1.0703125,
+					"initialY": 1.484375,
+					"initialAngle": 0.7853981633974483,
+					"shape": "square"
+				},
+				"mediumTriangle": {
+					"initialX": -1.1953125,
+					"initialY": 1.9453125,
+					"initialAngle": -2.356194490192345,
+					"shape": "mediumTriangle"
+				}
+			}
+		},
+		{
+			"name": "demo_2",
+			"goalPieces": {
+				"square": {
+					"initialX": -0.0390625,
+					"initialY": -1.7265625,
+					"initialAngle": 0.7853981633974483,
+					"shape": "square"
+				},
+				"mediumTriangle": {
+					"initialX": -0.0546875,
+					"initialY": 0.125,
+					"initialAngle": -2.356194490192345,
+					"shape": "mediumTriangle"
+				}
+			},
+			"movablePieces": {
+				"square": {
+					"initialX": 1.1171875,
+					"initialY": 1.46875,
+					"initialAngle": -1.3877787807814457e-17,
+					"shape": "square"
+				},
+				"mediumTriangle": {
+					"initialX": -1.25,
+					"initialY": 1.5234375,
+					"initialAngle": -3.141592653589793,
+					"shape": "mediumTriangle"
+				}
+			}
+		},
+		{
+			"name": "house_1",
 			"goalPieces": {
 				"mediumTriangle": {
 					"initialX": -0.0078125,
@@ -28,6 +90,439 @@
 					"initialY": 2.34375,
 					"initialAngle": 0.7853981633974483,
 					"shape": "square"
+				}
+			}
+		},
+		{
+			"name": "house_2",
+			"goalPieces": {
+				"mediumTriangle": {
+					"initialX": -0.0078125,
+					"initialY": -0.171875,
+					"initialAngle": -2.356194490192345,
+					"shape": "mediumTriangle"
+				},
+				"square": {
+					"initialX": -0.0234375,
+					"initialY": 0.3125,
+					"initialAngle": 0.7853981633974483,
+					"shape": "square"
+				}
+			},
+			"movablePieces": {
+				"mediumTriangle": {
+					"initialX": -0.8203125,
+					"initialY": 2.203125,
+					"initialAngle": -4.71238898038469,
+					"shape": "mediumTriangle"
+				},
+				"square": {
+					"initialX": 1.1953125,
+					"initialY": 2.2578125,
+					"initialAngle": 1.4835298641951802,
+					"shape": "square"
+				}
+			}
+		},
+		{
+			"name": "turtle_1",
+			"goalPieces": {
+				"bigTriangle1": {
+					"initialX": 0.6796875,
+					"initialY": 0.640625,
+					"initialAngle": -5.551115123125783e-17,
+					"shape": "bigTriangle"
+				},
+				"bigTriangle2": {
+					"initialX": -0.7265625,
+					"initialY": 0.640625,
+					"initialAngle": 3.141592653589793,
+					"shape": "bigTriangle"
+				},
+				"square": {
+					"initialX": 0,
+					"initialY": -1.2578125,
+					"initialAngle": 0.7853981633974483,
+					"shape": "square"
+				}
+			},
+			"movablePieces": {
+				"bigTriangle1": {
+					"initialX": -1.5703125,
+					"initialY": -1.3125,
+					"initialAngle": -5.551115123125783e-17,
+					"shape": "bigTriangle"
+				},
+				"bigTriangle2": {
+					"initialX": 1.515625,
+					"initialY": -1.359375,
+					"initialAngle": 3.141592653589793,
+					"shape": "bigTriangle"
+				},
+				"square": {
+					"initialX": -1.2265625,
+					"initialY": 2.6171875,
+					"initialAngle": 0.7853981633974483,
+					"shape": "square"
+				}
+			}
+		},
+		{
+			"name": "turtle_2",
+			"goalPieces": {
+				"bigTriangle1": {
+					"initialX": 0.6796875,
+					"initialY": 0.640625,
+					"initialAngle": -5.551115123125783e-17,
+					"shape": "bigTriangle"
+				},
+				"bigTriangle2": {
+					"initialX": -0.7265625,
+					"initialY": 0.640625,
+					"initialAngle": 3.141592653589793,
+					"shape": "bigTriangle"
+				},
+				"square": {
+					"initialX": 0,
+					"initialY": -1.2578125,
+					"initialAngle": 0.7853981633974483,
+					"shape": "square"
+				}
+			},
+			"movablePieces": {
+				"bigTriangle1": {
+					"initialX": -0.015625,
+					"initialY": -2.671875,
+					"initialAngle": -1.5707963267948968,
+					"shape": "bigTriangle"
+				},
+				"bigTriangle2": {
+					"initialX": -1.390625,
+					"initialY": 2.3984375,
+					"initialAngle": 2.356194490192345,
+					"shape": "bigTriangle"
+				},
+				"square": {
+					"initialX": 1.5390625,
+					"initialY": 1.8203125,
+					"initialAngle": 1.5707963267948966,
+					"shape": "square"
+				}
+			}
+		},
+		{
+			"name": "turtle_3",
+			"goalPieces": {
+				"bigTriangle1": {
+					"initialX": 0.6796875,
+					"initialY": 0.640625,
+					"initialAngle": -5.551115123125783e-17,
+					"shape": "bigTriangle"
+				},
+				"bigTriangle2": {
+					"initialX": -0.7265625,
+					"initialY": 0.640625,
+					"initialAngle": 3.141592653589793,
+					"shape": "bigTriangle"
+				},
+				"square": {
+					"initialX": -0.03125,
+					"initialY": -1.2734375,
+					"initialAngle": 0.7853981633974483,
+					"shape": "square"
+				},
+				"smallTriangle1": {
+					"initialX": -1.21875,
+					"initialY": -0.5703125,
+					"initialAngle": 0.7853981633974482,
+					"shape": "smallTriangle"
+				},
+				"smallTriangle2": {
+					"initialX": 1.15625,
+					"initialY": -0.578125,
+					"initialAngle": -0.7853981633974485,
+					"shape": "smallTriangle"
+				}
+			},
+			"movablePieces": {
+				"bigTriangle1": {
+					"initialX": -1.875,
+					"initialY": -1.9296875,
+					"initialAngle": -5.551115123125783e-17,
+					"shape": "bigTriangle"
+				},
+				"bigTriangle2": {
+					"initialX": 1.75,
+					"initialY": -2.078125,
+					"initialAngle": 3.141592653589793,
+					"shape": "bigTriangle"
+				},
+				"square": {
+					"initialX": -0.078125,
+					"initialY": -2.7421875,
+					"initialAngle": 0.7853981633974483,
+					"shape": "square"
+				},
+				"smallTriangle1": {
+					"initialX": 1.7421875,
+					"initialY": 1.6015625,
+					"initialAngle": 0.7853981633974482,
+					"shape": "smallTriangle"
+				},
+				"smallTriangle2": {
+					"initialX": -1.796875,
+					"initialY": 1.6796875,
+					"initialAngle": -0.7853981633974485,
+					"shape": "smallTriangle"
+				}
+			}
+		},
+		{
+			"name": "turtle_4",
+			"goalPieces": {
+				"bigTriangle1": {
+					"initialX": 0.6796875,
+					"initialY": 0.640625,
+					"initialAngle": -5.551115123125783e-17,
+					"shape": "bigTriangle"
+				},
+				"bigTriangle2": {
+					"initialX": -0.7265625,
+					"initialY": 0.640625,
+					"initialAngle": 3.141592653589793,
+					"shape": "bigTriangle"
+				},
+				"square": {
+					"initialX": -0.03125,
+					"initialY": -1.2734375,
+					"initialAngle": 0.7853981633974483,
+					"shape": "square"
+				},
+				"smallTriangle1": {
+					"initialX": -1.21875,
+					"initialY": -0.5703125,
+					"initialAngle": 0.7853981633974482,
+					"shape": "smallTriangle"
+				},
+				"smallTriangle2": {
+					"initialX": 1.15625,
+					"initialY": -0.578125,
+					"initialAngle": -0.7853981633974485,
+					"shape": "smallTriangle"
+				}
+			},
+			"movablePieces": {
+				"bigTriangle1": {
+					"initialX": 1.234375,
+					"initialY": 1.984375,
+					"initialAngle": -1.5707963267948966,
+					"shape": "bigTriangle"
+				},
+				"bigTriangle2": {
+					"initialX": -1.2421875,
+					"initialY": 1.921875,
+					"initialAngle": 5.497787143782138,
+					"shape": "bigTriangle"
+				},
+				"square": {
+					"initialX": 1.515625,
+					"initialY": -1.8359375,
+					"initialAngle": 1.5707963267948966,
+					"shape": "square"
+				},
+				"smallTriangle1": {
+					"initialX": -2.1796875,
+					"initialY": 0.5,
+					"initialAngle": -0.7853981633974484,
+					"shape": "smallTriangle"
+				},
+				"smallTriangle2": {
+					"initialX": 2.0390625,
+					"initialY": 0.5546875,
+					"initialAngle": 1.5707963267948966,
+					"shape": "smallTriangle"
+				}
+			}
+		},
+		{
+			"name": "turtle_5",
+			"goalPieces": {
+				"bigTriangle1": {
+					"initialX": 0.6796875,
+					"initialY": 0.640625,
+					"initialAngle": -5.551115123125783e-17,
+					"shape": "bigTriangle"
+				},
+				"bigTriangle2": {
+					"initialX": -0.7265625,
+					"initialY": 0.640625,
+					"initialAngle": 3.141592653589793,
+					"shape": "bigTriangle"
+				},
+				"square": {
+					"initialX": -0.03125,
+					"initialY": -1.2734375,
+					"initialAngle": 0.7853981633974483,
+					"shape": "square"
+				},
+				"smallTriangle1": {
+					"initialX": -1.21875,
+					"initialY": -0.5703125,
+					"initialAngle": 0.7853981633974482,
+					"shape": "smallTriangle"
+				},
+				"smallTriangle2": {
+					"initialX": 1.15625,
+					"initialY": -0.578125,
+					"initialAngle": -0.7853981633974485,
+					"shape": "smallTriangle"
+				},
+				"smallTriangle3": {
+					"initialX": -1.0390625,
+					"initialY": 2.1015625,
+					"initialAngle": -0.9599310885968814,
+					"shape": "smallTriangle"
+				},
+				"smallTriangle4": {
+					"initialX": 0.984375,
+					"initialY": 2.109375,
+					"initialAngle": 0.9599310885968811,
+					"shape": "smallTriangle"
+				}
+			},
+			"movablePieces": {
+				"bigTriangle1": {
+					"initialX": -2.21875,
+					"initialY": 1.203125,
+					"initialAngle": -3.141592653589793,
+					"shape": "bigTriangle"
+				},
+				"bigTriangle2": {
+					"initialX": 2.25,
+					"initialY": 1.203125,
+					"initialAngle": 0,
+					"shape": "bigTriangle"
+				},
+				"square": {
+					"initialX": 1.4453125,
+					"initialY": -2.1953125,
+					"initialAngle": 0.7853981633974483,
+					"shape": "square"
+				},
+				"smallTriangle1": {
+					"initialX": -1.234375,
+					"initialY": -1.7734375,
+					"initialAngle": 0.7853981633974482,
+					"shape": "smallTriangle"
+				},
+				"smallTriangle2": {
+					"initialX": 0.109375,
+					"initialY": -2.7265625,
+					"initialAngle": -0.7853981633974485,
+					"shape": "smallTriangle"
+				},
+				"smallTriangle3": {
+					"initialX": -0.2734375,
+					"initialY": 2.65625,
+					"initialAngle": -0.9599310885968814,
+					"shape": "smallTriangle"
+				},
+				"smallTriangle4": {
+					"initialX": 2.328125,
+					"initialY": -1.046875,
+					"initialAngle": 0.9599310885968811,
+					"shape": "smallTriangle"
+				}
+			}
+		},
+		{
+			"name": "turtle_6",
+			"goalPieces": {
+				"bigTriangle1": {
+					"initialX": 0.6796875,
+					"initialY": 0.640625,
+					"initialAngle": -5.551115123125783e-17,
+					"shape": "bigTriangle"
+				},
+				"bigTriangle2": {
+					"initialX": -0.7265625,
+					"initialY": 0.640625,
+					"initialAngle": 3.141592653589793,
+					"shape": "bigTriangle"
+				},
+				"square": {
+					"initialX": -0.03125,
+					"initialY": -1.2734375,
+					"initialAngle": 0.7853981633974483,
+					"shape": "square"
+				},
+				"smallTriangle1": {
+					"initialX": -1.21875,
+					"initialY": -0.5703125,
+					"initialAngle": 0.7853981633974482,
+					"shape": "smallTriangle"
+				},
+				"smallTriangle2": {
+					"initialX": 1.15625,
+					"initialY": -0.578125,
+					"initialAngle": -0.7853981633974485,
+					"shape": "smallTriangle"
+				},
+				"smallTriangle3": {
+					"initialX": -1.0390625,
+					"initialY": 2.1015625,
+					"initialAngle": -0.9599310885968814,
+					"shape": "smallTriangle"
+				},
+				"smallTriangle4": {
+					"initialX": 0.984375,
+					"initialY": 2.109375,
+					"initialAngle": 0.9599310885968811,
+					"shape": "smallTriangle"
+				}
+			},
+			"movablePieces": {
+				"bigTriangle1": {
+					"initialX": -1.4921875,
+					"initialY": -2.796875,
+					"initialAngle": -1.5707963267948968,
+					"shape": "bigTriangle"
+				},
+				"bigTriangle2": {
+					"initialX": 1.2578125,
+					"initialY": -2.53125,
+					"initialAngle": 3.9269908169872414,
+					"shape": "bigTriangle"
+				},
+				"square": {
+					"initialX": -0.03125,
+					"initialY": 2.8046875,
+					"initialAngle": 0,
+					"shape": "square"
+				},
+				"smallTriangle1": {
+					"initialX": -2.2734375,
+					"initialY": -0.0859375,
+					"initialAngle": -0.7853981633974485,
+					"shape": "smallTriangle"
+				},
+				"smallTriangle2": {
+					"initialX": 2.125,
+					"initialY": 0.140625,
+					"initialAngle": 0.7853981633974481,
+					"shape": "smallTriangle"
+				},
+				"smallTriangle3": {
+					"initialX": -2.2578125,
+					"initialY": 1.6796875,
+					"initialAngle": -2.356194490192345,
+					"shape": "smallTriangle"
+				},
+				"smallTriangle4": {
+					"initialX": 2.1875,
+					"initialY": 1.6953125,
+					"initialAngle": 2.356194490192345,
+					"shape": "smallTriangle"
 				}
 			}
 		},

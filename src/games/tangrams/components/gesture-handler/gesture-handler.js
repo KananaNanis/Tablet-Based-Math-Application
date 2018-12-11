@@ -1,7 +1,7 @@
 // @flow
 
 import React from 'react'
-import {View, StyleSheet, Dimensions} from 'react-native'
+import {View, StyleSheet} from 'react-native'
 import {HandlerState, Gesture} from './constants'
 import type {NativeEvent, PanEvent, RotationEvent, NativeLayout} from './types'
 import {createPanEvent, createRotationEvent} from './events'

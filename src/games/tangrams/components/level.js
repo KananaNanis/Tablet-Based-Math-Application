@@ -1,7 +1,7 @@
 // @flow
 
 import React from 'react'
-import {Animated, StyleSheet, View, Text, Dimensions} from 'react-native'
+import {Animated, StyleSheet, Dimensions} from 'react-native'
 import type {
 	GestureEvent,
 	PanEvent,
@@ -19,7 +19,6 @@ import {getMovablePiecesData, getStaticPiecesData} from '../lib/piece-creation'
 import map from 'lodash/map'
 import find from 'lodash/find'
 import type {PiecesDataCollection} from '../config/types'
-import {global_screen_width} from '../../../components/Workspace'
 import {Yay} from './yay'
 
 const {width} = Dimensions.get('window')
@@ -27,6 +26,10 @@ const {width} = Dimensions.get('window')
 type Props = {
 	level: string,
 	onSolved: () => any,
+}
+
+type ComponentState = {
+	solved: boolean,
 }
 
 export class TangramsLevel extends React.Component<Props, ComponentState> {
@@ -204,7 +207,6 @@ export class TangramsLevel extends React.Component<Props, ComponentState> {
 const styles = StyleSheet.create({
 	container: {
 		...StyleSheet.absoluteFillObject,
-		backgroundColor: 'gray',
 		overflow: 'hidden',
 		flex: 1,
 		alignItems: 'center',
