@@ -4329,46 +4329,58 @@ tower_addition:
 t_add_mix_1:
   ma1:
     params_from: [tower_addition, missing_addend, level_1]
+    params:
+      misc:
+        jmp: [tangrams, easy_levels, house_1]
   ma2:
     params_from: [tower_addition, missing_addend, level_2]
+    params:
+      misc:
+        jmp: [tangrams, easy_levels, house_2]
   ma21:
     params_from: [tower_addition, missing_addend_2, level_1]
+    params:
+      misc:
+        jmp: [tangrams, easy_levels, cat_1]
   ma22:
     params_from: [tower_addition, missing_addend_2, level_2]
+    params:
+      misc:
+        jmp: [tangrams, easy_levels, cat_2]
   sing1:
     params_from: [tower_addition, singletons, missing_addend, level_1]
+    params:
+      misc:
+        jmp: [tangrams, easy_levels, cat_3]
   sing2:
     params_from: [tower_addition, singletons, missing_addend, level_2]
+    params:
+      misc:
+        jmp: [tangrams, easy_levels, cat_4]
   sep1:
     params_from: [tower_addition, singletons_separate_fivers, missing_addend, level_1]
     params:
       misc:
-        jmp: [tangrams, easy_levels, demo_1]
+        jmp: [tangrams, easy_levels, cat_1]
   sep2:
     params_from: [tower_addition, singletons_separate_fivers, missing_addend, level_2]
     params:
       misc:
-        jmp: [tangrams, easy_levels, demo_2]
+        jmp: [tangrams, easy_levels, cat_2]
   both1:
     params_from: [tower_addition, singletons_with_a_fiver, missing_addend, level_1]
     params:
       misc:
-        jmp: [tangrams, easy_levels, house_1]
+        jmp: [tangrams, easy_levels, cat_3]
   both2:
     params_from: [tower_addition, singletons_with_a_fiver, missing_addend, level_2]
     params:
       misc:
-        jmp: [tangrams, easy_levels, house_2]
+        jmp: [tangrams, easy_levels, cat_4]
   all1:
     params_from: [tower_addition, singletons_with_fivers, missing_addend, level_1]
-    params:
-      misc:
-        jmp: [tangrams, easy_levels, turtle_1]
   all2:
     params_from: [tower_addition, singletons_with_fivers, missing_addend, level_2]
-    params:
-      misc:
-        jmp: [tangrams, easy_levels, turtle_2]
 t_add_mix_2:
   ma2:
     params_from: [tower_addition, missing_addend, level_2]
@@ -4752,11 +4764,19 @@ tangrams:
       params:
         misc:
           game_level_name: 'house_2'
-    turtle_1:
+    cat_1:
       params:
         misc:
-          game_level_name: 'turtle_1'
-    turtle_2:
+          game_level_name: 'cat_1'
+    cat_2:
       params:
         misc:
-          game_level_name: 'turtle_2'
+          game_level_name: 'cat_2'
+    cat_3:
+      params:
+        misc:
+          game_level_name: 'cat_3'
+    cat_4:
+      params:
+        misc:
+          game_level_name: 'cat_4'
