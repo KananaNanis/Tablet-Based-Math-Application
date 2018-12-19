@@ -1,6 +1,18 @@
 # these constants should be fixed!
 debug_mode: true
-num_exercises_for_debugging: 1
+num_exercises_for_debugging: 2
+debug_path: [baby_turtles, direct, use_keypad]
+# debug_path: [baby_turtles, direct, fiver_fiver, level_2]
+# debug_path: [baby_turtles, direct, review_singletons, level_2]
+# debug_path: [baby_turtles, direct, baby_singletons, level_1]
+# debug_path: [baby_turtles, direct, singleton_singleton, level_1]
+# debug_path: [baby_turtles, direct, review_singleton_with_fiver, level_1]
+# debug_path: [baby_turtles, direct, baby_singleton_with_fiver, level_1]
+# debug_path: [baby_turtles, direct, both_singleton_with_fiver, level_1]
+# debug_path: [baby_turtles, direct, many_small_fivers, level_1]
+# debug_path: [baby_turtles, direct, challenge, level_1]
+# debug_path: [t_add_mix_1, ma1]
+# debug_path: [t_add_mix_1, sep1]
 # debug_path: [tangrams]
 # debug_path: [tower_variations, level_1]
 # debug_path: [tower_variations, singletons, level_1]
@@ -9,7 +21,7 @@ num_exercises_for_debugging: 1
 # debug_path: [tower_variations, singletons_with_fivers, level_1]
 # debug_path: [animation_test]
 # debug_path: [two_doors]
-debug_path: [identity_function, as_option, bars, level_1]
+# debug_path: [identity_function, as_option, bars, level_1]
 # debug_path: [identity_function, as_drag, bars, level_1]
 # debug_path: [identity_function, as_option, doors, level_1]
 # debug_path: [identity_function, as_drag, doors, level_1]
@@ -174,29 +186,30 @@ starting_config_path_Dom: [tower_addition, direct, level_1] # Nov 9
 # starting_config_path_PCCS: [drag_blocks, missing_addend, level_1] # Nov 26
 # starting_config_path_PCCS: [drag_blocks, missing_addend, level_3, harder_case, stage_1] # Nov 27
 # starting_config_path_PCCS: [counting_up_sub, missing_addend, level_1] # Dec 3
-starting_config_path_PCCS: [t_add_mix_1, ma1] # Dec 7
+# starting_config_path_PCCS: [t_add_mix_1, ma1] # Dec 7
+starting_config_path_PCCS: [baby_turtles, direct, use_keypad] # Dec 18
 
-starting_level_for: # Dec 10
-  m01: [t_add_mix_1, ma21]
-  m02: [t_add_mix_1, both1]
-  m03: [t_add_mix_1, sing1]
-  m04: [t_add_mix_1, sing1]
+starting_level_for_earlier: # Dec 10
+  m01: [t_add_mix_1, ma1]
+  m02: [t_add_mix_1, all1]
+  m03: [t_add_mix_1, sep1]
+  m04: [t_add_mix_1, all1]
   m05: [t_add_mix_1, all1]
-  m06: [t_add_mix_1, sep1]
-  m07: [t_add_mix_1, sing1]
+  m06: [t_add_mix_1, all1]
+  m07: [t_add_mix_1, sep1]
   m08: [t_add_mix_1, both1]
-  m09: [t_add_mix_1, both1]
-  m10: [t_add_mix_1, both1]
-  m11: [t_add_mix_1, sep1]
-  m12: [t_add_mix_1, ma21]
-  m13: [t_add_mix_1, sing1]
-  m14: [t_add_mix_1, ma21]
+  m09: [t_add_mix_1, all1]
+  m10: [t_add_mix_1, all1]
+  m11: [t_add_mix_1, all1]
+  m12: [t_add_mix_1, sep1]
+  m13: [t_add_mix_1, sep1]
+  m14: [t_add_mix_1, sing1]
   m15: [t_add_mix_1, sep1]
-  m16: [t_add_mix_2, ma1]
+  m16: [t_add_mix_2, ma2]
   m17: [t_add_mix_1, sep1]
-  m18: [t_add_mix_1, sing1]
+  m18: [t_add_mix_1, sep1]
   m19: [t_add_mix_1, ma1]
-  m20: [t_add_mix_2, ma1]
+  m20: [t_add_mix_2, both1]
 
 jmp_label_1:
   # the following are the levels that have to do with estimating heights 1-18
@@ -301,7 +314,7 @@ special_button_geoms:
 keypad_info:
   buildTower:
     # position: [right 5, top 5]
-    position: [25, top 25]
+    position: [25, top 95]
     button_width: 80
     button_height: 80
     space_width: 20
@@ -425,7 +438,7 @@ prop_types: [scale_factor, freeze_display, num_stars,
     repeat_level, skip_slide_down, correct_option_index,
     show_only_fivers, show_only_singletons, show_only_size,
     trigger_blocks_moving_to_result,
-    answer_is_correct, top_block_under_construction, curr_op, is_game, game_name, game_level_name]
+    answer_is_correct, top_block_under_construction, curr_op, is_game]
 prop_value_types: [number, string, boolean]
 event_handling_types: [target, comparison_source, correctness,
   event_move, top_right_text, show_camel, slide_portal,
@@ -435,7 +448,7 @@ event_handling_types: [target, comparison_source, correctness,
   allow_non_standard, expand_into_units, drag_blocks_to_result,
   just_yaml_event, on_down, on_up, use_option_buttons,
   show_blocks_moving_to_result, show_mean_result_at_end,
-  counting_up_sub,
+  counting_up_sub, allow_keypad_minis,
   move, arg_1, arg_2, result]
 position_modifiers: [left, right, top, bottom,
   left_from_right, right_from_left, top_from_bottom,

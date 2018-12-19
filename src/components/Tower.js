@@ -258,6 +258,7 @@ class Tower extends React.Component {
 			const b = block_info[i]
 			const is_small = b.height < 10
 			const is_tiny = b.height < 4
+			// console.log('is_tiny', is_tiny)
 			const is_fiver = b.is_fiver
 			const size = b.size
 			//console.log('size', size)
@@ -291,21 +292,22 @@ class Tower extends React.Component {
 				else height -= 2
 				if (!is_small) radius_style = {borderRadius: radius}
 			}
+			let bg = width < 50 ? 'darkred' : '#dbb'
 			let marginLeft = 0
 			if (is_small) {
 				if (
 					//is_fiver ||
 					!(small_in_a_row % 2)
 				) {
-					marginLeft = 1
+					marginLeft = 10
+					if (width < 50) bg = 'red'
 				}
 			}
+			if (just_grey) bg = as_greyscale(bg)
 			let img_name = null
 			if (-1 === size && !is_fiver) img_name = 'turtle'
 			else if (-1 === size && is_fiver) img_name = 'fiverTurtle'
 			else if (0 === size && !is_fiver) img_name = 'unit'
-			let bg = width < 10 ? 'black' : '#dbb'
-			if (just_grey) bg = as_greyscale(bg)
 			let view_style = {
 				position: 'absolute',
 				backgroundColor: bg,

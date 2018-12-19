@@ -1,6 +1,6 @@
 import {List, fromJS} from 'immutable'
 import {config_tree, global_constant} from '../lib/global'
-import {with_suffix, query_path, query_prop} from './query_store'
+import {with_suffix, query_path, query_prop, query_event} from './query_store'
 import {tower_name2height} from './query_tower'
 import {
 	global_screen_width,
@@ -10,6 +10,7 @@ import {get_block_size_from_group} from '../components/Block'
 import {enter_exit_config} from './enter_exit'
 import * as Actions from './actions'
 import {do_batched_actions} from './reducers'
+import {update_keypad_button_visibility} from '../event/utils'
 
 export const deep_clone = obj => JSON.parse(JSON.stringify(obj))
 
@@ -303,6 +304,9 @@ export function transition_to_next_config(action_list, silent) {
 			enter_exit_config(next_path, true, action_list, silent)
 			action_list.push(Actions.setProp('is_game', true))
 			do_batched_actions(action_list)
+			if (query_event('allow_keypad_minis')) {
+				update_keypad_button_visibility(null, null, null)
+			}
 			const add_debug = false
 			if (add_debug) {
 				// for debugging, let's turn it off after awhile

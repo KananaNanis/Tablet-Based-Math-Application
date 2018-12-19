@@ -467,8 +467,8 @@ function apply_gen_instruction(
 					if (0 === vals1) vals1 = []
 					else vals1 = [vals1]
 				}
-				// console.log(' vals0', vals0, 'vals1', vals1)
 				gen_vars[id] = vals0.concat(vals1)
+				// console.log(' vals0', vals0, 'vals1', vals1, 'id', id, 'res', gen_vars[id])
 			} else if ('+*+' === words[1]) {
 				// a kind of outer product, with special handling for zero
 				let vals0 = vals[0],

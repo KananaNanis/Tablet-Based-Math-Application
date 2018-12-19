@@ -165,6 +165,9 @@ export function update_keypad_button_visibility(size, is_fiver, how_many) {
 	const i_end = global_constant.buildTower_button_info.length
 	let require_standard_tower = true
 	if (query_event('allow_non_standard')) require_standard_tower = false
+	let hide_minis = true
+	if (query_event('allow_keypad_minis')) hide_minis = false
+	// console.log('allow_keypad_minis', query_event('allow_keypad_minis'))
 	for (let i = 0; i < i_end; ++i) {
 		const bsize = global_constant.buildTower_button_info[i][0]
 		const bfiver = global_constant.buildTower_button_info[i][1]
@@ -175,9 +178,15 @@ export function update_keypad_button_visibility(size, is_fiver, how_many) {
 				else if (!is_fiver && how_many > 3) show = false
 			}
 		}
-		const hide_minis_and_tinys = true
-		if (hide_minis_and_tinys) {
-			if (bsize < -1) show = false
+		const hide_tinys = true
+		if (hide_tinys) {
+			if (bsize < -2) show = false
+		}
+		if (hide_minis) {
+			if (bsize === -2) show = false
+		}
+		const hide_large = true
+		if (hide_large) {
 			if (bsize > 0) show = false
 			if (bsize === 0 && bfiver) show = false
 		}

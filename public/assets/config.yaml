@@ -4406,6 +4406,195 @@ t_add_mix_2:
     params_from: [tower_addition, singletons_with_fivers, missing_addend, level_2]
   all3:
     params_from: [tower_addition, singletons_with_fivers, missing_addend, level_3]
+baby_turtles:
+  params:
+    generate:
+      mean_name_base_5: [pick_from_list, [[.5,.5, .5,.5, .5,.5], [1, .5,.5, .5,.5], [2, .5,.5], [.5,.5, .5,.5], [1, .5,.5], [.5,.5]]]
+      # mean_name_base_5: [pick_from_list, [[.5,.5]]]
+      extra_fiver: [pick_from_list, [0, .5]]
+      extra_small_fiver: [pick_from_list, [0, .05]]
+      extra_delta: [pick_from_range, 0, .45, .1]
+      extra_small_delta: [pick_from_range, 0, .045, .01]
+      mean_name_f: mean_name_base_5 ++ extra_fiver
+      mean_name_g: mean_name_f ++ extra_delta
+      mean_name_h: mean_name_g ++ extra_small_fiver
+      mean_name_i: [fixed, 0]  # placeholders
+      mean_name_j: [fixed, 0]
+      mean_name: mean_name_h ++ extra_small_delta
+      # mean_name: [fixed, [1, .5, .4, .04, .03]]
+      # mean_name: [fixed, [3, .5, .4, .05, .04]]
+      tower_1_name: mean_name
+    create:
+      tower_1: { name: tower_1_name }
+      tower_mid: []
+      tower_2: []
+      tower_moving: []
+    modify:
+      tower_1:
+        position: [5, 0]
+        tower_style: {opacity: 0}
+      tower_mid:
+        position: [40vw, 0]
+        misc:
+          hide_tower_name: true
+      tower_2:
+        position: [right 20vw, 0]
+        # tower_style: {opacity: 0}
+        misc:
+          tower_name_style: { left: 55 }
+      tower_moving:
+        position: [0, 0]
+        misc:
+          hide_tower_name: true
+    event_handling:
+      correctness: identical
+      touch_reveals_button: [submit, delete]
+    misc:
+      new_scale_factor: 200
+      num_stars: 2
+      remove_on_exit: [button_submit, button_delete]
+      # config_iteration: 7
+      # when ready to tie the different stages together:
+      # skip_submit: true
+  direct:
+    params_from: [grouping_direct_snippet]
+    params:
+      event_handling:
+        allow_non_standard: false
+        allow_keypad_minis: true
+    use_keypad:
+    fiver_fiver:
+      params:
+        generate:
+          mean_name_base_5: [pick_from_list, [[.5,.5, .5,.5, .5,.5], [1, .5,.5, .5,.5], [2, .5,.5], [.5,.5, .5,.5], [1, .5,.5], [.5,.5]]]
+          mean_name_base_05: [pick_from_list, [[.05,.05, .05,.05, .05,.05], [.1, .05,.05, .05,.05], [.2, .05,.05], [.05,.05, .05,.05], [.1, .05,.05], [.05,.05]]]
+          extra_fiver: [pick_from_list, [0, .5]]
+          extra_small_fiver: [pick_from_list, [0, .05]]
+          extra_delta: [pick_from_range, 0, .45, .1]
+          extra_small_delta: [pick_from_range, 0, .045, .01]
+          mean_name_f: mean_name_base_5 ++ extra_fiver
+          mean_name_g: mean_name_f ++ extra_delta
+          mean_name_h: mean_name_g ++ mean_name_base_05
+          mean_name_i: mean_name_h ++ extra_small_fiver
+          mean_name: mean_name_i ++ extra_small_delta
+          # mean_name_base_1: [pick_from_list, [[.3,.3], [.4,.2], [.2,.4], [.4,.3], [.3,.4], [.4,.4]]]
+          # extra_box: [pick_from_range, 0, 1.1, 1]
+          # mean_name: extra_box ++ mean_name_base_1
+        event_handling:
+          expand_into_units: true  # to allow .3, .4 == .4, .3
+      level_1:
+        params:
+          generate:
+            extra_delta: [fixed, 0]
+            extra_small_delta: [fixed, 0]
+      level_2:
+    review_singletons:
+      params:
+        generate:
+          mean_name_base_1: [pick_from_list, [[.3,.3], [.4,.2], [.2,.4], [.4,.3], [.3,.4], [.4,.4]]]
+          extra_box: [pick_from_range, 0, 1.1, 1]
+          mean_name: extra_box ++ mean_name_base_1
+        event_handling:
+          expand_into_units: true  # to allow .3, .4 == .4, .3
+      level_1:
+      level_2:
+        params:
+          modify:
+            tower_mid:
+              anim_info:
+                tower_opacity: [1, 0]
+                duration: 1000
+            tower_2:
+              tower_style: {opacity: 0}
+    baby_singletons:
+      params:
+        generate:
+          mean_name_base_01: [pick_from_list, [[.03,.03], [.04,.02], [.02,.04], [.04,.03], [.03,.04], [.04,.04]]]
+          extra_box: [pick_from_range, 0, 1.1, 1]
+          extra_turtle: [pick_from_range, 0, .11, .1]
+          mean_name: extra_box ++ mean_name_base_01
+        event_handling:
+          expand_into_units: true  # to allow .3, .4 == .4, .3
+      level_1:
+    singleton_singleton:
+      params:
+        generate:
+          extra_box: [pick_from_range, 0, 1.1, 1]
+          mean_name_base_1: [pick_from_list, [[.3,.3], [.4,.2], [.2,.4], [.4,.3], [.3,.4], [.4,.4]]]
+          # extra_turtle: [pick_from_range, 0, .11, .1]
+          extra_turtle: [fixed, 0]
+          mean_name_base_01: [pick_from_list, [[.03,.03], [.04,.02], [.02,.04], [.04,.03], [.03,.04], [.04,.04]]]
+          mean_name_f: extra_box ++ mean_name_base_1
+          mean_name_g: mean_name_f ++ extra_turtle
+          mean_name: mean_name_g ++ mean_name_base_01
+        event_handling:
+          expand_into_units: true  # to allow .3, .4 == .4, .3
+      level_1:
+    review_singleton_with_fiver:
+      params:
+        generate:
+          mean_name_base_1: [pick_from_list, [[.3,.3], [.4,.2], [.2,.4], [.4,.3], [.3,.4], [.4,.4]]]
+          extra_box: [pick_from_range, 0, 2.1, 1]
+          extra_fiver: [fixed, 0.5]
+          mean_name_f: extra_box ++ extra_fiver
+          mean_name: mean_name_f ++ mean_name_base_1
+        event_handling:
+          expand_into_units: true  # to allow .3, .4 == .4, .3
+      level_1:
+    baby_singleton_with_fiver:
+      params:
+        generate:
+          mean_name_base_01: [pick_from_list, [[.03,.03], [.04,.02], [.02,.04], [.04,.03], [.03,.04], [.04,.04]]]
+          extra_turtle: [pick_from_range, 0, .21, .1]
+          extra_small_fiver: [fixed, 0.05]
+          mean_name_f: extra_turtle ++ extra_small_fiver
+          mean_name: mean_name_f ++ mean_name_base_01
+        event_handling:
+          expand_into_units: true  # to allow .3, .4 == .4, .3
+      level_1:
+    both_singleton_with_fiver:
+      params:
+        generate:
+          mean_name_base_1: [pick_from_list, [[.3,.3], [.4,.2], [.2,.4], [.4,.3], [.3,.4], [.4,.4]]]
+          extra_box: [pick_from_range, 0, 2.1, 1]
+          extra_fiver: [fixed, 0.5]
+          mean_name_base_01: [pick_from_list, [[.03,.03], [.04,.02], [.02,.04], [.04,.03], [.03,.04], [.04,.04]]]
+          # extra_turtle: [pick_from_range, 0, .21, .1]
+          extra_turtle: [fixed, 0]
+          extra_small_fiver: [fixed, 0.05]
+          mean_name_f: extra_box ++ extra_fiver
+          mean_name_g: mean_name_f ++ mean_name_base_1
+          mean_name_h: mean_name_g ++ extra_small_fiver
+          mean_name: mean_name_h ++ mean_name_base_01
+        event_handling:
+          expand_into_units: true  # to allow .3, .4 == .4, .3
+      level_1:
+    many_small_fivers:
+      params:
+        generate:
+          extra_box: [pick_from_range, 0, 2.1, 1]
+          extra_fiver: [fixed, 0.5]
+          mean_name_base_1: [pick_from_list, [[.3,.05,.05,.05,.05,.05,.05], [.4,.05,.05,.05,.05], [.4,.05,.05,.05,.05,.05,.05]]]
+          mean_name_f: extra_box ++ extra_fiver
+          mean_name: mean_name_f ++ mean_name_base_1
+        event_handling:
+          expand_into_units: true  # to allow .3, .4 == .4, .3
+    challenge:
+      params:
+        generate:
+          mean_name_base_1: [pick_from_list, [[.3,.3], [.4,.2], [.2,.4], [.4,.3], [.3,.4], [.4,.4]]]
+          extra_box: [pick_from_range, 0, 2.1, 1]
+          extra_fiver: [fixed, 0.5]
+          mean_name_base_01: [pick_from_list, [[.03,.03], [.04,.02], [.02,.04], [.04,.03], [.03,.04], [.04,.04]]]
+          extra_turtle: [pick_from_range, 0, .21, .1]
+          extra_small_fiver: [fixed, 0.05]
+          mean_name_f: extra_box ++ extra_fiver
+          mean_name_g: mean_name_f ++ mean_name_base_1
+          mean_name_h: mean_name_g ++ extra_turtle
+          mean_name_i: mean_name_h ++ extra_small_fiver
+          mean_name: mean_name_i ++ mean_name_base_01
+        event_handling:
+          expand_into_units: true  # to allow .3, .4 == .4, .3
 # bar_addition:
 # - params:
 #   - generator: {random1: uniform, random2: uniform, sum_in_range: [.1,1]}
