@@ -8,13 +8,19 @@ import {
 } from '../components/Workspace'
 import {enter_exit_config} from '../providers/enter_exit'
 import {do_batched_actions} from '../providers/reducers'
-import {query_path, query_test, query_prop} from '../providers/query_store'
+import {
+	query_path,
+	query_test,
+	query_prop,
+	query_event,
+} from '../providers/query_store'
 import {clear_handler_variables} from '../event/handlers'
 import {global_store} from '../index.js'
 import * as Actions from '../providers/actions'
 import {as_position, print_all_paths} from '../providers/change_config'
 import {get_keypad_width_height} from '../components/Keypad'
 import Sound from '../assets/sound'
+import {update_keypad_button_visibility} from '../event/utils'
 
 export let global_sound = {}
 
@@ -64,6 +70,9 @@ export function initialize_redux_store(path) {
 	enter_exit_config(path, enter, action_list)
 	if (verbose) console.log('applying actions to load initial values into store')
 	do_batched_actions(action_list)
+	if (query_event('allow_keypad_minis')) {
+		update_keypad_button_visibility(null, null, null)
+	}
 }
 
 let prev_response_text = ''
