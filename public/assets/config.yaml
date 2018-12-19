@@ -4470,7 +4470,8 @@ baby_turtles:
           mean_name_base_05: [pick_from_list, [[.05,.05, .05,.05, .05,.05], [.1, .05,.05, .05,.05], [.2, .05,.05], [.05,.05, .05,.05], [.1, .05,.05], [.05,.05]]]
           extra_fiver: [pick_from_list, [0, .5]]
           extra_small_fiver: [pick_from_list, [0, .05]]
-          extra_delta: [pick_from_range, 0, .45, .1]
+          # extra_delta: [pick_from_range, 0, .45, .1]
+          extra_delta: [fixed, 0]  # don't do a double carry yet
           extra_small_delta: [pick_from_range, 0, .045, .01]
           mean_name_f: mean_name_base_5 ++ extra_fiver
           mean_name_g: mean_name_f ++ extra_delta
