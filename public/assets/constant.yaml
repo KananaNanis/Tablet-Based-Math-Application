@@ -1,24 +1,8 @@
 # these constants should be fixed!
-debug_mode: true
+debug_mode: false
 num_exercises_for_debugging: 2
-debug_path: [baby_turtles, direct, use_keypad]
-# debug_path: [baby_turtles, direct, fiver_fiver, level_2]
-# debug_path: [baby_turtles, direct, review_singletons, level_2]
-# debug_path: [baby_turtles, direct, baby_singletons, level_1]
-# debug_path: [baby_turtles, direct, singleton_singleton, level_1]
-# debug_path: [baby_turtles, direct, review_singleton_with_fiver, level_1]
-# debug_path: [baby_turtles, direct, baby_singleton_with_fiver, level_1]
-# debug_path: [baby_turtles, direct, both_singleton_with_fiver, level_1]
-# debug_path: [baby_turtles, direct, many_small_fivers, level_1]
-# debug_path: [baby_turtles, direct, challenge, level_1]
-# debug_path: [t_add_mix_1, ma1]
-# debug_path: [t_add_mix_1, sep1]
+# debug_path: [addition2, direct, level_1]
 # debug_path: [tangrams]
-# debug_path: [tower_variations, level_1]
-# debug_path: [tower_variations, singletons, level_1]
-# debug_path: [tower_variations, singletons_separate_fivers, level_1]
-# debug_path: [tower_variations, singletons_with_a_fiver, level_1]
-# debug_path: [tower_variations, singletons_with_fivers, level_1]
 # debug_path: [animation_test]
 # debug_path: [two_doors]
 # debug_path: [identity_function, as_option, bars, level_1]
@@ -152,6 +136,22 @@ debug_path: [baby_turtles, direct, use_keypad]
 # debug_path: [tower_addition, missing_addend, level_1]
 # debug_path: [counting_up_sub, missing_addend, level_1]
 # debug_path: [t_add_mix_1, ma1]
+# debug_path: [t_add_mix_1, sep1]
+# debug_path: [tower_variations, level_1]
+# debug_path: [tower_variations, singletons, level_1]
+# debug_path: [tower_variations, singletons_separate_fivers, level_1]
+# debug_path: [tower_variations, singletons_with_a_fiver, level_1]
+# debug_path: [tower_variations, singletons_with_fivers, level_1]
+# debug_path: [baby_turtles, direct, use_keypad]
+# debug_path: [baby_turtles, direct, fiver_fiver, level_2]
+# debug_path: [baby_turtles, direct, review_singletons, level_2]
+# debug_path: [baby_turtles, direct, baby_singletons, level_1]
+# debug_path: [baby_turtles, direct, singleton_singleton, level_1]
+# debug_path: [baby_turtles, direct, review_singleton_with_fiver, level_1]
+# debug_path: [baby_turtles, direct, baby_singleton_with_fiver, level_1]
+# debug_path: [baby_turtles, direct, both_singleton_with_fiver, level_1]
+# debug_path: [baby_turtles, direct, many_small_fivers, level_1]
+# debug_path: [baby_turtles, direct, challenge, level_1]
 # debug_path: [all_done]
 # debug_path: [in_between]
 # starting_config_path: [one_through_five, five_frame, level_1] # P Oct 8
@@ -188,6 +188,9 @@ starting_config_path_Dom: [tower_addition, direct, level_1] # Nov 9
 # starting_config_path_PCCS: [counting_up_sub, missing_addend, level_1] # Dec 3
 # starting_config_path_PCCS: [t_add_mix_1, ma1] # Dec 7
 starting_config_path_PCCS: [baby_turtles, direct, use_keypad] # Dec 18
+
+starting_level_for: # Dec 10
+  math: [addition2, direct, level_1]
 
 starting_level_for_earlier: # Dec 10
   m01: [t_add_mix_1, ma1]
@@ -363,8 +366,20 @@ tower:
   size2depth:
     -3: .1
     -2: .2
-    -1: .8
-    0: 1
+    # -1: .8
+    -1: .318
+    # 0: 1
+    0: .508
+    1: 8
+    2: 50
+    3: 500
+  size2depth_fiver:
+    -3: .1
+    -2: .2
+    # -1: .8
+    -1: .381
+    # 0: 1
+    0: .508
     1: 8
     2: 50
     3: 500

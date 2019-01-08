@@ -52,7 +52,7 @@ function init_page_dimensions(
 }
 
 const PrintFigure = () => {
-	const scale_down_for_laptop = false
+	const scale_down_for_laptop = true
 	const rotate_whole_page = false
 	let use11x17 = true
 	let landscape = false
@@ -162,6 +162,28 @@ const PrintFigure = () => {
 			content.push(<FiveFrame key={i} name={5} position={[5 + i * 245, 5]} />)
 		}
 	} else if (keep) {
+		console.log('HI')
+		use11x17 = false
+		landscape = true
+		show_purple_border = true
+		const vals = [0.1, 0.5, 1.0]
+		const scale_factor = query_prop('scale_factor')
+		for (let i = 0; i < 3; ++i) {
+				content.push(<FiveFrame key={i} name={5} position={[5 + i * 245, 5]} />)
+				/*
+				content.push(
+					<Num
+						key={i}
+						id={'tower_' + i}
+						misc={{hide_tower_name: true}}
+						name={height2tower_name(vals[i % 3])}
+						position={[150 * (i) + 50 * i + 50, 0]}
+						scale_factor={scale_factor}
+					/>,
+				)
+				*/
+		}
+	} else if (skip) {
 		// print worksheets for learning to draw tower diagrams
 		use11x17 = false
 		landscape = true
@@ -247,8 +269,15 @@ const PrintFigure = () => {
 		scale_down_for_laptop,
 		rotate_whole_page,
 	)
-	const borderWidth = show_purple_border ? 1 : 0
+	let borderWidth = show_purple_border ? 1 : 0
+	borderWidth = 20
+	console.log('OK')
+	content = null
+	width = 100
+	height = 100
+	console.log(width, height, transform)
 
+	return (<View style={[styles.print_figure, {width, height, borderWidth}]}><Text>HELLO?</Text></View>)
 	return (
 		<View
 			style={[styles.print_figure, {width, height, transform, borderWidth}]}
@@ -263,6 +292,7 @@ const diagramBorder = 'black'
 const styles = StyleSheet.create({
 	print_figure: {
 		position: 'absolute',
+		display: 'block',
 		borderColor: pageBorder,
 		transformOrigin: 'top left',
 	},

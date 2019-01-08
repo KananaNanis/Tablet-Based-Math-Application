@@ -82,6 +82,7 @@ const Num = ({
 		)
 	// misc = { top_just_outline: true }
 	//misc = { as_diagram: true }
+	const hide_all_tower_names = true
 	return (
 		<View style={[styles.num, style, {left: position[0], bottom: position[1]}]}>
 			<Tower
@@ -96,7 +97,7 @@ const Num = ({
 				scale_factor={scale_factor}
 				style={tower_style}
 			/>
-			{tn}
+			{hide_all_tower_names ? null : tn}
 		</View>
 	)
 }
