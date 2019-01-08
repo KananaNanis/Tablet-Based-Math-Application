@@ -22,7 +22,7 @@ import {connect} from 'react-redux'
 class App extends React.Component {
 	constructor(props) {
 		super(props)
-		this.state = {do_print: false, has_error: false}
+		this.state = {do_print: true, has_error: false}
 		const poll_to_see_if_config_tree_changed = true
 		if (poll_to_see_if_config_tree_changed) {
 			window.setInterval(load_config_tree, 3000, this)
@@ -53,6 +53,9 @@ class App extends React.Component {
 	render() {
 		//console.log(global_screen_height)
 		//console.log('misc for tower_result', query_obj_misc('tower_result'))
+		if (this.state.do_print) return <PrintFigure />
+		console.log('not printing figure')
+
 		let tablet_border, scaling_border
 		if (this.state.has_error) {
 			console.log('Error caught at top level.')
@@ -90,7 +93,6 @@ class App extends React.Component {
 			)
 		}
 		// console.log('rendering root')
-		if (this.state.do_print) return <PrintFigure />
 		// top level view, sets up event listeners
 		return (
 			<View

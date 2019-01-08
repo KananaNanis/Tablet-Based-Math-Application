@@ -304,10 +304,14 @@ class Tower extends React.Component {
 				}
 			}
 			if (just_grey) bg = as_greyscale(bg)
+			bg = 'black' // NOTE:  set color of tower here!
 			let img_name = null
-			if (-1 === size && !is_fiver) img_name = 'turtle'
-			else if (-1 === size && is_fiver) img_name = 'fiverTurtle'
-			else if (0 === size && !is_fiver) img_name = 'unit'
+			//const img_name_array = ['unit', 'fiverTurtle', 'turtle']
+			// const img_name_array = ['cow3', 'fiverTurtle', 'turtle']
+			const img_name_array = ['cow3', 'goat3', 'anansi3']
+			if (-1 === size && !is_fiver) img_name = img_name_array[2]
+			else if (-1 === size && is_fiver) img_name = img_name_array[1]
+			else if (0 === size && !is_fiver) img_name = img_name_array[0]
 			let view_style = {
 				position: 'absolute',
 				backgroundColor: bg,
@@ -401,6 +405,7 @@ class Tower extends React.Component {
 			}
 			let swap_channel
 			if (misc && misc.swap_channel) swap_channel = misc.swap_channel
+			const hide_all_symbols = true
 			blocks.push(
 				<Block
 					key={i}
@@ -412,7 +417,7 @@ class Tower extends React.Component {
 					radius_style={radius_style}
 					scale_factor={scale_factor}
 					swap_channel={swap_channel}
-					text_content={text_content}
+					text_content={hide_all_symbols ? null : text_content}
 					text_style={text_style}
 					view_style={view_style}
 					width={width}

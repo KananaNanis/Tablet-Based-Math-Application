@@ -47,10 +47,11 @@ export function query_tower_blocks(num_id, tower = null, just_position) {
 		//console.log('size ' + size + ' how_many ' + how_many)
 		let height = scale_factor * 10 ** size
 		//const is_tiny = height < 4
-		const width = scale_factor * global_constant.tower.size2depth[size]
+		let width = scale_factor * global_constant.tower.size2depth[size]
 		if (is_fiver) {
 			//width *= is_tiny ? 1.5 : 1.1
 			height *= 5
+			width = scale_factor * global_constant.tower.size2depth_fiver[size]
 		}
 		for (let i = 0; i < how_many; ++i) {
 			if (just_position) {

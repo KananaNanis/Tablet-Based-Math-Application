@@ -293,6 +293,9 @@ export function transition_to_next_config(action_list, silent) {
 	if (do_actions_immediately) {
 		//console.log('do_actions_immediately action_list', action_list)
 		do_batched_actions(action_list)
+		if (query_event('allow_keypad_minis')) {
+			update_keypad_button_visibility(null, null, null)
+		}
 		// check whether we are switching to a game level
 		if (query_prop('is_game')) {
 			const prev_path = query_path('prev_config')
@@ -304,9 +307,6 @@ export function transition_to_next_config(action_list, silent) {
 			enter_exit_config(next_path, true, action_list, silent)
 			action_list.push(Actions.setProp('is_game', true))
 			do_batched_actions(action_list)
-			if (query_event('allow_keypad_minis')) {
-				update_keypad_button_visibility(null, null, null)
-			}
 			const add_debug = false
 			if (add_debug) {
 				// for debugging, let's turn it off after awhile
