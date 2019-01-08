@@ -304,7 +304,7 @@ class Tower extends React.Component {
 				}
 			}
 			if (just_grey) bg = as_greyscale(bg)
-			bg = 'black'  // NOTE:  set color of tower here!
+			bg = 'black' // NOTE:  set color of tower here!
 			let img_name = null
 			//const img_name_array = ['unit', 'fiverTurtle', 'turtle']
 			// const img_name_array = ['cow3', 'fiverTurtle', 'turtle']

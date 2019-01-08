@@ -51,7 +51,7 @@ export function query_tower_blocks(num_id, tower = null, just_position) {
 		if (is_fiver) {
 			//width *= is_tiny ? 1.5 : 1.1
 			height *= 5
-		  width = scale_factor * global_constant.tower.size2depth_fiver[size]
+			width = scale_factor * global_constant.tower.size2depth_fiver[size]
 		}
 		for (let i = 0; i < how_many; ++i) {
 			if (just_position) {

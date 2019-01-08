@@ -166,11 +166,11 @@ const PrintFigure = () => {
 		use11x17 = false
 		landscape = true
 		show_purple_border = true
-		const vals = [0.1, 0.5, 1.0]
-		const scale_factor = query_prop('scale_factor')
+		// const vals = [0.1, 0.5, 1.0]
+		// const scale_factor = query_prop('scale_factor')
 		for (let i = 0; i < 3; ++i) {
-				content.push(<FiveFrame key={i} name={5} position={[5 + i * 245, 5]} />)
-				/*
+			content.push(<FiveFrame key={i} name={5} position={[5 + i * 245, 5]} />)
+			/*
 				content.push(
 					<Num
 						key={i}
@@ -277,7 +277,12 @@ const PrintFigure = () => {
 	height = 100
 	console.log(width, height, transform)
 
-	return (<View style={[styles.print_figure, {width, height, borderWidth}]}><Text>HELLO?</Text></View>)
+	return (
+		<View style={[styles.print_figure, {width, height, borderWidth}]}>
+			<Text>HELLO?</Text>
+		</View>
+	)
+	/*
 	return (
 		<View
 			style={[styles.print_figure, {width, height, transform, borderWidth}]}
@@ -285,6 +290,7 @@ const PrintFigure = () => {
 			{content}
 		</View>
 	)
+*/
 }
 
 const pageBorder = 'purple'
