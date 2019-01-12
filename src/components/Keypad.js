@@ -58,18 +58,37 @@ const Keypad = ({
 					marginBottom: 0.15 * height,
 					fontSize: 0.75 * height,
 				} // default
+			let image_name,
+				image_style = {}
 			//console.log(label_style)
+			const skip_symbol = true
 			if ('buildTower' === kind) {
 				const size = global_constant.buildTower_button_info[index][0]
 				const is_fiver = global_constant.buildTower_button_info[index][1]
-				label = global_constant.tower.size2symbol[size]
-				label_style['color'] = global_constant.tower.size2color[size]
-				if (is_fiver) {
-					label = '5' + label
-					label_style = {...global_fiver_shadow[1], ...label_style}
+				if (skip_symbol) {
+					label = ''
+					label_style['color'] = 'black'
+					if (0 === size) {
+						image_name = 'goat'
+						image_style = {position: 'absolute', width: 60, height: 60}
+					} else if (-1 === size) {
+						image_name = 'anansi'
+						image_style = {position: 'absolute', width: 30, height: 30}
+					}
+					if (is_fiver) {
+						label = '5  '
+						image_style.marginLeft = 20
+					}
+				} else {
+					label = global_constant.tower.size2symbol[size]
+					label_style['color'] = global_constant.tower.size2color[size]
+					if (is_fiver) {
+						label = '5' + label
+						label_style = {...global_fiver_shadow[1], ...label_style}
+					}
 				}
 			}
-			const view_style = {backgroundColor: 'grey'}
+			const view_style = {borderColor: 'black', borderWidth: 1} // backgroundColor: 'grey'}
 			if (null !== button_highlight && index === button_highlight) {
 				view_style['backgroundColor'] = freeze_display ? 'red' : 'yellow'
 			} else if (freeze_display) view_style['opacity'] = 0.25
@@ -77,6 +96,8 @@ const Keypad = ({
 				<Button
 					key={index}
 					height={height}
+					image_name={image_name}
+					image_style={image_style}
 					label={label}
 					label_style={label_style}
 					position={button_position}

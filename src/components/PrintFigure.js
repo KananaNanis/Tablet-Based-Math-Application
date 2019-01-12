@@ -52,7 +52,7 @@ function init_page_dimensions(
 }
 
 const PrintFigure = () => {
-	const scale_down_for_laptop = true
+	const scale_down_for_laptop = false
 	const rotate_whole_page = false
 	let use11x17 = true
 	let landscape = false
@@ -163,25 +163,65 @@ const PrintFigure = () => {
 		}
 	} else if (keep) {
 		console.log('HI')
-		use11x17 = false
-		landscape = true
+		//use11x17 = false
+		//landscape = true
 		show_purple_border = true
-		// const vals = [0.1, 0.5, 1.0]
-		// const scale_factor = query_prop('scale_factor')
-		for (let i = 0; i < 3; ++i) {
-			content.push(<FiveFrame key={i} name={5} position={[5 + i * 245, 5]} />)
-			/*
+		const vals = [0.1, 0.5, 1.0]
+		let scale_factor = query_prop('scale_factor')
+		scale_factor *= 10.0 / 5.2 // not sure why all my numbers are off!
+		const col = ['black', 'blue', 'red']
+		let num_cols = 7,
+			num_rows = 21
+		/*
+		for (let j = 0; j < num_rows; ++j) {
+			for (let i = 0; i < num_cols; ++i) {
 				content.push(
 					<Num
-						key={i}
-						id={'tower_' + i}
-						misc={{hide_tower_name: true}}
-						name={height2tower_name(vals[i % 3])}
-						position={[150 * (i) + 50 * i + 50, 0]}
+						key={j*num_cols + i}
+						id={'tower_' + (j*num_cols + i)}
+						misc={{ hide_tower_name: true, backgroundColor: col[Math.floor(j/7)] }}
+						name={height2tower_name(vals[0])}
+						position={[123 * i + 50, 37*j + 5]}
 						scale_factor={scale_factor}
 					/>,
 				)
-				*/
+			}
+		}
+		*/
+		/*
+		num_cols = 6
+		num_rows = 3
+		for (let j = 0; j < num_rows; ++j) {
+			for (let i = 0; i < num_cols; ++i) {
+				content.push(
+					<Num
+						key={j*num_cols + i + 100}
+						id={'tower_' + (j*num_cols + i + 100)}
+						misc={{ hide_tower_name: true, backgroundColor: col[Math.floor(j/1)] }}
+						name={height2tower_name(vals[1])}
+						position={[148 * i + 50, 192*j + 950]}
+						scale_factor={scale_factor}
+					/>,
+				)
+			}
+		}
+		*/
+		num_cols = 4
+		num_rows = 4
+		for (let j = 0; j < num_rows; ++j) {
+			const col2 = j < 3 ? col[j] : col[2]
+			for (let i = 0; i < num_cols; ++i) {
+				content.push(
+					<Num
+						key={j * num_cols + i + 200}
+						id={'tower_' + (j * num_cols + i + 200)}
+						misc={{hide_tower_name: true, backgroundColor: col2}}
+						name={height2tower_name(vals[2])}
+						position={[198 * i + 50, 385 * j + 7]}
+						scale_factor={scale_factor}
+					/>,
+				)
+			}
 		}
 	} else if (skip) {
 		// print worksheets for learning to draw tower diagrams
@@ -270,19 +310,20 @@ const PrintFigure = () => {
 		rotate_whole_page,
 	)
 	let borderWidth = show_purple_border ? 1 : 0
-	borderWidth = 20
-	console.log('OK')
-	content = null
-	width = 100
-	height = 100
-	console.log(width, height, transform)
+	// borderWidth = 20
+	// console.log('OK')
+	// content = null
+	// width = 100
+	// height = 100
+	// console.log(width, height, transform)
 
+	/*
 	return (
 		<View style={[styles.print_figure, {width, height, borderWidth}]}>
 			<Text>HELLO?</Text>
 		</View>
 	)
-	/*
+	*/
 	return (
 		<View
 			style={[styles.print_figure, {width, height, transform, borderWidth}]}
@@ -290,14 +331,13 @@ const PrintFigure = () => {
 			{content}
 		</View>
 	)
-*/
 }
 
 const pageBorder = 'purple'
 const diagramBorder = 'black'
 const styles = StyleSheet.create({
 	print_figure: {
-		position: 'absolute',
+		// position: 'absolute',
 		display: 'block',
 		borderColor: pageBorder,
 		transformOrigin: 'top left',

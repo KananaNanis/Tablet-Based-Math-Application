@@ -245,7 +245,12 @@ class Tower extends React.Component {
 			)
 		}
 
-		const block_info = query_tower_blocks(id, {name, position, block_opacity})
+		const block_info = query_tower_blocks(
+			id,
+			{name, position, block_opacity},
+			null,
+			scale_factor,
+		)
 		//console.log('block_info', block_info)
 		const selected_block_index = misc && misc.selected_block_index
 		//console.log('selected_block_index', selected_block_index)
@@ -304,14 +309,10 @@ class Tower extends React.Component {
 				}
 			}
 			if (just_grey) bg = as_greyscale(bg)
-			bg = 'black' // NOTE:  set color of tower here!
-			let img_name = null
-			//const img_name_array = ['unit', 'fiverTurtle', 'turtle']
-			// const img_name_array = ['cow3', 'fiverTurtle', 'turtle']
-			const img_name_array = ['cow3', 'goat3', 'anansi3']
-			if (-1 === size && !is_fiver) img_name = img_name_array[2]
-			else if (-1 === size && is_fiver) img_name = img_name_array[1]
-			else if (0 === size && !is_fiver) img_name = img_name_array[0]
+			console.log('misc', misc)
+			if (misc && misc.backgroundColor) {
+				bg = misc.backgroundColor
+			}
 			let view_style = {
 				position: 'absolute',
 				backgroundColor: bg,
@@ -324,6 +325,13 @@ class Tower extends React.Component {
 				view_style.left = misc.block_offset[i][0]
 				view_style.bottom = misc.block_offset[i][1]
 			}
+			let img_name = null
+			//const img_name_array = ['unit', 'fiverTurtle', 'turtle']
+			// const img_name_array = ['cow3', 'fiverTurtle', 'turtle']
+			const img_name_array = ['goat', 'anansi', 'anansi']
+			if (-1 === size && !is_fiver) img_name = img_name_array[2]
+			else if (-1 === size && is_fiver) img_name = img_name_array[1]
+			else if (0 === size && !is_fiver) img_name = img_name_array[0]
 			let inner_anim_info
 			if (block_anim_info && block_anim_info[i]) {
 				inner_anim_info = block_anim_info[i]
@@ -406,6 +414,7 @@ class Tower extends React.Component {
 			let swap_channel
 			if (misc && misc.swap_channel) swap_channel = misc.swap_channel
 			const hide_all_symbols = true
+			console.log('width', width, 'height', height)
 			blocks.push(
 				<Block
 					key={i}
@@ -413,6 +422,7 @@ class Tower extends React.Component {
 					height={height}
 					id={id + '.' + i}
 					img_name={img_name}
+					is_fiver={is_fiver}
 					just_grey={just_grey}
 					radius_style={radius_style}
 					scale_factor={scale_factor}

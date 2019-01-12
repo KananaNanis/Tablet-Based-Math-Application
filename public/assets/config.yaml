@@ -4605,51 +4605,63 @@ addition2:
       extra_delta: [pick_from_range, 0, .45, .1]
       mean_name_f: mean_name_base_5 ++ extra_fiver
       # mean_name: mean_name_f ++ extra_delta
-      mean_name: [fixed, [2, .5, .5, .5, .4]]
+      # mean_name: [fixed, [2, .5, .5, .5, .4]]
+      mean_name: [fixed, []]
       partition_1: mean_name into m1 and m2
       # tower_1_name: mean_name
     create:
-      big_paren: true
-      big_op: +
+      # big_paren: true
+      # big_op: +
       tower_2_shadow: { name: m2 }
       tower_1_shadow: { name: m1 }
-      tower_result: [1, .5, .1]
       tower_2: { name: m2 }
       tower_1: { name: m1 }
+      tower_mixed: []
+      # tower_result: [3, .5, .4]
+      tower_result: []
     modify:
       big_paren:
         position: [20, 0]
-        style: { width: 500 }
+        style: { width: 330 }
       big_op:
-        position: [195, 0]
+        position: [120, 0]
       tower_1:
         position: [15, 0]
+        tower_style: {opacity: 0.2}
         misc:
+          backgroundColor: 'blue'
           # swap_channel: '12'
       tower_1_shadow:
         position: [15, 0]
-        tower_style: {opacity: 0.2}
         misc:
           hide_tower_name: true
+          backgroundColor: 'blue'
           # swap_channel: '12'
       tower_2:
-        position: [300, 0]
-        misc:
-          # swap_channel: '01'
-      tower_2_shadow:
-        position: [300, 0]
+        position: [230, 0]
         tower_style: {opacity: 0.2}
         misc:
-          hide_tower_name: true
+          backgroundColor: 'red'
           # swap_channel: '01'
+      tower_2_shadow:
+        position: [230, 0]
+        misc:
+          hide_tower_name: true
+          backgroundColor: 'red'
+          # swap_channel: '01'
+      tower_mixed:
+        position: [340, 0]
+        tower_style: {opacity: 0}
       tower_result:
-        position: [550, 0]
+        position: [380, 0]
         # tower_style: {opacity: 0}
         misc:
+          backgroundColor: 'black'
           tower_name_style: { left: 25 }
     event_handling:
       correctness: identical
-      touch_reveals_button: [submit, delete]
+      # touch_reveals_button: [submit, delete]
+      touch_reveals_button: [delete]
       no_split_fiver: true
       minimum_split_size: -1
     misc:
@@ -4657,6 +4669,7 @@ addition2:
       num_stars: 2
       remove_on_exit: [button_submit, button_delete]
       config_iteration: 4
+      trigger_blocks_moving_to_result: 0
   direct:
     params:
       generate:
@@ -4671,7 +4684,7 @@ addition2:
           style: {opacity: 0}
       event_handling:
         target: tower_result
-        allow_non_standard: true
+        # allow_non_standard: true
         comparison_source: tower_4
       misc:
         remove_on_exit: [button_submit, button_delete]

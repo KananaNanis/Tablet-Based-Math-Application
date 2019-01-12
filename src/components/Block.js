@@ -195,6 +195,7 @@ class Block extends React.Component {
 			just_grey,
 			swap_channel,
 			scale_factor,
+			is_fiver,
 		} = this.props
 		// console.log('Block img_name', img_name, 'view_style', view_style, 'radius_style', radius_style, 'just_grey', just_grey)
 
@@ -228,12 +229,29 @@ class Block extends React.Component {
 		if ('diagram' === img_name) {
 			// make a tower diagram
 		} else if (img_name) {
-			img = (
-				<Image
-					source={image_location(img_name, just_grey, swap_channel)}
-					style={[styles.image_default, radius_style, {width, height}]}
-				/>
-			)
+			if (is_fiver) {
+				// make five images!
+				img = []
+				for (let k = 0; k < 5; ++k) {
+					img.push(
+						<Image
+							source={image_location(img_name, just_grey, swap_channel)}
+							style={[
+								styles.image_default,
+								radius_style,
+								{width, height: height / 5, bottom: (height * k) / 5},
+							]}
+						/>,
+					)
+				}
+			} else {
+				img = (
+					<Image
+						source={image_location(img_name, just_grey, swap_channel)}
+						style={[styles.image_default, radius_style, {width, height}]}
+					/>
+				)
+			}
 		}
 		let txt = null
 		if ('|' === text_content) {

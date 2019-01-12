@@ -1,7 +1,7 @@
 # these constants should be fixed!
 debug_mode: false
 num_exercises_for_debugging: 2
-# debug_path: [addition2, direct, level_1]
+debug_path: [addition2, direct, level_1]
 # debug_path: [tangrams]
 # debug_path: [animation_test]
 # debug_path: [two_doors]
@@ -188,6 +188,7 @@ starting_config_path_Dom: [tower_addition, direct, level_1] # Nov 9
 # starting_config_path_PCCS: [counting_up_sub, missing_addend, level_1] # Dec 3
 # starting_config_path_PCCS: [t_add_mix_1, ma1] # Dec 7
 starting_config_path_PCCS: [baby_turtles, direct, use_keypad] # Dec 18
+starting_config_path: [addition2, direct, level_1]
 
 starting_level_for: # Dec 10
   math: [addition2, direct, level_1]
@@ -317,11 +318,12 @@ special_button_geoms:
 keypad_info:
   buildTower:
     # position: [right 5, top 5]
-    position: [25, top 95]
+    # position: [25, top 95]
+    position: [500, top 95]
     button_width: 80
     button_height: 80
-    space_width: 20
-    space_height: 30
+    space_width: 5
+    space_height: 5
     num_cols: 2
     num_rows: 5
   decimal:
@@ -477,8 +479,10 @@ extra_dot_threshold: 0.2
 top_right_text_offset: 80
 incorrect_freeze_time: 3000
 screen_pixels_per_cm: 52
-print_pixels_per_cm: 56.77
-print_size11x17: {width: 1471, height: 2333}
+# print_pixels_per_cm: 56.77
+print_pixels_per_cm: 37.88
+# print_size11x17: {width: 1471, height: 2333}
+print_size11x17: {width: 982, height: 1556}
 print_size8p5x11: {width: 1112, height: 1471}
 tablet_width: 660
 tablet_height: 1000

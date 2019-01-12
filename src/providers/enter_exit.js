@@ -311,7 +311,9 @@ export function enter_exit_config(
 				} else if ('skip_suffix_for_this_level' === key) {
 					if (c[key0]) skip_suffix_for_this_level = true
 				} else if ('trigger_blocks_moving_to_result' === key) {
-					if (enter && c[key0]) trigger_blocks_moving_to_result = c[key0]
+					if (enter && 'undefined' !== typeof c[key0]) {
+						trigger_blocks_moving_to_result = c[key0]
+					}
 				} else if ('suffix_path' === key) {
 					if (enter && !c['jmp_no_suffix'] && !use_suffix) {
 						// don't unset this state here... wait for in-between
@@ -577,12 +579,17 @@ export function enter_exit_config(
 			// console.log('loc', loc, 'scale_factor', scale_factor)
 			action_list.push(Actions.setName('door_1', [loc[1] / (h * scale_factor)]))
 		}
-		if (trigger_blocks_moving_to_result) {
+		if ('undefined' !== typeof trigger_blocks_moving_to_result) {
 			const delay = trigger_blocks_moving_to_result
 			// console.log('trigger_blocks_moving_to_result delay', delay)
 			window.setTimeout(function() {
 				create_orderly_sum('tower_1', 'tower_2', 'tower_mixed')
-				show_blocks_moving_to_result('tower_1', 'tower_2', 'tower_mixed')
+				show_blocks_moving_to_result(
+					'tower_1',
+					'tower_2',
+					'tower_mixed',
+					0 === delay,
+				)
 			}, delay)
 		}
 
