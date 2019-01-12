@@ -27,9 +27,14 @@ export function query_tower(num_id, all_nums = null) {
 	return all_nums.get(num_id)
 }
 
-export function query_tower_blocks(num_id, tower = null, just_position) {
+export function query_tower_blocks(
+	num_id,
+	tower = null,
+	just_position,
+	scale_factor,
+) {
 	if (!tower) tower = query_tower(num_id).toJS()
-	const scale_factor = query_prop('scale_factor')
+	if (!scale_factor) scale_factor = query_prop('scale_factor')
 	// expand the name into individual blocks
 	//console.log(tower.name)
 	let blocks = []
@@ -100,6 +105,7 @@ export function height2tower_name(height) {
 	//    1 -> [1]
 	//    .999999 -> [1]
 	let res = []
+	if (0 === height) return res
 	if (height > 10000) {
 		console.error('Error in height2tower_name:  height', height, '(too large)')
 	}
