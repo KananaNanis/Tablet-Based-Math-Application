@@ -309,7 +309,7 @@ class Tower extends React.Component {
 				}
 			}
 			if (just_grey) bg = as_greyscale(bg)
-			console.log('misc', misc)
+			// console.log('misc', misc)
 			if (misc && misc.backgroundColor) {
 				bg = misc.backgroundColor
 			}
@@ -414,7 +414,7 @@ class Tower extends React.Component {
 			let swap_channel
 			if (misc && misc.swap_channel) swap_channel = misc.swap_channel
 			const hide_all_symbols = true
-			console.log('width', width, 'height', height)
+			// console.log('width', width, 'height', height)
 			blocks.push(
 				<Block
 					key={i}

@@ -2,6 +2,7 @@ import React from 'react'
 import {StyleSheet, View} from 'react-native'
 import Tower from './Tower'
 import TowerName from './TowerName'
+import TowerNumber from './TowerNumber'
 import {get_is_fiver_from_group, get_block_size_from_group} from './Block'
 
 export const global_fiver_shadow = [
@@ -59,14 +60,18 @@ const Num = ({
 	if (misc && misc.show_only_size) {
 		tn_name = only_one_size(tn_name, misc.show_only_size)
 	}
+	let tm_name = name
 	let tower_name_style =
 		misc && misc.tower_name_style ? misc.tower_name_style : null
-	let tn_anim_info, t_anim_info
+	let tower_number_style =
+		misc && misc.tower_number_style ? misc.tower_number_style : null
+	let tn_anim_info, tm_anim_info, t_anim_info
 	if (anim_info && anim_info.tower_opacity) {
 		// t_anim_info = anim_info
 		t_anim_info = anim_info
 	} else {
 		tn_anim_info = anim_info
+		tm_anim_info = anim_info
 		t_anim_info = anim_info
 	}
 	const tn =
@@ -78,6 +83,17 @@ const Num = ({
 				name={tn_name}
 				position={position}
 				tower_name_style={tower_name_style}
+			/>
+		)
+	const tm =
+		misc && misc.hide_tower_number ? null : (
+			<TowerNumber
+				anim_info={tm_anim_info}
+				id={id}
+				just_grey={just_grey}
+				name={tm_name}
+				position={position}
+				tower_number_style={tower_number_style}
 			/>
 		)
 	// misc = { top_just_outline: true }
@@ -98,6 +114,7 @@ const Num = ({
 				style={tower_style}
 			/>
 			{hide_all_tower_names ? null : tn}
+			{tm}
 		</View>
 	)
 }

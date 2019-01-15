@@ -176,6 +176,8 @@ export function update_keypad_button_visibility(size, is_fiver, how_many) {
 			if (size === bsize) {
 				if (bfiver) show = false
 				else if (!is_fiver && how_many > 3) show = false
+				// special case:  prevent more than 3 goats
+				if (0 === size && how_many > 2) show = false
 			}
 		}
 		const hide_tinys = true
