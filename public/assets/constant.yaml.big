@@ -1,0 +1,566 @@
+# these constants should be fixed!
+debug_mode: true
+num_exercises_for_debugging: 2
+debug_path: [addition2, direct, level_1]
+# debug_path: [tangrams]
+# debug_path: [animation_test]
+# debug_path: [two_doors]
+# debug_path: [identity_function, as_option, bars, level_1]
+# debug_path: [identity_function, as_drag, bars, level_1]
+# debug_path: [identity_function, as_option, doors, level_1]
+# debug_path: [identity_function, as_drag, doors, level_1]
+# debug_path: [intro_halves, level_1]
+# debug_path: [add_or_half, as_option, result_option, half, bars, level_1]
+# debug_path: [add_or_half, as_drag, result_option, half, bars, level_1]
+# debug_path: [add_or_half, as_option, result_option, half, doors, level_1]
+# debug_path: [add_or_half, as_drag, result_option, half, doors, level_1]
+# debug_path: [add_or_half, as_option, arg_1_option, half, bars, level_1]
+# debug_path: [add_or_half, as_drag, arg_1_option, half, bars, level_1]
+# debug_path: [add_or_half, as_option, arg_1_option, half, doors, level_1]
+# debug_path: [add_or_half, as_drag, arg_1_option, half, doors, level_1]
+
+# debug_path: [add_or_half, as_option, result_option, stack, bars, level_1]
+# debug_path: [add_or_half, as_option, result_option, stack, bars, level_2]
+# debug_path: [add_or_half, as_option, result_option, stack, bars, level_3]
+# debug_path: [add_or_half, as_option, result_option, bars, level_1]
+# debug_path: [add_or_half, as_drag, result_option, bars, level_1]
+# debug_path: [add_or_half, as_option, result_option, doors, level_1]
+# debug_path: [add_or_half, as_drag, result_option, doors, level_1]
+# debug_path: [add_or_half, as_option, arg_2_option, bars, level_1]
+# debug_path: [add_or_half, as_drag, arg_2_option, bars, level_1]
+# debug_path: [add_or_half, as_option, arg_2_option, doors, level_1]
+# debug_path: [add_or_half, as_drag, arg_2_option, doors, level_1]
+# debug_path: [add_or_half, as_option, arg_1_option, bars, level_1]
+# debug_path: [add_or_half, as_drag, arg_1_option, bars, level_1]
+# debug_path: [add_or_half, as_option, arg_1_option, doors, level_1]
+# debug_path: [add_or_half, as_drag, arg_1_option, doors, level_1]
+# debug_path: [add_or_half, as_drag, arg_1_option, doors, all_done_adding]
+
+# debug_path: [add_height, bar_target, arg1_option, level_1]
+# debug_path: [add_height, bar_target, actual_addition, level_1]
+# debug_path: [add_height, door_target, actual_addition, level_1]
+# debug_path: [two_animals, just_dot]
+# debug_path: [two_animals, with_handle, with_dot,level_4]
+# debug_path: [two_animals, with_handle, just_doors,level_1]
+# debug_path: [proportion, option, pure_copy, level_2]
+# debug_path: [proportion, pure_copy, level_2]
+# debug_path: [proportion, option, zoom_down, level_1]
+# debug_path: [proportion, zoom_down, level_1]
+# debug_path: [proportion, option, bounce, level_3]
+# debug_path: [proportion, bounce, level_3]
+# debug_path: [proportion, option, no_bounce, level_4]
+# debug_path: [proportion, no_bounce, level_4]
+# debug_path: [proportion, no_bounce, level_figure]
+# debug_path: [multiply_height, animal_target, touch_image]
+# debug_path: [multiply_height, animal_target, move_handle]
+# debug_path: [multiply_height, door_target, move_portal_handle_to_match]
+# debug_path: [multiply_height, door_target, move_portal_handle_to_shadow]
+# debug_path: [multiply_height, door_target,
+#  move_portal_handle_to_shadow, levels_with_stages, level_2a]
+# debug_path: [multiply_height, door_target,
+#   move_portal_handle_to_shadow, levels_with_stages, level_3a]
+# debug_path: [multiply_height, door_target, actual_multiplication, level_1]
+# debug_path: [estimate_tower_height, level_1]
+# debug_path: [animal_sum, level_1]
+# debug_path: [measure_height, copy_tower_subitize, disappearing, level_2]
+# debug_path: [measure_height, animal_height_subitize]
+# debug_path: [estimate_names, of_animals, level_1]
+# debug_path: [estimate_names, of_doors, level_1]
+# debug_path: [estimate_names, of_doors, all_values, level_10]
+# debug_path: [measure_height, to_handle, level_1]
+# debug_path: [measure_height,  animal_height, level_1]
+# debug_path: [intro_diagrams, copy_tower, level_1]
+# debug_path: [intro_names, copy_tower, level_1]
+# debug_path: [intro_names, copy_tower, level_4]
+# debug_path: [one_through_five, pegs, pegs_with_five_frames, level_1]
+# debug_path: [one_through_five, pegs, pegs_with_five_frames, disappearing, level_2]
+# debug_path: [one_through_five, pegs, disappearing, level_2]
+# debug_path: [one_through_five, doors, level_1]
+# debug_path: [estimate_names_1_to_5, of_doors, level_1]
+# debug_path: [six_through_nine, intro]
+# debug_path: [six_through_nine, doors, level_1]
+# debug_path: [eleven_through_fourteen, intro]
+# debug_path: [eleven_through_fourteen, doors, level_1]
+# debug_path: [estimate_names_11_to_14, of_doors, level_1]
+# debug_path: [pure_five_frame, level_1]
+# debug_path: [pure_five_frame, disappearing, level_4]
+# debug_path: [round_2_est_option, 1_to_4, with_tower, level_1]
+# debug_path: [round_2_est_option, 1_to_4, notches]
+# debug_path: [round_2_est_option, 1_to_4, no_notches]
+# debug_path: [round_2_est_button, 1_to_4]
+# debug_path: [round_2_est_option, 6_to_9, with_tower, level_1]
+# debug_path: [round_2_est_option, 6_to_9, notches]
+# debug_path: [round_2_est_option, 6_to_9, no_notches]
+# debug_path: [round_2_est_button, 6_to_9]
+# debug_path: [round_2_est_option, 1_to_9, notches]
+# debug_path: [round_2_est_option, 1_to_9, no_notches]
+# debug_path: [round_2_est_button, 1_to_9]
+# debug_path: [intro_diagrams_2, level_1]
+# debug_path: [intro_diagrams_2, level_2]
+# debug_path: [tower_1_2, level_1]
+# debug_path: [tower_1_2, level_2]
+# debug_path: [tower_1_2, diagrams, level_3]
+# debug_path: [tower_1_2, diagrams, level_4]
+# debug_path: [group_ungroup, stage_1]
+# debug_path: [group_ungroup, just_diagram, stage_1]
+# debug_path: [group_ungroup, direct, level_1]
+# debug_path: [group_ungroup, ungroup, stage_1]
+# debug_path: [group_ungroup, ungroup, just_diagram, stage_1]
+# debug_path: [group_ungroup, ungroup, direct, level_1]
+# debug_path: [group_ungroup, singletons, stage_1]
+# debug_path: [group_ungroup, singletons, just_diagram, stage_1]
+# debug_path: [group_ungroup, singletons, direct, level_1]
+# debug_path: [group_ungroup, singletons, ungroup, stage_1]
+# debug_path: [group_ungroup, singletons, ungroup, direct, level_1]
+# debug_path: [group_ungroup, singletons_separate_fivers, stage_1]
+# debug_path: [group_ungroup, singletons_separate_fivers, just_diagram, stage_1]
+# debug_path: [group_ungroup, singletons_separate_fivers, direct, level_1]
+# debug_path: [group_ungroup, singletons_separate_fivers, ungroup, stage_1]
+# debug_path: [group_ungroup, singletons_separate_fivers, ungroup, direct, level_1]
+# debug_path: [group_ungroup, singletons_with_a_fiver, stage_1]
+# debug_path: [group_ungroup, singletons_with_a_fiver, direct, level_1]
+# debug_path: [group_ungroup, singletons_with_fivers, stage_1]
+# debug_path: [group_ungroup, singletons_with_fivers, just_diagram, stage_1]
+# debug_path: [group_ungroup, singletons_with_fivers, direct, level_1]
+# debug_path: [group_ungroup, singletons_with_fivers, ungroup, stage_1]
+# debug_path: [group_ungroup, singletons_with_fivers, ungroup, just_diagram, stage_1]
+# debug_path: [group_ungroup, singletons_with_fivers, ungroup, direct, level_1]
+# debug_path: [group_ungroup, jump_to_next]
+# debug_path: [drag_blocks, missing_addend, level_1]
+# debug_path: [drag_blocks, missing_addend, level_2, level_2a]
+# debug_path: [drag_blocks, missing_addend, level_3, stage_1]
+# debug_path: [drag_blocks, missing_addend, level_3, level_3b, simpler_case, stage_1]
+# debug_path: [counting_up_sub, missing_addend, level_1]
+# debug_path: [tower_addition, direct, level_1]
+# debug_path: [tower_addition, direct, level_2]
+# debug_path: [tower_addition, missing_addend, level_1]
+# debug_path: [counting_up_sub, missing_addend, level_1]
+# debug_path: [t_add_mix_1, ma1]
+# debug_path: [t_add_mix_1, sep1]
+# debug_path: [tower_variations, level_1]
+# debug_path: [tower_variations, singletons, level_1]
+# debug_path: [tower_variations, singletons_separate_fivers, level_1]
+# debug_path: [tower_variations, singletons_with_a_fiver, level_1]
+# debug_path: [tower_variations, singletons_with_fivers, level_1]
+# debug_path: [baby_turtles, direct, use_keypad]
+# debug_path: [baby_turtles, direct, fiver_fiver, level_2]
+# debug_path: [baby_turtles, direct, review_singletons, level_2]
+# debug_path: [baby_turtles, direct, baby_singletons, level_1]
+# debug_path: [baby_turtles, direct, singleton_singleton, level_1]
+# debug_path: [baby_turtles, direct, review_singleton_with_fiver, level_1]
+# debug_path: [baby_turtles, direct, baby_singleton_with_fiver, level_1]
+# debug_path: [baby_turtles, direct, both_singleton_with_fiver, level_1]
+# debug_path: [baby_turtles, direct, many_small_fivers, level_1]
+# debug_path: [baby_turtles, direct, challenge, level_1]
+# debug_path: [all_done]
+# debug_path: [in_between]
+# starting_config_path: [one_through_five, five_frame, level_1] # P Oct 8
+#starting_config_path_Dom: [intro_diagrams, copy_tower, level_1] # Oct 12
+#starting_config_path_PCCS: [one_through_five, pegs, level_1] # Oct 12
+# starting_config_path_Dom: [intro_diagrams, copy_tower, level_1] # Oct 15
+# starting_config_path_PCCS: [halves, level_1] # Oct 15, 16
+# starting_config_path_Dom: [pure_five_frame, level_1] # Oct 16
+#starting_config_path_Dom: [measure_height,  animal_height, level_1] # Oct 17
+#starting_config_path_PCCS: [identity_function, as_option, bars, level_1] # Oct 22
+# starting_config_path_Dom: [identity_function, as_option, bars, level_1] # Oct 22
+# starting_config_path_Dom: [add_or_half, as_option, result_option, half, bars, level_1] # Oct 23
+# starting_config_path_Dom: [add_or_half, as_option, result_option, bars, level_1] # Oct 24
+# starting_config_path_Dom: [round_2_est_option, 1_to_4, notches] # Oct 26
+# starting_config_path_PCCS: [round_2_est_option, 1_to_4, notches] # Oct 26
+#starting_config_path_Dom: [round_2_est_option, 6_to_9, notches] # Oct 29
+# starting_config_path_PCCS: [intro_diagrams_2, level_1] # Oct 29, 30
+# starting_config_path_Dom: [round_2_est_option, 1_to_4, with_tower, level_1] # Oct 30
+# starting_config_path_Dom: [round_2_est_option, 6_to_9, with_tower, level_1] # Oct 31
+# starting_config_path_Dom: [add_or_half, as_option, result_option, stack, bars, level_1] # Nov 1
+# starting_config_path_PCCS: [add_or_half, as_option, result_option, stack, bars, level_1] # Nov 1
+# starting_config_path_PCCS: [group_ungroup, stage_1] # Nov 2
+# starting_config_path_Dom: [intro_diagrams_2, level_1] # Nov 2
+# starting_config_path_Dom: [group_ungroup, direct, level_1] # Nov 8
+# starting_config_path_PCCS: [group_ungroup, direct, level_1] # Nov 9
+starting_config_path_Dom: [tower_addition, direct, level_1] # Nov 9
+# starting_config_path_PCCS: [group_ungroup, direct, level_1] # Nov 12
+# starting_config_path_PCCS: [group_ungroup, ungroup, direct, level_1] # Nov 13
+# starting_config_path_PCCS: [tower_variations, level_1] # Nov 16
+# starting_config_path_PCCS: [tower_variations, singletons, level_1] # Nov 19, unused
+# starting_config_path_PCCS: [tower_addition, missing_addend, level_1] # Nov 20
+# starting_config_path_PCCS: [drag_blocks, missing_addend, level_1] # Nov 26
+# starting_config_path_PCCS: [drag_blocks, missing_addend, level_3, harder_case, stage_1] # Nov 27
+# starting_config_path_PCCS: [counting_up_sub, missing_addend, level_1] # Dec 3
+# starting_config_path_PCCS: [t_add_mix_1, ma1] # Dec 7
+starting_config_path_PCCS: [baby_turtles, direct, use_keypad] # Dec 18
+starting_config_path: [addition2, direct, level_1]
+
+starting_level_for: # Dec 10
+  math: [addition2, direct, level_1]
+
+starting_level_for_earlier: # Dec 10
+  m01: [t_add_mix_1, ma1]
+  m02: [t_add_mix_1, all1]
+  m03: [t_add_mix_1, sep1]
+  m04: [t_add_mix_1, all1]
+  m05: [t_add_mix_1, all1]
+  m06: [t_add_mix_1, all1]
+  m07: [t_add_mix_1, sep1]
+  m08: [t_add_mix_1, both1]
+  m09: [t_add_mix_1, all1]
+  m10: [t_add_mix_1, all1]
+  m11: [t_add_mix_1, all1]
+  m12: [t_add_mix_1, sep1]
+  m13: [t_add_mix_1, sep1]
+  m14: [t_add_mix_1, sing1]
+  m15: [t_add_mix_1, sep1]
+  m16: [t_add_mix_2, ma2]
+  m17: [t_add_mix_1, sep1]
+  m18: [t_add_mix_1, sep1]
+  m19: [t_add_mix_1, ma1]
+  m20: [t_add_mix_2, both1]
+
+jmp_label_1:
+  # the following are the levels that have to do with estimating heights 1-18
+  Olaf: [one_through_five, doors, level_1]
+  # m19: [one_through_five, pegs, level_2]
+  m19: [estimate_names_1_to_5 of_doors, level_1]
+  # m14: [estimate_names_6_to_9, of_doors, level_1]
+  m14: [eleven_through_fourteen doors level_3]
+  # m13: [six_through_nine, doors, level_3]
+  # m08: [six_through_nine, doors, disappearing, level_5]
+  m13: [estimate_names of_doors level_5]
+  m08: [estimate_names of_doors level_5]
+
+  m17: [six_through_nine, intro]
+  m01: [six_through_nine, doors, level_3]
+  m03: [eleven_through_fourteen, doors, disappearing, level_4]
+  m15: [estimate_names of_doors, level_1]
+
+  m18: [one_through_five, doors, level_1]
+  m05: [one_through_five, doors, level_1]
+
+  m02: [six_through_nine, doors, level_3]
+  m04: [eleven_through_fourteen, doors, level_1]
+  m09: [eleven_through_fourteen, doors, level_3]
+  m06: [eleven_through_fourteen, doors, level_3]
+  m20: [estimate_names, of_doors, level_1]
+  m10: [estimate_names, of_doors, level_4]
+  m11: [estimate_names, of_doors, level_6]
+  m12: [estimate_names, of_doors, level_6]
+  m07: [estimate_names, of_doors, all_values, level_8]
+  m16: [estimate_names, of_doors, all_values, level_8]
+
+jmp_label_2:  # more continuous visual estimation
+  Olaf: [two_animals, just_dot]
+  m01: [round_2_est_option, 15_to_18, notches]
+  m02: [round_2_est_option, 1_to_18, no_notches]
+  m03: [round_2_est_button, 11_to_14]
+  m04: [round_2_est_option, 1_to_18, notches]
+  m05: [round_2_est_option, 1_to_9, no_notches]
+  m06: [round_2_est_option, 11_to_14, notches]
+  m07: [round_2_est_option, 15_to_18, no_notches]
+  m08: [round_2_est_option, 1_to_9, no_notches]
+  m09: [round_2_est_button, 11_to_14]
+  m10: [round_2_est_button, 15_to_18]
+  m12: [round_2_est_option, 1_to_18, notches]
+  m13: [round_2_est_option, 1_to_9, no_notches]
+  m14: [round_2_est_option, 11_to_14, notches]
+  m15: [round_2_est_option, 15_to_18, no_notches]
+  m16: [round_2_est_option, 1_to_18, notches]
+  m17: [round_2_est_button, 1_to_9]
+  m18: [round_2_est_button, 15_to_18]
+  m19: [round_2_est_button, 6_to_9]
+  m20: [round_2_est_button, 1_to_18]
+
+first_name_for:
+  # m22: Anita
+  # m78: Jimmi
+  # m79: Frances
+  # m89: Kaia
+  # math: Olaf
+  matsuura: Ryota
+scale_factor_from_yaml: 520
+door:
+  handle_fraction: 0.1
+  min_dist_from_handle: 200
+  min_dist_from_door: 200
+  thickness_fraction: 0.01
+  color_of_mutable: darkgreen
+  frame_color: darkblue
+  # frame_color_grey: '#d0d0d0'
+  frame_color_grey: '#f5f5f5'
+  portal_width: 300
+  # portal_bg_color: lightgrey
+  portal_bg_color: white
+  portal_min_value: 0.01
+  border_radius: 50
+special_button_geoms:
+  submit: 
+    position: [40, top 15]
+    width: 210
+    height: 80
+  submit_on_right: 
+    position: [right 10, top 30]
+    width: 150
+    height: 80
+  restart: 
+    position: [40, top 100]
+    width: 210
+    height: 80
+  delete: 
+    position: [40, top 100]
+    width: 210
+    height: 80
+  next: 
+    position: [center, 30vh]
+    width: 210
+    height: 80
+  start: 
+    position: [right 5, top 30]
+    width: 210
+    height: 80
+keypad_info:
+  buildTower:
+    # position: [right 5, top 5]
+    # position: [25, top 95]
+    position: [500, top 95]
+    button_width: 80
+    button_height: 80
+    space_width: 5
+    space_height: 5
+    num_cols: 2
+    num_rows: 5
+  decimal:
+    position: [350, 50]
+    button_width: 50
+    button_height: 50
+    space_width: 20
+    space_height: 30
+    num_cols: 3
+    num_rows: 4
+placard:
+  position: [center, center]
+  width: 510
+  height: 400
+buildTower_button_info: [ [1, 0], [1, 1], [0, 0], [0, 1], [-1, 0], [-1, 1], [-2, 0], [-2, 1], [-3, 0], [-3, 1] ]
+tower:
+  size2color:
+    -3: limegreen
+    -2: purple
+    -1: darkgreen
+    0: blue
+    1: pink
+    2: orange
+    3: cyan
+  size2symbol:
+    -3: '-'
+    -2: ^
+    -1: \u25CF
+    # 0: \u2577 # |
+    0: '|'
+    1: \u25AF
+    2: \u25EB
+    3: \u25E7
+  size2fontsize:
+    -3: 25
+    -2: 30
+    -1: 35
+    0: 40
+    1: 45
+    2: 50
+    3: 55
+  size2depth:
+    -3: .1
+    -2: .2
+    # -1: .8
+    -1: .318
+    # 0: 1
+    0: .508
+    1: 8
+    2: 50
+    3: 500
+  size2depth_fiver:
+    -3: .1
+    -2: .2
+    # -1: .8
+    -1: .381
+    # 0: 1
+    0: .508
+    1: 8
+    2: 50
+    3: 500
+  size2padding:
+    -3: 60
+    -2: 50
+    -1: 40
+    0: 30
+    1: 20
+    2: 10
+    3: 0
+animals:
+  ladybug: {height: .1, pixel_width: 297, pixel_height: 163}
+  mouse: {height: .2, pixel_width: 166, pixel_height: 122}
+  fish: {height: .3, pixel_width: 755, pixel_height: 493}
+  crab: {height: .4, pixel_width: 768, pixel_height: 440}
+  kitty: {height: .5, pixel_width: 269, pixel_height: 299}
+  puppy: {height: .6, pixel_width: 279, pixel_height: 280}
+  duck: {height: .7, pixel_width: 649, pixel_height: 456}
+  pig: {height: .8, pixel_width: 269, pixel_height: 205}
+  chimpanzee: {height: .85, pixel_width: 337, pixel_height: 464}
+  bear: {height: .9, pixel_width: 530, pixel_height: 689}
+  chick: {height: 1.0, pixel_width: 231, pixel_height: 267}
+  sloth: {height: 1.1, pixel_width: 453, pixel_height: 427}
+  deer: {height: 1.2, pixel_width: 415, pixel_height: 450}
+  bull: {height: 1.3, pixel_width: 359, pixel_height: 336}
+  unicorn: {height: 1.4, pixel_width: 507, pixel_height: 633}
+  horse: {height: 1.5, pixel_width: 507, pixel_height: 469}
+  moose: {height: 1.6, pixel_width: 299, pixel_height: 278}
+  rhino: {height: 1.7, pixel_width: 476, pixel_height: 430}
+  dragon: {height: 1.8, pixel_width: 313, pixel_height: 523}
+  giraffe: {height: 2.1, pixel_width: 413, pixel_height: 742}
+  peg: {height: 1.17, pixel_width: 716, pixel_height: 610}
+  peg_a1: {height: .1, pixel_width: 56, pixel_height:  50}
+  peg_a2: {height: .2, pixel_width: 56, pixel_height: 100}
+  peg_a3: {height: .3, pixel_width: 56, pixel_height: 150}
+  peg_a4: {height: .4, pixel_width: 56, pixel_height: 200}
+  peg_a5: {height: .5, pixel_width: 56, pixel_height: 250}
+  peg_b1: {height: .1, pixel_width: 127, pixel_height:  50}
+  peg_b2: {height: .2, pixel_width: 127, pixel_height: 100}
+  peg_b3: {height: .3, pixel_width: 127, pixel_height: 150}
+  peg_b4: {height: .4, pixel_width: 127, pixel_height: 200}
+  peg_b5: {height: .5, pixel_width: 127, pixel_height: 250}
+  peg_c1: {height: .1, pixel_width: 190, pixel_height:  50}
+  peg_c2: {height: .2, pixel_width: 190, pixel_height: 100}
+  peg_c3: {height: .3, pixel_width: 190, pixel_height: 150}
+  peg_c4: {height: .4, pixel_width: 190, pixel_height: 200}
+  peg_c5: {height: .5, pixel_width: 190, pixel_height: 250}
+# animal_scale_correction: 0.92  # for incorrect print
+animal_scale_correction: 1.0
+camels:
+  camel_scale: 0.2
+  camel_offsets: [50, -10]
+  baggage_scale: 0.5
+  baggage_offset: 40
+  camel1: {pixel_width: 474, pixel_height: 384}
+  camel2: {pixel_width: 530, pixel_height: 377}
+  camel3: {pixel_width: 543, pixel_height: 327}
+  camel4: {pixel_width: 571, pixel_height: 291}
+  camel5: {pixel_width: 647, pixel_height: 208}
+star_policy:
+  extraLoose: [6.0001, 10.0001, 20.0001, 30]
+  loose: [3.0001, 6.0001, 10.0001, 20]
+  moderate: [1.0001, 3.0001, 5.0001, 10]
+  strict: [0.5001, 1.0001, 3.0001, 5]
+path_types: [config, prev_config, goto, jmp, jmp_no_suffix, suffix_path]
+prop_types: [scale_factor, freeze_display, num_stars,
+    config_iteration, goto_iteration, skip_submit, skip_in_between,
+    center_text, top_left_text, top_right_text, stderr_text, problem_stage,
+    blank_between_exercises, hide_dot, big_op, big_paren,
+    repeat_level, skip_slide_down, correct_option_index,
+    show_only_fivers, show_only_singletons, show_only_size,
+    trigger_blocks_moving_to_result,
+    answer_is_correct, top_block_under_construction, curr_op, is_game]
+prop_value_types: [number, string, boolean]
+event_handling_types: [target, comparison_source, correctness,
+  event_move, top_right_text, show_camel, slide_portal,
+  return_to_top, star_policy, touch_reveals_button,
+  just_proportion, create_tower_by_height, stack_arg_2,
+  swipe_tower, minimum_split_size, no_split_fiver, moving,
+  allow_non_standard, expand_into_units, drag_blocks_to_result,
+  just_yaml_event, on_down, on_up, use_option_buttons,
+  show_blocks_moving_to_result, show_mean_result_at_end,
+  counting_up_sub, allow_keypad_minis,
+  move, arg_1, arg_2, result]
+position_modifiers: [left, right, top, bottom,
+  left_from_right, right_from_left, top_from_bottom,
+  bottom_from_top]
+anim_all_attributes: [left, right, top, bottom, opacity,
+  rotate, scale, handle_opacity, tower_opacity]
+default_bar_width: 75
+prompt_width: 300
+margin_for_merge: 50
+extra_dot_threshold: 0.2
+top_right_text_offset: 80
+incorrect_freeze_time: 3000
+screen_pixels_per_cm: 52
+# print_pixels_per_cm: 56.77
+print_pixels_per_cm: 37.88
+# print_size11x17: {width: 1471, height: 2333}
+print_size11x17: {width: 982, height: 1556}
+print_size8p5x11: {width: 1112, height: 1471}
+tablet_width: 660
+tablet_height: 1000
+laptop_scaling_factor: 1
+animal_landmarks:
+  extra_dot_diameter: 50
+  sloth:
+    #claw: [387, 511]
+    shoulder: [303, 77]
+    head_bottom: [525, 109]
+    eye: [546, 236]
+    head_top: [470, 326]
+    leg: [186, 408]
+    branch_below: [380, 499]
+    branch_above: [380, 557]
+  unicorn:
+    lower_leg: [390, 113]
+    knee: [466, 210]
+    mane: [435, 300]
+    nose: [462, 459]
+    eye: [443, 567]
+    horn: [580, 654]
+    ear: [483, 698]
+  dragon:
+    front1: [436, 160]
+    front2: [440, 292]
+    front3: [428, 412]
+    front4: [400, 514]
+    front5: [386, 586]
+    nose: [540, 688]
+    ear: [364, 846]
+option_button_style:
+  untouched:
+    top:
+      borderColor: green
+      borderWidth: 1
+    bottom:
+      borderColor: red
+      borderWidth: 1
+    highlight:
+      borderColor: yellow
+      borderWidth: 1
+  chosen:
+    top:
+      backgroundColor: green
+    bottom:
+      backgroundColor: red
+    highlight:
+      backgroundColor: yellow
+  notchosen:
+    top:
+      borderColor: grey
+      borderWidth: 1
+    bottom:
+      borderColor: grey
+      borderWidth: 1
+    highlight:
+      borderColor: yellow
+      borderWidth: 1
+option_button_label_style:
+  untouched:
+    top:
+      color: green
+    bottom:
+      color: red
+    highlight:
+      color: yellow
+  chosen:
+    top:
+      color: white
+    bottom:
+      color: white
+    highlight:
+      color: white
+  notchosen:
+    top:
+      color: grey
+    bottom:
+      color: grey
+    highlight:
+      color: yellow

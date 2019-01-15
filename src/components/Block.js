@@ -235,6 +235,7 @@ class Block extends React.Component {
 				for (let k = 0; k < 5; ++k) {
 					img.push(
 						<Image
+							key={k}
 							source={image_location(img_name, just_grey, swap_channel)}
 							style={[
 								styles.image_default,
