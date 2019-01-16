@@ -1,7 +1,7 @@
 # these constants should be fixed!
 debug_mode: true
 num_exercises_for_debugging: 5
-debug_path: [measure_height,  animal_height, level_4]
+debug_path: [measure_height_animals, level_1]
 
 starting_config_path: [addition2, direct, open_build]
 
