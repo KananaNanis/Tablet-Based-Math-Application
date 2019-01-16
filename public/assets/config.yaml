@@ -27,21 +27,21 @@ addition_mix_and_match:
         position: [15, 0]
         tower_style: {opacity: 0.2}
         misc:
+          hide_tower_number: true
           backgroundColor: 'blue'
       tower_1_shadow:
         position: [15, 0]
         misc:
-          hide_tower_number: true
           backgroundColor: 'blue'
       tower_2:
         position: [230, 0]
         tower_style: {opacity: 0.2}
         misc:
+          hide_tower_number: true
           backgroundColor: 'red'
       tower_2_shadow:
         position: [230, 0]
         misc:
-          hide_tower_number: true
           backgroundColor: 'red'
       tower_mixed:
         position: [340, 0]
@@ -69,6 +69,34 @@ addition_mix_and_match:
       config_iteration: 4
       trigger_blocks_moving_to_result: 0
   level_1:
+  disappearing:
+    params:
+      create:
+        button_start:
+      misc:
+        freeze_display: true
+      modify:
+        tower_1:
+          style: { opacity: 0 }
+        tower_1_shadow:
+          style: { opacity: 0 }
+        tower_2:
+          style: { opacity: 0 }
+        tower_2_shadow:
+          style: { opacity: 0 }
+      delay:
+        modify:
+            tower_1:
+              style: { opacity: 1 }
+              anim_info: { opacity: [1, 0], delay: 0, duration: 2000 }
+            tower_2:
+              style: { opacity: 1 }
+              anim_info: { opacity: [1, 0], delay: 0, duration: 2000 }
+            tower_1_shadow:
+              style: { opacity: 1 }
+            tower_2_shadow:
+              style: { opacity: 1 }
+    level_2:
 
 open_build:
   params:

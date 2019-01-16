@@ -107,14 +107,14 @@ export function handle_submit_button(state) {
 				doAction.setProp('freeze_display', false)
 			} else if (delay) {
 				// do animation!
-				global_sound['chirp1'].play()
+				global_sound['ding'].play()
 				doAction.setButtonDisplay('submit', null)
 				//console.log('animating now')
 				window.setTimeout(function() {
 					transition_to_next_config()
 				}, delay)
 			} else {
-				global_sound['chirp1'].play()
+				global_sound['ding'].play()
 				transition_to_next_config()
 			}
 		}
@@ -163,7 +163,7 @@ export function handle_options(state, x, y) {
 			action_list.push(Actions.setButtonHighlight('option_' + i))
 			if ('up' === state) {
 				if (option_is_correct(i)) {
-					global_sound['chirp1'].play()
+					global_sound['ding'].play()
 					action_list.push(Actions.setProp('answer_is_correct', true))
 					action_list.push(Actions.setProp('freeze_display', true))
 					const arg_1 = query_arg(1)
