@@ -38,7 +38,6 @@ export const load_sounds = () => {
 	for (const snd of available_sounds) {
 		global_sound[snd] = new Sound('../assets/snd/' + snd + '.wav')
 	}
-	//global_sound['chirp1'] = new Sound('../assets/snd/chirp1.wav')
 }
 
 export let doAction = {}
