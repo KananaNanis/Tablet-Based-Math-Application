@@ -103,7 +103,7 @@ addition2:
           touch_reveals_button: [delete]
     level_1:
 
-subetize:
+subitize:
   params:
     generate:
       num_animals: [pick_from_range, 0.3, 3.9, 0.1]
