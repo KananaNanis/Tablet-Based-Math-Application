@@ -1,14 +1,19 @@
 # these constants should be fixed!
 debug_mode: true
+<<<<<<< HEAD
 num_exercises_for_debugging: 2
 debug_path: [subitize, level_1]
+=======
+num_exercises_for_debugging: 5
+debug_path: [measure_height_animals, level_1]
+>>>>>>> 39b774920dec6c16e3c91721b30add0cf7d07cc6
 
 starting_config_path: [addition2, direct, open_build]
 
 starting_level_for:
   math: [addition2, direct, open_build]
 
-scale_factor_from_yaml: 520
+scale_factor_from_yaml: 200
 door:
   handle_fraction: 0.1
   min_dist_from_handle: 200
