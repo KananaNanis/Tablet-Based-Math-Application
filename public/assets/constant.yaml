@@ -45,14 +45,14 @@ special_button_geoms:
     width: 210
     height: 80
   start:
-    position: [right 5, top 30]
+    position: [right 10, top 45]
     width: 210
     height: 80
 keypad_info:
   buildTower:
     # position: [right 5, top 5]
     # position: [25, top 95]
-    position: [500, top 95]
+    position: [right 5, top 95]
     button_width: 80
     button_height: 80
     space_width: 5
