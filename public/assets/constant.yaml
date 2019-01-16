@@ -4,6 +4,7 @@ num_exercises_for_debugging: 2
 debug_path: [subitize, level_1]
 
 starting_config_path: [measure_height_animals, level_1]
+#starting_config_path: [redbluequiz, level_1]
 #starting_config_path: [addition_mix_and_match, level_1]
 #starting_config_path: [subitize, level_1]
 
