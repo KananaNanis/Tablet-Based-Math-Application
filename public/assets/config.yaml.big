@@ -2183,6 +2183,13 @@ measure_height:
         modify:
           tower_2:
             tower_style: { opacity: 0 }
+    level_4:
+      params:
+        create:
+          keypad_kind: 'buildTower'
+        modify:
+          tower_2:
+            tower_style: { opacity: 1 }
   to_handle:
     params:
       generate: { door_1_name: [pick_from_range, .1, 1.8, .1] }
@@ -2211,6 +2218,13 @@ measure_height:
         modify:
           tower_2:
             tower_style: { opacity: 0 }
+    level_4:
+      params:
+        create:
+          keypad_kind: 'buildTower'
+        modify:
+          tower_2:
+            tower_style: { opacity: 1 }
   copy_tower_subitize:
     params:
       generate: { tower_1_name: [pick_from_range, .1, 1.8, .1] }
