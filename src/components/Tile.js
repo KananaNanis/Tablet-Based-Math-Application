@@ -10,7 +10,7 @@ export function current_pixel_size_of_animal(name, extra_scale = 1) {
 	const height =
 		extra_scale *
 		global_constant.screen_pixels_per_cm *
-		(scale_factor/52) *
+		(scale_factor / 52) *
 		global_constant.animals[name].height
 	const width =
 		(height * global_constant.animals[name].pixel_width) /
