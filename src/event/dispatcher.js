@@ -391,7 +391,7 @@ export function touch_dispatcher(state, x, y, touchID) {
 								doAction.addObjStyle(result, 'opacity', 1)
 							}
 							if (query_prop('skip_submit')) {
-								global_sound['chirp1'].play()
+								global_sound['ding'].play()
 								transition_to_next_config()
 							} else doAction.setButtonDisplay('submit', true)
 						} else {
