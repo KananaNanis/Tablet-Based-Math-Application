@@ -26,7 +26,6 @@ measure_height:
     level_3:
       params:
         create:
-<<<<<<< HEAD
           keypad_kind: 'buildTower'
         modify:
           tower_2:
@@ -46,80 +45,3 @@ measure_height:
         modify:
           tower_2:
             tower_style: { opacity: 1 }
-=======
-          big_paren: remove
-          big_op: remove
-        event_handling:
-          touch_reveals_button: [delete]
-    level_1:
-
-subetize:
-  params:
-    generate:
-      num_animals: [pick_from_range, 0.3, 3.9, 0.1]
-      option_value_delta: 0.2
-      option_value_seed: num_animals
-      restriction_3: option > 0
-      restriction_4: option < 4
-      m1: num_animals
-    create:
-      tower_1: { name: m1 }
-      tower_2: { name: 1 }
-    modify:
-      tower_1:
-        position: [15, 0]
-        misc:
-          hide_tower_number: true
-          backgroundColor: 'black'
-      tower_2:
-        position: [0, 0]
-        misc:
-          is_option: true
-          option_offset: 220
-          option_width: 110
-          backgroundColor: 'purple'
-    event_handling:
-      correctness: identical
-      target: tower_2
-      arg_1: tower_1
-      comparison_source: tower_1
-    misc:
-      new_scale_factor: 200
-      config_iteration: 5
-  level_1:
-  disappearing:
-    params:
-      create:
-        button_start:
-      modify:
-        tower_1:
-          anim_info: null
-          style: { opacity: 0 }
-        tower_2:
-          style: { opacity: 0 }
-      misc:
-        freeze_display: true
-      delay:
-        modify:
-          tower_1:
-            style: { opacity: 1 }
-            anim_info: { opacity: [1, 0], delay: 0, duration: 1000 }
-          tower_2:
-            style: { opacity: 1 }
-    level_2:
-    level_3:
-      params:
-        modify:
-          tower_2:
-            tower_style: { opacity: 0 }
-        delay:
-          modify:
-            tower_1:
-              style: { opacity: 1 }
-              anim_info: { opacity: [1, 0], delay: 0, duration: 2000 }
-
-in_between:
-  params:
-    create:
-      button_next:
->>>>>>> 8370da6e4f688905cf496214e81d263ca22677b4
