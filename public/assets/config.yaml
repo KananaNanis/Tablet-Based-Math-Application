@@ -210,6 +210,8 @@ measure_height_animals:
       modify:
         tower_2:
           tower_style: { opacity: 1 }
+          misc:
+            backgroundColor: 'black'
 
 redbluequiz:
   params:
