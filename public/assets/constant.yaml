@@ -1,7 +1,7 @@
 # these constants should be fixed!
 debug_mode: true
 num_exercises_for_debugging: 2
-debug_path: [addition2, direct, level_1]
+debug_path: [subitize, level_1]
 
 starting_config_path: [addition2, direct, open_build]
 
@@ -24,27 +24,27 @@ door:
   portal_min_value: 0.01
   border_radius: 50
 special_button_geoms:
-  submit: 
+  submit:
     position: [40, top 15]
     width: 210
     height: 80
-  submit_on_right: 
+  submit_on_right:
     position: [right 10, top 30]
     width: 150
     height: 80
-  restart: 
+  restart:
     position: [40, top 100]
     width: 210
     height: 80
-  delete: 
+  delete:
     position: [40, top 100]
     width: 210
     height: 80
-  next: 
+  next:
     position: [center, 30vh]
     width: 210
     height: 80
-  start: 
+  start:
     position: [right 5, top 30]
     width: 210
     height: 80
