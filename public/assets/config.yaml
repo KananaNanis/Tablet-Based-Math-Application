@@ -1,28 +1,22 @@
 # this config tree assumes order, even for yaml hashes!
-addition2:
+addition_mix_and_match:
   params:
     generate: # { tower_1_name: [pick_from_range, .1, 3.8, .1] }
-      mean_name_base_5: [pick_from_list, [[.5,.5, .5,.5, .5,.5], [1, .5,.5, .5,.5], [2, .5,.5], [.5,.5, .5,.5], [1, .5,.5], [.5,.5]]]
-      # mean_name_base_5: [pick_from_list, [[1, .5,.5]]]
-      extra_fiver: [pick_from_list, [0, .5]]
-      extra_delta: [pick_from_range, 0, .45, .1]
-      mean_name_f: mean_name_base_5 ++ extra_fiver
-      mean_name: mean_name_f ++ extra_delta
-      # mean_name: [fixed, [2, .5, .5, .5, .4]]
-      # partition_1: mean_name into m1 and m2
-      m1: [fixed, [1, .5, .1]]
-      m2: [fixed, [1, .5, .1]]
-      # tower_1_name: mean_name
+      tower_1_height: [pick_from_range, 0.3, 2, 0.1]
+      tower_2_height: [pick_from_range, 0.3, 3, 0.1]
+      mixed_tower_height: tower_1_height + tower_2_height
+      restriction_upper: mixed_tower_height < 3.9
     create:
+      keypad_kind: 'buildTower'
       big_paren: true
       big_op: +
-      tower_2_shadow: { name: m2 }
-      tower_1_shadow: { name: m1 }
-      tower_2: { name: m2 }
-      tower_1: { name: m1 }
+      tower_2_shadow: { name: tower_2_height }
+      tower_1_shadow: { name: tower_1_height }
+      tower_2: { name: tower_2_height }
+      tower_1: { name: tower_1_height }
       tower_mixed: []
-      # tower_result: [3, .5, .4]
       tower_result: []
+      tower_4: { name: mixed_tower_height }
     modify:
       big_paren:
         position: [20, 0]
@@ -59,49 +53,38 @@ addition2:
         # tower_style: {opacity: 0}
         misc:
           backgroundColor: 'black'
+      tower_4:
+        position: [0, 0]
+        style: {opacity: 0}
     event_handling:
       correctness: identical
       touch_reveals_button: [submit, delete]
       no_split_fiver: true
       minimum_split_size: -1
+      target: tower_result
+      comparison_source: tower_4
     misc:
-      new_scale_factor: 200
       num_stars: 2
       remove_on_exit: [button_submit, button_delete]
       config_iteration: 4
       trigger_blocks_moving_to_result: 0
-  direct:
-    params:
-      generate:
-        nice_name: standardize_name mean_name
-      create:
-        keypad_kind: 'buildTower'
-        # tower_2: { name: tower_1_name }
-        tower_4: nice_name
-      modify:
-        tower_4:
-          position: [0, 0]
-          style: {opacity: 0}
-      event_handling:
-        target: tower_result
-        # allow_non_standard: true
-        comparison_source: tower_4
-      misc:
-        remove_on_exit: [button_submit, button_delete]
-        config_iteration: 4
-        num_stars: 2
-        problem_stage: null
-        skip_in_between: null
-    open_build:
-      params:
-        generate:
-          mean_name: [fixed, []]
-        create:
-          big_paren: remove
-          big_op: remove
-        event_handling:
-          touch_reveals_button: [delete]
-    level_1:
+  level_1:
+
+open_build:
+  params:
+    generate:
+      mean_name: [fixed, []]
+    create:
+      keypad_kind: 'buildTower'
+      tower_result: []
+    modify:
+      tower_result:
+        position: [42vw, 0]
+        misc:
+          backgroundColor: 'black'
+    event_handling:
+      target: tower_result
+      touch_reveals_button: [delete]
 
 subitize:
   params:
