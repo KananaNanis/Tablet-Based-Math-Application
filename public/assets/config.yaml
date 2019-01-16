@@ -217,6 +217,7 @@ measure_height_animals:
         tower_2:
           tower_style: { opacity: 1 }
       misc:
+        backgroundColor: 'black'
         jmp: [measure_height_animals, level_1]
 
 redbluequiz:
