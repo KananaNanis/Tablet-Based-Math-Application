@@ -69,12 +69,16 @@ addition_mix_and_match:
       config_iteration: 4
       trigger_blocks_moving_to_result: 0
   level_1:
+    params:
+      misc:
+        jmp: [addition_mix_and_match, level_1]
   disappearing:
     params:
       create:
         button_start:
       misc:
         freeze_display: true
+        # jmp: [addition_mix_and_match, level_1]
       modify:
         tower_1:
           style: { opacity: 0 }
@@ -168,6 +172,9 @@ subitize:
           tower_2:
             style: { opacity: 1 }
     level_2:
+      params:
+        misc:
+          jmp: [subitize, disappearing, level_2]
     level_3:
       params:
         modify:
@@ -201,7 +208,6 @@ measure_height_animals:
     misc:
       remove_on_exit: [button_submit, button_delete]
       config_iteration: 7
-      # config_iteration: 1
       num_stars: 3
   level_1:
     params:
@@ -212,6 +218,8 @@ measure_height_animals:
           tower_style: { opacity: 1 }
           misc:
             backgroundColor: 'black'
+      misc:
+        jmp: [measure_height_animals, level_1]
 
 redbluequiz:
   params:
@@ -262,6 +270,9 @@ redbluequiz:
       num_stars: 3
       trigger_blocks_moving_to_result: 0
   level_1:
+    params:
+      misc:
+        jmp: [redbluequiz, level_1]
   disappearing:
     params:
       create:
