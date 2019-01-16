@@ -1,12 +1,7 @@
 # these constants should be fixed!
 debug_mode: true
-<<<<<<< HEAD
 num_exercises_for_debugging: 2
 debug_path: [subitize, level_1]
-=======
-num_exercises_for_debugging: 5
-debug_path: [measure_height_animals, level_1]
->>>>>>> 39b774920dec6c16e3c91721b30add0cf7d07cc6
 
 starting_config_path: [addition2, direct, open_build]
 
