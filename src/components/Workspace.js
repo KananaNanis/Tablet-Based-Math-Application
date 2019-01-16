@@ -26,8 +26,10 @@ import {
 import BarContainer from '../containers/BarContainer'
 //import {runInDebugContext} from 'vm'
 
-export let global_screen_width = Dimensions.get('window').width
-export let global_screen_height = Dimensions.get('window').height
+export const original_global_screen_width = Dimensions.get('window').width
+export let global_screen_width = original_global_screen_width
+export const original_global_screen_height = Dimensions.get('window').height
+export let global_screen_height = original_global_screen_height
 export const global_grass_height = 50
 export let global_workspace_height = global_screen_height - global_grass_height
 
@@ -36,8 +38,18 @@ export function update_screen_dimensions() {
 		global_screen_width = global_constant.tablet_width
 		global_screen_height = global_constant.tablet_height
 		global_workspace_height = global_screen_height - global_grass_height
-		// console.log('changing global_workspace_height to', global_workspace_height)
+		//console.log('changing global_workspace_height to', global_workspace_height)
 	}
+	/*
+	console.log(
+		'laptop_scaling',
+		global_constant.laptop_scaling_factor,
+		'screen_width',
+		global_screen_width,
+		'workspace_height',
+		global_workspace_height,
+	)
+	*/
 }
 
 export const window2workspaceCoords = pos0 => [
