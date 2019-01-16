@@ -3,8 +3,8 @@ import {Platform} from 'react-native'
 import {bindActionCreators} from 'redux'
 import yaml from 'js-yaml'
 import {
-	global_screen_height,
 	update_screen_dimensions,
+	original_global_screen_height,
 } from '../components/Workspace'
 import {enter_exit_config} from '../providers/enter_exit'
 import {do_batched_actions} from '../providers/reducers'
@@ -76,6 +76,7 @@ export function initialize_redux_store(path) {
 }
 
 let prev_response_text = ''
+let prev_const_text = ''
 export async function load_config_tree(appObj) {
 	function convert_unicode(input) {
 		return input.replace(/\\u(\w\w\w\w)/g, function(a, b) {
@@ -135,20 +136,27 @@ export async function load_config_tree(appObj) {
 	}
 
 	try {
-		if (!global_constant) {
+		let first_load = !global_constant
+		let constant_changed = false
+		if (first_load) {
 			window.print_global_constant = print_global_constant
-			// first load the constants
-			let const_buffer = await fetch('assets/constant.yaml', {
-				credentials: 'same-origin',
-				cache: 'no-store',
-			})
-			let const_text = await const_buffer.text()
-			const_text = convert_unicode(const_text)
+		}
+		// check whether the constant.yaml file has changed
+		let const_buffer = await fetch('assets/constant.yaml', {
+			credentials: 'same-origin',
+			cache: 'no-store',
+		})
+		let const_text = await const_buffer.text()
+		const_text = convert_unicode(const_text)
+
+		if (const_text !== prev_const_text) {
+			constant_changed = true
+			prev_const_text = const_text
 			global_constant = yaml.safeLoad(const_text)
 			if (global_constant.debug_mode) {
 				// rescale the screen
 				global_constant.laptop_scaling_factor =
-					global_screen_height / global_constant.tablet_height
+					original_global_screen_height / global_constant.tablet_height
 				update_screen_dimensions()
 				// turn off actually sending log messages
 				global_constant.skip_send_log = true
@@ -156,7 +164,6 @@ export async function load_config_tree(appObj) {
 			// console.log('laptop_scaling_factor', global_constant.laptop_scaling_factor)
 			update_constant_position_info()
 			update_constant_animal_heights()
-			global_constant.start_time = Date.now()
 			if (Platform.OS === 'web') {
 				// user_id is a value passed in from a PHP file, cannot declare it!
 				if ('undefined' === typeof user_id) {
@@ -178,13 +185,16 @@ export async function load_config_tree(appObj) {
 			}
 			//console.log('is_mobile', global_constant.is_mobile)
 			//console.log('is_safari', global_constant.is_safari)
-			create_bound_action_creators()
+			if (first_load) {
+				global_constant.start_time = Date.now()
+				create_bound_action_creators()
+			}
 			doAction.addLogEntry(global_constant.start_time, [
 				[],
 				'loading_constants',
 			])
 		}
-		// check whether to reload after half a day
+		// check whether to reload config after half a day
 		const half_day = 12 * 60 * 60 * 1000
 		// const half_day = 10*1000
 		const currentTime = Date.now()
@@ -207,7 +217,7 @@ export async function load_config_tree(appObj) {
 			cache: 'no-store',
 		})
 		let response_text = await response.text()
-		if (response_text === prev_response_text) return
+		if (!constant_changed && response_text === prev_response_text) return
 		prev_response_text = response_text
 		//console.log(response_text);
 		config_tree = yaml.safeLoad(response_text)
