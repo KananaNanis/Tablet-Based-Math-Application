@@ -1,14 +1,16 @@
 # these constants should be fixed!
-debug_mode: false
+debug_mode: true
 num_exercises_for_debugging: 2
-debug_path: [subitize, level_1]
+# debug_path: [addition2, direct, level_1]
+debug_path: [redbluequiz, level_1]
+# debug_path: [pure_five_frame, level_1]
 
-starting_config_path: [measure_height_animals, level1]
+starting_config_path: [addition2, direct, open_build]
 
 starting_level_for:
   math: [addition2, direct, open_build]
 
-scale_factor_from_yaml: 200
+scale_factor_from_yaml: 520
 door:
   handle_fraction: 0.1
   min_dist_from_handle: 200
@@ -24,35 +26,35 @@ door:
   portal_min_value: 0.01
   border_radius: 50
 special_button_geoms:
-  submit:
+  submit: 
     position: [40, top 15]
     width: 210
     height: 80
-  submit_on_right:
+  submit_on_right: 
     position: [right 10, top 30]
     width: 150
     height: 80
-  restart:
+  restart: 
     position: [40, top 100]
     width: 210
     height: 80
-  delete:
+  delete: 
     position: [40, top 100]
     width: 210
     height: 80
-  next:
+  next: 
     position: [center, 30vh]
     width: 210
     height: 80
-  start:
-    position: [right 10, top 45]
+  start: 
+    position: [right 5, top 30]
     width: 210
     height: 80
 keypad_info:
   buildTower:
     # position: [right 5, top 5]
     # position: [25, top 95]
-    position: [right 5, top 95]
+    position: [500, top 95]
     button_width: 80
     button_height: 80
     space_width: 5
@@ -163,9 +165,6 @@ animals:
   peg_c3: {height: .3, pixel_width: 190, pixel_height: 150}
   peg_c4: {height: .4, pixel_width: 190, pixel_height: 200}
   peg_c5: {height: .5, pixel_width: 190, pixel_height: 250}
-  smile_emoji: {height: 1.7, pixel_width: 600, pixel_height: 600}
-  frown_emoji: {height: 1.7, pixel_width: 600, pixel_height: 600}
-
 # animal_scale_correction: 0.92  # for incorrect print
 animal_scale_correction: 1.0
 camels:
