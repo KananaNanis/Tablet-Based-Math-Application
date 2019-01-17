@@ -88,7 +88,7 @@ export async function load_config_tree(appObj) {
 	function update_constant_position_info() {
 		const p = global_constant.placard
 		p.position = as_position(p.position, p.width, p.height)
-		for (const item of ['special_button_geoms', 'keypad_info']) {
+		for (const item of ['special_button_defaults', 'keypad_info']) {
 			for (const key in global_constant[item]) {
 				if (global_constant[item].hasOwnProperty(key)) {
 					let geom = global_constant[item][key],
