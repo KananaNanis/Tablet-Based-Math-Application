@@ -156,10 +156,10 @@ class Tile extends React.Component {
 		const is_peg = name.startsWith('peg_')
 		const img_name = is_peg ? 'peg' : name
 		let [width, height] = current_pixel_size_of_animal(name, extra_scale)
-		if (misc && 'undefined' != typeof misc.animal_width) {
+		if(misc && 'undefined' !== typeof misc.animal_width) {
 			width = misc.animal_width
 		}
-		if (misc && 'undefined' != typeof misc.unscaled_height) {
+		if(misc && 'undefined' !== typeof misc.unscaled_height) {
 			height = misc.unscaled_height * query_prop('scale_factor')
 		}
 		let [img_width, img_height] = [width, height]
