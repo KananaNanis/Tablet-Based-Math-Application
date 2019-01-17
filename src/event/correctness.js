@@ -189,6 +189,7 @@ export function is_correct() {
 	const how = query_event('correctness')
 	const curr_time = Date.now() // when anwer was given
 	const cp = query_path('config').toJS()
+	const tile_sccss = query_arg('tile_success')
 	let delay = 'incorrect'
 	//console.log('is_correct src', src, 'how', how)
 	if ('subset' === how) {
@@ -264,6 +265,17 @@ export function is_correct() {
 		if (eq !== 'unchecked') {
 			if (eq) {
 				delay = 0
+				if (query_prop('use_emoji')) {
+					doAction.addObjStyle('tile_success', 'opacity', 1.0)
+					delay = 500
+				}
+				//doAction.addObjStyle('tile_success', 'opacity', 1.0)
+
+				// console.log('hello bidit')
+				// window.setTimeout( function() {
+				// 	doAction.addObjStyle('tile_success', 'opacity', 0.0)
+				// 	// console.log('hello again, bidit')
+				// }, 500)
 				if (query_event('show_mean_result_at_end')) {
 					const mean_name = query_name_of('tower_mean').toJS()
 					// console.log('mean_name', mean_name)
@@ -293,6 +305,11 @@ export function is_correct() {
 					)
 					delay += 1000
 				}
+				// doAction.addObjStyle('tile_success', 'opacity', 1)
+				// setTimeout( function() {doAction.addObjStyle('tile_success', 'opacity', 0)}, 500)
+			} else {
+				doAction.addObjStyle('tile_fail', 'opacity', 1)
+				setTimeout( function() {doAction.addObjStyle('tile_fail', 'opacity', 0)}, 500)
 			}
 			doAction.addLogEntry(curr_time, [
 				with_suffix(cp),
