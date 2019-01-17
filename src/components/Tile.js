@@ -155,7 +155,10 @@ class Tile extends React.Component {
 		if (just_grey) extra_style = {opacity: 0.1}
 		const is_peg = name.startsWith('peg_')
 		const img_name = is_peg ? 'peg' : name
-		const [width, height] = current_pixel_size_of_animal(name, extra_scale)
+		let [width, height] = current_pixel_size_of_animal(name, extra_scale)
+		if(misc && 'undefined' != typeof misc.animal_width) {
+			width = misc.animal_width
+		}
 		let [img_width, img_height] = [width, height]
 		let img_offset_x = 0,
 			img_offset_y = 0

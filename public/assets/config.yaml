@@ -201,7 +201,7 @@ measure_height_animals:
     modify:
       tower_2: { position: [65vw, 0] }
       tile_1: { position: [right 40vw, 0] }
-      tile_2: {position: [right 50vw, 0], misc: {image_opacity: 0}}
+      tile_2: {position: [right 40vw, 0], misc: {image_opacity: 0, animal_width: 100000}}
     event_handling:
       target: tower_2
       touch_reveals_button: [submit, delete]
