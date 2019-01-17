@@ -168,7 +168,10 @@ export async function load_config_tree(appObj) {
 				// user_id is a value passed in from a PHP file, cannot declare it!
 				if ('undefined' === typeof user_id) {
 					global_constant.username = 'Olaf'
-				} else if (!global_constant.first_name_for || !global_constant.first_name_for[user_id]) {
+				} else if (
+					!global_constant.first_name_for ||
+					!global_constant.first_name_for[user_id]
+				) {
 					global_constant.username = user_id
 				} else {
 					global_constant.username = global_constant.first_name_for[user_id]
