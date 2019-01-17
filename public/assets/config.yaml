@@ -148,6 +148,7 @@ subitize:
       target: tower_2
       arg_1: tower_1
       comparison_source: tower_1
+      disappearing_object: tower_1
     misc:
       new_scale_factor: 200
       config_iteration: 5
