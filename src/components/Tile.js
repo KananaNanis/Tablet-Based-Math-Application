@@ -151,10 +151,14 @@ class Tile extends React.Component {
 		let extra_style = {}
 		let image_opacity =
 			misc && 'undefined' !== typeof misc.image_opacity ? misc.image_opacity : 1
-		let use_no_borders = 
-			misc && 'undefined' !== typeof misc.use_no_borders ? misc.use_no_borders : false
-		let use_all_borders =   
-			misc && 'undefined' !== typeof misc.use_all_borders ? misc.use_all_borders : false
+		let use_no_borders =
+			misc && 'undefined' !== typeof misc.use_no_borders
+				? misc.use_no_borders
+				: false
+		let use_all_borders =
+			misc && 'undefined' !== typeof misc.use_all_borders
+				? misc.use_all_borders
+				: false
 
 		if (just_grey) extra_style = {opacity: 0.1}
 		const is_peg = name.startsWith('peg_')
