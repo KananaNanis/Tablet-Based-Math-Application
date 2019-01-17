@@ -94,7 +94,11 @@ export function incorrect_button_response() {
 		doAction.setProp('freeze_display', false)
 		const comp_source = query_event('disappearing_object')
 		doAction.addObjStyle(comp_source, 'opacity', 1)
-		doAction.addAnimInfo(comp_source, { opacity: [1, 0], delay: 0, duration: 1000 })
+		doAction.addAnimInfo(comp_source, {
+			opacity: [1, 0],
+			delay: 0,
+			duration: 1000,
+		})
 	}, global_constant.incorrect_freeze_time)
 }
 
