@@ -159,6 +159,9 @@ class Tile extends React.Component {
 		if(misc && 'undefined' != typeof misc.animal_width) {
 			width = misc.animal_width
 		}
+		if(misc && 'undefined' != typeof misc.unscaled_height) {
+			height = misc.unscaled_height * query_prop('scale_factor')
+		}
 		let [img_width, img_height] = [width, height]
 		let img_offset_x = 0,
 			img_offset_y = 0

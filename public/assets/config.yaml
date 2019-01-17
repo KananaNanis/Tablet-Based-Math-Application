@@ -238,6 +238,7 @@ redbluequiz:
       tower_1: { name: m1 }
       tower_frame_2: { name: 1 }
       tower_mixed: []
+      tile_1: {name: "mouse"}
     modify:
       tower_frame_2:
         position: [0, 0]
@@ -261,6 +262,7 @@ redbluequiz:
         tower_style: {opacity: 0}
         misc:
           hide_tower_number: true
+      tile_1: {position: [0, 0], misc: {image_opacity: 0, animal_width: 100000, unscaled_height: mean_name}}
 
     event_handling:
       correctness: identical
