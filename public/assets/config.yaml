@@ -49,7 +49,7 @@ addition_mix_and_match:
         misc:
           hide_tower_number: true
       tower_result:
-        position: [380, 0]
+        position: [443, 0]
         # tower_style: {opacity: 0}
         misc:
           backgroundColor: 'black'
@@ -301,3 +301,8 @@ redbluequiz:
             tower_2:
               style: { opacity: 1 }
               anim_info: { opacity: [1, 0], delay: 0, duration: 2000 }
+
+ok:
+  params:
+    create:
+      center_text:  OK
