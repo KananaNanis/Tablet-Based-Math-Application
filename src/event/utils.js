@@ -267,10 +267,13 @@ export function show_blocks_moving_to_result(arg_1, arg_2, result, instant) {
 	const already_animated_side_0 = Boolean(query_block_anim_info(arg_1))
 	for (let i = 0; i < toggle.length; ++i) {
 		let side = toggle[i]
+		let w = block_info[side][block_index[side]].width
 		if (1 === side && 0 === tower_name[1].length) {
 			// skip this one
 		} else {
-			let xpos = [0, dx[side]]
+			const scale_factor = query_prop('scale_factor')
+			const goat_width = scale_factor * global_constant.tower.size2depth[0]
+			let xpos = [0, dx[side] + (goat_width - w)]
 			let ypos = [
 				block_info[side][block_index[side]].bottom,
 				result_block_info[block_index[2]].bottom,
