@@ -119,7 +119,7 @@ intro_halves:
       comparison_source: bar_1
       target: door_3
       correctness: half_height
-      touch_reveals_button: submit
+      touch_reveals_button: button_submit
     misc:
       config_iteration: 4
       # config_iteration: 1
@@ -386,7 +386,7 @@ add_or_half:
         arg_1: bar_1
         arg_2: bar_2
         result: bar_3
-        touch_reveals_button: submit
+        touch_reveals_button: button_submit
         star_policy: extraLoose
     result_option:
       params:
@@ -659,7 +659,7 @@ add_height:
               mutable: true
         event_handling:
           target: bar_3
-          touch_reveals_button: submit
+          touch_reveals_button: button_submit
           star_policy: loose
       level_1:
         params:
@@ -698,7 +698,7 @@ add_height:
               mutable: true
         event_handling:
           target: door_3
-          touch_reveals_button: submit
+          touch_reveals_button: button_submit
           star_policy: loose
       level_1:
         params:
@@ -844,7 +844,7 @@ intro_diagrams:
     level_2:
       params:
         event_handling:
-          touch_reveals_button: [submit, delete]
+          touch_reveals_button: [button_submit, button_delete]
           create_tower_by_height: true
         misc:
           remove_on_exit: [button_submit, button_delete]
@@ -876,7 +876,7 @@ intro_diagrams:
             misc:
               as_diagram: true
         event_handling:
-          touch_reveals_button: [submit, delete]
+          touch_reveals_button: [button_submit, button_delete]
           create_tower_by_height: true
         misc:
           remove_on_exit: [button_submit, button_delete]
@@ -969,7 +969,7 @@ intro_names:
         create:
           keypad_kind: 'buildTower'
         event_handling:
-          touch_reveals_button: [submit, delete]
+          touch_reveals_button: [button_submit, button_delete]
         misc:
           remove_on_exit: [button_submit, button_delete]
     level_3:
@@ -1013,7 +1013,7 @@ intro_names:
           tower_2:
             position: [right 100, 0]
         event_handling:
-          touch_reveals_button: [submit, delete]
+          touch_reveals_button: [button_submit, button_delete]
         misc:
           remove_on_exit: [button_submit, button_delete]
     level_5:
@@ -1024,7 +1024,7 @@ intro_names:
             misc:
               hide_tower_name: true
         event_handling:
-          touch_reveals_button: [submit, delete]
+          touch_reveals_button: [button_submit, button_delete]
           create_tower_by_height: true
         misc:
           remove_on_exit: [button_submit, button_delete]
@@ -1069,7 +1069,7 @@ intro_names:
               hide_tower_name: true
               as_diagram: true
         event_handling:
-          touch_reveals_button: [submit, delete]
+          touch_reveals_button: [button_submit, button_delete]
         misc:
           remove_on_exit: [button_submit, button_delete]
     level_8:
@@ -1081,7 +1081,7 @@ intro_names:
               hide_tower_name: true
               as_diagram: true
         event_handling:
-          touch_reveals_button: [submit, delete]
+          touch_reveals_button: [button_submit, button_delete]
           create_tower_by_height: true
         misc:
           remove_on_exit: [button_submit, button_delete]
@@ -1341,7 +1341,7 @@ estimate_names_1_to_5:
       tower_2: []
     event_handling:
       target: tower_2
-      touch_reveals_button: [submit, delete]
+      touch_reveals_button: [button_submit, button_delete]
     modify:
       tower_2:
         position: [65vw, 0]
@@ -1522,7 +1522,7 @@ estimate_names_6_to_9:
       tower_2: []
     event_handling:
       target: tower_2
-      touch_reveals_button: [submit, delete]
+      touch_reveals_button: [button_submit, button_delete]
     modify:
       tower_2:
         position: [65vw, 0]
@@ -1690,7 +1690,7 @@ estimate_names_11_to_14:
       tower_2: []
     event_handling:
       target: tower_2
-      touch_reveals_button: [submit, delete]
+      touch_reveals_button: [button_submit, button_delete]
     modify:
       tower_2:
         position: [65vw, 0]
@@ -1752,7 +1752,7 @@ estimate_tower_height:
       comparison_source: tower_1
       target: door_3
       correctness: near_discrete_height
-      touch_reveals_button: submit
+      touch_reveals_button: button_submit
     misc:
       config_iteration: 4
       # config_iteration: 1
@@ -1806,7 +1806,7 @@ estimate_names:
       tower_2: []
     event_handling:
       target: tower_2
-      touch_reveals_button: [submit, delete]
+      touch_reveals_button: [button_submit, button_delete]
     modify:
       tower_2:
         position: [65vw, 0]
@@ -2098,7 +2098,7 @@ round_2_est_button:
       comparison_source: door_1
       correctness: same_height
       target: tower_2
-      touch_reveals_button: [submit, delete]
+      touch_reveals_button: [button_submit, button_delete]
     misc:
       config_iteration: 7
       num_stars: 3
@@ -2147,7 +2147,7 @@ measure_height:
       tower_2: { position: [65vw, 0] }
     event_handling:
       target: tower_2
-      touch_reveals_button: [submit, delete]
+      touch_reveals_button: [button_submit, button_delete]
     misc:
       remove_on_exit: [button_submit, button_delete]
       config_iteration: 7
@@ -2937,7 +2937,7 @@ intro_diagrams_2:
       comparison_source: tower_1
       target: tower_2
       correctness: identical
-      touch_reveals_button: [submit, delete]
+      touch_reveals_button: [button_submit, button_delete]
     misc:
       new_scale_factor: 200
       config_iteration: 7
@@ -3088,7 +3088,7 @@ group_ungroup:
           hide_tower_name: true
     event_handling:
       correctness: identical
-      touch_reveals_button: [submit, delete]
+      touch_reveals_button: [button_submit, button_delete]
       no_split_fiver: true
       minimum_split_size: -1
     misc:
@@ -3782,7 +3782,7 @@ drag_blocks:
       result: tower_result
       drag_blocks_to_result: true
       correctness: all_moved
-      touch_reveals_button: [submit]
+      touch_reveals_button: [button_submit]
       # no_split_fiver: true
       # minimum_split_size: -1
     misc:
@@ -3951,7 +3951,7 @@ counting_up_sub:
           tower_name_style: { left: 25 }
     event_handling:
       correctness: identical
-      touch_reveals_button: [submit, delete]
+      touch_reveals_button: [button_submit, button_delete]
       counting_up_sub: true
     misc:
       new_scale_factor: 200
@@ -4094,7 +4094,7 @@ tower_addition:
           tower_name_style: { left: 25 }
     event_handling:
       correctness: identical
-      touch_reveals_button: [submit, delete]
+      touch_reveals_button: [button_submit, button_delete]
       no_split_fiver: true
       minimum_split_size: -1
     misc:
@@ -4448,7 +4448,7 @@ baby_turtles:
           hide_tower_name: true
     event_handling:
       correctness: identical
-      touch_reveals_button: [submit, delete]
+      touch_reveals_button: [button_submit, button_delete]
     misc:
       new_scale_factor: 200
       num_stars: 2
@@ -4660,8 +4660,8 @@ addition2:
           tower_name_style: { left: 25 }
     event_handling:
       correctness: identical
-      # touch_reveals_button: [submit, delete]
-      touch_reveals_button: [delete]
+      # touch_reveals_button: [button_submit, button_delete]
+      touch_reveals_button: [button_delete]
       no_split_fiver: true
       minimum_split_size: -1
     misc:
@@ -4761,7 +4761,7 @@ stage_2_building_arg_2_snippet:
       comparison_source: tower_4
       show_blocks_moving_to_result: true
       target: tower_2
-      touch_reveals_button: [submit, delete]
+      touch_reveals_button: [button_submit, button_delete]
       allow_non_standard: true
     misc:
       problem_stage: false
@@ -4817,7 +4817,7 @@ grouping_snippet_stage_2:
         moving: tower_moving
         correctness: is_standardized
         swipe_tower: true
-        touch_reveals_button: [submit]
+        touch_reveals_button: [button_submit]
 grouping_snippet_stage_2_un:
   params_from: [grouping_snippet_stage_2]
   params:
@@ -4902,7 +4902,7 @@ tower_addition_direct_snippet:
         allow_non_standard: true
         comparison_source: tower_4
       misc:
-        remove_on_exit: [button_submit, button_delete]
+        remove_on_exit: [button_button_submit, button_delete]
         config_iteration: 4
         num_stars: 2
         problem_stage: null
