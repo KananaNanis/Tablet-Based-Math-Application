@@ -189,7 +189,6 @@ export function is_correct() {
 	const how = query_event('correctness')
 	const curr_time = Date.now() // when anwer was given
 	const cp = query_path('config').toJS()
-	const tile_sccss = query_arg('tile_success')
 	let delay = 'incorrect'
 	//console.log('is_correct src', src, 'how', how)
 	if ('subset' === how) {
