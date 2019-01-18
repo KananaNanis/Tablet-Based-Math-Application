@@ -3,7 +3,10 @@ debug_mode: true
 num_exercises_for_debugging: 2
 debug_path: [subitize, level_1]
 
-starting_config_path: [addition2, direct, open_build]
+#starting_config_path: [measure_height_animals, level_1]
+#starting_config_path: [redbluequiz, level_1]
+#starting_config_path: [addition_mix_and_match, level_1]
+starting_config_path: [subitize, disappearing, level_2]
 
 starting_level_for:
   math: [addition2, direct, open_build]
@@ -23,28 +26,34 @@ door:
   portal_bg_color: white
   portal_min_value: 0.01
   border_radius: 50
-special_button_geoms:
-  submit:
+special_button_defaults:
+  button_submit:
+    label: submit
     position: [40, top 15]
     width: 210
     height: 80
-  submit_on_right:
+  button_submit_on_right:
+    label: submit
     position: [right 10, top 30]
     width: 150
     height: 80
-  restart:
+  button_restart:
+    label: restart
     position: [40, top 100]
     width: 210
     height: 80
-  delete:
+  button_delete:
+    label: delete
     position: [40, top 100]
     width: 210
     height: 80
-  next:
+  button_next:
+    label: next
     position: [center, 30vh]
     width: 210
     height: 80
-  start:
+  button_start:
+    label: start
     position: [right 10, top 45]
     width: 210
     height: 80
@@ -198,7 +207,7 @@ event_handling_types: [target, comparison_source, correctness,
   allow_non_standard, expand_into_units, drag_blocks_to_result,
   just_yaml_event, on_down, on_up, use_option_buttons,
   show_blocks_moving_to_result, show_mean_result_at_end,
-  counting_up_sub, allow_keypad_minis,
+  counting_up_sub, allow_keypad_minis, disappearing_object,
   move, arg_1, arg_2, result]
 position_modifiers: [left, right, top, bottom,
   left_from_right, right_from_left, top_from_bottom,

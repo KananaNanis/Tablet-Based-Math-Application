@@ -88,7 +88,7 @@ export async function load_config_tree(appObj) {
 	function update_constant_position_info() {
 		const p = global_constant.placard
 		p.position = as_position(p.position, p.width, p.height)
-		for (const item of ['special_button_geoms', 'keypad_info']) {
+		for (const item of ['special_button_defaults', 'keypad_info']) {
 			for (const key in global_constant[item]) {
 				if (global_constant[item].hasOwnProperty(key)) {
 					let geom = global_constant[item][key],
@@ -168,7 +168,10 @@ export async function load_config_tree(appObj) {
 				// user_id is a value passed in from a PHP file, cannot declare it!
 				if ('undefined' === typeof user_id) {
 					global_constant.username = 'Olaf'
-				} else if (!global_constant.first_name_for[user_id]) {
+				} else if (
+					!global_constant.first_name_for ||
+					!global_constant.first_name_for[user_id]
+				) {
 					global_constant.username = user_id
 				} else {
 					global_constant.username = global_constant.first_name_for[user_id]

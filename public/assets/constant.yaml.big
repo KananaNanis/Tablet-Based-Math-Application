@@ -290,28 +290,34 @@ door:
   portal_bg_color: white
   portal_min_value: 0.01
   border_radius: 50
-special_button_geoms:
-  submit: 
+special_button_defaults:
+  button_submit:
+    label: submit
     position: [40, top 15]
     width: 210
     height: 80
-  submit_on_right: 
+  button_submit_on_right:
+    label: submit
     position: [right 10, top 30]
     width: 150
     height: 80
-  restart: 
+  button_restart:
+    label: restart
     position: [40, top 100]
     width: 210
     height: 80
-  delete: 
+  button_delete:
+    label: delete
     position: [40, top 100]
     width: 210
     height: 80
-  next: 
+  button_next:
+    label: next
     position: [center, 30vh]
     width: 210
     height: 80
-  start: 
+  button_start: 
+    label: start
     position: [right 5, top 30]
     width: 210
     height: 80

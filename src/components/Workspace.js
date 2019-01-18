@@ -1,7 +1,7 @@
 import React from 'react'
 import {View, Image, Text, StyleSheet, Dimensions} from 'react-native'
 import Keypad from './Keypad'
-import Button, {get_special_button_geom} from './Button'
+import Button, {get_special_button_geoms} from './Button'
 import Placard from './Placard'
 import ErrBox from './ErrBox'
 import CamelContainer from '../containers/CamelContainer'
@@ -306,29 +306,29 @@ const Workspace = ({
 	}
 	//console.log('freeze_display', freeze_display)
 	//console.log('button_display', button_display)
-	for (const special_button in global_constant.special_button_geoms) {
+	for (const special_button in global_constant.special_button_defaults) {
 		//if (special_button in button_display)
 		if (button_display.has(special_button)) {
 			++key
 			let bg_style = {}
-			if (freeze_display && 'start' !== special_button) {
+			if (freeze_display && 'button_start' !== special_button) {
 				bg_style =
 					special_button === button_highlight
 						? freeze_highlight_style
 						: freeze_no_highlight_style
 			} else if (special_button === button_highlight) bg_style = highlight_style
 			//console.log('bg_style', bg_style)
-			let position = get_special_button_geom(special_button).position.concat()
+			let position = get_special_button_geoms(special_button).position.concat()
 			if (is_scaled) {
-				if (['submit', 'delete'].includes(special_button)) {
+				if (['button_submit', 'button_delete'].includes(special_button)) {
 					position[1] -= 10
 				}
 			}
 			misc_above.push(
 				<Button
 					key={key}
-					height={get_special_button_geom(special_button).height}
-					label={special_button}
+					height={get_special_button_geoms(special_button).height}
+					label={get_special_button_geoms(special_button).label}
 					label_style={styles.button_text_default}
 					position={position}
 					view_style={[
@@ -338,7 +338,7 @@ const Workspace = ({
 						//(special_button === button_highlight) ?
 						//  (freeze_display ? freeze_highlight_style : highlight_style) : {}
 					]}
-					width={get_special_button_geom(special_button).width}
+					width={get_special_button_geoms(special_button).width}
 				/>,
 			)
 		}
