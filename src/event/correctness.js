@@ -326,7 +326,11 @@ export function is_correct() {
 			name1 = query_name_of(src).toJS()
 			name2 = query_name_of(tgt).toJS()
 			// console.log('name1', name1, 'name2', name2)
-			if (name1 === name2) delay = 0
+			if (name1 === name2) { delay = 0 }
+			if (query_prop('use_emoji')) {
+				doAction.addObjStyle('tile_success', 'opacity', 1.0)
+				delay = 500
+			}
 		} else {
 			name1 = query_tower_name(src).toJS()
 			name2 = query_tower_name(tgt).toJS()
@@ -345,6 +349,13 @@ export function is_correct() {
 					)
 					delay += 1000
 				}
+				if (query_prop('use_emoji')) {
+					doAction.addObjStyle('tile_success', 'opacity', 1.0)
+					delay = 500
+				}
+			} else {
+				doAction.addObjStyle('tile_fail', 'opacity', 1)
+				setTimeout( function() {doAction.addObjStyle('tile_fail', 'opacity', 0)}, 500)
 			}
 		}
 		doAction.addLogEntry(curr_time, [

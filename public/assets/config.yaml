@@ -17,7 +17,19 @@ addition_mix_and_match:
       tower_mixed: []
       tower_result: []
       tower_4: { name: mixed_tower_height }
+      tile_success: { name: emoji_smile }
+      tile_fail: { name: emoji_frown }
     modify:
+      tile_success:
+        position: [center,center]
+        style: { opacity: 0.0 }
+        misc:
+          use_no_borders: true
+      tile_fail:
+        position: [center,center]
+        style: { opacity: 0.0 }
+        misc:
+          use_no_borders: true
       big_paren:
         position: [20, 0]
         style: { width: 330 }
@@ -64,6 +76,7 @@ addition_mix_and_match:
       target: tower_result
       comparison_source: tower_4
     misc:
+      use_emoji: true
       num_stars: 2
       remove_on_exit: [button_submit, button_delete]
       config_iteration: 4
