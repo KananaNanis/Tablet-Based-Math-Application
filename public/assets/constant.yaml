@@ -1,7 +1,7 @@
 # these constants should be fixed!
 debug_mode: true
 num_exercises_for_debugging: 2
-debug_path: [subitize, level_1]
+debug_path: [addition_mix_and_match, level_1]
 
 #starting_config_path: [measure_height_animals, level_1]
 #starting_config_path: [redbluequiz, level_1]
@@ -61,7 +61,8 @@ keypad_info:
   buildTower:
     # position: [right 5, top 5]
     # position: [25, top 95]
-    position: [right 5, top 95]
+    # position: [right 5, top 95]
+    position: [right 95, bottom 680]
     button_width: 80
     button_height: 80
     space_width: 5
