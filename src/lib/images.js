@@ -5,7 +5,7 @@ export const image_location = (
 ) => {
 	let extra = ''
 	if ('01' === swap_channel || '02' === swap_channel || '12' === swap_channel) {
-		extra = '.' + swap_channel
+		// extra = '.' + swap_channel
 	} else if (just_grey) extra = '.bw'
 	return require('../assets/img/' + name + extra + '.png')
 }

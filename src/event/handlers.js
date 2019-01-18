@@ -71,7 +71,7 @@ export function handle_start_button(state) {
 		let action_list = [],
 			silent = false
 		action_list.push(Actions.setProp('freeze_display', null))
-		action_list.push(Actions.setButtonDisplay('start', null))
+		action_list.push(Actions.setButtonDisplay('button_start', null))
 		const cp = query_path('config')
 		enter_exit_config(
 			cp,
@@ -92,6 +92,13 @@ export function incorrect_button_response() {
 	window.setTimeout(function() {
 		doAction.setButtonHighlight(null)
 		doAction.setProp('freeze_display', false)
+		const comp_source = query_event('disappearing_object')
+		doAction.addObjStyle(comp_source, 'opacity', 1)
+		doAction.addAnimInfo(comp_source, {
+			opacity: [1, 0],
+			delay: 0,
+			duration: 1000,
+		})
 	}, global_constant.incorrect_freeze_time)
 }
 
@@ -108,7 +115,7 @@ export function handle_submit_button(state) {
 			} else if (delay) {
 				// do animation!
 				global_sound['ding'].play()
-				doAction.setButtonDisplay('submit', null)
+				doAction.setButtonDisplay('button_submit', null)
 				//console.log('animating now')
 				window.setTimeout(function() {
 					transition_to_next_config()
