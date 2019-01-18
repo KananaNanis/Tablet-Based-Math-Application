@@ -6,7 +6,7 @@ debug_path: [addition_mix_and_match, level_1]
 starting_config_path: [addition_mix_and_match, level_1]
 #starting_config_path: [redbluequiz, level_1]
 #starting_config_path: [addition_mix_and_match, level_1]
-starting_config_path: [subitize, disappearing, level_2]
+# starting_config_path: [subitize, disappearing, level_2]
 
 starting_level_for:
   math: [addition2, direct, open_build]
