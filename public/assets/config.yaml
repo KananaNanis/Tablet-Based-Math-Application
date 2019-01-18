@@ -10,6 +10,7 @@ addition_mix_and_match:
       tower_2_spiders: [pick_from_range, 0, 0.45, 0.1]
       total_fivers: tower_1_fivers + tower_2_fivers
       total_spiders: tower_1_spiders + tower_2_spiders
+      total_fivers_and_spiders: total_fivers + total_spiders
       tower_1_height_part: tower_1_goats + tower_1_fivers
       tower_1_height: tower_1_height_part + tower_1_spiders
       tower_2_height_part: tower_2_goats + tower_2_fivers
@@ -105,6 +106,7 @@ addition_mix_and_match:
     params:
       generate:
         restriction_fivers: total_fivers < 0.55
+        restriction_spiders: total_fivers_and_spiders < 0.95
       misc:
         jmp: [addition_mix_and_match, level_2]
   level_3:
