@@ -64,7 +64,7 @@ addition_mix_and_match:
       target: tower_result
       comparison_source: tower_4
     misc:
-      num_stars: 2
+      num_stars: 3
       remove_on_exit: [button_submit, button_delete]
       config_iteration: 4
       trigger_blocks_moving_to_result: 0
