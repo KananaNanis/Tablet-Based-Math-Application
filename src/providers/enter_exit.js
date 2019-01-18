@@ -337,6 +337,7 @@ export function enter_exit_config(
 						'is_game',
 						'game_name',
 						'game_level_name',
+						'use_emoji',
 					].includes(key)
 				) {
 					action_list.push(Actions.setProp(key, enter ? c[key0] : null))

@@ -3,7 +3,7 @@ debug_mode: true
 num_exercises_for_debugging: 2
 debug_path: [addition_mix_and_match, level_1]
 
-#starting_config_path: [measure_height_animals, level_1]
+starting_config_path: [addition_mix_and_match, level_1]
 #starting_config_path: [redbluequiz, level_1]
 #starting_config_path: [addition_mix_and_match, level_1]
 #starting_config_path: [addition_mix_and_match, level_2]
@@ -175,6 +175,9 @@ animals:
   peg_c3: {height: .3, pixel_width: 190, pixel_height: 150}
   peg_c4: {height: .4, pixel_width: 190, pixel_height: 200}
   peg_c5: {height: .5, pixel_width: 190, pixel_height: 250}
+  emoji_smile: {height: 2.7, pixel_width: 600, pixel_height: 600}
+  emoji_frown: {height: 2.7, pixel_width: 600, pixel_height: 600}
+
 # animal_scale_correction: 0.92  # for incorrect print
 animal_scale_correction: 1.0
 camels:
@@ -200,7 +203,7 @@ prop_types: [scale_factor, freeze_display, num_stars,
     repeat_level, skip_slide_down, correct_option_index,
     show_only_fivers, show_only_singletons, show_only_size,
     trigger_blocks_moving_to_result,
-    answer_is_correct, top_block_under_construction, curr_op, is_game]
+    answer_is_correct, top_block_under_construction, curr_op, is_game, use_emoji]
 prop_value_types: [number, string, boolean]
 event_handling_types: [target, comparison_source, correctness,
   event_move, top_right_text, show_camel, slide_portal,

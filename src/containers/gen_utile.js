@@ -23,7 +23,8 @@ export function pick_animal_name(prev_value) {
 			animal_name !== prev_value &&
 			animal_name !== 'chimpanzee' &&
 			!animal_name.startsWith('peg') &&
-			!animal_too_tall(animal_name)
+			!animal_too_tall(animal_name) &&
+			!animal_name.startsWith('emoji')
 		) {
 			//console.log('choose_random_animal result ', animal_name)
 			return animal_name

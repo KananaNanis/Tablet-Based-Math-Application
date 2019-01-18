@@ -136,8 +136,7 @@ class Tile extends React.Component {
 			misc && 'undefined' !== typeof misc.extra_scale ? misc.extra_scale : 1
 		//console.log('Tile  id', id, 'extra_scale', extra_scale)
 		console.log('Tile  id', id, 'anim_info', anim_info)
-		const useAllBorders = false // use true when printing
-		const useNoBorders = false // need to allow this for some cases!
+		// const use_all_borders = false // use true when printing
 
 		let animated_style = {}
 		if (!just_grey) {
@@ -152,6 +151,15 @@ class Tile extends React.Component {
 		let extra_style = {}
 		let image_opacity =
 			misc && 'undefined' !== typeof misc.image_opacity ? misc.image_opacity : 1
+		let use_no_borders =
+			misc && 'undefined' !== typeof misc.use_no_borders
+				? misc.use_no_borders
+				: false
+		let use_all_borders =
+			misc && 'undefined' !== typeof misc.use_all_borders
+				? misc.use_all_borders
+				: false
+
 		if (just_grey) extra_style = {opacity: 0.1}
 		const is_peg = name.startsWith('peg_')
 		const img_name = is_peg ? 'peg' : name
@@ -260,9 +268,9 @@ class Tile extends React.Component {
 			}
 		}
 		let border_info
-		if (useNoBorders || is_peg) {
+		if (use_no_borders || is_peg) {
 			// do nothing
-		} else if (useAllBorders) {
+		} else if (use_all_borders) {
 			border_info = {
 				borderColor: just_grey ? 'grey' : 'orange',
 				borderWidth: 1,
