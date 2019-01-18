@@ -135,7 +135,7 @@ class Tile extends React.Component {
 		const extra_scale =
 			misc && 'undefined' !== typeof misc.extra_scale ? misc.extra_scale : 1
 		//console.log('Tile  id', id, 'extra_scale', extra_scale)
-		console.log('Tile  id', id, 'anim_info', anim_info)
+		// console.log('Tile  id', id, 'anim_info', anim_info)
 		// const use_all_borders = false // use true when printing
 
 		let animated_style = {}

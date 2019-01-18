@@ -1,5 +1,5 @@
 # these constants should be fixed!
-debug_mode: true
+debug_mode: false
 num_exercises_for_debugging: 2
 debug_path: [addition_mix_and_match, level_1]
 
@@ -8,7 +8,7 @@ starting_config_path: [addition_mix_and_match, level_1]
 #starting_config_path: [addition_mix_and_match, level_1]
 #starting_config_path: [addition_mix_and_match, level_2]
 #starting_config_path: [addition_mix_and_match, level_3]
-starting_config_path: [subitize, disappearing, level_2]
+# starting_config_path: [subitize, disappearing, level_2]
 
 starting_level_for:
   math: [addition2, direct, open_build]
