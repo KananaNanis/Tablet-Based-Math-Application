@@ -54,7 +54,7 @@ import {
 	with_diameter_offset,
 } from '../components/Tile'
 import {store_config_modify} from '../providers/enter_exit'
-import {get_special_button_geom} from '../components/Button'
+import {get_special_button_geoms} from '../components/Button'
 import {
 	get_option_button_geom,
 	get_option_button_offset,
@@ -80,7 +80,7 @@ export function touch_dispatcher(state, x, y, touchID) {
 	//if ('down' === state && x > 500) console.log(x.thisdoesntexist[3])
 	if (query_prop('freeze_display')) {
 		// perhaps allow start or submit?
-		if (!visible.includes('start')) {
+		if (!visible.includes('button_start')) {
 			if ('down' === state || 'up' === state) console.log('frozen')
 			return
 		}
@@ -113,15 +113,15 @@ export function touch_dispatcher(state, x, y, touchID) {
 	//if ('down' === state ) console.log('visible', visible)
 	for (const i of visible) {
 		// console.log('of visible, i is', i)
-		if (global_constant.special_button_geoms.hasOwnProperty(i)) {
-			//if ('down' === state ) console.log('checking i', i, 'x', x, 'y', y, 'geom', global_constant.special_button_geoms[i])
-			if (pointIsInRectangle([x, y], get_special_button_geom(i))) {
+		if (global_constant.special_button_defaults.hasOwnProperty(i)) {
+			//if ('down' === state ) console.log('checking i', i, 'x', x, 'y', y, 'geom', global_constant.special_button_defaults[i])
+			if (pointIsInRectangle([x, y], get_special_button_geoms(i))) {
 				found_one = true
 				doAction.setButtonHighlight(i)
-				if ('submit' === i) handle_submit_button(state)
-				else if ('delete' === i) handle_delete_button(state)
-				else if ('next' === i) handle_next_button(state)
-				else if ('start' === i) handle_start_button(state)
+				if ('button_submit' === i) handle_submit_button(state)
+				else if ('button_delete' === i) handle_delete_button(state)
+				else if ('button_next' === i) handle_next_button(state)
+				else if ('button_start' === i) handle_start_button(state)
 				else console.warn('touch_dispatcher did not handle', i)
 				return
 			}
@@ -158,7 +158,7 @@ export function touch_dispatcher(state, x, y, touchID) {
 						option_button_choice[2] !== 0 &&
 						option_button_choice[3] !== 0
 					) {
-						doAction.setButtonDisplay('submit', 'on_right')
+						doAction.setButtonDisplay('button_submit', 'on_right')
 					}
 				}
 			}
@@ -393,7 +393,7 @@ export function touch_dispatcher(state, x, y, touchID) {
 							if (query_prop('skip_submit')) {
 								global_sound['ding'].play()
 								transition_to_next_config()
-							} else doAction.setButtonDisplay('submit', true)
+							} else doAction.setButtonDisplay('button_submit', true)
 						} else {
 							// encourage a new attempt
 							// doAction.addObjMisc(tgt, 'handle_opacity', null)
@@ -401,7 +401,7 @@ export function touch_dispatcher(state, x, y, touchID) {
 								//doAction.addObjMisc(arg_2, 'blink', 0.5)
 								doAction.addAnimInfo(arg_2, {blink: 0.5})
 							} else doAction.addAnimInfo(tgt, {handle_blink: 0})
-							doAction.setButtonDisplay('submit', null)
+							doAction.setButtonDisplay('button_submit', null)
 							if (query_name_of(tgt).size > 1) {
 								//console.log('hide result door')
 								doAction.addObjStyle(result, 'opacity', 0)

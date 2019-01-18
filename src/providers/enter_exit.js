@@ -48,9 +48,9 @@ export function remove_on_exit(lis, action_list) {
 	// console.log('remove_on_exit lis', lis)
 	for (const what of lis) {
 		if ('button_submit' === what) {
-			action_list.push(Actions.setButtonDisplay('submit', null))
+			action_list.push(Actions.setButtonDisplay('button_submit', null))
 		} else if ('button_delete' === what) {
-			action_list.push(Actions.setButtonDisplay('delete', null))
+			action_list.push(Actions.setButtonDisplay('button_delete', null))
 		} else if ('err_box' === what) action_list.push(Actions.setErrBox(null))
 	}
 }
@@ -373,21 +373,16 @@ export function enter_exit_config(
 		for (const id0 in c) {
 			if (c.hasOwnProperty(id0)) {
 				const id = remap_id(id0, remap_id_table)
-				if ('button_submit' === id) {
-					const t = 'on_right' === c[id0] ? c[id0] : true
-					action_list.push(Actions.setButtonDisplay('submit', enter ? t : null))
-				} else if ('button_delete' === id) {
-					action_list.push(
-						Actions.setButtonDisplay('delete', enter ? true : null),
-					)
-				} else if ('button_next' === id) {
-					action_list.push(
-						Actions.setButtonDisplay('next', enter ? true : null),
-					)
-				} else if ('button_start' === id) {
-					action_list.push(
-						Actions.setButtonDisplay('start', enter ? true : null),
-					)
+				if (id.startsWith('button_')) {
+					if (
+						config['modify'] &&
+						config['modify'][id] &&
+						config['modify'][id].position
+					) {
+						const pos = as_position(config['modify'][id].position)
+						action_list.push(Actions.setPosition(id, enter ? pos : null))
+					}
+					action_list.push(Actions.setButtonDisplay(id, enter ? true : null))
 				} else if (['center_text', 'big_op', 'big_paren'].includes(id)) {
 					//console.log('setting prop', id, 'to', c[id0])
 					action_list.push(Actions.setProp(id, enter ? c[id0] : null))

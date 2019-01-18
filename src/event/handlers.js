@@ -71,7 +71,7 @@ export function handle_start_button(state) {
 		let action_list = [],
 			silent = false
 		action_list.push(Actions.setProp('freeze_display', null))
-		action_list.push(Actions.setButtonDisplay('start', null))
+		action_list.push(Actions.setButtonDisplay('button_start', null))
 		const cp = query_path('config')
 		enter_exit_config(
 			cp,
@@ -115,7 +115,7 @@ export function handle_submit_button(state) {
 			} else if (delay) {
 				// do animation!
 				global_sound['ding'].play()
-				doAction.setButtonDisplay('submit', null)
+				doAction.setButtonDisplay('button_submit', null)
 				//console.log('animating now')
 				window.setTimeout(function() {
 					transition_to_next_config()

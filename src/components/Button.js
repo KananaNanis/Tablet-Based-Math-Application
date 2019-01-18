@@ -1,13 +1,15 @@
 import React from 'react'
 import {StyleSheet, View, Text, Image} from 'react-native'
 import {global_constant} from '../lib/global'
-import {query_button_detail} from '../providers/query_store'
+import {query_button_detail, query_position_of} from '../providers/query_store'
 import {image_location} from '../lib/images'
 
-export function get_special_button_geom(i) {
-	let res = global_constant.special_button_geoms[i]
-	if ('submit' === i && 'on_right' === query_button_detail(i)) {
-		res = global_constant.special_button_geoms['submit_on_right']
+export function get_special_button_geoms(i) {
+	let res = global_constant.special_button_defaults[i]
+	if ('button_submit' === i && 'on_right' === query_button_detail(i)) {
+		res = global_constant.special_button_defaults['button_submit_on_right']
+	} else if (query_position_of(i)) {
+		res.position = query_position_of(i).toJS()
 	}
 	return res
 }

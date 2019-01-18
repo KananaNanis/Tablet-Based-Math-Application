@@ -58,7 +58,7 @@ addition_mix_and_match:
         style: {opacity: 0}
     event_handling:
       correctness: identical
-      touch_reveals_button: [submit, delete]
+      touch_reveals_button: [button_submit, button_delete]
       no_split_fiver: true
       minimum_split_size: -1
       target: tower_result
@@ -78,8 +78,9 @@ addition_mix_and_match:
         button_start:
       misc:
         freeze_display: true
-        # jmp: [addition_mix_and_match, level_1]
       modify:
+        button_start:
+          position: [400, 40]
         tower_1:
           style: { opacity: 0 }
         tower_1_shadow:
@@ -116,7 +117,7 @@ open_build:
           backgroundColor: 'black'
     event_handling:
       target: tower_result
-      touch_reveals_button: [delete]
+      touch_reveals_button: [button_delete]
 
 subitize:
   params:
@@ -158,6 +159,8 @@ subitize:
       create:
         button_start:
       modify:
+        button_start:
+          position: [10, 200]
         tower_1:
           anim_info: null
           style: { opacity: 0 }
@@ -205,7 +208,7 @@ measure_height_animals:
       tile_2: {position: [right 40vw, 0], misc: {image_opacity: 0, animal_width: 100000}}
     event_handling:
       target: tower_2
-      touch_reveals_button: [submit, delete]
+      touch_reveals_button: [button_submit, button_delete]
       comparison_source: tile_1
       correctness: approx_height
     misc:

@@ -60,7 +60,7 @@ export function query_keypad_kind() {
 export function query_visible_buttons() {
 	const state = global_store.getState()
 	let res = []
-	for (const i in global_constant.special_button_geoms) {
+	for (const i in global_constant.special_button_defaults) {
 		if (
 			state.get('button_display').has(i) &&
 			state.getIn(['button_display', i]) !== 'false'
