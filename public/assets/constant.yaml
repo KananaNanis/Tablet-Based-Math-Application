@@ -1,5 +1,5 @@
 # these constants should be fixed!
-debug_mode: false
+debug_mode: true
 num_exercises_for_debugging: 2
 debug_path: [addition_mix_and_match_with_ants, level_2]
 

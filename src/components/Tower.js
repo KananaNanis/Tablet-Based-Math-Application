@@ -304,7 +304,8 @@ class Tower extends React.Component {
 					//is_fiver ||
 					!(small_in_a_row % 2)
 				) {
-					marginLeft = 10
+					const rev = misc && misc.reverse_ant_offsets
+					marginLeft = rev ? -10 : 10
 					if (width < 50) bg = 'red'
 				}
 			}
