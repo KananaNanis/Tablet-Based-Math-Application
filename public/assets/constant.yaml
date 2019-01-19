@@ -1,9 +1,10 @@
 # these constants should be fixed!
-debug_mode: true
+debug_mode: false
 num_exercises_for_debugging: 2
 debug_path: [addition_mix_and_match_with_ants, level_2]
 
-starting_config_path: [addition_mix_and_match, level_1]
+#starting_config_path: [addition_mix_and_match, level_1]
+starting_config_path: [tower_to_number, level_1]
 #starting_config_path: [redbluequiz, level_1]
 #starting_config_path: [addition_mix_and_match, level_1]
 #starting_config_path: [addition_mix_and_match, level_2]
@@ -72,11 +73,11 @@ keypad_info:
     num_cols: 2
     num_rows: 5
   decimal:
-    position: [350, 50]
-    button_width: 50
-    button_height: 50
-    space_width: 20
-    space_height: 30
+    position: [right 5, top 45]
+    button_width: 60
+    button_height: 60
+    space_width: 10
+    space_height: 10
     num_cols: 3
     num_rows: 4
 placard:

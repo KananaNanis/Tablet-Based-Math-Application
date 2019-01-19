@@ -480,6 +480,52 @@ redbluequiz:
               style: { opacity: 1 }
               anim_info: { opacity: [1, 0], delay: 0, duration: 2000 }
 
+tower_to_number:
+  params:
+    generate:
+      tower_name: [pick_from_range, 0.01, 3.25, 0.01]  # stay under keypad?
+    create:
+      keypad_kind: 'decimal'
+      big_paren: true
+      # big_op: +
+      tower_result: { name: tower_name }
+      tower_show_number: []
+      tile_success: { name: emoji_smile }
+      tile_fail: { name: emoji_frown }
+    modify:
+      big_paren:
+        position: [20, 0]
+        style: { width: 330 }
+      tile_success:
+        position: [center,center]
+        style: { opacity: 0.0 }
+        misc:
+          use_no_borders: true
+      tile_fail:
+        position: [center,center]
+        style: { opacity: 0.0 }
+        misc:
+          use_no_borders: true
+      tower_result:
+        position: [443, 0]
+        misc:
+          hide_tower_number: true
+          backgroundColor: 'black'
+      tower_show_number:
+        position: [443, 0]
+        tower_style: {opacity: 0}
+    event_handling:
+      correctness: identical
+      touch_reveals_button: [button_submit, button_delete]
+      target: tower_show_number
+      comparison_source: tower_result
+    misc:
+      use_emoji: true
+      num_stars: 2
+      remove_on_exit: [button_submit, button_delete]
+      config_iteration: 4
+  level_1:
+
 ok:
   params:
     create:

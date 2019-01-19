@@ -9,6 +9,7 @@ import {
 	query_option_obj,
 	query_position_of,
 	query_obj_misc,
+	query_keypad_kind,
 } from '../providers/query_store'
 import {
 	query_top_block,
@@ -16,6 +17,7 @@ import {
 	query_tower_name,
 	query_tower_blocks,
 	query_tower,
+	height2tower_name,
 } from '../providers/query_tower'
 import {doAction, global_constant, global_sound} from '../lib/global'
 import {transition_to_next_config} from '../providers/change_config'
@@ -46,18 +48,30 @@ import {
 } from '../components/Block'
 import {do_batched_actions} from '../providers/reducers'
 import * as Actions from '../providers/actions'
+import {height_too_tall} from '../containers/gen_utile'
 // import { fromJS } from 'immutable';
 
 export function handle_delete_button(state) {
 	if ('up' === state) {
 		const tgt = query_event('target')
-		if (query_tower_name(tgt).size > 0) {
-			doAction.towerRemoveBlock(tgt)
-			if (query_event('counting_up_sub')) redraw_mixed_tower()
+		if ('decimal' === query_keypad_kind()) {
+			const tgt_height = query_tower_height(tgt)
+			if (tgt_height > 0) {
+				let s = String(Math.round(100 * tgt_height))
+				s = s.substr(0, s.length - 1)
+				let new_height = Number(s) / 100
+				const new_name = height2tower_name(new_height)
+				doAction.setName(tgt, new_name)
+			}
+		} else {
+			if (query_tower_name(tgt).size > 0) {
+				doAction.towerRemoveBlock(tgt)
+				if (query_event('counting_up_sub')) redraw_mixed_tower()
+			}
+			const [size, is_fiver, how_many] = query_top_block(tgt)
+			update_keypad_button_visibility(size, is_fiver, how_many)
 		}
 		doAction.setButtonHighlight(null)
-		const [size, is_fiver, how_many] = query_top_block(tgt)
-		update_keypad_button_visibility(size, is_fiver, how_many)
 	}
 }
 
@@ -881,4 +895,17 @@ export function handle_drag_blocks_to_result(state, x, y) {
 		}
 	}
 */
+}
+
+export function handle_decimal_keypad(val) {
+	// console.log('handle_decimal_keypad val', val)
+	const tgt = query_event('target')
+	const tgt_height = query_tower_height(tgt)
+	let s = String(Math.round(100 * tgt_height)) + String(val)
+	let new_height = Number(s) / 100
+	if (!height_too_tall(new_height)) {
+		const new_name = height2tower_name(new_height)
+		doAction.setName(tgt, new_name)
+	}
+	//if (query_event('counting_up_sub')) redraw_mixed_tower()
 }

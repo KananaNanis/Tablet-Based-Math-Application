@@ -7,6 +7,7 @@ import {global_constant} from '../lib/global'
 export function get_button_geoms_for(kind) {
 	//console.warn('get_button_geoms_for', kind)
 	const pos = global_constant.keypad_info[kind]
+	// console.log('get_button_geoms_for', kind, 'pos', pos)
 	let geoms = []
 	for (let row = 0; row < pos.num_rows; ++row) {
 		for (let col = 0; col < pos.num_cols; ++col) {
@@ -53,9 +54,10 @@ const Keypad = ({
 			const button_position = geoms[index].position
 			if (is_scaled) button_position[0] -= 10
 			const height = pos.button_height
+			let width = pos.button_width
 			let label = index,
 				label_style = {
-					marginBottom: 0.15 * height,
+					//marginBottom: 0.1 * height,
 					fontSize: 0.75 * height,
 				} // default
 			let image_name,
@@ -90,6 +92,10 @@ const Keypad = ({
 						label_style = {...global_fiver_shadow[1], ...label_style}
 					}
 				}
+			} else if ('decimal' === kind) {
+				if (index > 2) label = index - 2
+				else if (index === 1) label = 0
+				else continue
 			}
 			const view_style = {borderColor: 'black', borderWidth: 1} // backgroundColor: 'grey'}
 			if (null !== button_highlight && index === button_highlight) {
@@ -105,7 +111,7 @@ const Keypad = ({
 					label_style={label_style}
 					position={button_position}
 					view_style={view_style}
-					width={pos.button_width}
+					width={width}
 				/>,
 			)
 		}
