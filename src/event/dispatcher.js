@@ -36,6 +36,7 @@ import {
 	handle_swipe_tower,
 	handle_stack_arg_2,
 	handle_drag_blocks_to_result,
+	handle_decimal_keypad,
 } from './handlers'
 import {correct_next_button} from './correctness'
 import {
@@ -76,6 +77,7 @@ let y_delta, scaling_delta
 export function touch_dispatcher(state, x, y, touchID) {
 	//console.log('touch_dispatcher state ' + state + ' x ' + x + ' y ' + y + ' touchID ' + touchID)
 	const visible = query_visible_buttons()
+	//console.log('visible', visible)
 	//if('down' === state) console.log('visible', visible)
 	//if ('down' === state && x > 500) console.log(x.thisdoesntexist[3])
 	if (query_prop('freeze_display')) {
@@ -167,26 +169,34 @@ export function touch_dispatcher(state, x, y, touchID) {
 				doAction.setButtonHighlight(i)
 				found_one = true
 				if ('up' === state) {
-					const new_size = global_constant.buildTower_button_info[i][0]
-					const new_is_fiver = global_constant.buildTower_button_info[i][1]
-					const curr = (new_is_fiver ? 5 : 1) * 10 ** new_size
-					const require_incremental_correctness = false
-					if (require_incremental_correctness) {
-						const correct = correct_next_button()
-						if (curr !== correct) {
-							incorrect_button_response()
-							return
+					if ('buildTower' === kind) {
+						const new_size = global_constant.buildTower_button_info[i][0]
+						const new_is_fiver = global_constant.buildTower_button_info[i][1]
+						const curr = (new_is_fiver ? 5 : 1) * 10 ** new_size
+						const require_incremental_correctness = false
+						if (require_incremental_correctness) {
+							const correct = correct_next_button()
+							if (curr !== correct) {
+								incorrect_button_response()
+								return
+							}
 						}
-					}
-					const pixel_height =
-						query_prop('scale_factor') * query_tower_height(tgt)
-					// console.log('pixel_height', pixel_height, 'h', global_workspace_height)
-					if (pixel_height < global_workspace_height) {
-						//console.log('adding block', new_size, 'is_fiver', new_is_fiver, 'to tgt', tgt)
-						doAction.towerAddBlock(tgt, new_size, new_is_fiver)
-						const [size, is_fiver, how_many] = query_top_block(tgt)
-						update_keypad_button_visibility(size, is_fiver, how_many)
-						if (query_event('counting_up_sub')) redraw_mixed_tower()
+						const pixel_height =
+							query_prop('scale_factor') * query_tower_height(tgt)
+						// console.log('pixel_height', pixel_height, 'h', global_workspace_height)
+						if (pixel_height < global_workspace_height) {
+							//console.log('adding block', new_size, 'is_fiver', new_is_fiver, 'to tgt', tgt)
+							doAction.towerAddBlock(tgt, new_size, new_is_fiver)
+							const [size, is_fiver, how_many] = query_top_block(tgt)
+							update_keypad_button_visibility(size, is_fiver, how_many)
+							if (query_event('counting_up_sub')) redraw_mixed_tower()
+						}
+					} else if ('decimal' === kind) {
+						// convert from incoming index to number
+						if (0 !== i && 2 !== i) {
+							let val = i > 2 ? i - 2 : 0
+							handle_decimal_keypad(val)
+						}
 					}
 				}
 			}
