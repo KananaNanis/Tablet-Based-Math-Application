@@ -483,7 +483,7 @@ redbluequiz:
 tower_to_number:
   params:
     generate:
-      tower_name: [pick_from_range, 0.01, 3.99, 0.01]
+      tower_name: [pick_from_range, 0.01, 3.25, 0.01]  # stay under keypad?
     create:
       keypad_kind: 'decimal'
       big_paren: true
