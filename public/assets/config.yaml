@@ -1,4 +1,127 @@
 # this config tree assumes order, even for yaml hashes!
+addition_mix_and_match_with_ants:
+  params:
+    generate:
+      tower_1_goats: [pick_from_list, [0, 1]]
+      tower_2_goats: [pick_from_list, [0, 1, 2]]
+      tower_1_fivers: [pick_from_list, [0, 0.5]]
+      tower_2_fivers: [pick_from_list, [0, 0.5]]
+      tower_1_spiders: [pick_from_range, 0, 0.45, 0.1]
+      tower_2_spiders: [pick_from_range, 0, 0.45, 0.1]
+      tower_1_ant_fivers: [pick_from_list, [0, 0.05]]
+      tower_2_ant_fivers: [pick_from_list, [0, 0.05]]
+      tower_1_ants: [pick_from_range, 0, 0.045, 0.01]
+      tower_2_ants: [pick_from_range, 0, 0.045, 0.01]
+      total_fivers: tower_1_fivers + tower_2_fivers
+      total_spiders: tower_1_spiders + tower_2_spiders
+      total_fivers_and_spiders: total_fivers + total_spiders
+      total_ant_fivers: tower_1_ant_fivers + tower_2_ant_fivers
+      total_ants: tower_1_ants + tower_2_ants
+      tower_1_height_ants: tower_1_ant_fivers + tower_1_ants
+      tower_1_height_spiders: tower_1_fivers + tower_1_spiders
+      tower_1_height_insects: tower_1_height_spiders + tower_1_height_ants
+      tower_1_height: tower_1_goats + tower_1_height_insects
+      tower_2_height_ants: tower_2_ant_fivers + tower_2_ants
+      tower_2_height_spiders: tower_2_fivers + tower_2_spiders
+      tower_2_height_insects: tower_2_height_spiders + tower_2_height_ants
+      tower_2_height: tower_2_goats + tower_2_height_insects
+      restriction_1: tower_1_height > 0.01
+      restriction_2: tower_2_height > 0.01
+      mixed_tower_height: tower_1_height + tower_2_height
+      restriction_upper: mixed_tower_height < 3.99
+      restriction_lower: mixed_tower_height > 0.33
+    create:
+      keypad_kind: 'buildTower'
+      big_paren: true
+      big_op: +
+      tower_2_shadow: { name: tower_2_height }
+      tower_1_shadow: { name: tower_1_height }
+      tower_2: { name: tower_2_height }
+      tower_1: { name: tower_1_height }
+      tower_mixed: []
+      tower_result: []
+      tower_4: { name: mixed_tower_height }
+      tile_success: { name: emoji_smile }
+      tile_fail: { name: emoji_frown }
+    modify:
+      tile_success:
+        position: [center,center]
+        style: { opacity: 0.0 }
+        misc:
+          use_no_borders: true
+      tile_fail:
+        position: [center,center]
+        style: { opacity: 0.0 }
+        misc:
+          use_no_borders: true
+      big_paren:
+        position: [20, 0]
+        style: { width: 330 }
+      big_op:
+        position: [120, 0]
+      tower_1:
+        position: [15, 0]
+        tower_style: {opacity: 0.2}
+        misc:
+          hide_tower_number: true
+          backgroundColor: 'blue'
+      tower_1_shadow:
+        position: [15, 0]
+        misc:
+          backgroundColor: 'blue'
+      tower_2:
+        position: [230, 0]
+        tower_style: {opacity: 0.2}
+        misc:
+          hide_tower_number: true
+          backgroundColor: 'red'
+      tower_2_shadow:
+        position: [230, 0]
+        misc:
+          backgroundColor: 'red'
+      tower_mixed:
+        position: [340, 0]
+        tower_style: {opacity: 0}
+        misc:
+          hide_tower_number: true
+      tower_result:
+        position: [443, 0]
+        # tower_style: {opacity: 0}
+        misc:
+          backgroundColor: 'black'
+      tower_4:
+        position: [0, 0]
+        style: {opacity: 0}
+    event_handling:
+      correctness: identical
+      touch_reveals_button: [button_submit, button_delete]
+      no_split_fiver: true
+      minimum_split_size: -1
+      target: tower_result
+      comparison_source: tower_4
+      allow_keypad_minis: true
+    misc:
+      use_emoji: true
+      num_stars: 2
+      remove_on_exit: [button_submit, button_delete]
+      config_iteration: 4
+      trigger_blocks_moving_to_result: 0
+  level_1:
+    params:
+      generate:
+        restriction_fivers: total_fivers < 0.55
+        restriction_spiders: total_spiders < 0.45
+        restriction_ant_fivers: total_ant_fivers < 0.055
+        restriction_ants: total_ants < 0.045
+      misc:
+        jmp: [addition_mix_and_match_with_ants, level_1]
+  level_2:
+    params:
+      misc:
+        jmp: [addition_mix_and_match_with_ants, level_3]
+
+
+
 addition_mix_and_match:
   params:
     generate: # { tower_1_name: [pick_from_range, .1, 3.8, .1] }
@@ -89,7 +212,6 @@ addition_mix_and_match:
       minimum_split_size: -1
       target: tower_result
       comparison_source: tower_4
-      allow_keypad_minis: true
     misc:
       use_emoji: true
       num_stars: 2
