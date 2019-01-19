@@ -74,6 +74,9 @@ const Keypad = ({
 					} else if (-1 === size) {
 						image_name = 'anansi'
 						image_style = {position: 'absolute', width: 30, height: 30}
+					} else if (-2 === size) {
+						image_name = 'ant'
+						image_style = {position: 'absolute', width: 30, height: 30}
 					}
 					if (is_fiver) {
 						label = '5  '

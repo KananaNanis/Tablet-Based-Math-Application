@@ -1,7 +1,7 @@
 # these constants should be fixed!
-debug_mode: false
+debug_mode: true
 num_exercises_for_debugging: 2
-debug_path: [addition_mix_and_match, level_1]
+debug_path: [addition_mix_and_match, level_3]
 
 starting_config_path: [addition_mix_and_match, level_1]
 #starting_config_path: [redbluequiz, level_1]
@@ -64,7 +64,7 @@ keypad_info:
     # position: [right 5, top 5]
     # position: [25, top 95]
     # position: [right 5, top 95]
-    position: [right 95, bottom 680]
+    position: [right 95, bottom 600]
     button_width: 80
     button_height: 80
     space_width: 5

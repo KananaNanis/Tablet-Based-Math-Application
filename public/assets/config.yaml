@@ -89,6 +89,7 @@ addition_mix_and_match:
       minimum_split_size: -1
       target: tower_result
       comparison_source: tower_4
+      allow_keypad_minis: true
     misc:
       use_emoji: true
       num_stars: 2
