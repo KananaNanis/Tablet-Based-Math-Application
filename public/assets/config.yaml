@@ -65,6 +65,7 @@ addition_mix_and_match_with_ants:
         misc:
           hide_tower_number: true
           backgroundColor: 'blue'
+          reverse_ant_offsets: true
       tower_1_shadow:
         position: [15, 0]
         misc:
@@ -75,6 +76,7 @@ addition_mix_and_match_with_ants:
         misc:
           hide_tower_number: true
           backgroundColor: 'red'
+          reverse_ant_offsets: true
       tower_2_shadow:
         position: [230, 0]
         misc:
