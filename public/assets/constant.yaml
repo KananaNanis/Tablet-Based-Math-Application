@@ -73,7 +73,7 @@ keypad_info:
     num_cols: 2
     num_rows: 5
   decimal:
-    position: [right 5, bottom 650]
+    position: [right 5, top 45]
     button_width: 60
     button_height: 60
     space_width: 10
