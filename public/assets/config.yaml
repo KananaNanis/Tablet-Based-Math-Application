@@ -359,6 +359,55 @@ in_between:
     create:
       button_next:
 
+measure_height_animals_with_ants:
+  params:
+    generate: { tile_1_name: [pick_animal_name] }
+
+    create:
+      tower_2: []
+      tile_1: { name: tile_1_name }
+      tile_2: {name: tile_1_name}
+      tile_success: { name: emoji_smile }
+      tile_fail: { name: emoji_frown }
+    modify:
+      tower_2: { position: [65vw, 0] }
+      tile_1: { position: [right 40vw, 0] }
+      tile_2: {position: [right 40vw, 0], misc: {image_opacity: 0, animal_width: 100000}}
+      tile_success:
+        position: [center,center]
+        style: { opacity: 0.0 }
+        misc:
+          use_no_borders: true
+      tile_fail:
+        position: [center,center]
+        style: { opacity: 0.0 }
+        misc:
+          use_no_borders: true
+    event_handling:
+      target: tower_2
+      touch_reveals_button: [button_submit, button_delete]
+      comparison_source: tile_1
+      correctness: approx_height
+      allow_keypad_minis: true
+    misc:
+      use_emoji: true
+      remove_on_exit: [button_submit, button_delete]
+      config_iteration: 7
+      num_stars: 3
+  level_1:
+    params:
+      create:
+        keypad_kind: 'buildTower'
+      modify:
+        tower_2:
+          tower_style: { opacity: 1 }
+          misc:
+            backgroundColor: 'black'
+      misc:
+        jmp: [measure_height_animals_with_ants, level_1]
+
+
+
 measure_height_animals:
   params:
     generate: { tile_1_name: [pick_animal_name] }

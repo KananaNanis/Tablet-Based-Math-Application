@@ -3,8 +3,9 @@ debug_mode: false
 num_exercises_for_debugging: 2
 debug_path: [addition_mix_and_match_with_ants, level_2]
 
+starting_config_path: [measure_height_animals_with_ants, level_1]
 #starting_config_path: [addition_mix_and_match, level_1]
-starting_config_path: [tower_to_number, level_1]
+#starting_config_path: [tower_to_number, level_1]
 #starting_config_path: [redbluequiz, level_1]
 #starting_config_path: [addition_mix_and_match, level_1]
 #starting_config_path: [addition_mix_and_match, level_2]
@@ -179,8 +180,8 @@ animals:
   emoji_smile: {height: 2.7, pixel_width: 600, pixel_height: 600}
   emoji_frown: {height: 2.7, pixel_width: 600, pixel_height: 600}
 
-# animal_scale_correction: 0.92  # for incorrect print
-animal_scale_correction: 1.0
+animal_scale_correction: 0.92  # for incorrect print
+# animal_scale_correction: 1.0
 camels:
   camel_scale: 0.2
   camel_offsets: [50, -10]
