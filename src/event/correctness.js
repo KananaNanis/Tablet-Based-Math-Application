@@ -187,6 +187,7 @@ export function is_correct() {
 	const tgt = query_event('target')
 	const src = query_event('comparison_source')
 	const how = query_event('correctness')
+	const ants_used = query_event('allow_keypad_minis')
 	const curr_time = Date.now() // when anwer was given
 	const cp = query_path('config').toJS()
 	let delay = 'incorrect'
@@ -250,7 +251,9 @@ export function is_correct() {
 			if (name) {
 				src_height = global_constant.animals[name].height
 				if ('approx_height' === how) {
-					eq = approx_equal(src_height, tgt_height, 0.075)
+					let tol = 0.075
+					if (ants_used) tol /= 10
+					eq = approx_equal(src_height, tgt_height, tol)
 				} else eq = approx_equal(src_height, tgt_height)
 			}
 		} else if (src.startsWith('tower_')) {
