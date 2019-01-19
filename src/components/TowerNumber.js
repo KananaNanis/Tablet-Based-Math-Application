@@ -68,13 +68,16 @@ class TowerNumber extends React.Component {
 				style={styles.anansi_image}
 			/>,
 		)
+		name_elements.push(
+			<Image key={3} source={image_location('ant')} style={styles.ant_image} />,
+		)
 		let show_digit = false
 		for (let i = 0; i < digits.length; ++i) {
 			if (digits[i] > 0 || i + 1 === digits.length) show_digit = true
 			if (show_digit) {
 				name_elements.push(
 					<Text
-						key={3 + i}
+						key={4 + i}
 						style={[styles.tower_number_element, {left: 5 + 35 * i}]}
 					>
 						{digits[i]}
@@ -109,6 +112,13 @@ const styles = StyleSheet.create({
 		width: 15,
 		height: 15,
 		left: 40,
+		bottom: 23,
+	},
+	ant_image: {
+		position: 'absolute',
+		width: 15,
+		height: 15,
+		left: 75,
 		bottom: 23,
 	},
 	tower_number_element: {
