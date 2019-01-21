@@ -17,6 +17,7 @@ addition_mix_and_match_with_ants:
       total_fivers_and_spiders: total_fivers + total_spiders
       total_ant_fivers: tower_1_ant_fivers + tower_2_ant_fivers
       total_ants: tower_1_ants + tower_2_ants
+      total_ant_fivers_and_spiders: total_ant_fivers + total_ants
       tower_1_height_ants: tower_1_ant_fivers + tower_1_ants
       tower_1_height_spiders: tower_1_fivers + tower_1_spiders
       tower_1_height_insects: tower_1_height_spiders + tower_1_height_ants
@@ -111,13 +112,18 @@ addition_mix_and_match_with_ants:
   level_1:
     params:
       generate:
-        restriction_fivers: total_fivers < 0.55
-        restriction_spiders: total_spiders < 0.45
         restriction_ant_fivers: total_ant_fivers < 0.055
         restriction_ants: total_ants < 0.045
       misc:
         jmp: [addition_mix_and_match_with_ants, level_1]
   level_2:
+    params:
+      generate:
+        restriction_ant_fivers: total_ant_fivers < 0.055
+        restriction_ants: total_ant_fivers_and_spiders < 0.095
+      misc:
+        jmp: [addition_mix_and_match_with_ants, level_1]
+  level_3:
     params:
       misc:
         jmp: [addition_mix_and_match_with_ants, level_3]
