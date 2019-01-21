@@ -122,7 +122,7 @@ addition_mix_and_match_with_ants:
         restriction_ant_fivers: total_ant_fivers < 0.055
         restriction_ants: total_ant_fivers_and_spiders < 0.095
       misc:
-        jmp: [addition_mix_and_match_with_ants, level_1]
+        jmp: [addition_mix_and_match_with_ants, level_2]
   level_3:
     params:
       misc:
