@@ -313,7 +313,7 @@ export function is_correct() {
 				doAction.addObjStyle('tile_fail', 'opacity', 1)
 				setTimeout(function() {
 					doAction.addObjStyle('tile_fail', 'opacity', 0)
-				}, 500)
+				}, global_constant.incorrect_freeze_time)
 			}
 			doAction.addLogEntry(curr_time, [
 				with_suffix(cp),
