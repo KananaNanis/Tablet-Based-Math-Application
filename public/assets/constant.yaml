@@ -48,7 +48,7 @@ special_button_defaults:
     height: 80
   button_delete:
     label: delete
-    position: [40, top 100]
+    position: [40, top 175]
     width: 210
     height: 80
   button_next:
@@ -227,7 +227,7 @@ prompt_width: 300
 margin_for_merge: 50
 extra_dot_threshold: 0.2
 top_right_text_offset: 80
-incorrect_freeze_time: 3000
+incorrect_freeze_time: 500
 screen_pixels_per_cm: 52
 # print_pixels_per_cm: 56.77
 print_pixels_per_cm: 37.88
