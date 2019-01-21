@@ -163,10 +163,8 @@ export function set_primary_height(id, val) {
 export function update_keypad_button_visibility(size, is_fiver, how_many) {
 	//console.log('update_keypad_button_visibility', size, is_fiver, how_many)
 	const i_end = global_constant.buildTower_button_info.length
-	let require_standard_tower = true
-	if (query_event('allow_non_standard')) require_standard_tower = false
-	let hide_minis = true
-	if (query_event('allow_keypad_minis')) hide_minis = false
+	const require_standard_tower = !query_event('allow_non_standard')
+	const hide_minis = !query_event('allow_keypad_minis')
 	// console.log('allow_keypad_minis', query_event('allow_keypad_minis'))
 	for (let i = 0; i < i_end; ++i) {
 		const bsize = global_constant.buildTower_button_info[i][0]

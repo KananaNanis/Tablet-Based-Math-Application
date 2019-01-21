@@ -69,15 +69,22 @@ export function query_visible_buttons() {
 		}
 	}
 	if (state.get('keypad_kind')) {
-		const i_end = get_button_geoms_for(state.get('keypad_kind')).length
-		for (let i = 0; i < i_end; ++i) {
-			//const istr = String(i)
-			//console.log('i', i, 'istr', istr, '  has', state.get('button_display').has(i), 'val', state.getIn(['button_display', i]))
-			if (
-				state.get('button_display').has(i) &&
-				state.getIn(['button_display', i]) !== false
-			) {
-				res.push(i)
+		const keypad_kind = state.get('keypad_kind')
+		const i_end = get_button_geoms_for(keypad_kind).length
+		if ('decimal' === keypad_kind) {
+			for (let i = 0; i < i_end; ++i) {
+				if (0 !== i && 2 !== i) res.push(i)
+			}
+		} else {
+			for (let i = 0; i < i_end; ++i) {
+				//const istr = String(i)
+				//console.log('i', i, 'istr', istr, '  has', state.get('button_display').has(i), 'val', state.getIn(['button_display', i]))
+				if (
+					state.get('button_display').has(i) &&
+					state.getIn(['button_display', i]) !== false
+				) {
+					res.push(i)
+				}
 			}
 		}
 	}
