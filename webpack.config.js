@@ -2,6 +2,7 @@
 
 const path = require('path')
 const webpack = require('webpack')
+const HtmlWebpackPlugin = require('html-webpack-plugin')
 
 const appDirectory = path.resolve(__dirname, './')
 
@@ -87,7 +88,7 @@ module.exports = {
 
 	// configures where the build ends up
 	output: {
-		filename: 'bundle.js',
+		filename: '[name].[contenthash].js',
 		publicPath: '/assets/',
 		path: path.resolve(appDirectory, './public/assets'),
 	},
@@ -110,6 +111,10 @@ module.exports = {
 				process.env.NODE_ENV || 'development',
 			),
 			__DEV__: process.env.NODE_ENV === 'production' || true,
+		}),
+
+		new HtmlWebpackPlugin({
+			title: 'Caching',
 		}),
 	],
 
