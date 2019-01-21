@@ -14,11 +14,9 @@ before_script:
 run_prettier:
   stage: format
   script:
-    - npm install -g prettier
     - npm run prettier:diff
 
 run_lint:
   stage: format
   script:
-    - npm install -g eslint babel-eslint eslint-config-prettier eslint-plugin-babel eslint-plugin-react eslint-plugin-react-native
     - npm run lint
