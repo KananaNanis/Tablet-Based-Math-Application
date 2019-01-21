@@ -9,6 +9,7 @@ starting_config_path: [addition_mix_and_match, level_1]
 #starting_config_path: [addition_mix_and_match, level_2]
 #starting_config_path: [addition_mix_and_match, level_3]
 starting_config_path: [subitize, disappearing, level_2]
+#test change
 
 starting_level_for:
   math: [addition2, direct, open_build]
