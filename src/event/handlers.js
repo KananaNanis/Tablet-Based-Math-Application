@@ -63,6 +63,15 @@ export function handle_delete_button(state) {
 				const new_name = height2tower_name(new_height)
 				doAction.setName(tgt, new_name)
 			}
+		} else if ('decimal_column' === query_keypad_kind()) {
+			const tgt_height = query_tower_height(tgt)
+			if (tgt_height > 0) {
+				let s = String(Math.round(100 * tgt_height))
+				s = s.substr(0, s.length - 1)
+				let new_height = Number(s) / 100
+				const new_name = height2tower_name(new_height)
+				doAction.setName(tgt, new_name)
+			}
 		} else {
 			if (query_tower_name(tgt).size > 0) {
 				doAction.towerRemoveBlock(tgt)
@@ -909,3 +918,16 @@ export function handle_decimal_keypad(val) {
 	}
 	//if (query_event('counting_up_sub')) redraw_mixed_tower()
 }
+
+export function handle_decimal_column_keypad(val) {
+	const tgt = query_event('target')
+	const tgt_height = query_tower_height(tgt)
+	let s = String(Math.round(100 * tgt_height)) + String(val)
+	let new_height = Number(s) / 100
+	if (!height_too_tall(new_height)) {
+		const new_name = height2tower_name(new_height)
+		doAction.setName(tgt, new_name)
+	}
+	//if (query_event('counting_up_sub')) redraw_mixed_tower()
+}
+

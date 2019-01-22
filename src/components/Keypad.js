@@ -96,6 +96,9 @@ const Keypad = ({
 				if (index > 2) label = index - 2
 				else if (index === 1) label = 0
 				else continue
+				
+			} else if ('decimal_column' === kind) {
+				label = index
 			}
 			const view_style = {borderColor: 'black', borderWidth: 1} // backgroundColor: 'grey'}
 			if (null !== button_highlight && index === button_highlight) {

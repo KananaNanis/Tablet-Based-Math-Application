@@ -152,7 +152,7 @@ addition_mix_and_match:
       restriction_upper: mixed_tower_height < 3.9
       restriction_lower: mixed_tower_height > 0.3
     create:
-      keypad_kind: 'buildTower'
+      keypad_kind: 'decimal_column'
       big_paren: true
       big_op: +
       tower_2_shadow: { name: tower_2_height }
@@ -220,6 +220,7 @@ addition_mix_and_match:
       minimum_split_size: -1
       target: tower_result
       comparison_source: tower_4
+      keypad_column: goat
     misc:
       use_emoji: true
       num_stars: 2

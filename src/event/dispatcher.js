@@ -37,6 +37,7 @@ import {
 	handle_stack_arg_2,
 	handle_drag_blocks_to_result,
 	handle_decimal_keypad,
+	handle_decimal_column_keypad
 } from './handlers'
 import {correct_next_button} from './correctness'
 import {
@@ -197,6 +198,8 @@ export function touch_dispatcher(state, x, y, touchID) {
 							let val = i > 2 ? i - 2 : 0
 							handle_decimal_keypad(val)
 						}
+					} else if ('decimal_column' === kind) {
+						handle_decimal_column_keypad(i)
 					}
 				}
 			}
