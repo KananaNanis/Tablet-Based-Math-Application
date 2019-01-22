@@ -408,7 +408,7 @@ const purple = 'rgb(255, 0, 255)'
 const paren_color_1 = '#eee'
 const styles = StyleSheet.create({
 	workspace: {
-		//backgroundColor: 'blue',
+		backgroundColor: 'blue',
 		position: 'absolute',
 		left: 0,
 		bottom: global_grass_height,

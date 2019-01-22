@@ -88,7 +88,7 @@ module.exports = {
 
 	// configures where the build ends up
 	output: {
-		filename: '[name].[contenthash].js',
+		filename: 'bundle.js',
 		path: path.resolve(appDirectory, './public'),
 	},
 
@@ -113,6 +113,7 @@ module.exports = {
 		}),
 
 		new HtmlWebpackPlugin({
+			hash: true,
 			title: 'Caching',
 			template: './src/index.php',
 			filename: 'index.php',
