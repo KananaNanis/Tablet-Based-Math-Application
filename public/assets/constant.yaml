@@ -5,8 +5,8 @@ debug_path: [addition_mix_and_match, level_1]
 
 #starting_config_path: [addition_mix_and_match, level_3]
 #starting_config_path: [redbluequiz, level_1]
-starting_config_path: [addition_mix_and_match, level_1]
-#starting_config_path: [addition_mix_and_match_with_ants, level_1]
+#starting_config_path: [measure_height_animals_with_ants, level_1]
+starting_config_path: [addition_mix_and_match_with_ants, level_1]
 #starting_config_path: [addition_mix_and_match_with_ants, level_2]
 #starting_config_path: [addition_mix_and_match_with_ants, level_3]
 
@@ -70,7 +70,7 @@ keypad_info:
     # position: [right 5, top 5]
     # position: [25, top 95]
     # position: [right 5, top 95]
-    position: [right 5, bottom 525]
+    position: [right 5, bottom 485]
     button_width: 80
     button_height: 80
     space_width: 5
@@ -213,7 +213,7 @@ path_types: [config, prev_config, goto, jmp, jmp_no_suffix, suffix_path]
 prop_types: [scale_factor, freeze_display, num_stars,
     config_iteration, goto_iteration, skip_submit, skip_in_between,
     center_text, top_left_text, top_right_text, stderr_text, problem_stage,
-    blank_between_exercises, hide_dot, big_op, big_paren,
+    blank_between_exercises, hide_dot, big_op, big_paren, arith_symbol, equal_symbol
     repeat_level, skip_slide_down, correct_option_index,
     show_only_fivers, show_only_singletons, show_only_size,
     trigger_blocks_moving_to_result,

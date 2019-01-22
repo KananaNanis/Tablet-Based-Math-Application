@@ -36,7 +36,6 @@ export const load_sounds = () => {
 		'level3',
 	]
 	for (const snd of available_sounds) {
-		// global_sound[snd] = new Sound('../assets/snd/' + snd + '.wav')
 		global_sound[snd] = new Sound('./assets/snd/' + snd + '.wav')
 	}
 }

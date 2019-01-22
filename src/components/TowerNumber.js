@@ -78,7 +78,7 @@ class TowerNumber extends React.Component {
 				name_elements.push(
 					<Text
 						key={4 + i}
-						style={[styles.tower_number_element, {left: 15 + 75 * i}]}
+						style={[styles.tower_number_element, {left: 60 * i - 10}]}
 					>
 						{digits[i]}
 					</Text>,
@@ -106,26 +106,26 @@ const styles = StyleSheet.create({
 		width: 72,
 		height: 72,
 		bottom: 11,
+		left: -15,
 	},
 	anansi_image: {
 		position: 'absolute',
 		width: 60,
 		height: 60,
-		left: 70,
+		left: 55,
 		bottom: 11,
 	},
 	ant_image: {
 		position: 'absolute',
 		width: 60,
 		height: 60,
-		left: 140,
+		left: 120,
 		bottom: 11,
 	},
 	tower_number_element: {
 		position: 'absolute',
-		bottom: -30,
-		left: 5,
-		fontSize: 30,
+		bottom: -90,
+		fontSize: 100,
 	},
 })
 
