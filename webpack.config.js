@@ -2,6 +2,7 @@
 
 const path = require('path')
 const webpack = require('webpack')
+const HtmlWebpackPlugin = require('html-webpack-plugin')
 
 const appDirectory = path.resolve(__dirname, './')
 
@@ -58,7 +59,7 @@ const imageLoaderConfiguration = {
 	use: {
 		loader: 'file-loader',
 		options: {
-			name: 'img/[name].[ext]',
+			name: 'assets/img/[name].[ext]',
 		},
 	},
 }
@@ -88,8 +89,7 @@ module.exports = {
 	// configures where the build ends up
 	output: {
 		filename: 'bundle.js',
-		publicPath: '/assets/',
-		path: path.resolve(appDirectory, './public/assets'),
+		path: path.resolve(appDirectory, './public'),
 	},
 
 	module: {
@@ -110,6 +110,13 @@ module.exports = {
 				process.env.NODE_ENV || 'development',
 			),
 			__DEV__: process.env.NODE_ENV === 'production' || true,
+		}),
+
+		new HtmlWebpackPlugin({
+			hash: true,
+			title: 'Caching',
+			template: './src/index.php',
+			filename: 'index.php',
 		}),
 	],
 
