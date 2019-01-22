@@ -59,9 +59,9 @@ addition_mix_and_match_with_ants:
           use_no_borders: true
       big_paren:
         position: [20, 0]
-        style: { width: 370 }
+        style: { width: 437 }
       big_op:
-        position: [145, 0]
+        position: [175, 0]
       tower_1:
         position: [15, 0]
         tower_style: {opacity: 0.2}
@@ -71,6 +71,7 @@ addition_mix_and_match_with_ants:
           reverse_ant_offsets: true
       tower_1_shadow:
         position: [15, 0]
+        tower_style: {left: 38}
         misc:
           backgroundColor: 'blue'
       tower_2:
@@ -82,6 +83,7 @@ addition_mix_and_match_with_ants:
           reverse_ant_offsets: true
       tower_2_shadow:
         position: [270, 0]
+        tower_style: {left: 38}
         misc:
           backgroundColor: 'red'
       tower_mixed:
