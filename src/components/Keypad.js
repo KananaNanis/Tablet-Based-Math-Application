@@ -4,18 +4,24 @@ import Button from './Button'
 import {global_fiver_shadow} from './Num'
 import {global_constant} from '../lib/global'
 
-import {query_event, query_position_of} from '../providers/query_store'
+import {
+	query_event,
+	query_position_of,
+} from '../providers/query_store'
 
-export function get_button_geoms_for(kind) {
+export function get_button_geoms_for(kind, x_offset=0) {
 	//console.warn('get_button_geoms_for', kind)
 	const pos = global_constant.keypad_info[kind]
 	// console.log('get_button_geoms_for', kind, 'pos', pos)
+
+
+
 	let geoms = []
 	for (let row = 0; row < pos.num_rows; ++row) {
 		for (let col = 0; col < pos.num_cols; ++col) {
 			geoms.push({
 				position: [
-					col * (pos.button_width + pos.space_width),
+					col * (pos.button_width + pos.space_width) + x_offset,
 					row * (pos.button_height + pos.space_height),
 				],
 				width: pos.button_width,
@@ -99,10 +105,10 @@ const Keypad = ({
 				if (index > 2) label = index - 2
 				else if (index === 1) label = 0
 				else continue
+				
 			} else if ('decimal_column' === kind) {
 				let col = keypad_column
-				console.log(col)
-				if (col !== 'goat' && col !== 'spider' && col !== 'ant') continue
+				if (col !== 'goat' && col !== 'spider' && col !== 'ant' ) continue
 				const tgt = query_event('target')
 				let pos_x = query_position_of(tgt).get(0)
 				let x_offset = 0
@@ -134,12 +140,12 @@ const Keypad = ({
 	let extras = []
 	if (add_words_on_side && 'buildTower' === kind) {
 		extras.push(
-			<Text key="707" style={styles.keypad_text1}>
+			<Text key='707' style={styles.keypad_text1}>
 				Small
 			</Text>,
 		)
 		extras.push(
-			<Text key="727" style={styles.keypad_text2}>
+			<Text key='727' style={styles.keypad_text2}>
 				Box
 			</Text>,
 		)
