@@ -35,6 +35,8 @@ addition_mix_and_match_with_ants:
       keypad_kind: 'buildTower'
       big_paren: true
       big_op: +
+      arith_symbol: +
+      equal_symbol: =
       tower_2_shadow: { name: tower_2_height }
       tower_1_shadow: { name: tower_1_height }
       tower_2: { name: tower_2_height }
@@ -57,9 +59,9 @@ addition_mix_and_match_with_ants:
           use_no_borders: true
       big_paren:
         position: [20, 0]
-        style: { width: 330 }
+        style: { width: 370 }
       big_op:
-        position: [120, 0]
+        position: [145, 0]
       tower_1:
         position: [15, 0]
         tower_style: {opacity: 0.2}
@@ -79,16 +81,16 @@ addition_mix_and_match_with_ants:
           backgroundColor: 'red'
           reverse_ant_offsets: true
       tower_2_shadow:
-        position: [230, 0]
+        position: [270, 0]
         misc:
           backgroundColor: 'red'
       tower_mixed:
-        position: [340, 0]
+        position: [442, 0]
         tower_style: {opacity: 0}
         misc:
           hide_tower_number: true
       tower_result:
-        position: [443, 0]
+        position: [545, 0]
         # tower_style: {opacity: 0}
         misc:
           backgroundColor: 'black'

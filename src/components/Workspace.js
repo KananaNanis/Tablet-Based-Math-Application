@@ -30,7 +30,7 @@ export const original_global_screen_width = Dimensions.get('window').width
 export let global_screen_width = original_global_screen_width
 export const original_global_screen_height = Dimensions.get('window').height
 export let global_screen_height = original_global_screen_height
-export const global_grass_height = 150
+export const global_grass_height = 190
 export let global_workspace_height = global_screen_height - global_grass_height
 
 export function update_screen_dimensions() {
@@ -77,6 +77,8 @@ const Workspace = ({
 	big_op,
 	big_paren,
 	big_paren_style,
+	arith_symbol,
+	equal_symbol,
 	err_box,
 	option_values,
 }) => {
@@ -257,6 +259,24 @@ const Workspace = ({
 			</BarContainer>,
 		)
 	}
+
+	if (arith_symbol) {
+		++key
+		misc_below.push(
+			<Text key={key} id="arith_symbol" style={[styles.arith_symbol]}>
+				{arith_symbol}
+			</Text>
+		)
+	}
+
+	if (equal_symbol) {
+		++key
+		misc_below.push(
+			<Text key={key} id="equal_symbol" style={[styles.equal_symbol]}>
+				{equal_symbol}
+			</Text>
+		)
+	}
 	/*
   if (err_box) {
     ++key
@@ -345,8 +365,8 @@ const Workspace = ({
 	}
 	for (let i = 0; i < num_stars; ++i) {
 		++key
-		let top = 20
-		let right = 310 + 30 * i
+		let top = 0
+		let right = 400 + 30 * i
 		if (is_scaled) {
 			top += 10
 			right += 8
@@ -477,6 +497,20 @@ const styles = StyleSheet.create({
 		borderTopRightRadius: 100,
 		overflow: 'hidden',
 	},
+	arith_symbol: {
+		position: 'absolute',
+		left: 195,
+		bottom: -180,
+		fontSize: 100,
+		color: 'black',
+	},
+	equal_symbol: {
+		position: 'absolute',
+		left: 465,
+		bottom: -180,
+		fontSize: 100,
+		color: 'black',
+	}
 })
 
 export default Workspace

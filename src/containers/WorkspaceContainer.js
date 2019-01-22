@@ -26,6 +26,8 @@ const mapStateToProps = (state, ownProps) => {
 		top_right_text: state.getIn(['prop', 'top_right_text']),
 		stderr_text: state.getIn(['prop', 'stderr_text']),
 		big_op: state.getIn(['prop', 'big_op']),
+		arith_symbol: state.getIn(['prop', 'arith_symbol']),
+		equal_symbol: state.getIn(['prop', 'equal_symbol']),
 		big_paren: state.getIn(['prop', 'big_paren']),
 		big_paren_style: state.getIn(['style', 'big_paren']),
 		err_box: state.get('err_box'),

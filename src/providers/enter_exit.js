@@ -98,7 +98,7 @@ export function store_config_modify(
 						do_timed_action(id, key, new_val)
 					}
 				} else if ('position' === key) {
-					if (['big_op', 'big_paren'].includes(id)) {
+					if (['big_op', 'big_paren', 'arith_symbol', 'equal_symbol'].includes(id)) {
 						const pos = as_position(c[id0][key])
 						action_list.push(Actions.setPosition(id, enter ? pos : null))
 					}
@@ -384,7 +384,7 @@ export function enter_exit_config(
 						action_list.push(Actions.setPosition(id, enter ? pos : null))
 					}
 					action_list.push(Actions.setButtonDisplay(id, enter ? true : null))
-				} else if (['center_text', 'big_op', 'big_paren'].includes(id)) {
+				} else if (['center_text', 'big_op', 'big_paren', 'arith_symbol', 'equal_symbol'].includes(id)) {
 					//console.log('setting prop', id, 'to', c[id0])
 					action_list.push(Actions.setProp(id, enter ? c[id0] : null))
 				} else if ('err_box' === id) {
