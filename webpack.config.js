@@ -59,7 +59,7 @@ const imageLoaderConfiguration = {
 	use: {
 		loader: 'file-loader',
 		options: {
-			name: 'img/[name].[ext]',
+			name: 'assets/img/[name].[ext]',
 		},
 	},
 }
@@ -89,8 +89,7 @@ module.exports = {
 	// configures where the build ends up
 	output: {
 		filename: '[name].[contenthash].js',
-		publicPath: '/assets/',
-		path: path.resolve(appDirectory, './public/assets'),
+		path: path.resolve(appDirectory, './public'),
 	},
 
 	module: {
@@ -115,6 +114,8 @@ module.exports = {
 
 		new HtmlWebpackPlugin({
 			title: 'Caching',
+			template: './src/index.php',
+			filename: 'index.php',
 		}),
 	],
 
