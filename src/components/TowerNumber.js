@@ -69,10 +69,7 @@ class TowerNumber extends React.Component {
 			/>,
 		)
 		name_elements.push(
-			<Image key={3}
-			source={image_location('ant')}
-			style={styles.ant_image}
-			/>,
+			<Image key={3} source={image_location('ant')} style={styles.ant_image} />,
 		)
 		let show_digit = false
 		for (let i = 0; i < digits.length; ++i) {

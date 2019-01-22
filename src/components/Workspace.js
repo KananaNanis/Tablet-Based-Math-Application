@@ -265,7 +265,7 @@ const Workspace = ({
 		misc_below.push(
 			<Text key={key} id="arith_symbol" style={[styles.arith_symbol]}>
 				{arith_symbol}
-			</Text>
+			</Text>,
 		)
 	}
 
@@ -274,7 +274,7 @@ const Workspace = ({
 		misc_below.push(
 			<Text key={key} id="equal_symbol" style={[styles.equal_symbol]}>
 				{equal_symbol}
-			</Text>
+			</Text>,
 		)
 	}
 	/*
@@ -424,6 +424,7 @@ const green = 'green'
 const blue = 'blue'
 const white = 'white'
 const grey = 'grey'
+const black = 'black'
 const purple = 'rgb(255, 0, 255)'
 const paren_color_1 = '#eee'
 const styles = StyleSheet.create({
@@ -502,15 +503,15 @@ const styles = StyleSheet.create({
 		left: 195,
 		bottom: -180,
 		fontSize: 100,
-		color: 'black',
+		color: black,
 	},
 	equal_symbol: {
 		position: 'absolute',
 		left: 465,
 		bottom: -180,
 		fontSize: 100,
-		color: 'black',
-	}
+		color: black,
+	},
 })
 
 export default Workspace
