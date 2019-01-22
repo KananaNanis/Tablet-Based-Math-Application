@@ -30,7 +30,7 @@ export const original_global_screen_width = Dimensions.get('window').width
 export let global_screen_width = original_global_screen_width
 export const original_global_screen_height = Dimensions.get('window').height
 export let global_screen_height = original_global_screen_height
-export const global_grass_height = 50
+export const global_grass_height = 150
 export let global_workspace_height = global_screen_height - global_grass_height
 
 export function update_screen_dimensions() {
