@@ -1,6 +1,6 @@
 import React from 'react'
 import {View, Image, Text, StyleSheet, Dimensions} from 'react-native'
-import Keypad from './Keypad'
+import KeypadContainer from '../containers/KeypadContainer'
 import Button, {get_special_button_geoms} from './Button'
 import Placard from './Placard'
 import ErrBox from './ErrBox'
@@ -270,7 +270,7 @@ const Workspace = ({
 		//console.log('keypad_kind', keypad_kind)
 		++key
 		misc_above.push(
-			<Keypad
+			<KeypadContainer
 				key={key}
 				button_display={button_display}
 				button_highlight={button_highlight}

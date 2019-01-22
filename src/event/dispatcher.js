@@ -24,6 +24,7 @@ import {
 	apply_bounds,
 	update_keypad_button_visibility,
 	redraw_mixed_tower,
+	point_in_animals,
 } from './utils'
 import {
 	handle_submit_button,
@@ -37,7 +38,7 @@ import {
 	handle_stack_arg_2,
 	handle_drag_blocks_to_result,
 	handle_decimal_keypad,
-	handle_decimal_column_keypad
+	handle_decimal_column_keypad,
 } from './handlers'
 import {correct_next_button} from './correctness'
 import {
@@ -201,6 +202,17 @@ export function touch_dispatcher(state, x, y, touchID) {
 					} else if ('decimal_column' === kind) {
 						handle_decimal_column_keypad(i)
 					}
+				}
+			}
+
+			let pos_x = query_position_of(tgt).get(0)
+			if (point_in_animals([x, y], [pos_x, 0])) {
+				if (x - pos_x < 70) {
+					doAction.setEventHandlingParam('keypad_column', 'goat')
+				} else if (x - pos_x < 140) {
+					doAction.setEventHandlingParam('keypad_column', 'spider')
+				} else {
+					doAction.setEventHandlingParam('keypad_column', 'ant')
 				}
 			}
 		}

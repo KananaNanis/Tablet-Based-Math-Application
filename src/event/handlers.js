@@ -920,6 +920,7 @@ export function handle_decimal_keypad(val) {
 }
 
 export function handle_decimal_column_keypad(val) {
+	console.log(val)
 	const tgt = query_event('target')
 	const tgt_height = query_tower_height(tgt)
 	let s = String(Math.round(100 * tgt_height)) + String(val)
@@ -930,4 +931,3 @@ export function handle_decimal_column_keypad(val) {
 	}
 	//if (query_event('counting_up_sub')) redraw_mixed_tower()
 }
-

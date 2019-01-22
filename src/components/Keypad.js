@@ -4,6 +4,8 @@ import Button from './Button'
 import {global_fiver_shadow} from './Num'
 import {global_constant} from '../lib/global'
 
+import {query_event, query_position_of} from '../providers/query_store'
+
 export function get_button_geoms_for(kind) {
 	//console.warn('get_button_geoms_for', kind)
 	const pos = global_constant.keypad_info[kind]
@@ -40,18 +42,19 @@ const Keypad = ({
 	button_highlight,
 	freeze_display,
 	scale_factor,
+	keypad_column,
 }) => {
+	console.log(button_display)
 	let buttons = []
 	const add_words_on_side = false
-	const button_display2 = button_display.toJS()
 	const pos = global_constant.keypad_info[kind]
 	const geoms = get_button_geoms_for(kind)
 	const is_scaled = 520 !== scale_factor
 	for (let row = 0; row < pos.num_rows; ++row) {
 		for (let col = 0; col < pos.num_cols; ++col) {
 			const index = col + pos.num_cols * row
-			if (index in button_display2 && false === button_display2[index]) continue
-			const button_position = geoms[index].position
+			if (index in button_display && false === button_display[index]) continue
+			let button_position = geoms[index].position
 			if (is_scaled) button_position[0] -= 10
 			const height = pos.button_height
 			let width = pos.button_width
@@ -96,10 +99,19 @@ const Keypad = ({
 				if (index > 2) label = index - 2
 				else if (index === 1) label = 0
 				else continue
-				
 			} else if ('decimal_column' === kind) {
+				let col = keypad_column
+				console.log(col)
+				if (col !== 'goat' && col !== 'spider' && col !== 'ant') continue
+				const tgt = query_event('target')
+				let pos_x = query_position_of(tgt).get(0)
+				let x_offset = 0
+				if (col === 'ant') x_offset = 140
+				else if (col === 'spider') x_offset = 70
+				button_position[0] += pos_x + x_offset
 				label = index
 			}
+
 			const view_style = {borderColor: 'black', borderWidth: 1} // backgroundColor: 'grey'}
 			if (null !== button_highlight && index === button_highlight) {
 				view_style['backgroundColor'] = freeze_display ? 'red' : 'yellow'
