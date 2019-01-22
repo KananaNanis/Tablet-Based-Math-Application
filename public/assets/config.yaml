@@ -32,7 +32,7 @@ addition_mix_and_match_with_ants:
       restriction_upper: mixed_tower_height < 3.99
       restriction_lower: mixed_tower_height > 0.33
     create:
-      keypad_kind: 'buildTower'
+      keypad_kind: 'decimal_column'
       big_paren: true
       big_op: +
       arith_symbol: +
@@ -105,6 +105,8 @@ addition_mix_and_match_with_ants:
       target: tower_result
       comparison_source: tower_4
       allow_keypad_minis: true
+      keypad_column: placeholder
+
     misc:
       use_emoji: true
       num_stars: 2
