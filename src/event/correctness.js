@@ -252,7 +252,7 @@ export function is_correct() {
 				src_height = global_constant.animals[name].height
 				if ('approx_height' === how) {
 					let tol = 0.075
-					if (ants_used) tol /= 10
+					if (ants_used) tol /= 9.2
 					eq = approx_equal(src_height, tgt_height, tol)
 				} else eq = approx_equal(src_height, tgt_height)
 			}
