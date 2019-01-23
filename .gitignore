@@ -31,6 +31,8 @@ notesFromDom
 index.js.orig
 TODO
 public/favicon.ico
+public/bundle.js
+public/index.php
 public_stub/
 public/assets/bundle.js
 public/assets/bundle.js.moved
