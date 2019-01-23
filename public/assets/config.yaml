@@ -587,6 +587,104 @@ tower_to_number:
       config_iteration: 4
   level_1:
 
+addition_test:
+  params:
+    generate:
+      tower_1_height: [pick_from_range, 0.01, 1.995, 0.01]
+      tower_2_height: [pick_from_range, 0.01, 1.995, 0.01]
+    create:
+      tower_1: { name: tower_1_height }
+      tower_2: { name: tower_2_height }
+      tower_result: []
+      arith_symbol: +
+      equal_symbol: =
+    modify:
+      tower_1:
+        position: [15, 0]
+        tower_style: { opacity: 0 }
+      tower_2:
+        position: [230, 0]
+        tower_style: { opacity: 0 }
+      tower_result:
+        position: [545, 0]
+        tower_style: {opacity: 0}
+        misc:
+          backgroundColor: 'black'
+  level_1:
+
+concreteness_fading:
+  params:
+    generate:
+      tower_1_height: [pick_from_range, 0.01, 1.995, 0.01]
+    create:
+      keypad_kind: 'buildTower'
+      tower_1: { name: tower_1_height }
+      tower_result: []
+      tile_success: { name: emoji_smile }
+      tile_fail: { name: emoji_frown }
+    modify:
+      tower_1:
+        position: [center, 0]
+        tower_style: { opacity: 0 }
+        misc:
+          backgroundColor: 'black'
+      tower_result:
+        position: [center, 0]
+        misc:
+          backgroundColor: 'black'
+          hide_tower_number: true
+      tile_success:
+        position: [center,center]
+        style: { opacity: 0.0 }
+        misc:
+          use_no_borders: true
+      tile_fail:
+        position: [center,center]
+        style: { opacity: 0.0 }
+        misc:
+          use_no_borders: true
+    event_handling:
+      correctness: identical
+      touch_reveals_button: [button_submit, button_delete]
+      no_split_fiver: true
+      minimum_split_size: -1
+      target: tower_result
+      comparison_source: tower_1
+      allow_keypad_minis: true
+    misc:
+      use_emoji: true
+      num_stars: 3
+      remove_on_exit: [button_submit, button_delete]
+      config_iteration: 5
+  level_1:
+  level_2:
+    params:
+      create:
+        button_start:
+        tower_1_shadow: { name: tower_1_height }
+      modify:
+        button_start:
+          position: [40vw, 0]
+        tower_1:
+          misc:
+            hide_image: true
+        tower_1_shadow:
+          position: [center, 0]
+          tower_style: { opacity: 0 }
+      misc:
+        freeze_display: true
+      delay:
+        modify:
+          tower_1_shadow:
+            anim_info: { opacity: [1, 0], delay: 0, duration: 2000 }
+  level_3:
+    params:
+      modify:
+        tower_1:
+          misc:
+            hide_image: true
+
+
 ok:
   params:
     create:

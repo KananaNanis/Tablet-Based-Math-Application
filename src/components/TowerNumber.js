@@ -28,6 +28,7 @@ class TowerNumber extends React.Component {
 			// position,
 			anim_info,
 			tower_number_style,
+			hide_image,
 			// just_grey = false,
 		} = this.props
 		// console.log('TowerNumber id', id, 'name', name)
@@ -54,23 +55,25 @@ class TowerNumber extends React.Component {
 		//console.log(digits)
 
 		let name_elements = []
-		name_elements.push(
-			<Image
-				key={1}
-				source={image_location('goat')}
-				style={styles.goat_image}
-			/>,
-		)
-		name_elements.push(
-			<Image
-				key={2}
-				source={image_location('anansi')}
-				style={styles.anansi_image}
-			/>,
-		)
-		name_elements.push(
-			<Image key={3} source={image_location('ant')} style={styles.ant_image} />,
-		)
+		if (!hide_image) {
+			name_elements.push(
+				<Image
+					key={1}
+					source={image_location('goat')}
+					style={styles.goat_image}
+				/>,
+			)
+			name_elements.push(
+				<Image
+					key={2}
+					source={image_location('anansi')}
+					style={styles.anansi_image}
+				/>,
+			)
+			name_elements.push(
+				<Image key={3} source={image_location('ant')} style={styles.ant_image} />,
+			)
+		}
 		let show_digit = false
 		for (let i = 0; i < digits.length; ++i) {
 			if (digits[i] > 0 || i + 1 === digits.length) show_digit = true
