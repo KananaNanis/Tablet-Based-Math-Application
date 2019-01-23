@@ -153,7 +153,7 @@ const styles = StyleSheet.create({
 	},
 	tower_number_text_wrapper: {
 		position: 'absolute',
-		top: 60
+		top: 60,
 	},
 	tower_number_element: {
 		position: 'absolute',
