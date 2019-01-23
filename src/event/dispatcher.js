@@ -217,8 +217,7 @@ export function touch_dispatcher(state, x, y, touchID) {
 						}
 					} else if ('decimal_column' === kind) {
 						// convert from incoming index to number
-							console.log(animal)
-							handle_decimal_column_keypad(animal, i)
+						handle_decimal_column_keypad(animal, i)
 					}
 				}
 			}
@@ -227,7 +226,7 @@ export function touch_dispatcher(state, x, y, touchID) {
 			if ('decimal_column' === kind && point_in_animals([x, y], [pos_x, 0])) {
 				if (x - pos_x < 70) {
 					doAction.setEventHandlingParam('keypad_column', 'goat')
-					button_geoms[i].position[0] = pos_x 
+					button_geoms[i].position[0] = pos_x
 				} else if (x - pos_x < 140) {
 					doAction.setEventHandlingParam('keypad_column', 'spider')
 					button_geoms[i].position[0] = pos_x + 70
@@ -236,7 +235,6 @@ export function touch_dispatcher(state, x, y, touchID) {
 					button_geoms[i].position[0] = pos_x + 140
 				}
 			}
-
 		}
 	}
 	if ('up' === state || !found_one) doAction.setButtonHighlight(null)

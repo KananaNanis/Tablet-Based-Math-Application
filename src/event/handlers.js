@@ -921,16 +921,13 @@ export function handle_decimal_column_keypad(animal, val) {
 	const tgt = query_event('target')
 	const tgt_height = query_tower_height(tgt)
 	let current_height = Math.round(100 * tgt_height)
-	let s = String(Math.round(100 * tgt_height))
-	if (animal === 'goat'){
+	if (animal === 'goat') {
 		new_height = (current_height % 100) + 100 * val
-	} 
-	else if (animal === 'spider'){
+	} else if (animal === 'spider') {
 		let hundred = Math.trunc(current_height / 100)
 		new_height = (current_height % 10) + 10 * val + hundred * 100
-	} 
-	else if (animal === 'ant'){
-		new_height = Math.trunc(current_height/10) * 10 + val
+	} else if (animal === 'ant') {
+		new_height = Math.trunc(current_height / 10) * 10 + val
 	}
 	let new_height = new_height / 100
 	if (!height_too_tall(new_height)) {

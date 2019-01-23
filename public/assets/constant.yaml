@@ -3,7 +3,7 @@ debug_mode: false
 num_exercises_for_debugging: 2
 debug_path: [addition_mix_and_match, level_1]
 
-starting_config_path: [addition_mix_and_match_with_ants, level_3]
+starting_config_path: [addition_mix_and_match_numbers_only, level_3]
 #starting_config_path: [redbluequiz, level_1]
 #starting_config_path: [measure_height_animals_with_ants, level_1]
 # starting_config_path: [addition_mix_and_match_with_ants, level_1]
@@ -230,7 +230,7 @@ event_handling_types: [target, comparison_source, correctness,
   counting_up_sub, allow_keypad_minis, disappearing_object,
   move, arg_1, arg_2, result, keypad_column]
 position_modifiers: [left, right, top, bottom,
-  left_from_right, right_from_left, top_from_bottom,s
+  left_from_right, right_from_left, top_from_bottom,
   bottom_from_top]
 anim_all_attributes: [left, right, top, bottom, opacity,
   rotate, scale, handle_opacity, tower_opacity]
