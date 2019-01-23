@@ -1,12 +1,12 @@
 # these constants should be fixed!
 debug_mode: false
 num_exercises_for_debugging: 2
-debug_path: [redbluequiz, level_1]
+debug_path: [addition_mix_and_match, level_1]
 
-#starting_config_path: [addition_mix_and_match, level_3]
+starting_config_path: [addition_mix_and_match_numbers_only, level_3]
 #starting_config_path: [redbluequiz, level_1]
 #starting_config_path: [measure_height_animals_with_ants, level_1]
-starting_config_path: [addition_mix_and_match_with_ants, level_1]
+# starting_config_path: [addition_mix_and_match_with_ants, level_1]
 #starting_config_path: [addition_mix_and_match_with_ants, level_2]
 #starting_config_path: [addition_mix_and_match_with_ants, level_3]
 
@@ -85,6 +85,14 @@ keypad_info:
     space_height: 10
     num_cols: 3
     num_rows: 4
+  decimal_column:
+    position: [0, 0]
+    button_width: 60
+    button_height: 60
+    space_width: 10
+    space_height: 10
+    num_cols: 1
+    num_rows: 10
 placard:
   position: [center, center]
   width: 510
@@ -220,7 +228,7 @@ event_handling_types: [target, comparison_source, correctness,
   just_yaml_event, on_down, on_up, use_option_buttons,
   show_blocks_moving_to_result, show_mean_result_at_end,
   counting_up_sub, allow_keypad_minis, disappearing_object,
-  move, arg_1, arg_2, result]
+  move, arg_1, arg_2, result, keypad_column]
 position_modifiers: [left, right, top, bottom,
   left_from_right, right_from_left, top_from_bottom,
   bottom_from_top]

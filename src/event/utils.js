@@ -25,7 +25,7 @@ export function tlog(...args) {
 }
 
 export function pointIsInRectangle(point, geom, offset = [0, 0]) {
-	//console.log('pointIsInRectangle point', point, 'geom', geom, 'offset', offset)
+	// console.log('pointIsInRectangle point', point, 'geom', geom, 'offset', offset)
 	return (
 		geom.position[0] + offset[0] <= point[0] &&
 		point[0] <= geom.position[0] + offset[0] + geom.width &&
@@ -368,4 +368,10 @@ export function design_compatible_name_for_addend(arg_1, arg_2, result) {
 	if (verbose) console.log(' after condense:', name_2)
 
 	return name_2
+}
+
+export function point_in_animals(point, origin) {
+	if (point[0] < origin[0] || point[0] > origin[0] + 210) return false
+	if (point[1] < -100 || point[1] > origin[1]) return false
+	return true
 }
