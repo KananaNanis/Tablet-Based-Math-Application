@@ -51,6 +51,8 @@ const Num = ({
 	block_opacity,
 	block_anim_info,
 	scale_factor,
+	target,
+	keypad_column,
 	just_grey = false,
 }) => {
 	//console.log('Num id', id, 'anim_info', anim_info)
@@ -93,8 +95,10 @@ const Num = ({
 				hide_image={misc && misc.hide_image}
 				id={id}
 				just_grey={just_grey}
+				keypad_column={keypad_column}
 				name={tm_name}
 				position={position}
+				target={target}
 				tower_number_style={tower_number_style}
 			/>
 		)

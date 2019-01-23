@@ -24,6 +24,7 @@ import {
 	apply_bounds,
 	update_keypad_button_visibility,
 	redraw_mixed_tower,
+	point_in_animals,
 } from './utils'
 import {
 	handle_submit_button,
@@ -37,6 +38,7 @@ import {
 	handle_stack_arg_2,
 	handle_drag_blocks_to_result,
 	handle_decimal_keypad,
+	handle_decimal_column_keypad,
 } from './handlers'
 import {correct_next_button} from './correctness'
 import {
@@ -108,8 +110,24 @@ export function touch_dispatcher(state, x, y, touchID) {
 	const kind = query_keypad_kind()
 	//const pos = getPositionInfoForKeypad(kind)
 	const pos = global_constant.keypad_info[kind]
-	const button_geoms = kind ? get_button_geoms_for(kind) : null
+
+	let x_offset = 0
+	let animal = ''
+	if ('decimal_column' === kind) {
+		let col = query_event('keypad_column')
+		const tgt = query_event('target')
+		let pos_x = query_position_of(tgt).get(0)
+		x_offset = pos_x
+		if (col === 'ant') x_offset += 120
+		else if (col === 'spider') x_offset += 55
+		else if (col === 'goat') x_offset += 0
+		else x_offset = 1000 // off the screen
+		animal = col
+	}
+
+	let button_geoms = kind ? get_button_geoms_for(kind, x_offset) : null
 	// console.log('button_geoms', button_geoms)
+
 	let found_one = false
 	const tgt = query_event('target')
 	//if ('down' === state ) console.log('visible', visible)
@@ -197,7 +215,24 @@ export function touch_dispatcher(state, x, y, touchID) {
 							let val = i > 2 ? i - 2 : 0
 							handle_decimal_keypad(val)
 						}
+					} else if ('decimal_column' === kind) {
+						// convert from incoming index to number
+						handle_decimal_column_keypad(animal, i)
 					}
+				}
+			}
+
+			let pos_x = query_position_of(tgt).get(0)
+			if ('decimal_column' === kind && point_in_animals([x, y], [pos_x, 0])) {
+				if (x - pos_x < 70) {
+					doAction.setEventHandlingParam('keypad_column', 'goat')
+					button_geoms[i].position[0] = pos_x
+				} else if (x - pos_x < 140) {
+					doAction.setEventHandlingParam('keypad_column', 'spider')
+					button_geoms[i].position[0] = pos_x + 70
+				} else {
+					doAction.setEventHandlingParam('keypad_column', 'ant')
+					button_geoms[i].position[0] = pos_x + 140
 				}
 			}
 		}

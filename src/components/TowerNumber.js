@@ -27,11 +27,14 @@ class TowerNumber extends React.Component {
 			name,
 			// position,
 			anim_info,
+			keypad_column,
+			target,
 			tower_number_style,
 			hide_image,
 			// just_grey = false,
 		} = this.props
-		// console.log('TowerNumber id', id, 'name', name)
+		// console.log('TowerNumber id', this.props.id, 'name', this.props.name)
+
 		if ('undefined' === typeof name) {
 			console.error('Cannot render tower number id', id)
 			return null
@@ -54,26 +57,52 @@ class TowerNumber extends React.Component {
 		}
 		//console.log(digits)
 
+		let goat_style = {}
+		let spider_style = {}
+		let ant_style = {}
+		if (id === target) {
+			if (keypad_column === 'goat') {
+				goat_style = {
+					borderWidth: '2px solid black',
+				}
+			}
+			if (keypad_column === 'spider') {
+				spider_style = {
+					borderWidth: '2px solid black',
+				}
+			}
+			if (keypad_column === 'ant') {
+				ant_style = {
+					borderWidth: '2px solid black',
+				}
+			}
+		}
+
 		let name_elements = []
 		if (!hide_image) {
 			name_elements.push(
 				<Image
 					key={1}
 					source={image_location('goat')}
-					style={styles.goat_image}
+					style={[styles.goat_image, goat_style]}
 				/>,
 			)
 			name_elements.push(
 				<Image
 					key={2}
 					source={image_location('anansi')}
-					style={styles.anansi_image}
+					style={[styles.anansi_image, spider_style]}
 				/>,
 			)
 			name_elements.push(
-				<Image key={3} source={image_location('ant')} style={styles.ant_image} />,
+				<Image
+					key={3}
+					source={image_location('ant')}
+					style={[styles.ant_image, ant_style]}
+				/>,
 			)
 		}
+
 		let show_digit = false
 		for (let i = 0; i < digits.length; ++i) {
 			if (digits[i] > 0 || i + 1 === digits.length) show_digit = true

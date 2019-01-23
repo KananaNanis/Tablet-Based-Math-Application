@@ -75,6 +75,10 @@ export function query_visible_buttons() {
 			for (let i = 0; i < i_end; ++i) {
 				if (0 !== i && 2 !== i) res.push(i)
 			}
+		} else if ('decimal_column' === keypad_kind) {
+			for (let i = 0; i < i_end; ++i) {
+				res.push(i)
+			}
 		} else {
 			for (let i = 0; i < i_end; ++i) {
 				//const istr = String(i)
