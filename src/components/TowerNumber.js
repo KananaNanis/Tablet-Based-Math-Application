@@ -60,7 +60,11 @@ class TowerNumber extends React.Component {
 		let animal_images = [
 			{name: 'goat', style: styles.goat_image, extra_style: {}},
 			{name: 'anansi', style: styles.anansi_image, extra_style: {}},
-			{name: 'ant', style: styles.ant_image, extra_style: {borderRightWidth: 1}}
+			{
+				name: 'ant',
+				style: styles.ant_image,
+				extra_style: {borderRightWidth: 1},
+			},
 		]
 		if (id === target) {
 			if (keypad_column === 'goat') {
@@ -88,7 +92,11 @@ class TowerNumber extends React.Component {
 			name_elements.push(
 				<View
 					key={4 + i}
-					style={[styles.tower_number_element, {left: 60 * i - 10}, animal_images[i].extra_style]}
+					style={[
+						styles.tower_number_element,
+						{left: 60 * i - 10},
+						animal_images[i].extra_style,
+					]}
 				>
 					{!hide_image ? (
 						<Image
@@ -96,14 +104,10 @@ class TowerNumber extends React.Component {
 							source={image_location(animal_images[i].name)}
 							style={animal_images[i].style}
 						/>
-					): null}
+					) : null}
 					{show_digit ? (
-						<Text
-							style={styles.tower_number_text}
-						>
-							{digits[i]}
-						</Text>
-					): null}
+						<Text style={styles.tower_number_text}>{digits[i]}</Text>
+					) : null}
 				</View>,
 			)
 		}
