@@ -50,7 +50,7 @@ const Keypad = ({
 	scale_factor,
 	keypad_column,
 }) => {
-	console.log(button_display)
+	// console.log(button_display)
 	let buttons = []
 	const add_words_on_side = false
 	const pos = global_constant.keypad_info[kind]
@@ -112,8 +112,8 @@ const Keypad = ({
 				const tgt = query_event('target')
 				let pos_x = query_position_of(tgt).get(0)
 				let x_offset = 0
-				if (col === 'ant') x_offset = 140
-				else if (col === 'spider') x_offset = 70
+				if (col === 'ant') x_offset = 120
+				else if (col === 'spider') x_offset = 55
 				button_position[0] += pos_x + x_offset
 				label = index
 			}

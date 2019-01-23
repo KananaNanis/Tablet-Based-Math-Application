@@ -200,9 +200,7 @@ export function handle_options(state, x, y) {
 					const name_1 = query_name_of(arg_1)
 					const is_peg =
 						arg_1 && arg_1.startsWith('tile_') && name_1.startsWith('peg_')
-					// console.log(arg_1)
 					const op = query_prop('curr_op')
-					// console.log('op', op)
 					if ('identity' === op) {
 						// show dotted line
 						const arg_1 = query_arg(1)
@@ -919,15 +917,24 @@ export function handle_decimal_keypad(val) {
 	//if (query_event('counting_up_sub')) redraw_mixed_tower()
 }
 
-export function handle_decimal_column_keypad(val) {
-	console.log(val)
+export function handle_decimal_column_keypad(animal, val) {
 	const tgt = query_event('target')
 	const tgt_height = query_tower_height(tgt)
-	let s = String(Math.round(100 * tgt_height)) + String(val)
-	let new_height = Number(s) / 100
+	let current_height = Math.round(100 * tgt_height)
+	let s = String(Math.round(100 * tgt_height))
+	if (animal === 'goat'){
+		new_height = (current_height % 100) + 100 * val
+	} 
+	else if (animal === 'spider'){
+		let hundred = Math.trunc(current_height / 100)
+		new_height = (current_height % 10) + 10 * val + hundred * 100
+	} 
+	else if (animal === 'ant'){
+		new_height = Math.trunc(current_height/10) * 10 + val
+	}
+	let new_height = new_height / 100
 	if (!height_too_tall(new_height)) {
 		const new_name = height2tower_name(new_height)
 		doAction.setName(tgt, new_name)
 	}
-	//if (query_event('counting_up_sub')) redraw_mixed_tower()
 }

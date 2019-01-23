@@ -3,7 +3,7 @@ debug_mode: false
 num_exercises_for_debugging: 2
 debug_path: [addition_mix_and_match, level_1]
 
-starting_config_path: [addition_mix_and_match, level_3]
+starting_config_path: [addition_mix_and_match_with_ants, level_3]
 #starting_config_path: [redbluequiz, level_1]
 #starting_config_path: [measure_height_animals_with_ants, level_1]
 # starting_config_path: [addition_mix_and_match_with_ants, level_1]

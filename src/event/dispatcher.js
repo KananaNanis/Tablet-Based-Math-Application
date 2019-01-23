@@ -112,15 +112,17 @@ export function touch_dispatcher(state, x, y, touchID) {
 	const pos = global_constant.keypad_info[kind]
 
 	let x_offset = 0
+	let animal = ''
 	if ('decimal_column' === kind) {
 		let col = query_event('keypad_column')
 		const tgt = query_event('target')
 		let pos_x = query_position_of(tgt).get(0)
 		x_offset = pos_x
-		if (col === 'ant') x_offset += 140
-		else if (col === 'spider') x_offset += 70
+		if (col === 'ant') x_offset += 120
+		else if (col === 'spider') x_offset += 55
 		else if (col === 'goat') x_offset += 0
 		else x_offset = 1000 // off the screen
+		animal = col
 	}
 
 	let button_geoms = kind ? get_button_geoms_for(kind, x_offset) : null
@@ -215,7 +217,8 @@ export function touch_dispatcher(state, x, y, touchID) {
 						}
 					} else if ('decimal_column' === kind) {
 						// convert from incoming index to number
-							handle_decimal_column_keypad(i)
+							console.log(animal)
+							handle_decimal_column_keypad(animal, i)
 					}
 				}
 			}
