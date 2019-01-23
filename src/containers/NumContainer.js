@@ -58,6 +58,8 @@ const mapStateToProps = (state, ownProps) => {
 		style: state.getIn(['style', id]),
 		anim_info: state.getIn(['anim_info', id]),
 		misc: state.getIn(['misc', id]),
+		keypad_column: state.getIn(['event_handling', 'keypad_column']),
+		target: state.getIn(['event_handling', 'target']),
 		tower_style: state.getIn(['tower_style', id]),
 		block_opacity: state.getIn(['block_opacity', id]),
 		block_anim_info: state.getIn(['block_anim_info', id]),
