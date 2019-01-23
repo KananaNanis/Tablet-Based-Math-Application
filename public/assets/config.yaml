@@ -779,6 +779,26 @@ concreteness_fading:
       remove_on_exit: [button_submit, button_delete]
       config_iteration: 5
   level_1a:
+  level_2a:
+    params:
+      create:
+        button_start:
+        tower_1_shadow: { name: tower_1_height }
+      modify:
+        button_start:
+          position: [40vw, 0]
+        tower_1:
+          misc:
+            hide_image: true
+        tower_1_shadow:
+          position: [center, 0]
+          tower_style: { opacity: 0 }
+      misc:
+        freeze_display: true
+      delay:
+        modify:
+          tower_1_shadow:
+            anim_info: { opacity: [1, 0], delay: 0, duration: 2000 }
   level_3a:
     params:
       modify:
@@ -808,6 +828,26 @@ concreteness_fading:
         remove_on_exit: [button_submit]
     level_1b:
     level_2b:
+      params:
+        create:
+          button_start:
+          tower_result_shadow: []
+        modify:
+          button_start:
+            position: [40vw, 0]
+          tower_result:
+            misc:
+              hide_image: true
+          tower_result_shadow:
+            position: [150, 0]
+            tower_style: { opacity: 0 }
+        misc:
+          freeze_display: true
+        delay:
+          modify:
+            tower_result_shadow:
+              anim_info: { opacity: [1, 0], delay: 0, duration: 2000 }
+    level_3b:
       params:
         modify:
           tower_result:

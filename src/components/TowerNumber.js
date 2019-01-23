@@ -106,7 +106,9 @@ class TowerNumber extends React.Component {
 						/>
 					) : null}
 					{show_digit ? (
-						<Text style={styles.tower_number_text}>{digits[i]}</Text>
+						<View style={styles.tower_number_text_wrapper}>
+							<Text style={styles.tower_number_text}>{digits[i]}</Text>
+						</View>
 					) : null}
 				</View>,
 			)
@@ -137,17 +139,21 @@ const styles = StyleSheet.create({
 		height: 40,
 		left: 8,
 		top: 20,
-		marginBottom: 20,
+		// marginBottom: 20,
 	},
 	ant_image: {
 		top: 30,
 		width: 40,
 		height: 30,
 		left: 10,
-		marginBottom: 30,
+		// marginBottom: 30,
 	},
 	tower_number_text: {
 		fontSize: 100,
+	},
+	tower_number_text_wrapper: {
+		position: 'absolute',
+		top: 60
 	},
 	tower_number_element: {
 		position: 'absolute',
