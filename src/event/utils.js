@@ -372,6 +372,6 @@ export function design_compatible_name_for_addend(arg_1, arg_2, result) {
 
 export function point_in_animals(point, origin) {
 	if (point[0] < origin[0] || point[0] > origin[0] + 210) return false
-	if (point[1] < -100 || point[1] > origin[1]) return false
+	if (point[1] < -200 || point[1] > origin[1]) return false
 	return true
 }

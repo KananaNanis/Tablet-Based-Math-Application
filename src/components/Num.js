@@ -68,10 +68,11 @@ const Num = ({
 	let tower_number_style =
 		misc && misc.tower_number_style ? misc.tower_number_style : null
 	let tn_anim_info, tm_anim_info, t_anim_info
-	if (anim_info && anim_info.tower_opacity) {
-		// t_anim_info = anim_info
-		t_anim_info = anim_info
-	} else {
+
+	if (anim_info && tower_style && tower_style.opacity === 0) {
+		tn_anim_info = anim_info
+		tm_anim_info = anim_info
+	} else if (anim_info) {
 		tn_anim_info = anim_info
 		tm_anim_info = anim_info
 		t_anim_info = anim_info
@@ -91,6 +92,7 @@ const Num = ({
 		misc && misc.hide_tower_number ? null : (
 			<TowerNumber
 				anim_info={tm_anim_info}
+				hide_image={misc && misc.hide_image}
 				id={id}
 				just_grey={just_grey}
 				keypad_column={keypad_column}

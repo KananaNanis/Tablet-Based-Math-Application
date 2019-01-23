@@ -111,9 +111,9 @@ const Keypad = ({
 				if (col !== 'goat' && col !== 'spider' && col !== 'ant') continue
 				const tgt = query_event('target')
 				let pos_x = query_position_of(tgt).get(0)
-				let x_offset = 0
-				if (col === 'ant') x_offset = 120
-				else if (col === 'spider') x_offset = 55
+				let x_offset = 5
+				if (col === 'ant') x_offset = 125
+				else if (col === 'spider') x_offset = 65
 				button_position[0] += pos_x + x_offset
 				label = index
 			}

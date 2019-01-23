@@ -1,5 +1,5 @@
 import React from 'react'
-import {StyleSheet, Animated, Image, Text} from 'react-native'
+import {StyleSheet, Animated, Image, Text, View} from 'react-native'
 import * as Anim from '../event/animation'
 import {image_location} from '../lib/images'
 
@@ -30,6 +30,7 @@ class TowerNumber extends React.Component {
 			keypad_column,
 			target,
 			tower_number_style,
+			hide_image,
 			// just_grey = false,
 		} = this.props
 		// console.log('TowerNumber id', this.props.id, 'name', this.props.name)
@@ -56,62 +57,59 @@ class TowerNumber extends React.Component {
 		}
 		//console.log(digits)
 
-		let goat_style = {}
-		let spider_style = {}
-		let ant_style = {}
+		let animal_images = [
+			{name: 'goat', style: styles.goat_image, extra_style: {}},
+			{name: 'anansi', style: styles.anansi_image, extra_style: {}},
+			{
+				name: 'ant',
+				style: styles.ant_image,
+				extra_style: {borderRightWidth: 1},
+			},
+		]
 		if (id === target) {
 			if (keypad_column === 'goat') {
-				goat_style = {
-					borderWidth: '2px solid black',
+				animal_images[0].extra_style = {
+					backgroundColor: 'white',
 				}
 			}
 			if (keypad_column === 'spider') {
-				spider_style = {
-					borderWidth: '2px solid black',
+				animal_images[1].extra_style = {
+					backgroundColor: 'white',
 				}
 			}
 			if (keypad_column === 'ant') {
-				ant_style = {
-					borderWidth: '2px solid black',
+				animal_images[2].extra_style = {
+					backgroundColor: 'white',
+					borderRightWidth: 1,
 				}
 			}
 		}
 
 		let name_elements = []
-		name_elements.push(
-			<Image
-				key={1}
-				source={image_location('goat')}
-				style={[styles.goat_image, goat_style]}
-			/>,
-		)
-		name_elements.push(
-			<Image
-				key={2}
-				source={image_location('anansi')}
-				style={[styles.anansi_image, spider_style]}
-			/>,
-		)
-		name_elements.push(
-			<Image
-				key={3}
-				source={image_location('ant')}
-				style={[styles.ant_image, ant_style]}
-			/>,
-		)
 		let show_digit = false
 		for (let i = 0; i < digits.length; ++i) {
 			if (digits[i] > 0 || i + 1 === digits.length) show_digit = true
-			if (show_digit) {
-				name_elements.push(
-					<Text
-						key={4 + i}
-						style={[styles.tower_number_element, {left: 60 * i - 10}]}
-					>
-						{digits[i]}
-					</Text>,
-				)
-			}
+			name_elements.push(
+				<View
+					key={4 + i}
+					style={[
+						styles.tower_number_element,
+						{left: 60 * i - 10},
+						animal_images[i].extra_style,
+					]}
+				>
+					{!hide_image ? (
+						<Image
+							key={1}
+							source={image_location(animal_images[i].name)}
+							style={animal_images[i].style}
+						/>
+					) : null}
+					{show_digit ? (
+						<Text style={styles.tower_number_text}>{digits[i]}</Text>
+					) : null}
+				</View>,
+			)
 		}
 		return (
 			<Animated.View
@@ -126,34 +124,36 @@ class TowerNumber extends React.Component {
 const styles = StyleSheet.create({
 	tower_number: {
 		position: 'absolute',
-		bottom: -90,
+		top: 0,
 		left: 5,
 	},
 	goat_image: {
-		position: 'absolute',
-		width: 60,
-		height: 72,
-		bottom: 11,
-		left: -12,
+		width: 40,
+		height: 60,
+		left: 10,
 	},
 	anansi_image: {
-		position: 'absolute',
 		width: 50,
 		height: 40,
-		left: 55,
-		bottom: 11,
+		left: 8,
+		top: 20,
+		marginBottom: 20,
 	},
 	ant_image: {
-		position: 'absolute',
+		top: 30,
 		width: 40,
 		height: 30,
-		left: 120,
-		bottom: 11,
+		left: 10,
+		marginBottom: 30,
+	},
+	tower_number_text: {
+		fontSize: 100,
 	},
 	tower_number_element: {
 		position: 'absolute',
-		bottom: -90,
-		fontSize: 100,
+		height: 300,
+		width: 60,
+		borderLeftWidth: 1,
 	},
 })
 
