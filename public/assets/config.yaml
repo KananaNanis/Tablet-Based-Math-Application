@@ -36,11 +36,8 @@ addition_mix_and_match_numbers_only:
       keypad_kind: 'decimal_column'
       arith_symbol: +
       equal_symbol: =
-      tower_2_shadow: { name: tower_2_height }
-      tower_1_shadow: { name: tower_1_height }
       tower_2: { name: tower_2_height }
       tower_1: { name: tower_1_height }
-      tower_mixed: []
       tower_result: []
       tower_4: { name: mixed_tower_height }
       tile_success: { name: emoji_smile }
@@ -60,31 +57,16 @@ addition_mix_and_match_numbers_only:
         position: [15, 0]
         tower_style: {opacity: 0}
         misc:
-          hide_tower_number: true
+          hide_tower_number: false
           backgroundColor: 'blue'
           reverse_ant_offsets: true
-      tower_1_shadow:
-        position: [15, 0]
-        tower_style: {left: 38, , opacity: 0}
-        misc:
-          backgroundColor: 'blue'
       tower_2:
-        position: [230, 0]
+        position: [270, 0]
         tower_style: {opacity: 0}
         misc:
-          hide_tower_number: true
+          hide_tower_number: false
           backgroundColor: 'red'
           reverse_ant_offsets: true
-      tower_2_shadow:
-        position: [270, 0]
-        tower_style: {left: 38, opacity: 0}
-        misc:
-          backgroundColor: 'red'
-      tower_mixed:
-        position: [442, 0]
-        tower_style: {opacity: 0}
-        misc:
-          hide_tower_number: true
       tower_result:
         position: [545, 0]
         tower_style: {opacity: 0}
@@ -107,7 +89,6 @@ addition_mix_and_match_numbers_only:
       num_stars: 2
       remove_on_exit: [button_submit]
       config_iteration: 4
-      trigger_blocks_moving_to_result: 0
   level_1:
     params:
       generate:
@@ -126,6 +107,18 @@ addition_mix_and_match_numbers_only:
     params:
       misc:
         jmp: [addition_mix_and_match_with_ants, level_3]
+  level_4:
+    params:
+      modify:
+        tower_1:
+          misc:
+            hide_image: true
+        tower_2:
+          misc:
+            hide_image: true
+        tower_result:
+          misc:
+            hide_image: true
 
 
 addition_mix_and_match_with_ants:
