@@ -34,8 +34,6 @@ addition_mix_and_match_numbers_only:
       restriction_lower: mixed_tower_height > 0.33
     create:
       keypad_kind: 'decimal_column'
-      big_paren: true
-      big_op: +
       arith_symbol: +
       equal_symbol: =
       tower_2_shadow: { name: tower_2_height }
@@ -58,11 +56,6 @@ addition_mix_and_match_numbers_only:
         style: { opacity: 0.0 }
         misc:
           use_no_borders: true
-      big_paren:
-        position: [20, 0]
-        style: { width: 437 }
-      big_op:
-        position: [175, 0]
       tower_1:
         position: [15, 0]
         tower_style: {opacity: 0}
@@ -102,7 +95,7 @@ addition_mix_and_match_numbers_only:
         style: {opacity: 0}
     event_handling:
       correctness: identical
-      touch_reveals_button: [button_submit, button_delete]
+      touch_reveals_button: [button_submit]
       no_split_fiver: true
       minimum_split_size: -1
       target: tower_result
@@ -112,7 +105,7 @@ addition_mix_and_match_numbers_only:
     misc:
       use_emoji: true
       num_stars: 2
-      remove_on_exit: [button_submit, button_delete]
+      remove_on_exit: [button_submit]
       config_iteration: 4
       trigger_blocks_moving_to_result: 0
   level_1:
@@ -792,34 +785,41 @@ concreteness_fading:
       num_stars: 3
       remove_on_exit: [button_submit, button_delete]
       config_iteration: 5
-  level_1:
-  level_2:
+  level_1a:
+  level_3a:
+    params:
+      modify:
+        tower_1:
+          misc:
+            hide_image: true
+  tower_to_number:
     params:
       create:
-        button_start:
-        tower_1_shadow: { name: tower_1_height }
+        keypad_kind: 'decimal_column'
       modify:
-        button_start:
-          position: [40vw, 0]
         tower_1:
+          position: [30, 0]
+          tower_style: { opacity: 1 }
           misc:
-            hide_image: true
-        tower_1_shadow:
-          position: [center, 0]
+            hide_tower_number: true
+            backgroundColor: 'black'
+        tower_result:
+          position: [150, 0]
           tower_style: { opacity: 0 }
-      misc:
-        freeze_display: true
-      delay:
-        modify:
-          tower_1_shadow:
-            anim_info: { opacity: [1, 0], delay: 0, duration: 2000 }
-  level_3:
-    params:
-      modify:
-        tower_1:
           misc:
-            hide_image: true
-
+            hide_tower_number: false
+      event_handling:
+        touch_reveals_button: [button_submit]
+        keypad_column: goat
+      misc:
+        remove_on_exit: [button_submit]
+    level_1b:
+    level_2b:
+      params:
+        modify:
+          tower_result:
+            misc:
+              hide_image: true
 
 ok:
   params:

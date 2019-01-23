@@ -366,7 +366,7 @@ const Workspace = ({
 	for (let i = 0; i < num_stars; ++i) {
 		++key
 		let top = 0
-		let right = 400 + 30 * i
+		let right = 30 * i
 		if (is_scaled) {
 			top += 10
 			right += 8
