@@ -273,29 +273,12 @@ class Tower extends React.Component {
 			let width = b.width
 			let height = b.height
 			const bottom = b.bottom
-			let marginBottom = is_tiny || is_fiver ? 0 : 1
 			const radius = 0.1 * (0.5 * (height + width))
-			let radius_style = {}
-			if (1 === 0 && is_fiver) {
-				if (1 === fiver_in_a_row || 5 === fiver_in_a_row) height -= 1
-				if (1 === fiver_in_a_row) {
-					marginBottom = 1
-					radius_style = {
-						borderBottomLeftRadius: radius,
-						borderBottomRightRadius: radius,
-					}
-				}
-				if (5 === fiver_in_a_row) {
-					radius_style = {
-						borderTopLeftRadius: radius,
-						borderTopRightRadius: radius,
-					}
-				}
-			} else {
-				if (is_tiny) height -= 0
-				else if (is_small) height -= 1
-				else height -= 2
-				if (!is_small) radius_style = {borderRadius: radius}
+			let radius_style = {
+				borderBottomLeftRadius: radius,
+				borderBottomRightRadius: radius,
+				borderTopLeftRadius: radius,
+				borderTopRightRadius: radius,
 			}
 			let bg = width < 50 ? 'darkred' : '#dbb'
 			let marginLeft = 0
@@ -319,7 +302,6 @@ class Tower extends React.Component {
 				position: 'absolute',
 				backgroundColor: bg,
 				bottom,
-				marginBottom,
 				marginLeft,
 				//...fiver_style
 			}
