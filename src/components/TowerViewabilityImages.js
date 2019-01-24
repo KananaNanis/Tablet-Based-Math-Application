@@ -142,7 +142,7 @@ const styles = StyleSheet.create({
 		// marginBottom: 20,
 	},
 	ant_image: {
-		top: 0,
+		top: 30,
 		width: 40,
 		height: 30,
 		left: 10,
