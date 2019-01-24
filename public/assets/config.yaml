@@ -788,16 +788,21 @@ concreteness_fading:
         button_start:
           position: [40vw, 0]
         tower_1:
+          style: { opacity: 0 }
           misc:
             hide_image: true
         tower_1_shadow:
           position: [center, 0]
           tower_style: { opacity: 0 }
+          style: { opacity: 0 }
       misc:
         freeze_display: true
       delay:
         modify:
+          tower_1:
+            style: { opacity: 1 }
           tower_1_shadow:
+            style: { opacity: 1 }
             anim_info: { opacity: [1, 0], delay: 0, duration: 2000 }
   level_3a:
     params:
@@ -836,16 +841,21 @@ concreteness_fading:
           button_start:
             position: [40vw, 0]
           tower_result:
+            style: { opacity: 0 }
             misc:
               hide_image: true
           tower_result_shadow:
+            style: { opacity: 0 }
             position: [150, 0]
             tower_style: { opacity: 0 }
         misc:
           freeze_display: true
         delay:
           modify:
+            tower_result:
+              style: { opacity: 1 }
             tower_result_shadow:
+              style: { opacity: 1 }
               anim_info: { opacity: [1, 0], delay: 0, duration: 2000 }
     level_3b:
       params:
