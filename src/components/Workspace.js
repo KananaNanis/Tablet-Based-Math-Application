@@ -263,7 +263,7 @@ const Workspace = ({
 	if (arith_symbol) {
 		++key
 		misc_below.push(
-			<Text key={key} id="arith_symbol" style={[styles.arith_symbol]}>
+			<Text key={key} id="arith_symbol" style={styles.arith_symbol}>
 				{arith_symbol}
 			</Text>,
 		)
@@ -272,7 +272,7 @@ const Workspace = ({
 	if (equal_symbol) {
 		++key
 		misc_below.push(
-			<Text key={key} id="equal_symbol" style={[styles.equal_symbol]}>
+			<Text key={key} id="equal_symbol" style={styles.equal_symbol}>
 				{equal_symbol}
 			</Text>,
 		)
@@ -500,7 +500,7 @@ const styles = StyleSheet.create({
 	},
 	arith_symbol: {
 		position: 'absolute',
-		left: 195,
+		left: 200,
 		bottom: -180,
 		fontSize: 100,
 		color: black,
