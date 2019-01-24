@@ -3,6 +3,7 @@ import {StyleSheet, View} from 'react-native'
 import Tower from './Tower'
 import TowerName from './TowerName'
 import TowerNumber from './TowerNumber'
+import TowerViewabilityImages from './TowerViewabilityImages'
 import {get_is_fiver_from_group, get_block_size_from_group} from './Block'
 
 export const global_fiver_shadow = [
@@ -102,6 +103,20 @@ const Num = ({
 				tower_number_style={tower_number_style}
 			/>
 		)
+	const tvi =
+	  misc && misc.hide_tower_number ? null : (
+			<TowerViewabilityImages
+				anim_info={tm_anim_info}
+				hide_image={misc && misc.hide_image}
+				id={id}
+				just_grey={just_grey}
+				keypad_column={keypad_column}
+				name={tm_name}
+				position={position}
+				target={target}
+				tower_number_style={tower_number_style}
+			/>
+		)
 	// misc = { top_just_outline: true }
 	//misc = { as_diagram: true }
 	const hide_all_tower_names = true
@@ -120,7 +135,7 @@ const Num = ({
 				style={tower_style}
 			/>
 			{hide_all_tower_names ? null : tn}
-			{tm}
+			{tvi}
 		</View>
 	)
 }
