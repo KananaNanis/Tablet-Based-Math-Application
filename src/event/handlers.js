@@ -933,5 +933,6 @@ export function handle_decimal_column_keypad(animal, val) {
 	if (!height_too_tall(new_height)) {
 		const new_name = height2tower_name(new_height)
 		doAction.setName(tgt, new_name)
+		doAction.setEventHandlingParam('keypad_column', 'placeholder')
 	}
 }

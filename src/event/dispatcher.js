@@ -224,6 +224,11 @@ export function touch_dispatcher(state, x, y, touchID) {
 
 			let pos_x = query_position_of(tgt).get(0)
 			if ('decimal_column' === kind && point_in_animals([x, y], [pos_x, 0])) {
+				if (query_prop('freeze_display')) {
+					if (visible.includes('button_start')) {
+						return
+					}
+				}
 				if (x - pos_x < 70) {
 					doAction.setEventHandlingParam('keypad_column', 'goat')
 					button_geoms[i].position[0] = pos_x

@@ -829,7 +829,7 @@ concreteness_fading:
             hide_tower_number: false
       event_handling:
         touch_reveals_button: [button_submit]
-        keypad_column: goat
+        keypad_column: placeholder   # use placeholder so that it doesn't appear at first 
       misc:
         remove_on_exit: [button_submit]
     level_1b:
