@@ -3,7 +3,9 @@ debug_mode: false
 num_exercises_for_debugging: 2
 debug_path: [addition_mix_and_match, level_1]
 
-starting_config_path: [addition_mix_and_match_with_ants, level_1]
+starting_config_path: [addition_mix_and_match_with_ants, level_4]
+
+#starting_config_path: [addition_mix_and_match_with_ants, level_1]
 #starting_config_path: [addition_mix_and_match_with_ants, level_2]
 #starting_config_path: [addition_mix_and_match_with_ants, level_3]
 # starting_config_path: [concreteness_fading, level_1a]
