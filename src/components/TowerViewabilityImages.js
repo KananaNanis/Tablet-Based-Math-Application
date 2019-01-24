@@ -163,4 +163,4 @@ const styles = StyleSheet.create({
 	},
 })
 
-export default TowerNumber
+export default TowerViewabilityImages
