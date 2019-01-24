@@ -18,7 +18,7 @@ addition_mix_and_match_numbers_only:
       total_fivers_and_spiders: total_fivers + total_spiders
       total_ant_fivers: tower_1_ant_fivers + tower_2_ant_fivers
       total_ants: tower_1_ants + tower_2_ants
-      total_ant_fivers_and_spiders: total_ant_fivers + total_ants
+      total_ant_fivers_and_ants: total_ant_fivers + total_ants
       tower_1_height_ants: tower_1_ant_fivers + tower_1_ants
       tower_1_height_spiders: tower_1_fivers + tower_1_spiders
       tower_1_height_insects: tower_1_height_spiders + tower_1_height_ants
@@ -100,7 +100,7 @@ addition_mix_and_match_numbers_only:
     params:
       generate:
         restriction_ant_fivers: total_ant_fivers < 0.055
-        restriction_ants: total_ant_fivers_and_spiders < 0.095
+        restriction_ants: total_ant_fivers_and_ants < 0.095
       misc:
         jmp: [addition_mix_and_match_with_ants, level_2]
   level_3:
@@ -139,7 +139,7 @@ addition_mix_and_match_with_ants:
       total_fivers_and_spiders: total_fivers + total_spiders
       total_ant_fivers: tower_1_ant_fivers + tower_2_ant_fivers
       total_ants: tower_1_ants + tower_2_ants
-      total_ant_fivers_and_spiders: total_ant_fivers + total_ants
+      total_ant_fivers_and_ants: total_ant_fivers + total_ants
       tower_1_height_ants: tower_1_ant_fivers + tower_1_ants
       tower_1_height_spiders: tower_1_fivers + tower_1_spiders
       tower_1_height_insects: tower_1_height_spiders + tower_1_height_ants
@@ -246,13 +246,19 @@ addition_mix_and_match_with_ants:
     params:
       generate:
         restriction_ant_fivers: total_ant_fivers < 0.055
-        restriction_ants: total_ant_fivers_and_spiders < 0.095
+        restriction_ants: total_ant_fivers_and_ants < 0.095
       misc:
         jmp: [addition_mix_and_match_with_ants, level_2]
   level_3:
     params:
       misc:
         jmp: [addition_mix_and_match_with_ants, level_3]
+  level_4:
+    params:
+      generate:
+        restriction_ants: total_ant_fivers_and_ants > 0.095
+    misc:
+      jmp: [addition_mix_and_match_with_ants, level_5]
 
 
 
