@@ -4,11 +4,18 @@ num_exercises_for_debugging: 2
 debug_path: [addition_mix_and_match, level_1]
 
 
+starting_config_path: [addition_mix_and_match_with_ants, level_4]
+# starting_config_path: [concreteness_fading, level_2a]
+# starting_config_path: [concreteness_fading, tower_to_number, level_2b]
+# starting_config_path: [concreteness_fading, level_3a]
+# starting_config_path: [concreteness_fading, tower_to_number, level_3b]
+# starting_config_path: [addition_mix_and_match_numbers_only, level_3]
+
 
 #starting_config_path: [addition_mix_and_match_with_ants, level_1]
 #starting_config_path: [addition_mix_and_match_with_ants, level_2]
 # starting_config_path: [addition_mix_and_match_with_ants, level_3]
-starting_config_path: [addition_mix_and_match_with_ants, level_4]
+#starting_config_path: [addition_mix_and_match_with_ants, level_4]
 # starting_config_path: [concreteness_fading, level_1a]
 # starting_config_path: [concreteness_fading, tower_to_number, level_1b]
 # starting_config_path: [concreteness_fading, level_2a]
