@@ -5,6 +5,7 @@ import {image_location} from '../lib/images'
 import {global_constant} from '../lib/global'
 import {query_prop} from '../providers/query_store'
 import {tower_name2height} from '../providers/query_tower'
+import {get_how_many_from_group} from '../components/Block'
 
 class TowerViewabilityImages extends React.Component {
 	state = {
@@ -17,8 +18,13 @@ class TowerViewabilityImages extends React.Component {
 		let scale_factor = query_prop('scale_factor')
 		let tower_height = tower_name2height(name)
 
-		let number_of_ants = Math.trunc(Math.ceil(tower_height * 100) % 10)
-		console.log("ants", tower_height, name, number_of_ants)
+		let number_of_ants = 0
+		if (name[name.length - 1] < 0.1) {
+			number_of_ants += get_how_many_from_group(name[name.length - 1])
+		}
+		if (name[name.length - 2] < 0.1) {
+			number_of_ants += 5
+		}
 
 		let ant_images = []
 		let ant_image = {name: 'ant', style: styles.ant_image}
@@ -32,7 +38,7 @@ class TowerViewabilityImages extends React.Component {
 		let container_antfiver_style = {
 			flex: 1,
 			flexDirection: 'row',
-			right: -15
+			right: -15,
 		}
 
 		let ant_image5 = []
