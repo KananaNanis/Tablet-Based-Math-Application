@@ -20,7 +20,7 @@ class TowerViewabilityImages extends React.Component {
 		let number_of_ants = Math.trunc((tower_height * 100) % 10)
 
 		let ant_images = []
-		let ant2_image = {name: 'ant2', style: styles.ant2_image}
+		let ant_image = {name: 'ant', style: styles.ant_image}
 
 		let container_style = {
 			position: 'absolute',
@@ -40,16 +40,16 @@ class TowerViewabilityImages extends React.Component {
 				ant_image5.push(
 					<Image
 						key={9 + i}
-						source={image_location(ant2_image.name)}
-						style={ant2_image.style}
+						source={image_location(ant_image.name)}
+						style={ant_image.style}
 					/>,
 				)
 			} else {
 				ant_images.push(
 					<Image
 						key={9 + i}
-						source={image_location(ant2_image.name)}
-						style={ant2_image.style}
+						source={image_location(ant_image.name)}
+						style={ant_image.style}
 					/>,
 				)
 			}
@@ -65,7 +65,7 @@ class TowerViewabilityImages extends React.Component {
 }
 
 const styles = StyleSheet.create({
-	ant2_image: {
+	ant_image: {
 		width: 15,
 		height: 10,
 	},
