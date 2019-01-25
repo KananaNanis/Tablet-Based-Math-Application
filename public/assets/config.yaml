@@ -30,7 +30,7 @@ addition_mix_and_match_numbers_only:
       restriction_1: tower_1_height > 0.01
       restriction_2: tower_2_height > 0.01
       mixed_tower_height: tower_1_height + tower_2_height
-      restriction_upper: mixed_tower_height < 3.99
+      restriction_upper: mixed_tower_height < 3.505
       restriction_lower: mixed_tower_height > 0.33
     create:
       keypad_kind: 'decimal_column'
@@ -151,7 +151,7 @@ addition_mix_and_match_with_ants:
       restriction_1: tower_1_height > 0.01
       restriction_2: tower_2_height > 0.01
       mixed_tower_height: tower_1_height + tower_2_height
-      restriction_upper: mixed_tower_height < 3.99
+      restriction_upper: mixed_tower_height < 3.505
       restriction_lower: mixed_tower_height > 0.33
     create:
       keypad_kind: 'buildTower'
@@ -193,7 +193,7 @@ addition_mix_and_match_with_ants:
           reverse_ant_offsets: true
       tower_1_shadow:
         position: [15, 0]
-        tower_style: {left: 38}
+        tower_style: {left: 10}
         misc:
           backgroundColor: 'blue'
       tower_2:
@@ -205,7 +205,7 @@ addition_mix_and_match_with_ants:
           reverse_ant_offsets: true
       tower_2_shadow:
         position: [270, 0]
-        tower_style: {left: 38}
+        tower_style: {left: 10}
         misc:
           backgroundColor: 'red'
       tower_mixed:
@@ -214,7 +214,7 @@ addition_mix_and_match_with_ants:
         misc:
           hide_tower_number: true
       tower_result:
-        position: [545, 0]
+        position: [595, 0]
         # tower_style: {opacity: 0}
         misc:
           backgroundColor: 'black'
@@ -281,7 +281,7 @@ addition_mix_and_match:
       mixed_tower_height: tower_1_height + tower_2_height
       restriction_1: tower_1_height > 0.1
       restriction_2: tower_2_height > 0.1
-      restriction_upper: mixed_tower_height < 3.9
+      restriction_upper: mixed_tower_height < 3.505
       restriction_lower: mixed_tower_height > 0.3
     create:
       keypad_kind: 'buildTower'
@@ -743,7 +743,7 @@ addition_test:
 concreteness_fading:
   params:
     generate:
-      tower_1_height: [pick_from_range, 0.01, 1.995, 0.01]
+      tower_1_height: [pick_from_range, 0.01, 3.505, 0.01]
     create:
       keypad_kind: 'buildTower'
       tower_1: { name: tower_1_height }
@@ -752,12 +752,13 @@ concreteness_fading:
       tile_fail: { name: emoji_frown }
     modify:
       tower_1:
-        position: [center, 0]
+        position: [595, 0]
         tower_style: { opacity: 0 }
         misc:
           backgroundColor: 'black'
       tower_result:
-        position: [center, 0]
+        position: [595, 0]
+        tower_style: {left: 15}
         misc:
           backgroundColor: 'black'
           hide_tower_number: true
@@ -792,17 +793,18 @@ concreteness_fading:
         tower_1_shadow: { name: tower_1_height }
       modify:
         button_start:
-          position: [40vw, 0]
+          position: [575, 0]
         tower_1:
           style: { opacity: 0 }
           misc:
             hide_image: true
         tower_1_shadow:
-          position: [center, 0]
+          position: [595, 0]
           tower_style: { opacity: 0 }
           style: { opacity: 0 }
       misc:
         freeze_display: true
+        jmp: [concreteness_fading, tower_to_number, level_2b]
       delay:
         modify:
           tower_1:
@@ -816,6 +818,8 @@ concreteness_fading:
         tower_1:
           misc:
             hide_image: true
+      misc:
+        jmp: [concreteness_fading, tower_to_number, level_3b]
   tower_to_number:
     params:
       create:
@@ -828,13 +832,13 @@ concreteness_fading:
             hide_tower_number: true
             backgroundColor: 'black'
         tower_result:
-          position: [150, 0]
+          position: [200, 0]
           tower_style: { opacity: 0 }
           misc:
             hide_tower_number: false
       event_handling:
         touch_reveals_button: [button_submit]
-        keypad_column: placeholder   # use placeholder so that it doesn't appear at first 
+        keypad_column: placeholder   # use placeholder so that it doesn't appear at first
       misc:
         remove_on_exit: [button_submit]
     level_1b:
@@ -845,17 +849,18 @@ concreteness_fading:
           tower_result_shadow: []
         modify:
           button_start:
-            position: [40vw, 0]
+            position: [200, 0]
           tower_result:
             style: { opacity: 0 }
             misc:
               hide_image: true
           tower_result_shadow:
             style: { opacity: 0 }
-            position: [150, 0]
+            position: [200, 0]
             tower_style: { opacity: 0 }
         misc:
           freeze_display: true
+          jmp: [concreteness_fading, level_3a]
         delay:
           modify:
             tower_result:
@@ -869,6 +874,8 @@ concreteness_fading:
           tower_result:
             misc:
               hide_image: true
+        misc:
+          jmp: [concreteness_fading, level_3a]
 
 ok:
   params:

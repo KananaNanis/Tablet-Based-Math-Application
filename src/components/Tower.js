@@ -255,9 +255,7 @@ class Tower extends React.Component {
 		const selected_block_index = misc && misc.selected_block_index
 		//console.log('selected_block_index', selected_block_index)
 
-		let blocks = [],
-			small_in_a_row = 0
-		let fiver_in_a_row = 0 // prev_size = null
+		let blocks = []
 		for (let i = 0; i < block_info.length; ++i) {
 			// compute all the style info for the blocks here, where we have context
 			const b = block_info[i]
@@ -267,49 +265,19 @@ class Tower extends React.Component {
 			const is_fiver = b.is_fiver
 			const size = b.size
 			//console.log('size', size)
-			if (is_small && !is_fiver) ++small_in_a_row
-			else small_in_a_row = 0
 
 			let width = b.width
-			let height = b.height
+			let height = b.height - 1
 			const bottom = b.bottom
-			let marginBottom = is_tiny || is_fiver ? 0 : 1
-			const radius = 0.1 * (0.5 * (height + width))
-			let radius_style = {}
-			if (1 === 0 && is_fiver) {
-				if (1 === fiver_in_a_row || 5 === fiver_in_a_row) height -= 1
-				if (1 === fiver_in_a_row) {
-					marginBottom = 1
-					radius_style = {
-						borderBottomLeftRadius: radius,
-						borderBottomRightRadius: radius,
-					}
-				}
-				if (5 === fiver_in_a_row) {
-					radius_style = {
-						borderTopLeftRadius: radius,
-						borderTopRightRadius: radius,
-					}
-				}
-			} else {
-				if (is_tiny) height -= 0
-				else if (is_small) height -= 1
-				else height -= 2
-				if (!is_small) radius_style = {borderRadius: radius}
+			const radius = 0.05 * (0.5 * (height + width))
+			let radius_style = {
+				borderBottomLeftRadius: radius,
+				borderBottomRightRadius: radius,
+				borderTopLeftRadius: radius,
+				borderTopRightRadius: radius,
 			}
 			let bg = width < 50 ? 'darkred' : '#dbb'
 			let marginLeft = 0
-			if (is_small) {
-				if (
-					//is_fiver ||
-					!(small_in_a_row % 2)
-				) {
-					const rev = misc && misc.reverse_ant_offsets
-					// marginLeft = rev ? -10 : 10
-					marginLeft = rev ? 0 : 10
-					if (width < 50) bg = 'red'
-				}
-			}
 			if (just_grey) bg = as_greyscale(bg)
 			// console.log('misc', misc)
 			if (misc && misc.backgroundColor) {
@@ -319,7 +287,6 @@ class Tower extends React.Component {
 				position: 'absolute',
 				backgroundColor: bg,
 				bottom,
-				marginBottom,
 				marginLeft,
 				//...fiver_style
 			}

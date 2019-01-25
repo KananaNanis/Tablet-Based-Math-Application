@@ -3,11 +3,12 @@ debug_mode: false
 num_exercises_for_debugging: 2
 debug_path: [addition_mix_and_match, level_1]
 
-starting_config_path: [addition_mix_and_match_with_ants, level_4]
+
 
 #starting_config_path: [addition_mix_and_match_with_ants, level_1]
 #starting_config_path: [addition_mix_and_match_with_ants, level_2]
-#starting_config_path: [addition_mix_and_match_with_ants, level_3]
+# starting_config_path: [addition_mix_and_match_with_ants, level_3]
+starting_config_path: [addition_mix_and_match_with_ants, level_4]
 # starting_config_path: [concreteness_fading, level_1a]
 # starting_config_path: [concreteness_fading, tower_to_number, level_1b]
 # starting_config_path: [concreteness_fading, level_2a]
@@ -27,7 +28,7 @@ starting_config_path: [addition_mix_and_match_with_ants, level_4]
 starting_level_for:
   math: [addition2, direct, open_build]
 
-scale_factor_from_yaml: 200
+scale_factor_from_yaml: 300
 door:
   handle_fraction: 0.1
   min_dist_from_handle: 200
@@ -45,7 +46,7 @@ door:
 special_button_defaults:
   button_submit:
     label: submit
-    position: [40, top 15]
+    position: [40, top 25]
     width: 210
     height: 80
   button_submit_on_right:
@@ -60,7 +61,7 @@ special_button_defaults:
     height: 80
   button_delete:
     label: delete
-    position: [40, top 175]
+    position: [40, top 195]
     width: 210
     height: 80
   button_next:
@@ -78,7 +79,7 @@ keypad_info:
     # position: [right 5, top 5]
     # position: [25, top 95]
     # position: [right 5, top 95]
-    position: [right 5, bottom 485]
+    position: [280, top -50]
     button_width: 80
     button_height: 80
     space_width: 5
