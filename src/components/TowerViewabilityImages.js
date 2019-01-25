@@ -1,11 +1,10 @@
 import React from 'react'
-import {StyleSheet, Animated, Image, Text, View} from 'react-native'
+import {StyleSheet, Animated, Image, View} from 'react-native'
 import * as Anim from '../event/animation'
 import {image_location} from '../lib/images'
 import {global_constant} from '../lib/global'
 import {query_prop} from '../providers/query_store'
 import {tower_name2height} from '../providers/query_tower'
-
 
 class TowerViewabilityImages extends React.Component {
 	state = {
@@ -13,10 +12,7 @@ class TowerViewabilityImages extends React.Component {
 	}
 
 	render() {
-		let {
-			id,
-			name,
-		} = this.props
+		let {name} = this.props
 
 		let scale_factor = query_prop('scale_factor')
 		let tower_height = tower_name2height(name)
@@ -29,7 +25,7 @@ class TowerViewabilityImages extends React.Component {
 		let container_style = {
 			position: 'absolute',
 			bottom: scale_factor * (Math.trunc(tower_height * 10) / 10),
-			left: (scale_factor * global_constant.tower.size2depth[-2] + 50),
+			left: scale_factor * global_constant.tower.size2depth[-2] + 50,
 		}
 
 		let container_antfiver_style = {
@@ -43,30 +39,26 @@ class TowerViewabilityImages extends React.Component {
 			if (number_of_ants >= 5 && i < 5) {
 				ant_image5.push(
 					<Image
-						key={9+i}
-						source={ image_location(ant2_image.name) }
-						style={ ant2_image.style }
-					/>
+						key={9 + i}
+						source={image_location(ant2_image.name)}
+						style={ant2_image.style}
+					/>,
 				)
-			}
-			else{
+			} else {
 				ant_images.push(
-							<Image
-								key={9+i}
-								source={ image_location(ant2_image.name) }
-								style={ ant2_image.style }
-							/>
+					<Image
+						key={9 + i}
+						source={image_location(ant2_image.name)}
+						style={ant2_image.style}
+					/>,
 				)
 			}
 		}
 
 		return (
-			<Animated.View
-				style={container_style}>
-				{ ant_images }
-				<View style={container_antfiver_style}>
-					{ant_image5}
-				</View>
+			<Animated.View style={container_style}>
+				{ant_images}
+				<View style={container_antfiver_style}>{ant_image5}</View>
 			</Animated.View>
 		)
 	}

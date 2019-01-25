@@ -29,7 +29,6 @@ function only_fivers(name, reverse) {
 			if (get_is_fiver_from_group(i)) res.push(i)
 		}
 	}
-	// console.log('only_fivers name', name, 'reverse', reverse, 'res', res)
 	return res
 }
 
@@ -56,7 +55,6 @@ const Num = ({
 	keypad_column,
 	just_grey = false,
 }) => {
-	//console.log('Num id', id, 'anim_info', anim_info)
 	let tn_name = name
 	if (misc && misc.show_only_fivers) tn_name = only_fivers(tn_name)
 	if (misc && misc.show_only_singletons) tn_name = only_fivers(tn_name, true)
@@ -104,18 +102,8 @@ const Num = ({
 			/>
 		)
 	const tvi =
-	  misc && misc.hide_tower_number ? null : (
-			<TowerViewabilityImages
-				anim_info={tm_anim_info}
-				hide_image={misc && misc.hide_image}
-				id={id}
-				just_grey={just_grey}
-				keypad_column={keypad_column}
-				name={tm_name}
-				position={position}
-				target={target}
-				tower_number_style={tower_number_style}
-			/>
+		misc && (misc.hide_tower_number || misc.hide_ant_guide) ? null : (
+			<TowerViewabilityImages name={tm_name} />
 		)
 	// misc = { top_just_outline: true }
 	//misc = { as_diagram: true }
@@ -135,6 +123,7 @@ const Num = ({
 				style={tower_style}
 			/>
 			{hide_all_tower_names ? null : tn}
+			{tm}
 			{tvi}
 		</View>
 	)
