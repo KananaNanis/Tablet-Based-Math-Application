@@ -266,8 +266,6 @@ export function show_blocks_moving_to_result(arg_1, arg_2, result, instant) {
 	for (let i = 0; i < toggle.length; ++i) {
 		let side = toggle[i]
 		let w = block_info[side][block_index[side]].width
-		let size = block_info[side][block_index[side]].size
-		let is_fiver = block_info[side][block_index[side]].is_fiver
 		if (1 === side && 0 === tower_name[1].length) {
 			// skip this one
 		} else {
