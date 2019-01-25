@@ -263,14 +263,11 @@ export function show_blocks_moving_to_result(arg_1, arg_2, result, instant) {
 		block_offset = [[], []],
 		delay = 0
 	const already_animated_side_0 = Boolean(query_block_anim_info(arg_1))
-	let small_in_a_row = 0
 	for (let i = 0; i < toggle.length; ++i) {
 		let side = toggle[i]
 		let w = block_info[side][block_index[side]].width
 		let size = block_info[side][block_index[side]].size
 		let is_fiver = block_info[side][block_index[side]].is_fiver
-		if (-2 === size && !is_fiver) ++small_in_a_row
-		else small_in_a_row = 0
 		if (1 === side && 0 === tower_name[1].length) {
 			// skip this one
 		} else {

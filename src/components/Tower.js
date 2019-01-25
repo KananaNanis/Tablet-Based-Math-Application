@@ -255,9 +255,7 @@ class Tower extends React.Component {
 		const selected_block_index = misc && misc.selected_block_index
 		//console.log('selected_block_index', selected_block_index)
 
-		let blocks = [],
-			small_in_a_row = 0
-		let fiver_in_a_row = 0 // prev_size = null
+		let blocks = []
 		for (let i = 0; i < block_info.length; ++i) {
 			// compute all the style info for the blocks here, where we have context
 			const b = block_info[i]
@@ -267,8 +265,6 @@ class Tower extends React.Component {
 			const is_fiver = b.is_fiver
 			const size = b.size
 			//console.log('size', size)
-			if (is_small && !is_fiver) ++small_in_a_row
-			else small_in_a_row = 0
 
 			let width = b.width
 			let height = b.height - 1
