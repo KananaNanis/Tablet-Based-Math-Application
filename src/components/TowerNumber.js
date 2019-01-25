@@ -2,6 +2,7 @@ import React from 'react'
 import {StyleSheet, Animated, Image, Text, View} from 'react-native'
 import * as Anim from '../event/animation'
 import {image_location} from '../lib/images'
+import * as c from './colors'
 
 class TowerNumber extends React.Component {
 	state = {
@@ -60,33 +61,29 @@ class TowerNumber extends React.Component {
 		let animal_images = [
 			{name: 'goat', style: styles.goat_image, extra_style: {}},
 			{name: 'anansi', style: styles.anansi_image, extra_style: {}},
-			{
-				name: 'ant',
-				style: styles.ant_image,
-				extra_style: {borderRightWidth: 1},
-			},
+			{name: 'ant', style: styles.ant_image, extra_style: {}},
 		]
 		if (id === target) {
 			if (keypad_column === 'goat') {
 				animal_images[0].extra_style = {
-					backgroundColor: 'white',
+					backgroundColor: c.white,
 				}
 			}
 			if (keypad_column === 'spider') {
 				animal_images[1].extra_style = {
-					backgroundColor: 'white',
+					backgroundColor: c.white,
 				}
 			}
 			if (keypad_column === 'ant') {
 				animal_images[2].extra_style = {
-					backgroundColor: 'white',
-					borderRightWidth: 1,
+					backgroundColor: c.white,
 				}
 			}
 		}
 
 		let name_elements = []
 		let show_digit = false
+		const are_buttons = id === target && keypad_column !== undefined
 		for (let i = 0; i < digits.length; ++i) {
 			if (digits[i] > 0 || i + 1 === digits.length) show_digit = true
 			name_elements.push(
@@ -94,7 +91,8 @@ class TowerNumber extends React.Component {
 					key={4 + i}
 					style={[
 						styles.tower_number_element,
-						{left: 60 * i - 10},
+						{left: 61 * i},
+						are_buttons ? styles.button_style : null,
 						animal_images[i].extra_style,
 					]}
 				>
@@ -124,6 +122,12 @@ class TowerNumber extends React.Component {
 }
 
 const styles = StyleSheet.create({
+	button_style: {
+		backgroundColor: c.orange,
+		borderColor: c.black,
+		borderWidth: 3,
+		borderRadius: 5,
+	},
 	tower_number: {
 		position: 'absolute',
 		top: 0,
@@ -132,21 +136,19 @@ const styles = StyleSheet.create({
 	goat_image: {
 		width: 40,
 		height: 60,
-		left: 10,
+		left: 5,
 	},
 	anansi_image: {
 		width: 50,
 		height: 40,
-		left: 8,
+		left: 2,
 		top: 20,
-		// marginBottom: 20,
 	},
 	ant_image: {
 		top: 30,
 		width: 40,
 		height: 30,
-		left: 10,
-		// marginBottom: 30,
+		left: 5,
 	},
 	tower_number_text: {
 		fontSize: 100,
@@ -157,9 +159,8 @@ const styles = StyleSheet.create({
 	},
 	tower_number_element: {
 		position: 'absolute',
-		height: 300,
+		height: 170,
 		width: 60,
-		borderLeftWidth: 1,
 	},
 })
 

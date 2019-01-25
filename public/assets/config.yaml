@@ -18,7 +18,7 @@ addition_mix_and_match_numbers_only:
       total_fivers_and_spiders: total_fivers + total_spiders
       total_ant_fivers: tower_1_ant_fivers + tower_2_ant_fivers
       total_ants: tower_1_ants + tower_2_ants
-      total_ant_fivers_and_spiders: total_ant_fivers + total_ants
+      total_ant_fivers_and_ants: total_ant_fivers + total_ants
       tower_1_height_ants: tower_1_ant_fivers + tower_1_ants
       tower_1_height_spiders: tower_1_fivers + tower_1_spiders
       tower_1_height_insects: tower_1_height_spiders + tower_1_height_ants
@@ -100,7 +100,7 @@ addition_mix_and_match_numbers_only:
     params:
       generate:
         restriction_ant_fivers: total_ant_fivers < 0.055
-        restriction_ants: total_ant_fivers_and_spiders < 0.095
+        restriction_ants: total_ant_fivers_and_ants < 0.095
       misc:
         jmp: [addition_mix_and_match_with_ants, level_2]
   level_3:
@@ -139,7 +139,7 @@ addition_mix_and_match_with_ants:
       total_fivers_and_spiders: total_fivers + total_spiders
       total_ant_fivers: tower_1_ant_fivers + tower_2_ant_fivers
       total_ants: tower_1_ants + tower_2_ants
-      total_ant_fivers_and_spiders: total_ant_fivers + total_ants
+      total_ant_fivers_and_ants: total_ant_fivers + total_ants
       tower_1_height_ants: tower_1_ant_fivers + tower_1_ants
       tower_1_height_spiders: tower_1_fivers + tower_1_spiders
       tower_1_height_insects: tower_1_height_spiders + tower_1_height_ants
@@ -246,13 +246,19 @@ addition_mix_and_match_with_ants:
     params:
       generate:
         restriction_ant_fivers: total_ant_fivers < 0.055
-        restriction_ants: total_ant_fivers_and_spiders < 0.095
+        restriction_ants: total_ant_fivers_and_ants < 0.095
       misc:
         jmp: [addition_mix_and_match_with_ants, level_2]
   level_3:
     params:
       misc:
         jmp: [addition_mix_and_match_with_ants, level_3]
+  level_4:
+    params:
+      generate:
+        restriction_ants: total_ant_fivers_and_ants > 0.095
+    misc:
+      jmp: [addition_mix_and_match_with_ants, level_5]
 
 
 
@@ -788,16 +794,21 @@ concreteness_fading:
         button_start:
           position: [40vw, 0]
         tower_1:
+          style: { opacity: 0 }
           misc:
             hide_image: true
         tower_1_shadow:
           position: [center, 0]
           tower_style: { opacity: 0 }
+          style: { opacity: 0 }
       misc:
         freeze_display: true
       delay:
         modify:
+          tower_1:
+            style: { opacity: 1 }
           tower_1_shadow:
+            style: { opacity: 1 }
             anim_info: { opacity: [1, 0], delay: 0, duration: 2000 }
   level_3a:
     params:
@@ -823,7 +834,7 @@ concreteness_fading:
             hide_tower_number: false
       event_handling:
         touch_reveals_button: [button_submit]
-        keypad_column: goat
+        keypad_column: placeholder   # use placeholder so that it doesn't appear at first 
       misc:
         remove_on_exit: [button_submit]
     level_1b:
@@ -836,16 +847,21 @@ concreteness_fading:
           button_start:
             position: [40vw, 0]
           tower_result:
+            style: { opacity: 0 }
             misc:
               hide_image: true
           tower_result_shadow:
+            style: { opacity: 0 }
             position: [150, 0]
             tower_style: { opacity: 0 }
         misc:
           freeze_display: true
         delay:
           modify:
+            tower_result:
+              style: { opacity: 1 }
             tower_result_shadow:
+              style: { opacity: 1 }
               anim_info: { opacity: [1, 0], delay: 0, duration: 2000 }
     level_3b:
       params:
