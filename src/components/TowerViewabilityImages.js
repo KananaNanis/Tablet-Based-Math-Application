@@ -3,89 +3,79 @@ import {StyleSheet, Animated, Image, Text, View} from 'react-native'
 import * as Anim from '../event/animation'
 import {image_location} from '../lib/images'
 import {global_constant} from '../lib/global'
+import {query_prop} from '../providers/query_store'
+import {tower_name2height} from '../providers/query_tower'
+
 
 class TowerViewabilityImages extends React.Component {
 	state = {
 		timer: Anim.new_timer(),
 	}
 
-	componentDidMount() {
-		Anim.init_anim(this.props.id, this.props.anim_info, this.state.timer)
-	}
-
-	componentDidUpdate(prev_props) {
-		Anim.update_anim(
-			this.props.id,
-			this.props.anim_info,
-			this.state.timer,
-			prev_props.anim_info,
-		)
-	}
-
 	render() {
 		let {
 			id,
 			name,
-			// position,
-			anim_info,
-			keypad_column,
-			target,
-			tower_number_style,
-			hide_image,
-			// just_grey = false,
 		} = this.props
-		// console.log('TowerNumber id', this.props.id, 'name', this.props.name)
+
+		let scale_factor = query_prop('scale_factor')
+		let tower_height = tower_name2height(name)
+
+		let number_of_ants = Math.trunc((tower_height * 100) % 10)
 
 		let ant_images = []
-		let number_of_ants = name[name.length - 1] < 0.1 ? name[name.length - 1] * 100 : null
-    let ant2_image = {name: 'ant2', style: styles.ant2_image, extra_style: {} }
-    console.log("Number of ants", number_of_ants)
-		for (let i = 0; i < number_of_ants; ++i) {
-			ant_images.push(
-				<View key={9 + i}>
-						<Image
-							key={1}
-							source={ image_location(ant2_image.name) }
-							style={ ant2_image.style }
-						/>
-				</View>,
-			)
+		let ant2_image = {name: 'ant2', style: styles.ant2_image}
+
+		let container_style = {
+			position: 'absolute',
+			bottom: scale_factor * (Math.trunc(tower_height * 10) / 10),
+			left: (scale_factor * global_constant.tower.size2depth[-2] + 50),
 		}
+
+		let container_antfiver_style = {
+			flex: 1,
+			flexDirection: 'row',
+		}
+
+		let ant_image5 = []
+
+		for (let i = 0; i < number_of_ants; ++i) {
+			if (number_of_ants >= 5 && i < 5) {
+				ant_image5.push(
+					<Image
+						key={9+i}
+						source={ image_location(ant2_image.name) }
+						style={ ant2_image.style }
+					/>
+				)
+			}
+			else{
+				ant_images.push(
+							<Image
+								key={9+i}
+								source={ image_location(ant2_image.name) }
+								style={ ant2_image.style }
+							/>
+				)
+			}
+		}
+
 		return (
 			<Animated.View
-				style={[styles.tower_number, tower_number_style]}
-			>
-				{ant_images}
+				style={container_style}>
+				{ ant_images }
+				<View style={container_antfiver_style}>
+					{ant_image5}
+				</View>
 			</Animated.View>
 		)
 	}
 }
 
 const styles = StyleSheet.create({
-	tower_number: {
-		position: 'absolute',
-		top: 0,
-		left: 15,
-	},
 	ant2_image: {
-		top: -80,
-		width: 40,
-		height: 30,
-		right: global_constant.tower.size2depth[get_block_size_from_group(-2)]                                                                                                                                       0,
-		// marginBottom: 30
-	},
-	tower_number_text: {
-		fontSize: 100,
-	},
-	tower_number_text_wrapper: {
-		position: 'absolute',
-		top: 60,
-	},
-	tower_number_element: {
-		position: 'absolute',
-		height: 300,
-		width: 60,
-		borderLeftWidth: 1,
+		width: 15,
+		height: 10,
 	},
 })
 
