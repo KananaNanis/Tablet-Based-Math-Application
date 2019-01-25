@@ -258,7 +258,7 @@ addition_mix_and_match_with_ants:
       generate:
         restriction_ants: total_ant_fivers_and_ants > 0.095
     misc:
-      jmp: [addition_mix_and_match_with_ants, level_5]
+      jmp: [addition_mix_and_match_with_ants, level_4]
 
 
 
