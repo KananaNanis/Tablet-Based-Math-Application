@@ -3,6 +3,7 @@ import {StyleSheet, View} from 'react-native'
 import Tower from './Tower'
 import TowerName from './TowerName'
 import TowerNumber from './TowerNumber'
+import TowerViewabilityImages from './TowerViewabilityImages'
 import {get_is_fiver_from_group, get_block_size_from_group} from './Block'
 
 export const global_fiver_shadow = [
@@ -28,7 +29,6 @@ function only_fivers(name, reverse) {
 			if (get_is_fiver_from_group(i)) res.push(i)
 		}
 	}
-	// console.log('only_fivers name', name, 'reverse', reverse, 'res', res)
 	return res
 }
 
@@ -55,7 +55,6 @@ const Num = ({
 	keypad_column,
 	just_grey = false,
 }) => {
-	//console.log('Num id', id, 'anim_info', anim_info)
 	let tn_name = name
 	if (misc && misc.show_only_fivers) tn_name = only_fivers(tn_name)
 	if (misc && misc.show_only_singletons) tn_name = only_fivers(tn_name, true)
@@ -102,6 +101,10 @@ const Num = ({
 				tower_number_style={tower_number_style}
 			/>
 		)
+	const tvi =
+		misc && (misc.hide_tower_number || misc.hide_ant_guide) ? null : (
+			<TowerViewabilityImages name={tm_name} />
+		)
 	// misc = { top_just_outline: true }
 	//misc = { as_diagram: true }
 	const hide_all_tower_names = true
@@ -121,6 +124,7 @@ const Num = ({
 			/>
 			{hide_all_tower_names ? null : tn}
 			{tm}
+			{tvi}
 		</View>
 	)
 }
