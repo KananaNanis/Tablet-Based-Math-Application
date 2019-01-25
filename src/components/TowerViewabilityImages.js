@@ -31,8 +31,8 @@ class TowerViewabilityImages extends React.Component {
 
 		let container_style = {
 			position: 'absolute',
-			bottom: scale_factor * (Math.trunc(tower_height * 10) / 10),
-			left: scale_factor * global_constant.tower.size2depth[-2] + 50,
+			bottom: scale_factor * (Math.trunc(tower_height * 10) / 10) + 5,
+			left: scale_factor * global_constant.tower.size2depth[-2] + 10,
 		}
 
 		let container_antfiver_style = {
