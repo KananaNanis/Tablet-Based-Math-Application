@@ -36,7 +36,7 @@ class TowerViewabilityImages extends React.Component {
 		let ant_image5 = []
 
 		for (let i = 0; i < number_of_ants; ++i) {
-			if (number_of_ants >= 5 && i < 5) {
+			if (number_of_ants > 4 && i < 5) {
 				ant_image5.push(
 					<Image
 						key={9 + i}
