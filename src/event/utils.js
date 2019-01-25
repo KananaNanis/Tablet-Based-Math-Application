@@ -278,7 +278,6 @@ export function show_blocks_moving_to_result(arg_1, arg_2, result, instant) {
 			const goat_width = scale_factor * global_constant.tower.size2depth[0]
 			let xpos = [0, dx[side] + (goat_width - w)]
 			// console.log('size', size)
-			if (-2 === size && !is_fiver && !(small_in_a_row % 2)) xpos[1] -= 10
 			let ypos = [
 				block_info[side][block_index[side]].bottom,
 				result_block_info[block_index[2]].bottom,

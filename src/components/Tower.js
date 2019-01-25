@@ -271,9 +271,9 @@ class Tower extends React.Component {
 			else small_in_a_row = 0
 
 			let width = b.width
-			let height = b.height
+			let height = b.height - 1
 			const bottom = b.bottom
-			const radius = 0.1 * (0.5 * (height + width))
+			const radius = 0.05 * (0.5 * (height + width))
 			let radius_style = {
 				borderBottomLeftRadius: radius,
 				borderBottomRightRadius: radius,
@@ -282,17 +282,6 @@ class Tower extends React.Component {
 			}
 			let bg = width < 50 ? 'darkred' : '#dbb'
 			let marginLeft = 0
-			if (is_small) {
-				if (
-					//is_fiver ||
-					!(small_in_a_row % 2)
-				) {
-					const rev = misc && misc.reverse_ant_offsets
-					// marginLeft = rev ? -10 : 10
-					marginLeft = rev ? 0 : 10
-					if (width < 50) bg = 'red'
-				}
-			}
 			if (just_grey) bg = as_greyscale(bg)
 			// console.log('misc', misc)
 			if (misc && misc.backgroundColor) {

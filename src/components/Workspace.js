@@ -507,7 +507,7 @@ const styles = StyleSheet.create({
 	},
 	equal_symbol: {
 		position: 'absolute',
-		left: 465,
+		left: 490,
 		bottom: -180,
 		fontSize: 100,
 		color: black,
